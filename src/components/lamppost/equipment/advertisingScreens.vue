@@ -1,0 +1,194 @@
+<template>
+    <!--广告屏 -->
+    <div class="advertisingScreens">
+        <div class="advertisingScreens_top">
+            目录:
+            <el-cascader
+            size='small'
+            :options="options"
+            v-model="selectedOptions3">
+            </el-cascader>
+            <el-dropdown style="margin-left:25px;">
+                <el-button type="primary" size='small' style="width:125px;">
+                    操作<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item>广告设置</el-dropdown-item>
+                    <el-dropdown-item>公告信息</el-dropdown-item>
+                    <el-dropdown-item>数据同步</el-dropdown-item>
+                    <el-dropdown-item>开始播放广告</el-dropdown-item>
+                    <el-dropdown-item>停止播放广告</el-dropdown-item>
+                    <el-dropdown-item>广告状态查询</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+        </div>
+        <div class="advertisingScreens_bottom">
+            <el-table
+                :data="tableData"
+                border
+                stripe
+                size='small'
+                tooltip-effect="dark"
+                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                <el-table-column
+                type="selection"
+                align='center'
+                width="55">
+                </el-table-column>
+                <el-table-column
+                prop="name"
+                align='center'
+                label="区域"
+                width="120">
+                </el-table-column>
+                <el-table-column
+                prop="name"
+                align='center'
+                label="名称"
+                width="80">
+                </el-table-column>
+                <el-table-column
+                prop="name"
+                align='center'
+                label="网关UID"
+                width="80">
+                </el-table-column>
+                <el-table-column
+                prop="name"
+                align='center'
+                label="地址"
+                width="80">
+                </el-table-column>
+                <el-table-column
+                prop="name"
+                align='center'
+                label="充电枪"
+                width="80">
+                </el-table-column>
+                <el-table-column
+                prop="name"
+                align='center'
+                label="桩状态"
+                width="80">
+                </el-table-column>
+                <el-table-column
+                prop="name"
+                align='center'
+                label="枪状态"
+                width="80">
+                </el-table-column>
+                <el-table-column
+                prop="name"
+                align='center'
+                label="枪警报"
+                width="80">
+                </el-table-column>
+                <el-table-column
+                prop="name"
+                align='center'
+                label="电压(V)"
+                width="80">
+                </el-table-column>
+                <el-table-column
+                prop="name"
+                align='center'
+                label="电流(A)"
+                width="80">
+                </el-table-column>
+                <el-table-column
+                prop="name"
+                align='center'
+                label="功率(W)"
+                width="80">
+                </el-table-column>
+                <el-table-column
+                prop="name"
+                align='center'
+                label="电能(KWh)"
+                width="80">
+                </el-table-column>
+                <el-table-column
+                prop="name"
+                align='center'
+                label="采集时间"
+                width="80">
+                </el-table-column>
+                <el-table-column
+                prop="date"
+                label="备注"
+                align='center'
+                show-overflow-tooltip>
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                background
+                :current-page="pageIndex"
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+                </el-pagination>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+export default {
+    name: 'chargingPile',
+    data () {
+        return {
+            selectedOptions3:[1,2],
+            options:[
+                {
+                    value: 1,
+                    label: '浙江',
+                    children:[
+                        {
+                            value: 2,
+                            label: '杭州',
+                        },
+                        {
+                            value: 3,
+                            label: '嘉兴',
+                        },
+                    ]
+                }
+            ],
+            tableData:[{
+                date: '2016-05-02',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1518 弄'
+                }, {
+                date: '2016-05-04',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1517 弄'
+                }, {
+                date: '2016-05-01',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1519 弄'
+                }, {
+                date: '2016-05-03',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1516 弄'
+            }],
+            pageSize:10,
+            pageIndex:1,
+            total:50,
+        }
+    },
+    mounted(){
+
+    },
+    methods:{
+        
+    },
+}
+</script>
+<style scoped>
+.advertisingScreens{width: 100%;height: 100%;}
+.advertisingScreens>div{width: 100%;border: 1px solid #E4E4F1;position: absolute;}
+.advertisingScreens_top{height: 46px;border-bottom: none !important;display: flex;align-items: center;font-size: 16px;padding-left: 20px;}
+.advertisingScreens_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;}
+.block{text-align: center;}
+</style>
