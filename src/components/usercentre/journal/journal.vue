@@ -54,7 +54,7 @@
                 <el-table-column
                 prop="name"
                 align='center'
-                label="项目"
+                label="用户名"
                 width="180">
                 </el-table-column>
                 <el-table-column
@@ -66,7 +66,7 @@
                 <el-table-column
                 prop="name"
                 align='center'
-                label="用户名"
+                label="项目"
                 width="180">
                 </el-table-column>
                 <el-table-column

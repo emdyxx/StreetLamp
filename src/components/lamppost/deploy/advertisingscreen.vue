@@ -75,13 +75,13 @@
             </div>
         </div>
         <!-- 添加编辑模态框 -->
-        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addModal" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:450px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 v-if="addtype=='0'" class="modal-title" id="myModalLabel">添加广告屏</h4>
-                        <h4 v-if="addtype=='1'" class="modal-title" id="myModalLabel">编辑广告屏</h4>
+                        <h4 v-if="addType=='0'" class="modal-title" id="myModalLabel">添加广告屏</h4>
+                        <h4 v-if="addType=='1'" class="modal-title" id="myModalLabel">编辑广告屏</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -89,7 +89,11 @@
                             <input type="text" class="form-control" id="email" placeholder="请输入名称">
                         </div> 
                         <div class="form-group">
-                            <label>网关UID:</label>
+                            <label>设备型号:</label>
+                            <input type="text" class="form-control" id="email" placeholder="请输入名称">
+                        </div> 
+                        <div class="form-group">
+                            <label>设备ID:</label>
                             <input type="text" class="form-control" id="email" placeholder="请输入名称">
                         </div> 
                         <div class="form-group">
@@ -97,7 +101,17 @@
                             <input type="text" class="form-control" id="email" placeholder="请输入名称">
                         </div> 
                         <div class="form-group">
-                            <label>型号:</label>
+                            <label>备注:</label>
+                            <el-input
+                                type="textarea"
+                                :rows="2"
+                                style="width:196px;"
+                                placeholder="请输入内容"
+                                v-model="textarea">
+                            </el-input>
+                        </div> 
+                        <div class="form-group">
+                            <label>关联灯杆:</label>
                             <el-select v-model="value" size='small' style="width:196px" placeholder="请选择">
                                 <el-option
                                 v-for="item in options"
@@ -106,15 +120,6 @@
                                 :value="item.value">
                                 </el-option>
                             </el-select>
-                        </div> 
-                        <div class="form-group">
-                            <label>备注:</label>
-                            <el-input
-                                type="textarea"
-                                :rows="2"
-                                placeholder="请输入内容"
-                                v-model="textarea">
-                            </el-input>
                         </div> 
                     </div>
                     <div class="modal-footer">
@@ -154,6 +159,23 @@ export default {
             pageIndex:1,
             total:50, 
             textarea:'', //弹框文本域
+            options:[
+                {
+                    value: 1,
+                    label: '浙江',
+                    children:[
+                        {
+                            value: 2,
+                            label: '杭州',
+                        },
+                        {
+                            value: 3,
+                            label: '嘉兴',
+                        },
+                    ]
+                }
+            ],
+            value:'',
         }
     },
     mounted(){
@@ -171,6 +193,12 @@ export default {
             $('#addModal').modal('show')
             if(val=='0'){}
             if(val=='1'){}
+            /* 完成拖拽 */
+            $('#addModal').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#addModal').css("overflow", "hidden")
         },
         //删除广告屏
         deleteadvertisingscreen(){

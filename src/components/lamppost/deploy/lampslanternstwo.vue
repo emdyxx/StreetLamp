@@ -29,37 +29,19 @@
                 <el-table-column
                 prop="name"
                 align='center'
-                label="启用"
+                label="控制柜"
                 width="80">
                 </el-table-column>
                 <el-table-column
                 prop="name"
                 align='center'
-                label="校检"
+                label="灯杆编号"
                 width="80">
                 </el-table-column>
                 <el-table-column
                 prop="name"
                 align='center'
-                label="灯杆"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
-                label="灯头号"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
-                label="终端"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
-                label="输出通道"
+                label="灯杆型号"
                 width="80">
                 </el-table-column>
                 <el-table-column
@@ -77,23 +59,30 @@
                 <el-table-column
                 prop="name"
                 align='center'
-                label="灯杆型号"
+                label="灯具"
                 width="80">
                 </el-table-column>
                 <el-table-column
-                prop="name"
                 align='center'
-                label="灯具型号"
-                width="80">
-                </el-table-column><el-table-column
-                prop="name"
+                label="广告屏"
+                width="110">
+                    <template slot-scope="scope">
+                        {{scope.row.name}}
+                        <button @click="relevancelanterns" style="height:20px;line-height:15px;">...</button>
+                    </template>
+                </el-table-column>
+                <el-table-column
                 align='center'
-                label="终端型号"
-                width="80">
+                label="摄像头"
+                width="110">
+                    <template slot-scope="scope">
+                        {{scope.row.name}}
+                        <button @click="camera" style="height:20px;line-height:15px;">...</button>
+                    </template>
                 </el-table-column>
                 <el-table-column
                 prop="date"
-                label="启停时间"
+                label="创建时间"
                 align='center'
                 show-overflow-tooltip>
                 </el-table-column>
@@ -110,7 +99,7 @@
             </div>
         </div>
         <!-- 添加编辑灯杆 -->
-        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addModal" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:450px;">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -119,29 +108,19 @@
                         <h4 v-if="addtype=='1'" class="modal-title" id="myModalLabel">编辑灯杆</h4>
                     </div>
                     <div class="modal-body">
-                        <div>
-                            <el-radio v-model="radio1" label="0">使用终端 UID 作为灯杆名称</el-radio>
+                        <div class="form-group">
+                            <label>添加灯杆:</label>
+                            <input type="text" class="form-control" id="email" placeholder="请输入名称">
                         </div>
                         <div>
-                            <el-radio  v-model="radio1" label="1">
-                                灯杆(名称)从:<input type="text" class="form-control" style="width:50px;height:26px;display:inline-block;">
+                            <!-- <el-radio  v-model="radio1" label="1"> -->
+                                批量:<input type="text" class="form-control" style="width:50px;height:26px;display:inline-block;">
                                 到<input type="text" class="form-control" style="width:50px;height:26px;display:inline-block;">
                                 每次递增<input type="text" class="form-control" style="width:50px;height:26px;display:inline-block;">杆
-                            </el-radio>
+                            <!-- </el-radio> -->
                         </div>
                         <div class="form-group">
-                            <label>终端类型:</label>
-                            <el-select v-model="value" size='small' style="width:196px" placeholder="请选择">
-                                <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </div> 
-                        <div class="form-group">
-                            <label>终端型号:</label>
+                            <label>灯杆型号:</label>
                             <el-select v-model="value" size='small' style="width:196px" placeholder="请选择">
                                 <el-option
                                 v-for="item in options"
@@ -163,7 +142,7 @@
                             </el-select>
                         </div> 
                         <div class="form-group">
-                            <label>灯杆型号:</label>
+                            <label>终端类型:</label>
                             <el-select v-model="value" size='small' style="width:196px" placeholder="请选择">
                                 <el-option
                                 v-for="item in options"
@@ -174,7 +153,7 @@
                             </el-select>
                         </div> 
                         <div class="form-group">
-                            <label>终端输出:</label>
+                            <label>终端编号:</label>
                             <el-select v-model="value" size='small' style="width:196px" placeholder="请选择">
                                 <el-option
                                 v-for="item in options"
@@ -183,11 +162,7 @@
                                 :value="item.value">
                                 </el-option>
                             </el-select>
-                        </div> 
-                        <div class="form-group">
-                            <label>UID:</label>
-                            <input type="text" class="form-control" id="email" placeholder="请输入名称">
-                        </div> 
+                        </div>     
                         <div class="form-group">
                             <label>经度:</label>
                             <input type="text" class="form-control" id="email" placeholder="请输入名称">
@@ -196,10 +171,251 @@
                             <label>纬度:</label>
                             <input type="text" class="form-control" id="email" placeholder="请输入名称">
                         </div> 
+                        <div class="form-group">
+                            <label>备注:</label>
+                            <el-input
+                                type="textarea"
+                                :rows="2"
+                                style="width:196px;"
+                                placeholder="请输入内容"
+                                v-model="textarea">
+                            </el-input>
+                        </div> 
+                        <div class="form-group">
+                            <label>关联控制柜:</label>
+                            <el-select v-model="value" size='small' style="width:196px" placeholder="请选择">
+                                <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div> 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                         <button type="button" class="btn btn-primary">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- 关联广告屏 -->
+        <div class="modal fade" id="relevanceadvertising" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <div>
+                            <el-button @click="relevancelanterntwo" type="primary" size='small'>关联灯具</el-button>
+                            <el-button type="primary" size='small'>解除关联</el-button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div>已关联广告屏:</div>
+                        <el-table
+                            :data="tableData"
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            @selection-change="userSelectionChange"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="区域"
+                            width="100">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="启用"
+                            width="80">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="位置编号"
+                            width="100">
+                            </el-table-column>
+                            <el-table-column
+                            prop="date"
+                            label="创建时间"
+                            align='center'
+                            show-overflow-tooltip>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary">确认</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- 点击关联广告屏 -->
+        <div class="modal fade" id="relevanceadvertisingtwo" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4>请选择广告屏进行关联</h4>
+                    </div>
+                    <div class="modal-body">
+                        <el-table
+                            :data="tableData"
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            @selection-change="userSelectionChange"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="区域"
+                            width="100">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="启用"
+                            width="80">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="位置编号"
+                            width="100">
+                            </el-table-column>
+                            <el-table-column
+                            prop="date"
+                            label="创建时间"
+                            align='center'
+                            show-overflow-tooltip>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- 关联摄像头 -->
+        <div class="modal fade" id="cameras" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <div>
+                            <el-button @click="camerastwo" type="primary" size='small'>关联摄像头</el-button>
+                            <el-button type="primary" size='small'>解除关联</el-button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div>已关联摄像头:</div>
+                        <el-table
+                            :data="tableData"
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            @selection-change="userSelectionChange"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="区域"
+                            width="100">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="启用"
+                            width="80">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="位置编号"
+                            width="100">
+                            </el-table-column>
+                            <el-table-column
+                            prop="date"
+                            label="创建时间"
+                            align='center'
+                            show-overflow-tooltip>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- 点击关联摄像头 -->
+        <div class="modal fade" id="camerastwo" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4>请选择摄像头进行关联</h4>
+                    </div>
+                    <div class="modal-body">
+                        <el-table
+                            :data="tableData"
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            @selection-change="userSelectionChange"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="区域"
+                            width="100">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="启用"
+                            width="80">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="位置编号"
+                            width="100">
+                            </el-table-column>
+                            <el-table-column
+                            prop="date"
+                            label="创建时间"
+                            align='center'
+                            show-overflow-tooltip>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary">确认</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div>
@@ -251,6 +467,7 @@ export default {
             }],
             value: '',
             radio1: '0', //模态框单选按钮
+            textarea:'',
         }
     },
     mounted(){
@@ -264,6 +481,12 @@ export default {
             $('#addModal').modal('show')
             if(val=='0'){}
             if(val=='1'){}
+            /* 完成拖拽 */
+            $('#addModal').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#addModal').css("overflow", "hidden")
         },
         // 列表输出chang事件
         userSelectionChange(val){
@@ -290,6 +513,46 @@ export default {
                     message: '已取消删除'
                 });          
             });
+        },
+        //关联广告屏
+        relevancelanterns(){
+            $('#relevanceadvertising').modal('show')
+            /* 完成拖拽 */
+            $('#relevanceadvertising').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#relevanceadvertising').css("overflow", "hidden")
+        },
+        //点击关联广告屏
+        relevancelanterntwo(){
+            $('#relevanceadvertisingtwo').modal('show')
+            /* 完成拖拽 */
+            $('#relevanceadvertisingtwo').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#relevanceadvertisingtwo').css("overflow", "hidden")
+        },
+        //关联摄像头
+        camera(){
+            $('#cameras').modal('show')
+            /* 完成拖拽 */
+            $('#cameras').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#cameras').css("overflow", "hidden")
+        },
+        //点击关联摄像头
+        camerastwo(){
+            $('#camerastwo').modal('show')
+            /* 完成拖拽 */
+            $('#camerastwo').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#camerastwo').css("overflow", "hidden")
         },
     },
     created(){

@@ -80,7 +80,7 @@
             </div>
         </div>
         <!-- 添加修改模态框 -->
-        <div class="modal fade" id="addarticles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addarticles" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:450px;">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -137,10 +137,10 @@
                             <label for="name">名称:</label>
                             <input type="text" class="form-control" id="name" placeholder="请输入名称">
                         </div> 
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="name">服务器:</label>
                             <input type="text" class="form-control" id="name" placeholder="请输入名称">
-                        </div>
+                        </div> -->
                         <div class="form-group">
                             <label for="name">备注:</label>
                             <input type="text" class="form-control" id="name" placeholder="请输入名称">
@@ -244,6 +244,12 @@ export default {
             this.type = val
             if(val=='0'){}
             if(val=='1'){}
+            /* 完成拖拽 */
+            $('#addarticles').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#addarticles').css("overflow", "hidden")
         },
         //页面选中事件
         userSelectionChange(val){

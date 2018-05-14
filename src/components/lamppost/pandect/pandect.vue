@@ -10,13 +10,13 @@
 </template>
 <script>
 export default {
-  name: 'lamppost',
-  data () {
-    return {
-      
-    }
-  },
-  mounted(){
+    name: 'lamppost',
+    data () {
+        return {
+        
+        }
+    },
+    mounted(){
         var that = this
         $(function () {
             $('#jstree').jstree({
@@ -96,9 +96,9 @@ export default {
             }
         });
     },
-  methods:{
-    
-  },
+    methods:{
+        
+    },
 }
 </script>
 <style scoped>

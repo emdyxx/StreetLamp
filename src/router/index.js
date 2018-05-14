@@ -18,6 +18,7 @@ import equipment from '@/components/lamppost/equipment/equipment'
 import homepage from '@/components/lamppost/equipment/homepage'
 import lampslanterns from '@/components/lamppost/equipment/lampslanterns'
 import deploy from '@/components/lamppost/deploy/deploy'
+import deployhomepage from '@/components/lamppost/deploy/deployhomepage'
 import controlhousing from '@/components/lamppost/deploy/controlhousing'
 import lampslanternstwo from '@/components/lamppost/deploy/lampslanternstwo'
 import chargingpile from '@/components/lamppost/deploy/chargingpile'
@@ -125,8 +126,13 @@ export default new Router({
           children:[
             {
               path: '/',
-              name: 'controlhousing',
-              component: controlhousing,
+              name: 'deployhomepage',
+              component: deployhomepage,
+            },
+            {
+              path: '/deployhomepage',
+              name: 'deployhomepage',
+              component: deployhomepage,
             },
             {
               path: '/controlhousing',

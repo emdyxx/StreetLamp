@@ -96,23 +96,23 @@
       </div>
     </div>
     <!--添加编辑模态框-->
-    <div class="modal fade" id="addorganizations" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addorganizations" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 v-if="type=='0'" class="modal-title" id="myModalLabel">添加机构</h4>
                     <h4 v-if="type=='1'" class="modal-title" id="myModalLabel">编辑机构</h4>
-                </div>
+                </div>  
                 <div class="modal-body">
                     <el-tabs tab-position="left">
-                        <el-tab-pane label="用户">
+                        <el-tab-pane label="机构">
                             <div class="form-group">
                                 <label for="name">机构名称:</label>
                                 <input type="text" class="form-control" id="name" placeholder="请输入名称">
                             </div> 
                             <div class="form-group">
-                                <label for="username">管理员账号:</label>
+                                <label for="username">账号:</label>
                                 <input type="text" class="form-control" id="username" placeholder="请输入名称">
                             </div> 
                             <div class="form-group">
@@ -139,11 +139,20 @@
                                 <label for="address">地址:</label>
                                 <input type="text" class="form-control" id="address" placeholder="请输入名称">
                             </div> 
+                            <div class="form-group">
+                                <label for="textarea">备注:</label>
+                                <el-input
+                                style="margin-left:7px;"
+                                type="textarea"
+                                :rows="1"
+                                placeholder="请输入内容">
+                                </el-input>
+                            </div>
                         </el-tab-pane>
                         <el-tab-pane label="项目">
                             <div class="model_top">
-                                <el-button @click="addproject" size='small' icon='el-icon-plus' type="primary">添加项目</el-button>
-                                <el-button size='small' icon='el-icon-delete' type="primary">删除项目</el-button>
+                                <el-button @click="addproject" size='small' icon='el-icon-plus' type="primary">选择项目</el-button>
+                                <el-button size='small' icon='el-icon-delete' type="primary">移除项目</el-button>
                             </div>
                             <div class="model_bottom" style="padding:5px;">
                                 <el-table
@@ -187,12 +196,12 @@
         
     </div>
     <!-- 添加项目模态框 -->
-    <div class="modal fade" id="addproject" tabindex="-1" role="dialog" aria-labelledby="addproject" aria-hidden="true">
+    <div class="modal fade" id="addproject" draggable="true" tabindex="-1" role="dialog" aria-labelledby="addproject" aria-hidden="true">
         <div class="modal-dialog" style="width:450px;">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">添加项目</h4>
+                    <h4 class="modal-title" id="myModalLabel">选择项目</h4>
                 </div>
                 <div class="modal-body">
                     <el-table
@@ -284,7 +293,7 @@ export default {
               'core' : {
                   'data' : [
                       {
-                          "text" : "用户中心",
+                          "text" : "机构中心",
                           id:'1',
                           "state" : { "opened" : true },
                           "children" : [
@@ -310,7 +319,7 @@ export default {
                 'core' : {
                     'data' : [
                         {
-                            "text" : "用户中心",
+                            "text" : "机构中心",
                             id:'1',
                             "state" : { "opened" : true },
                             "children" : [
@@ -351,10 +360,22 @@ export default {
             this.type = val
             if(val=='0'){}
             if(val=='1'){}
+            /* 完成拖拽 */
+            $('#addorganizations').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#addorganizations').css("overflow", "hidden")
         },
         // 项目栏目  添加项目按钮
         addproject(){
             $('#addproject').modal('show')
+            /* 完成拖拽 */
+            $('#addproject').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#addproject').css("overflow", "hidden")
         },
         //删除项目
         deleteorganization(){

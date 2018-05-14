@@ -5,7 +5,6 @@
             <el-button @click="addcontrolhousing(0)" type="primary" icon='el-icon-plus' size='small'>添加控制柜</el-button>
             <el-button @click="addcontrolhousing(1)" type="primary" icon="el-icon-edit" size='small'>编辑控制柜</el-button>
             <el-button @click="deletecontrolhousing" type="primary" icon='el-icon-delete' size='small'>删除控制柜</el-button>
-            <el-button type="primary" icon='el-icon-setting' size='small'>管理灯具控制柜</el-button>
         </div>
         <div class="controlhousing_bottom">
             <el-table
@@ -36,18 +35,6 @@
                 <el-table-column
                 prop="name"
                 align='center'
-                label="校检"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
-                label="集中器"
-                width="100">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
                 label="位置编号"
                 width="100">
                 </el-table-column>
@@ -64,58 +51,13 @@
                 width="100">
                 </el-table-column>
                 <el-table-column
-                prop="name"
-                align='center'
-                label="电表"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
-                label="开关"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="name"
                 align='center'
                 label="灯杆"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
-                label="灯具"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
-                label="终端"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
-                label="模拟量"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
-                label="数字量"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
-                label="防盗"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
-                label="光照度"
-                width="80">
+                width="120">
+                    <template slot-scope="scope">
+                        {{scope.row.name}}
+                        <button @click="relevancelamppost" style="height:20px;line-height:15px;">...</button>
+                    </template>
                 </el-table-column>
                 <el-table-column
                 prop="date"
@@ -136,7 +78,7 @@
             </div>
         </div>
         <!-- 添加编辑控制柜 -->
-        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addModal" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:450px;">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -146,33 +88,19 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>控制柜数量:</label>
-                            <input type="text" class="form-control" id="name" placeholder="请输入名称">
+                            <label>位置编号:</label>
+                            <input type="text" class="form-control" id="name" placeholder="位置编号">
                         </div> 
                         <div class="form-group">
-                            <label>集中器型号:</label>
-                            <el-select v-model="value" size='small' style="width:196px" placeholder="请选择">
-                                <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
+                            <label>类目编号:</label>
+                            <input type="text" class="form-control" id="name" placeholder="类目编号">
                         </div> 
                         <div class="form-group">
-                            <label>控制柜型号:</label>
-                            <el-select v-model="value" size='small' style="width:196px" placeholder="请选择">
-                                <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
+                            <label>区域:</label>
+                            <input type="text" class="form-control" id="name" placeholder="区域">
                         </div> 
                         <div class="form-group">
-                            <label>UID:</label>
+                            <label>附加信息:</label>
                             <input type="text" class="form-control" id="phone" placeholder="请输入名称">
                         </div> 
                         <div class="form-group">
@@ -183,50 +111,129 @@
                             <label>纬度:</label>
                             <input type="text" class="form-control" id="email" placeholder="请输入名称">
                         </div> 
-                        <div class="modal_body_table">
-                            <div>
-                                <el-button icon="el-icon-plus" size='small' type="primary">添加设备</el-button>
-                                <el-button icon="el-icon-delete" size='small' type="primary">删除设备</el-button>
-                                <el-button size='small' type="success">生成默认设备</el-button>
-                            </div>
-                            <div>
-                                <el-table
-                                    :data="tableData"
-                                    border
-                                    stripe
-                                    size='small'
-                                    tooltip-effect="dark"
-                                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                                    <el-table-column
-                                    type="selection"
-                                    align='center'
-                                    width="55">
-                                    </el-table-column>
-                                    <el-table-column
-                                    prop="name"
-                                    align='center'
-                                    label="名称"
-                                    width="120">
-                                    </el-table-column>
-                                    <el-table-column
-                                    prop="name"
-                                    align='center'
-                                    label="类型"
-                                    width="120">
-                                    </el-table-column>
-                                    <el-table-column
-                                    prop="date"
-                                    label="型号"
-                                    align='center'
-                                    show-overflow-tooltip>
-                                    </el-table-column>
-                                </el-table>
-                            </div>
+                        <div class="form-group">
+                            <label>是否启用:</label>
+                            <el-radio v-model="radio" label="1">是</el-radio>
+                            <el-radio v-model="radio" label="2">否</el-radio>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                         <button type="button" class="btn btn-primary">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- 关联灯杆 -->
+        <div class="modal fade" id="relevancelampposts" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <div>
+                            <el-button @click="relevancelamppoststwo" type="primary" size='small'>关联灯杆</el-button>
+                            <el-button type="primary" size='small'>解除关联</el-button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div>已关联灯杆:</div>
+                        <el-table
+                            :data="tableData"
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            @selection-change="userSelectionChange"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="区域"
+                            width="100">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="启用"
+                            width="80">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="位置编号"
+                            width="100">
+                            </el-table-column>
+                            <el-table-column
+                            prop="date"
+                            label="创建时间"
+                            align='center'
+                            show-overflow-tooltip>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- 点击关联灯杆 -->
+        <div class="modal fade" id="relevancelamppoststwo" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4>请选择灯杆进行关联</h4>
+                    </div>
+                    <div class="modal-body">
+                        <el-table
+                            :data="tableData"
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            @selection-change="userSelectionChange"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="区域"
+                            width="100">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="启用"
+                            width="80">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            align='center'
+                            label="位置编号"
+                            width="100">
+                            </el-table-column>
+                            <el-table-column
+                            prop="date"
+                            label="创建时间"
+                            align='center'
+                            show-overflow-tooltip>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary">确认</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div>
@@ -264,7 +271,8 @@ export default {
                 value: '选项5',
                 label: '北京烤鸭'
             }],
-            value: ''
+            value: '',
+            radio:'1'
         }
     },
     mounted(){
@@ -278,6 +286,12 @@ export default {
             $('#addModal').modal('show')
             if(val=='0'){}
             if(val=='1'){}
+            /* 完成拖拽 */
+            $('#addModal').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#addModal').css("overflow", "hidden")
         },
         //设备选中chang事件 进行添加,编辑操作,
         userSelectionChange(val){
@@ -305,6 +319,26 @@ export default {
                 });          
             });
         },
+        //关联灯杆
+        relevancelamppost(){
+            $('#relevancelampposts').modal('show')
+            /* 完成拖拽 */
+            $('#relevancelampposts').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#relevancelampposts').css("overflow", "hidden")
+        },
+        //点击关联灯杆
+        relevancelamppoststwo(){
+            $('#relevancelamppoststwo').modal('show')
+            /* 完成拖拽 */
+            $('#relevancelamppoststwo').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#relevancelamppoststwo').css("overflow", "hidden")
+        },
     },
     created(){
         
@@ -323,5 +357,5 @@ export default {
 .form-group{display:flex;justify-content: center;}
 .form-group>label{width: 75px;line-height: 34px;text-align: center;}
 .form-group>input{width: 196px;}
-.modal_body_table>div{margin-bottom: 10px;border: 1px solid #E4E4F1;padding: 5px;text-align: center;}
+
 </style>

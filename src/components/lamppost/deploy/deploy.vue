@@ -37,11 +37,11 @@ export default {
                                     "icon" : "jstree-file",
                                     id:'3',
                                 },
-                                { 
-                                    "text" : "充电桩",
-                                    "icon" : "jstree-file",
-                                    id:'4',
-                                },
+                                // { 
+                                //     "text" : "充电桩",
+                                //     "icon" : "jstree-file",
+                                //     id:'4',
+                                // },
                                 { 
                                     "text" : "广告屏",
                                     "icon" : "jstree-file",
@@ -52,16 +52,16 @@ export default {
                                     "icon" : "jstree-file",
                                     id:'6',
                                 },
-                                { 
-                                    "text" : "传感设备",
-                                    "icon" : "jstree-file",
-                                    id:'7',
-                                },
-                                { 
-                                    "text" : "WIFI设备",
-                                    "icon" : "jstree-file",
-                                    id:'8',
-                                }
+                                // { 
+                                //     "text" : "传感设备",
+                                //     "icon" : "jstree-file",
+                                //     id:'7',
+                                // },
+                                // { 
+                                //     "text" : "WIFI设备",
+                                //     "icon" : "jstree-file",
+                                //     id:'8',
+                                // }
                             ]
                         }
                     ]
@@ -69,6 +69,9 @@ export default {
             }); 
         });
         $('#jstree').on("changed.jstree", function (e, data) {
+            if(data.node.id=='1'){
+                that.$router.push({'path':'/deployhomepage'})
+            }
             if(data.node.id=='2'){
                 that.$router.push({'path':'/controlhousing'})
             }

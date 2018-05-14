@@ -4,7 +4,7 @@
         <i @click="backtrack" class="iconfont icon-fanhui2"></i>
         <div class="user-header-left">
           <i class="iconfont icon-hengpai"></i>
-          用户中心
+          系统管理
         </div>
         <div class="header-center">
           <div @click="headercolor(1)" :class="headercolorType=='1'?'header-center-color':''">用户</div>

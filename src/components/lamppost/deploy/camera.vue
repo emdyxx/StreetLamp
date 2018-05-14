@@ -105,7 +105,7 @@
             </div>
         </div>
         <!-- 添加编辑摄像头模态框 -->
-        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addModal" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:450px;">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -121,7 +121,7 @@
                         <div class="form-group">
                             <label>型号:</label>
                             <el-select v-model="value" size='small' style="width:196px" placeholder="请选择">
-                                <el-option
+                                <el-option                         
                                 v-for="item in options"
                                 :key="item.value"
                                 :label="item.label"
@@ -165,9 +165,21 @@
                             <el-input
                                 type="textarea"
                                 :rows="2"
+                                style="width:196px;"
                                 placeholder="请输入内容"
                                 v-model="textarea">
                             </el-input>
+                        </div> 
+                        <div class="form-group">
+                            <label>关联灯杆:</label>
+                            <el-select v-model="value" size='small' style="width:196px" placeholder="请选择">
+                                <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
                         </div> 
                     </div>
                     <div class="modal-footer">
@@ -206,6 +218,24 @@ export default {
             pageSize:10,
             pageIndex:1,
             total:50, 
+            options:[
+                {
+                    value: 1,
+                    label: '浙江',
+                    children:[
+                        {
+                            value: 2,
+                            label: '杭州',
+                        },
+                        {
+                            value: 3,
+                            label: '嘉兴',
+                        },
+                    ]
+                }
+            ],
+            value:'',
+            textarea:''
         }
     },
     mounted(){
@@ -223,6 +253,12 @@ export default {
             $('#addModal').modal('show')
             if(val=='0'){}
             if(val=='1'){}
+            /* 完成拖拽 */
+            $('#addModal').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#addModal').css("overflow", "hidden")
         },
         //删除摄像头
         deletecamera(){

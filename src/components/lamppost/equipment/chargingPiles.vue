@@ -6,6 +6,7 @@
             <el-cascader
             size='small'
             :options="options"
+            change-on-select
             v-model="selectedOptions3">
             </el-cascader>
             <el-dropdown style="margin-left:25px;">

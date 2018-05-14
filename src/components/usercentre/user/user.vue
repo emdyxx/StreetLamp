@@ -29,13 +29,13 @@
                         <el-table-column
                         prop="name"
                         align='center'
-                        label="机构"
+                        label="用户名"
                         width="180">
                         </el-table-column>
                         <el-table-column
                         prop="name"
                         align='center'
-                        label="用户名"
+                        label="机构"
                         width="180">
                         </el-table-column>
                         <el-table-column
@@ -77,7 +77,7 @@
             </div>
         </div>
         <!-- 添加  修改  用户 -->
-        <div class="modal fade" id="addedituser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addedituser" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -89,9 +89,13 @@
                         <el-tabs tab-position="left">
                             <el-tab-pane label="用户">
                                 <div class="form-group">
-                                    <label for="name">用户名:</label>
+                                    <label for="name">账号:</label>
                                     <input type="text" class="form-control" id="name" placeholder="请输入名称">
-                                </div> 
+                                </div>
+                                <div class="form-group">
+                                    <label for="name2">名称:</label>
+                                    <input type="text" class="form-control" id="name2" placeholder="请输入名称">
+                                </div>
                                 <div class="form-group">
                                     <label for="password">密码:</label>
                                     <input type="password" class="form-control" id="password" placeholder="请输入名称">
@@ -108,11 +112,20 @@
                                     <label for="email">邮箱:</label>
                                     <input type="text" class="form-control" id="email" placeholder="请输入名称">
                                 </div> 
+                                <div class="form-group">
+                                    <label for="textarea">备注:</label>
+                                    <el-input
+                                    style="margin-left:1px;width:196px;"
+                                    type="textarea"
+                                    :rows="1"
+                                    placeholder="请输入内容">
+                                    </el-input>
+                                </div> 
                             </el-tab-pane>
                             <el-tab-pane label="项目">
                                 <div class="model_top">
-                                    <el-button @click="addproject" size='small' icon='el-icon-plus' type="primary">添加项目</el-button>
-                                    <el-button size='small' icon='el-icon-delete' type="primary">删除项目</el-button>
+                                    <el-button @click="addproject" size='small' icon='el-icon-plus' type="primary">选择项目</el-button>
+                                    <el-button size='small' icon='el-icon-delete' type="primary">移除项目</el-button>
                                 </div>
                                 <div class="model_bottom" style="padding:5px;">
                                     <el-table
@@ -155,12 +168,12 @@
             </div>
         </div><!-- /.modal -->
         <!-- 添加项目模态框 -->
-        <div class="modal fade" id="addproject" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addproject" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:450px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">添加项目</h4>
+                        <h4 class="modal-title" id="myModalLabel">选择项目</h4>
                     </div>
                     <div class="modal-body">
                         <el-table
@@ -285,19 +298,27 @@ export default {
                 'core' : {
                     'data' : [
                         {
-                            "text" : "用户中心",
+                            text : "系统管理",
                             id:'1',
-                            "state" : { "opened" : true },
-                            "children" : [
+                            state : { "opened" : true },
+                            children : [
                                 {
-                                    "text" : "快越科技",
-                                    "icon" : 'jstree-file',
+                                    text : "用户中心",
+                                    icon : 'jstree-file',
                                     id:'2',
-                                },
-                                { 
-                                    "text" : "龙泉公安",
-                                    "icon" : "jstree-file",
-                                    id:'3',
+                                    state : { "opened" : true },
+                                    children:[
+                                        {
+                                            text:'查看',
+                                            icon:'jstree-file',
+                                            id:'3',
+                                        },
+                                        {
+                                            text:'修改',
+                                            icon:'jstree-file',
+                                            id:'4',
+                                        }
+                                    ]
                                 }
                             ]
                         }
@@ -321,10 +342,22 @@ export default {
             if(val=='0'){}
             if(val=='1'){}
             $('#addedituser').modal('show')
+            /* 完成拖拽 */
+            $('#addedituser').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#addedituser').css("overflow", "hidden")
         },
         // 项目栏目  添加项目按钮
         addproject(){
             $('#addproject').modal('show')
+            /* 完成拖拽 */
+            $('#addproject').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#addproject').css("overflow", "hidden")
         },
         //删除用户
         deleteuser(){
@@ -368,6 +401,6 @@ export default {
 
 
 .form-group{display:flex;}
-.form-group>label{width: 60px;line-height: 34px;text-align: center;}
+.form-group>label{width: 65px;line-height: 34px;text-align: center;}
 .form-group>input{width: 196px;}
 </style>

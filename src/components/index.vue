@@ -1,17 +1,13 @@
 <template>
   <div class="index">
     <div class="index_top">
-        <!-- <div class="index_top_left">
-            <i class="iconfont icon-shouye"></i>
-            <p>首页</p>
-        </div> -->
         <div class="index_top_right">
             <div class="index_top_right_text">
                 <p style="padding-top:30px;">机构管理员</p>
                 <p @click="dropout" style="padding-top:0px;cursor: pointer;">退出登录</p>
             </div>
             <div class="index_top_right_img" @click="imagemanage">
-                <img src="../assets/login/bg1.jpg" alt="">
+                <img src="../assets/bg1.jpg" alt="">
             </div>
         </div>
     </div>
@@ -21,7 +17,7 @@
             <div class="modal-content">
                 <div class="modal-header" style="display:flex;">
                     <div class="header_img">
-                        <img src="../assets/login/bg1.jpg" alt="">
+                        <img src="../assets/bg1.jpg" alt="">
                     </div>
                     <div class="header_right">
                         <p>机构管理员</p>
@@ -62,40 +58,32 @@
     </div>
     <div class="index_center">
         <div class="index_center_top">
-            <div class="index_center_top_img01">
+            <div class="index_center_top_usercentre" @click="usermanage">系统管理</div>
+            <div class="index_center_top_lampost" @click="lamppost">智慧灯杆系统</div>
+            <!-- <div class="index_center_top_img01">
                 <img src="../assets/login/icon_18.png" alt="">
                 <p>地理信息系统</p>
-            </div>
-            <div class="index_center_top_img02">
+            </div> -->
+            <!-- <div class="index_center_top_img02">
                 <img src="../assets/login/icon_18.png" alt="">
                 <p>道路照明系统</p>
+            </div> -->
+            <!-- <div class="index_center_top_img04" @click="usermanage">
+                <img src="../assets/login/icon_18.png" alt="">
+                <p>系统管理</p>
             </div>
             <div class="index_center_top_img03" @click="lamppost">
                 <img src="../assets/login/icon_18.png" alt="">
                 <p>智慧灯杆系统</p>
-            </div>
+            </div> -->
         </div>
         <div class="index_center_bottom">
-            <div class="index_center_top_img04" @click="usermanage">
-                <img src="../assets/login/icon_18.png" alt="">
-                <p>系统管理</p>
-            </div>
-            <div class="index_center_top_img05">
+            
+            <!-- <div class="index_center_top_img05">
                 <img src="../assets/login/icon_18.png" alt="">
                 <p>项目管理</p>
-            </div>
+            </div> -->
         </div>
-        <!-- <div class="index_center_top">
-            <p>监控系统</p>
-            <div class="geography"><span>地理信息系统</span></div>
-            <div class="roadway"><span>道路照明系统</span></div>
-            <div class="lamppost"><span>智慧灯杆系统</span></div>
-        </div>
-        <div class="index_center_bottom">
-            <p>平台功能</p>
-            <div class="user"><span>用户中心</span></div>
-            <div class="project"><span>项目管理</span></div>
-        </div> -->
     </div>
   </div>
 </template>
@@ -129,7 +117,8 @@ export default {
 }
 </script>
 <style scoped>
-.index{width: 100%;height: 100%;background: url('../assets/login/bg1.jpg') no-repeat;}
+/* /StreetLamp */
+.index{width: 100%;height: 100%;background: url('http://192.168.10.211/StreetLamp/img/bg1.jpg') no-repeat;background-size: 100% 100%;}
 .index_top{width: 100%;position: relative;height: 115px;}
 .index_top_left{padding:20px 25px;border: 2px solid white;border-radius: 10px;position: absolute;top:20px;left: 100px;display: flex;justify-content: center;align-items: center;}
 .index_top_left>i{color: white;font-size: 36px;margin-top:-10px;margin-bottom: 10px;}
@@ -144,25 +133,15 @@ export default {
 .index_center div>img{transition: all 1S;-webkit-transition: all 1S;}
 .index_center p{color: white;margin-top:10px;font-size: 16px}
 .index_center_top{display: flex;justify-content: center;}
-.index_center_bottom{display: flex;justify-content: center;margin-top: 40px;}
-.index_center_top_img01>img:hover{transform: rotate(360deg);-webkit-transform: rotate(360deg)}
-.index_center_top_img02>img:hover{transform: rotate(360deg);-webkit-transform: rotate(360deg)}
-.index_center_top_img03>img:hover{transform: rotate(360deg);-webkit-transform: rotate(360deg)}
-.index_center_top_img04>img:hover{transform: rotate(360deg);-webkit-transform: rotate(360deg)}
-.index_center_top_img05>img:hover{transform: rotate(360deg);-webkit-transform: rotate(360deg)}
+.index_center_top>div{width: 150px;height: 20px;background-repeat: no-repeat !important;background-position: center 25% !important;color: #FFF;text-align: center;font-size: 14px;opacity: 0.9;padding: 99px 5px 15px 10px;margin: 10px 10px 10px 10px;line-height: 5px;cursor: pointer;border: 2px solid transparent;}
+.index_center_top>div:hover{border: 2px solid white;}
+.index_center_top_usercentre{background: #2196F3 url('../assets/user.png');}
+.index_center_top_lampost{background:#9C27B0 url('../assets/project.png'); }
+
 .header_img{text-align: left;margin-left: 30px;}
 .header_img>img{width: 80px;height: 80px;border-radius: 50%;}
 .header_right{height: 40px;margin-left: 30px;margin-top: 40px;text-align: left;font-size: 13px;}
 .header_right>button{position: absolute;top: 40px;right: 15px;}
 .table_body>tr>td{padding-bottom: 15px;padding-top: 5px;}
-/* .index_center{width: 100%;height: 200px;padding-left: 100px;color: white;text-align: left;margin-top:30px;}
-.index_center_top{padding: 5px;}
-.index_center_top>div,.index_center_bottom>div{position: relative;height: 130px;background-repeat: no-repeat;background-position: center 25%;display: inline-block;margin-right: 10px;}
-.index_center_top span,.index_center_bottom span{display: inline-block;position: absolute;bottom: 5px;left: 10px;}
-.index_center_bottom{padding: 5px;}
-.geography{width: 150px;background-color: #059BDF;background-image: url('../assets/login/gis.png');}
-.roadway{width: 150px;background-color: #EA8D03;background-image: url('../assets/login/streetlight.png');}
-.lamppost{width: 150px;background-color: #4CA54D;background-image: url('../assets/login/smartpole.png');}
-.user{width: 150px;background-color: #218BDF;background-image: url('../assets/login/user.png');}
-.project{width: 150px;background-color: #982DAF;background-image: url('../assets/login/project.png');} */
+
 </style>

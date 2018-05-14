@@ -28,15 +28,15 @@ export default {
                             "state" : { "opened" : true },
                             "children" : [
                                 {
-                                    "text" : "灯杆",
+                                    "text" : "灯具",
                                     "icon" : "jstree-file",
                                     id:'2',
                                 },
-                                {
-                                    "text" : "充电桩",
-                                    "icon" : "jstree-file",
-                                    id:'3',
-                                },
+                                // {
+                                //     "text" : "充电桩",
+                                //     "icon" : "jstree-file",
+                                //     id:'3',
+                                // },
                                 {
                                     "text" : "广告屏",
                                     "icon" : "jstree-file",
@@ -47,16 +47,16 @@ export default {
                                     "icon" : "jstree-file",
                                     id:'5'
                                 },
-                                {
-                                    "text" : "传感设备",
-                                    "icon" : "jstree-file",
-                                    id:'6'
-                                },
-                                {
-                                    "text" : "WIFI设备",
-                                    "icon" : "jstree-file",
-                                    id:'7'
-                                }
+                                // {
+                                //     "text" : "传感设备",
+                                //     "icon" : "jstree-file",
+                                //     id:'6'
+                                // },
+                                // {
+                                //     "text" : "WIFI设备",
+                                //     "icon" : "jstree-file",
+                                //     id:'7'
+                                // }
                             ]
                         },
                     ]

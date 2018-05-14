@@ -6,20 +6,29 @@
             <el-cascader
             size='small'
             :options="options"
+            change-on-select
             v-model="selectedOptions3">
             </el-cascader>
-            <el-dropdown style="margin-left:25px;">
+            <el-button type="primary" size='small' style="margin-left:25px;">开灯</el-button>
+            <el-button type="primary" size='small'>关灯</el-button>
+            <el-dropdown style="margin-left:10px;" @command='dropdown'>
                 <el-button type="primary" size='small' style="width:85px;">
-                    操作<i class="el-icon-arrow-down el-icon--right"></i>
+                    调光<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
-                <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>开灯</el-dropdown-item>
-                    <el-dropdown-item>关灯</el-dropdown-item>
-                    <el-dropdown-item>调光</el-dropdown-item>
-                    <el-dropdown-item>状态查询</el-dropdown-item>
-                    <el-dropdown-item>数据查询</el-dropdown-item>
+                <el-dropdown-menu slot="dropdown"> 
+                    <el-dropdown-item command='10'>100%</el-dropdown-item>
+                    <el-dropdown-item command='9'>90%</el-dropdown-item>
+                    <el-dropdown-item command='8'>80%</el-dropdown-item>
+                    <el-dropdown-item command='7'>70%</el-dropdown-item>
+                    <el-dropdown-item command='6'>60%</el-dropdown-item>
+                    <el-dropdown-item command='5'>50%</el-dropdown-item>
+                    <el-dropdown-item command='4'>40%</el-dropdown-item>
+                    <el-dropdown-item command='3'>30%</el-dropdown-item>
+                    <el-dropdown-item command='2'>20%</el-dropdown-item>
+                    <el-dropdown-item command='1'>10%</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
+            <el-button type="primary" size='small' style="margin-left:10px;">刷新状态</el-button>
         </div>
         <div class="lampslanterns_bottom">
             <el-table
@@ -204,6 +213,12 @@ export default {
 
     },
     methods:{
+        // 调光下拉事件
+        dropdown(val){
+            console.log(val)
+        },
+    },
+    created(){
         
     },
 }
