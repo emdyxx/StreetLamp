@@ -49,7 +49,8 @@ export default {
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.login{width: 100%;height: 100%;background: url('http://192.168.10.211/StreetLamp/img/bg1.jpg') no-repeat;background-size: 100% 100%;display: flex;justify-content: center;align-items: center;}
+/*  */
+.login{width: 100%;height: 100%;background: url('../assets/bg2.jpg') no-repeat;background-size: 100% 100%;display: flex;justify-content: center;align-items: center;}
 .login_text{color: white;font-size: 35px;position: absolute;top: 20px;left: 40px;font-weight: bold;}
 .login_center{width:360px;background: rgb(94, 149, 250);border-radius: 10px;box-shadow: 0px 10px 15px black;padding: 10px;} 
 .login_center_top{width: 100%;padding: 20px 0 0 0;text-align: center;}

@@ -6,7 +6,20 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  created(){
+      sessionStorage.serverurl = 'http://192.168.10.89:8010/solin-cunstomer'
+      // $.ajax({
+      //   type:'post',
+      //   async:true,
+      //   xhrFields:{withCredentials:true},
+      //   url:'json/url.json',
+      //   dataType:'json',
+      //   success:function(data){
+      //     sessionStorage.serverurl = data.url;
+      //   }
+      // })
+  },
 }
 </script>
 

@@ -118,7 +118,7 @@ export default {
 </script>
 <style scoped>
 /* /StreetLamp */
-.index{width: 100%;height: 100%;background: url('http://192.168.10.211/StreetLamp/img/bg1.jpg') no-repeat;background-size: 100% 100%;}
+.index{width: 100%;height: 100%;background: url('../assets/bg2.jpg') no-repeat;background-size: 100% 100%;}
 .index_top{width: 100%;position: relative;height: 115px;}
 .index_top_left{padding:20px 25px;border: 2px solid white;border-radius: 10px;position: absolute;top:20px;left: 100px;display: flex;justify-content: center;align-items: center;}
 .index_top_left>i{color: white;font-size: 36px;margin-top:-10px;margin-bottom: 10px;}

@@ -61,7 +61,7 @@ export default {
 }
 </script>
 <style scoped>
-.pandectone{width: 100%;height: 100%;padding: 5px;background: url('http://192.168.10.211/StreetLamp/img/bg0.jpg') no-repeat;display: flex;justify-content: center;align-items: center;}
+.pandectone{width: 100%;height: 100%;padding: 5px;background: url('../../../assets/bg0.jpg') no-repeat;display: flex;justify-content: center;align-items: center;}
 .pandectone_center{width:350px;height:450px;background: #6E7A81;border-radius: 5px;opacity: 0.7;}
 .pandectone_top,.pandectone_bottom>div{width: 90%;padding: 5px;display: flex;justify-content: center;margin: 0 auto;}
 .pandectone_top>span,.pandectone_bottom>div>span{display: inline-block;width: 105px;height: 100%;text-align: center;}
