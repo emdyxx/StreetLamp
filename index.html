@@ -3,25 +3,35 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <!-- <script src="static/jquery.min.js"></script>
-    <script src="static/jquery-ui.js"></script> -->
-    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
-    <script src="//cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.js"></script> 
+    <script src="static/jquery.min.js"></script>
+    <script src="static/jquery-ui.js"></script>
+    <!-- <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.js"></script>  -->
     
     <link rel="stylesheet" href="//at.alicdn.com/t/font_590781_vn39ujrwkm0ftj4i.css">
     
-    <!-- <link rel="stylesheet" href="static/bootstrap.min.css">
-    <script src="static/bootstrap.min.js"></script> -->
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="static/bootstrap.min.css">
+    <script src="static/bootstrap.min.js"></script>
+    <!-- <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
 
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=BLMrbvOtUeIUxLi1ZUGYss6sGTSYELSE"></script>
     
-    <!-- <link rel="stylesheet" href="static/jstree-style.css">
-    <script src="static/jstree.min.js"></script> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <link rel="stylesheet" href="static/jstree-style.css">
+    <script src="static/jstree.min.js"></script>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script> -->
     <title>SOLIN智慧城市物联系统</title>
+    <script>
+      $.ajaxSetup({
+          xhrFields: {
+              withCredentials: false
+          }
+      });
+      $.ajaxSettings.beforeSend = function(xhr,request){
+        xhr.setRequestHeader('token',sessionStorage.token);
+      }
+    </script>
   </head>
   <body>
     <div id="app"></div>

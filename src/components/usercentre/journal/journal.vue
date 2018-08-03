@@ -1,162 +1,317 @@
 <template>
     <div class="journal">
         <!-- 日志 -->
-        <div class="journal_top">
-            <div>
-                <span>项目:</span>
-                <el-select style="width:156px;" v-model="value4" size='small' clearable placeholder="请选择">
-                    <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                    </el-option>
-                </el-select>
-            </div>
-            <div >
-                <span>操作类型:</span>
-                <el-select style="width:156px;" v-model="value4" size='small' clearable placeholder="请选择">
-                    <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                    </el-option>
-                </el-select>
-            </div>
-            <div>
-                <span>日期:</span>
-                <el-date-picker
-                v-model="value6"
-                style="width:250px;"
-                size='small'
-                type="daterange"
-                range-separator="--"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期">
-                </el-date-picker>
-            </div>
-            <el-button type="primary" size='small' :loading="true" icon="el-icon-search">搜索</el-button>
-        </div>
-        <div class="journal_bottom">
-            <el-table
-                :data="tableData"
-                border
-                stripe
-                size='small'
-                tooltip-effect="dark"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
-                label="用户名"
-                width="180">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
-                label="机构名称"
-                width="180">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
-                label="项目"
-                width="180">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
-                label="操作类型"
-                width="180">
-                </el-table-column>
-                <el-table-column
-                prop="date"
-                label="描述"
-                align='center'
-                show-overflow-tooltip>
-                </el-table-column>
-            </el-table>
-            <div class="block">
-                <el-pagination
-                background
-                :current-page="pageIndex"
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="pageSize"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="total">
-                </el-pagination>
-            </div>
-        </div>
+        <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
+            <el-tab-pane label="登录日志" name='0'>
+                <div class="journal_top">
+                    <div class="search">
+                        <span>用户名称:</span>
+                        <input type="text" v-model="userName" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入用户名">
+                    </div>
+                    <div>
+                        <span>日期:</span>
+                        <el-date-picker
+                        v-model="value3"
+                        style="width:250px;"
+                        size='small'
+                        type="daterange"
+                        range-separator="--"
+                        value-format='yyyy-MM-dd'
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+                        </el-date-picker>
+                    </div>
+                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                </div>
+                <div class="journal_bottom">
+                    <el-table
+                        :data="tableData"
+                        border
+                        stripe
+                        size='small'
+                        tooltip-effect="dark"
+                        style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                        <el-table-column
+                        type="selection"
+                        align='center'
+                        width="55">
+                        </el-table-column>
+                        <el-table-column
+                        prop="username"
+                        align='center'
+                        label="登录账号"
+                        width="150">
+                        </el-table-column>
+                        <el-table-column
+                        prop="ipAddress"
+                        align='center'
+                        label="登录IP"
+                        width="150">
+                        </el-table-column>
+                        <el-table-column
+                        align='center'
+                        label="登录状态"
+                        width="180">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.status=='0'">成功</span>
+                                <span v-if="scope.row.status=='1'">失败</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                        prop="createTime"
+                        align='center'
+                        label="登录时间"
+                        width="180">
+                        </el-table-column>
+                        <el-table-column
+                        prop="content"
+                        label="登录明细"
+                        align='center'
+                        show-overflow-tooltip>
+                        </el-table-column>
+                    </el-table>
+                    <div class="block">
+                        <el-pagination
+                        background
+                        @size-change="sizechange"
+                        @current-change="currentchange"
+                        :current-page="pageIndex"
+                        :page-sizes="[10, 20, 30, 50]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="total">
+                        </el-pagination>
+                    </div>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="操作日志" name='1'>
+                <div class="journal_top">
+                    <div>
+                        <span>操作类别:</span>
+                        <el-select style="width:156px;" v-model="value" size='small' clearable placeholder="请选择">
+                            <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div >
+                        <span>操作模块:</span>
+                        <el-select style="width:156px;" v-model="value2" size='small' clearable placeholder="请选择">
+                            <el-option
+                            v-for="item in options2"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div>
+                        <span>日期:</span>
+                        <el-date-picker
+                        v-model="value3"
+                        style="width:250px;"
+                        size='small'
+                        type="daterange"
+                        range-separator="--"
+                        value-format='yyyy-MM-dd'
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+                        </el-date-picker>
+                    </div>
+                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                </div>
+                <div class="journal_bottom">
+                    <el-table
+                        :data="tableData"
+                        border
+                        stripe
+                        size='small'
+                        tooltip-effect="dark"
+                        style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                        <el-table-column
+                        type="selection"
+                        align='center'
+                        width="55">
+                        </el-table-column>
+                        <el-table-column
+                        prop="username"
+                        align='center'
+                        label="用户名"
+                        width="180">
+                        </el-table-column>
+                        <el-table-column
+                        prop="orgName"
+                        align='center'
+                        label="机构名称"
+                        width="180">
+                        </el-table-column>
+                        <el-table-column
+                        align='center'
+                        label="操作模块"
+                        width="180">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.operatModule=='0'">用户</span>
+                                <span v-if="scope.row.operatModule=='1'">机构</span>
+                                <span v-if="scope.row.operatModule=='2'">项目</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                        align='center'
+                        label="操作类别"
+                        width="180">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.operatType=='0'">添加</span>
+                                <span v-if="scope.row.operatType=='1'">编辑</span>
+                                <span v-if="scope.row.operatType=='2'">删除</span>
+                                <span v-if="scope.row.operatType=='3'">启用/禁用</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                        prop="createTime"
+                        align='center'
+                        label="操作时间"
+                        width="180">
+                        </el-table-column>
+                        <el-table-column
+                        prop="content"
+                        label="描述"
+                        align='center'
+                        show-overflow-tooltip>
+                        </el-table-column>
+                    </el-table>
+                    <div class="block">
+                        <el-pagination
+                        background
+                        @size-change="sizechange"
+                        @current-change="currentchange"
+                        :current-page="pageIndex"
+                        :page-sizes="[10, 20, 30, 50]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="total">
+                        </el-pagination>
+                    </div>
+                </div>
+            </el-tab-pane>    
+        </el-tabs>
     </div>
 </template>
 <script>
 export default {
-  name: 'journal',
-  data () {
-    return {
-        tableData:[{
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-            }, {
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1517 弄'
-            }, {
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄'
-            }, {
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1516 弄'
-        }],
-        pageSize:10,
-        pageIndex:1,
-        total:50,
-        options: [{
-            value: '选项1',
-            label: '黄金糕'
-            }, {
-            value: '选项2',
-            label: '双皮奶'
-            }, {
-            value: '选项3',
-            label: '蚵仔煎'
-            }, {
-            value: '选项4',
-            label: '龙须面'
-            }, {
-            value: '选项5',
-            label: '北京烤鸭'
-        }],
-        value4: '',
-        value6:''
-    }
-  },
-  mounted(){
-    
-  },
-  methods:{
-    
-  },
-  created(){
-    
-  },
+    name: 'journal',
+    data () {
+        return {
+            serverurl:localStorage.serverurl,
+            activeName:'0',
+            tableData:[],
+            pageSize:10,
+            pageIndex:1,
+            total:50,
+            userName:'',
+            options: [{
+                value: '0',
+                label: '添加'
+                }, {
+                value: '1',
+                label: '编辑'
+                }, {
+                value: '2',
+                label: '删除'
+                }, {
+                value: '3',
+                label: '启用/禁用'
+            }],
+            value: '',
+            options2: [{
+                value: '0',
+                label: '用户'
+                }, {
+                value: '1',
+                label: '机构'
+                }, {
+                value: '2',
+                label: '项目'
+            }],
+            value2: '',
+            value3:''
+        }
+    },
+    mounted(){
+        
+    },
+    methods:{
+        handleClick(){
+            this.pageIndex = 1
+            this.pageSize = 10
+            this.value3 = []
+            this.ready();
+        },
+        search(){
+            this.ready()
+        },
+        ready(){
+            var that = this;
+            var url = ''
+            var data = {
+                page:this.pageIndex,
+                size:this.pageSize,
+                beginTime:that.value3[0],
+                endTime:that.value3[1],
+            }
+            if(this.activeName=='0'){
+                url='/privilege/getLoginLogs'
+                data.username = this.userName
+            }
+            if(this.activeName=='1'){
+                url='/privilege/getOperatLogs'
+                data.operatType=that.value,
+                data.operatModule=that.value2
+            }
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+url,
+                contentType:'application/json;charset=UTF-8',
+                data:data,
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tableData = data.result.list;
+                        that.total = data.result.total;
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                },
+            })
+        },
+        sizechange(val){
+            this.pageSize = val;
+            this.ready()
+        },
+        currentchange(val){
+            this.pageIndex = val;
+            this.ready()
+        },
+    },
+    created(){
+        this.ready()
+    },
 }
 </script>
 <style scoped>
-.journal{width:100%;height:100%;position: relative;}
-.journal>div{border: 1px solid #E4E4F1;position: absolute;}
-.journal_top{height: 46px;top:5px;left:5px;right: 5px;border-bottom: none !important;display: flex;align-items: center;}
+.journal{position: absolute;top:10px;left: 10px;right: 10px;bottom: 10px;width:auto;height: auto;border-radius: 4px;}
+.journal>div{width: 100%;height: 100%;}
+.journal_top{height: 46px;border-bottom: none !important;display: flex;align-items: center;}
 .journal_top>div{margin-left: 15px;}
 .journal_top>button{height:33px;margin-left: 15px;}
-.journal_bottom{top: 51px;left:5px;right: 5px;bottom: 5px;padding: 5px;overflow: auto;}
+.journal_bottom{top: 56px;left:5px;right: 5px;bottom: 5px;padding: 5px;overflow: auto;position: absolute;}
+
+.search{display: flex;margin-left:10px;}
+.search>span{line-height: 30px;line-height: 45px;}
+.search>input{height: 30px;width: 110px;margin-top: 6px;height: 33px;}
+.search>div{height: 30px;width: 110px;}
 .block{text-align: center;}
 </style>

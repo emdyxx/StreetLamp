@@ -1,0 +1,114 @@
+<template>
+    <div class="DeviceLog">
+        <div class="DeviceLog_left">
+            <div id="jstree"></div>
+        </div>
+        <div class="DeviceLog_right">
+            <router-view></router-view>
+        </div>
+    </div>
+</template>
+<script>
+export default {
+    name: 'lamppost',
+    data () {
+        return {
+            serverurl:localStorage.serverurl,
+        }
+    },
+    mounted(){
+        var that = this
+        //初始化左侧树
+        this.readyLeft()
+    },
+    methods:{
+        //请求左侧树
+        readyLeft(){
+            var that = this;
+            $('#jstree').jstree("destroy");
+            $('#jstree').jstree({
+                "types" : {
+                    "1" : {
+                        "icon" : that.serverurl+"/image/1.png",
+                    },
+                    "2" : {
+                        "icon" : that.serverurl+"/image/2.png",
+                    }
+                },
+                // "state" : { "key" : that.sizeType.text },
+                "plugins" : ['types'],
+                'core' : {
+                    'data':function(obj,callback){
+                        var jsonstr="[]";
+                        var jsonarray = eval('('+jsonstr+')');
+                        $.ajax({
+                            type:"GET",
+                            url:that.serverurl+'/privilege/getMyMenu',
+                            dataType:"json",
+                            async: false,
+                            data:{parentId:sessionStorage.menuId2},
+                            success:function(data) {
+                                if(data.errorCode=='0'){
+                                    var datas = []
+                                    var arr = {}
+                                    
+                                    for(var i=0;i<data.result.menus.length;i++){
+                                        arr = {}
+                                        arr.text = data.result.menus[i].menuName
+                                        arr.id = data.result.menus[i].id
+                                        arr.type = '1'
+                                        datas.push(arr)
+                                    }
+                                    jsonarray= datas;
+                                    if(sessionStorage.menuId3=='21'){
+                                        that.$router.push({'path':'/LampPoleJournal'})
+                                    }
+                                    if(sessionStorage.menuId3=='22'){
+                                        that.$router.push({'path':'/lampJournal'})
+                                    }
+                                    if(sessionStorage.menuId3=='23'){
+                                        that.$router.push({'path':'/screenJournal'})
+                                    }
+                                    if(sessionStorage.menuId3=='24'){
+                                        that.$router.push({'path':'/sensorJournal'})
+                                    }
+                                }else{
+                                    that.errorCode(data.errorCode)
+                                }
+                            }
+                        });
+                        callback.call(this, jsonarray);
+                    }
+                }
+            });
+            $('#jstree').bind("activate_node.jstree.jstree", function (e, data) {
+                if(data.node.id==''||data.node.id==undefined){
+                }else{
+                    sessionStorage.menuId3 = data.node.id
+                    if(data.node.id=='21'){
+                        that.$router.push({'path':'/LampPoleJournal'})
+                    }
+                    if(data.node.id=='22'){
+                        that.$router.push({'path':'/lampJournal'})
+                    }
+                    if(data.node.id=='23'){
+                        that.$router.push({'path':'/screenJournal'})
+                    }
+                    if(data.node.id=='24'){
+                        that.$router.push({'path':'/sensorJournal'})
+                    }
+                }
+            });
+            
+        },
+    },
+    created() {
+        var that = this
+    },
+}
+</script>
+<style scoped>
+.DeviceLog{width: 100%;height: 100%;}
+.DeviceLog_left{width: 200px;height: 100%;border: 1px solid #E4E4F1;}
+.DeviceLog_right{position: absolute;left: 210px;right: 5px;top:5px;bottom:5px;}
+</style>

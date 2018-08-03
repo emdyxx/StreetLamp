@@ -2,111 +2,124 @@
     <!--广告屏 -->
     <div class="advertisingScreens">
         <div class="advertisingScreens_top">
-            目录:
-            <el-cascader
-            size='small'
-            :options="options"
-            change-on-select
-            v-model="selectedOptions3">
-            </el-cascader>
-            <el-dropdown style="margin-left:25px;" trigger='click' @command="handleCommand">
+            <el-dropdown v-if="operation" trigger='click' @command="handleCommand">
                 <el-button type="primary" size='small' style="width:125px;">
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="0">节目设置</el-dropdown-item>
+                    <el-dropdown-item command="0">下发节目</el-dropdown-item>
+                    <el-dropdown-item command="1">开启屏幕</el-dropdown-item>
+                    <el-dropdown-item command="2">关闭屏幕</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <el-button type="primary" size='small' @click="notice" style="width:125px;margin-left:25px;">节目管理</el-button>
-            <el-button type="primary" size='small' @click="mediaLibrary" style="width:125px;margin-left:25px;">媒体库</el-button>
-            <el-button type="primary" size='small' @click="readymeadia" style="width:125px;margin-left:25px;">初始化配置</el-button>
+            <el-button v-if="programManagement" type="primary" size='small' @click="notice" style="width:125px;margin-left:25px;">节目管理</el-button>
+            <el-button v-if="mediaLibrarys" type="primary" size='small' @click="mediaLibrary" style="width:125px;margin-left:25px;">媒体库</el-button>
+            <!-- <el-button type="primary" size='small' @click="readymeadia" style="width:125px;margin-left:25px;">初始化配置</el-button> -->
         </div>
         <div class="advertisingScreens_bottom">
-            <el-table
-                :data="tableData"
-                border
-                stripe
-                size='small'
-                tooltip-effect="dark"
-                style="width: 100%;max-height:80%;margin-bottom:10px;"
-                @selection-change="tableChange1">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="nickName"
-                align='center'
-                label="名称"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="width"
-                align='center'
-                label="宽度"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="height"
-                align='center'
-                label="高度"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
-                label="屏幕状态"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="programId"
-                align='center'
-                label="当前播放节目"
-                width="130">
-                </el-table-column>
-                <el-table-column
-                prop="offlineTime"
-                align='center'
-                label="最后下线时间"
-                width="130">
-                </el-table-column>
-                <el-table-column
-                prop="uploadStatus"
-                align='center'
-                label="当前节目状态"
-                width="110">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.uploadStatus=='0'">未上传</span>
-                        <span v-if="scope.row.uploadStatus=='1'">上传中</span>
-                        <span v-if="scope.row.uploadStatus=='2'">上传成功</span>
-                        <span v-if="scope.row.uploadStatus=='3'">上传失败</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="操作"
-                width="130">
-                    <template slot-scope="scope">
-                        <el-button type="primary" size='small' @click="status(scope.row)">节目下发进度</el-button>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="remark"
-                label="备注"
-                align='center'
-                show-overflow-tooltip>
-                </el-table-column>
-            </el-table>
-            <div class="block">
-                <el-pagination
-                background
-                :current-page="pageIndex"
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="pageSize"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="total">
-                </el-pagination>
+            <div class="advertisingScreens_bottom_top">
+                <div class="search">
+                    <label>屏幕序列号:</label>
+                    <input type="text" v-model="serialNumber" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入屏幕序列号">
+                </div>
+                <div class="search">
+                    <label>屏幕状态:</label>
+                    <el-select v-model="value" style="width:126px;" size='small' clearable placeholder="请选择">
+                        <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div style="margin-left:15px;">
+                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                </div>
+            </div>
+            <div class="advertisingScreens_bottom_bottom">
+                <el-table
+                    :data="tableData"
+                    border
+                    stripe
+                    size='small'
+                    tooltip-effect="dark"
+                    style="width: 100%;max-height:80%;margin-bottom:10px;"
+                    @selection-change="tableChange1">
+                    <el-table-column
+                    type="selection"
+                    align='center'
+                    width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="nickName"
+                    align='center'
+                    label="名称"
+                    width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="serialNumber"
+                    align='center'
+                    label="屏幕序列号"
+                    width="125">
+                    </el-table-column>
+                    <el-table-column
+                    prop="width"
+                    align='center'
+                    label="宽度"
+                    width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="height"
+                    align='center'
+                    label="高度"
+                    width="80">
+                    </el-table-column>
+                    <el-table-column
+                    align='center'
+                    label="屏幕状态"
+                    width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.status=='0'">关闭</span>
+                            <span v-if="scope.row.status=='1'">开启</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    align='center'
+                    label="当前节目状态"
+                    width="110">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.uploadStatus=='0'">未上传</span>
+                            <span v-if="scope.row.uploadStatus=='1'">上传中</span>
+                            <span v-if="scope.row.uploadStatus=='2'">上传成功</span>
+                            <span v-if="scope.row.uploadStatus=='3'">上传失败</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    align='center'
+                    label="操作"
+                    width="130">
+                        <template slot-scope="scope">
+                            <el-button type="primary" size='small' @click="status(scope.row)">节目下发进度</el-button>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="remark"
+                    label="备注"
+                    align='center'
+                    show-overflow-tooltip>
+                    </el-table-column>
+                </el-table>
+                <div class="block">
+                    <el-pagination
+                    background
+                    :current-page="pageIndex"
+                    :page-sizes="[10, 20, 30, 50]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+                    </el-pagination>
+                </div>
             </div>
         </div>
         <!-- 媒体库 -->
@@ -120,7 +133,7 @@
                     <div class="modal-body">
                         <div class="mediaLibrary_top">
                             <span>状态:</span>
-                            <el-select v-model="stateValue" clearable size='small' style='width:120px;'>
+                            <el-select v-model="stateValue" size='small' style='width:120px;'>
                                 <el-option
                                 v-for="item in stateOptions"
                                 :key="item.value"
@@ -129,7 +142,7 @@
                                 </el-option>
                             </el-select>
                             <span>类型:</span>
-                            <el-select v-model="typeValue" clearable size='small' style='width:90px;'>
+                            <el-select v-model="typeValue" @change='typeChange' clearable size='small' style='width:90px;'>
                                 <el-option
                                 v-for="item in typeOptions"
                                 :key="item.value"
@@ -162,7 +175,7 @@
                                 width="170">
                                 </el-table-column>
                                 <el-table-column
-                                prop="mediaSize"
+                                prop="mediaSizeKb"
                                 align='center'
                                 label="文件大小"
                                 width="80">
@@ -188,7 +201,7 @@
                                 <el-table-column
                                 label="操作"
                                 align='center'
-                                width="160">
+                                width="140">
                                     <template slot-scope="scope">
                                         <!-- <a @click="download(scope.row.mediaUrl)" id="download">下载</a> -->
                                         <el-button type="primary" @click="download(scope.row)" size='mini'>下载</el-button>
@@ -273,10 +286,10 @@
                                 width="80">
                                 </el-table-column>
                                 <el-table-column
-                                prop="ts"
+                                prop="createTime"
                                 align='center'
                                 label="创建时间"
-                                width="305">
+                                width="322">
                                 </el-table-column>
                             </el-table>
                             <div class="block">
@@ -323,12 +336,11 @@
                             <el-input v-model="programDate.programWidth" size='small' style="width:146px" placeholder="请输入宽"></el-input>
                             <span style="margin-left:30px;"><i>*</i>高:</span>
                             <el-input v-model="programDate.programHeight" size='small' style="width:146px" placeholder="请输入高"></el-input>
-                            <p>请您谨慎输出宽高/宽高为比例(例:1:3)</p>
                         </div>
                         <div class="setProgram" v-if="programDate.setProgramType==false">
                             <div class="setProgram_left">
                                 <div class="setProgram_div_top">
-                                    <el-select v-model="setProgramValue" size='small' style="width:80px;margin:2px 0 0 5px;">
+                                    <el-select v-model="setProgramValue" @change="setProgramChange" clearable size='small' style="width:80px;margin:2px 0 0 5px;">
                                         <el-option
                                         v-for="item in setProgramOptions"
                                         :key="item.value"
@@ -346,7 +358,7 @@
                                         stripe
                                         size='small'
                                         tooltip-effect="dark"
-                                        height='250'
+                                        height='350'
                                         style="width: 100%;overflow:auto;max-height:85%;margin-bottom:10px;"
                                         @selection-change="leftMediaChange">
                                         <el-table-column
@@ -355,19 +367,13 @@
                                         width="55">
                                         </el-table-column>
                                         <el-table-column
-                                        prop="name"
-                                        align='center'
-                                        label="图片"
-                                        width="80">
-                                        </el-table-column>
-                                        <el-table-column
                                         prop="nickName"
                                         align='center'
                                         label="文件名"
-                                        width="80">
+                                        width="150">
                                         </el-table-column>
                                         <el-table-column
-                                        prop="mediaSize"
+                                        prop="mediaSizeKb"
                                         label="文件大小"
                                         align='center'
                                         show-overflow-tooltip>
@@ -392,7 +398,7 @@
                                     <el-button type="primary" @click="fluctuation(0)" size='small' style="margin:4px 0 0 8px;">上移</el-button>
                                     <el-button type="primary" @click="fluctuation(1)" size='small' style="margin:4px 0 0 8px;">下移</el-button>
                                     <el-button type="primary" @click="deleteMedia" size='small' style="margin:4px 0 0 8px;">删除</el-button>
-                                    <el-button type="primary" @click="modificationMedia" size='small' style="margin:4px 0 0 8px;">修改</el-button>
+                                    <!-- <el-button type="primary" @click="modificationMedia" size='small' style="margin:4px 0 0 8px;">修改</el-button> -->
                                     <!-- <span style="font-size:12px;color: #606266;">已选择文件</span> -->
                                 </div>
                                 <div class="setProgram_div_bottom">
@@ -402,7 +408,7 @@
                                         stripe
                                         size='small'
                                         tooltip-effect="dark"
-                                        height='250'
+                                        height='370'
                                         style="width: 100%;overflow:auto;max-height:85%;margin-bottom:10px;"
                                         @selection-change="centerMediaChange">
                                         <el-table-column
@@ -411,14 +417,8 @@
                                         width="55">
                                         </el-table-column>
                                         <el-table-column
-                                        prop="name"
                                         align='center'
-                                        label="图片"
-                                        width="80">
-                                        </el-table-column>
-                                        <el-table-column
-                                        align='center'
-                                        label="播放时间"
+                                        label="播放时长"
                                         width="80">
                                             <template slot-scope="scope">
                                                 <el-input v-model=scope.row.duration placeholder="请输入内容" size='mini'></el-input>
@@ -514,7 +514,7 @@
                                     prop="nickName"
                                     align='center'
                                     label="节目名称"
-                                    width="212">
+                                    width="195">
                                     </el-table-column>
                                     <el-table-column
                                     align='center'
@@ -538,17 +538,11 @@
                                     width="80">
                                     </el-table-column>
                                     <el-table-column
-                                    prop="mediaSize"
-                                    align='center'
-                                    label="大小"
-                                    width="80">
-                                    </el-table-column>
-                                    <el-table-column
                                     label="操作"
                                     align='center'
                                     width="80">
                                         <template slot-scope="scope">
-                                            <el-button type="primary" size='mini'>预览</el-button>
+                                            <el-button @click="previewS(scope.row)" type="primary" size='mini'>预览</el-button>
                                         </template>
                                     </el-table-column>
                                 </el-table>
@@ -565,9 +559,20 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- 节目设置-预览模态框 -->
+        <div class="modal fade" id="programSetting_previewS" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog previewS_width" style="width:309px;">
+                <div class="modal-content">
+                    <div class="modal-body previewS_height" style="height:409px;overflow: hidden;padding:0;marggin:0;">
+                        <div id="previews_div2" style="margin: 0 auto;">
+                            
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="text-align: center;padding:5px;"> 
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary">提交更改</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div>
@@ -588,24 +593,10 @@ export default {
     name: 'chargingPile',
     data () {
         return {
-            sessionStorageServerurl:sessionStorage.serverurl,
-            selectedOptions3:[1,2],
-            options:[
-                {
-                    value: 1,
-                    label: '浙江',
-                    children:[
-                        {
-                            value: 2,
-                            label: '杭州',
-                        },
-                        {
-                            value: 3,
-                            label: '嘉兴',
-                        },
-                    ]
-                }
-            ],
+            serverurl:localStorage.serverurl,
+            operation:false,
+            programManagement:false,
+            mediaLibrarys:false,
             // 屏幕
             tableData:[],
             tableSite1:[],                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
@@ -615,6 +606,18 @@ export default {
             site:[],
             centerDialogVisible:false,
             percentage:0,
+            serialNumber:'',
+            options:[
+                {
+                    value:0,
+                    label:'关闭'
+                },
+                {
+                    value:1,
+                    label:'开启'
+                }
+            ],
+            value:'',
             //媒体库
             typeOptions:[
                 {
@@ -628,20 +631,20 @@ export default {
             ],
             typeValue:'',
             stateOptions:[
-                {
-                    value:0,
-                    label:'未审核'
-                },
+                // {
+                //     value:0,
+                //     label:'未审核'
+                // },
                 {
                     value:1,
                     label:'审核通过'
                 },
-                {
-                    value:2,
-                    label:'审核未通过'
-                }
+                // {
+                //     value:2,
+                //     label:'审核未通过'
+                // }
             ],
-            stateValue:'',
+            stateValue:1,
             mediartableData:[],
             mediaSize:10,
             mediaIndex:1,
@@ -688,18 +691,14 @@ export default {
             setProgramOptions:[
                 {
                     value:0,
-                    label:'全部'
-                },
-                {
-                    value:1,
                     label:'图片'
                 },
                 {
-                    value:2,
+                    value:1,
                     label:'视频'
                 }
             ],
-            setProgramValue:0,
+            setProgramValue:'',
         }
     },
     mounted(){
@@ -716,28 +715,86 @@ export default {
                 });
                 return;
             }
-            if(val=='0'){//节目设置
+            if(val=='0'){//下发节目
+                if(sessionStorage.projectId=='0'){
+                    this.$message({
+                        message: '此操作请选择具体项目!',
+                        type: 'warning'
+                    });
+                    return;
+                }
                 $('#programSetting').modal('show')
                 $.ajax({
                     type:'get',
                     async:true,
                     dataType:'json',
-                    url:sessionStorage.serverurl+'/program/getProgramList',
+                    url:that.serverurl+'/program/getProgramList',
                     data:{
                         page:that.noticeIndex,
                         rows:that.noticeSize,
                         programType:0,
                         nickName:'',
+                        projectId:sessionStorage.projectId
                     },
                     success:function(data){
                         if(data.errorCode=='0'){
                             that.programSettingData = data.result.list
                             that.programSettingTotal = data.result.total
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode2(data.errorCode)
                         }
                     }
                 })
+            }
+            if(val=='1'){
+                var arr = []
+                for(var i=0;i<that.tableSite1.length;i++){
+                    arr.push(that.tableSite1[i].id)
+                }
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/screen/openScreen',
+                    data:{
+                       screenIds:arr.join(',')
+                    },
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '屏幕开启成功!',
+                                type: 'success'
+                            });
+                        }else{
+                            that.errorCode2(data.errorCode)
+                        }
+                    }
+                }) 
+            }
+            if(val=='2'){
+                var arr = []
+                for(var i=0;i<that.tableSite1.length;i++){
+                    arr.push(that.tableSite1[i].id)
+                }
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/screen/shutScreen',
+                    data:{
+                       screenIds:arr.join(',')
+                    },
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '屏幕关闭成功!',
+                                type: 'success'
+                            });
+                        }else{
+                            that.errorCode2(data.errorCode)
+                        }
+                    }
+                }) 
             }
         },
         //节目设置表格选择事件
@@ -747,6 +804,8 @@ export default {
         //发送节目
         sendMedia(){
             var that = this
+            var arr = [];
+            var Proportion = ''
             if(that.programSettingSite.length=='0'||that.programSettingSite.length>1){
                 that.$message({
                     message: '请选择一个节目进行下发!',
@@ -754,16 +813,37 @@ export default {
                 });
                 return;
             }
+            Proportion = that.programSettingSite[0].width/that.programSettingSite[0].height
+            var arr1 = [];
+            // var s=0;
+            for(var i=0;i<this.tableSite1.length;i++){
+                arr1.push(this.tableSite1[i].width/this.tableSite1[i].height)
+            }
+            for(let i=0;i<arr1.length;i++){
+                if(Proportion==arr1[i]){
+
+                }else if(arr1[i]/Proportion<=2){
+
+                }else{
+                    that.$message({
+                        message: '所选宽高比例不一致或比例相差太大,节目不能下发!',
+                        type: 'error'
+                    });
+                    return;
+                }
+            }
+            for(var i = 0;i<this.tableSite1.length;i++){
+                arr.push(this.tableSite1[i].id)
+            }
             var data = {
                 "programId": that.programSettingSite[0].id,
-                "serialNumber": this.tableSite1[0].serialNumber,
-                "screenId":this.tableSite1[0].id
             }
+            data.screenIds = arr.join(',')
             $.ajax({
                 type:'post',
                 async:true,
                 dataType:'json',
-                url:sessionStorage.serverurl+'/screen/setProgramUpload',
+                url:that.serverurl+'/screen/setProgramUpload',
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify(data),
                 success:function(data){
@@ -773,13 +853,111 @@ export default {
                             type: 'success'
                         });
                         setTimeout(function(){
+                            $('#programSetting').modal('hide')
                             that.ready()
                         },2000)
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode2(data.errorCode)
                     }
                 }
             })
+        },
+        //节目设置预览
+        previewS(val){
+            var that = this;
+            var val2 = val.width/val.height
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/program/getProgramDetailsList',
+                data:{
+                    programId:val.id
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.filesSelected = data.result.list
+                        $('#programSetting_previewS').modal('show')
+                        clearInterval(animationMedia)
+                        var width='';
+                        var height='';
+                        if(val2>1){
+                            // 宽大于高 横屏
+                            width=299;
+                            height = 299/val2
+                        }else{
+                            // 竖屏
+                            height=398;
+                            width=398*val2
+                        }
+                        var ss = 0;
+                        var htmls = ''
+                        var length = that.filesSelected.length
+                        var i = 0;
+                        // previews
+                        $('#previews_div2').css('width',width)
+                        $('#previews_div2').css('height',height)
+                        $('.previewS_width').css('width',width)
+                        $('.previewS_height').css('height',height)
+                        if(that.filesSelected.length<2){
+                            if(that.filesSelected[0].type=='0'){ //0为图片
+                                htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><img style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[0].mediaUrl+"'></div>"
+                            }else{
+                                htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><video style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[0].mediaUrl+"' autoplay></video></div>"
+                            }
+                            $('#previews_div2').append(htmls)
+                        }else{
+                            for(var s=0;s<that.filesSelected.length;s++){
+                                htmls=''
+                                if(that.filesSelected[s].type=='0'){
+                                    htmls = "<div id='previews_div_div' style='width:100%;height:100%;position:absolute;'><img style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[s].mediaUrl+"'></div>"
+                                }else{
+                                    htmls = "<div id='previews_div_div' style='width:100%;height:100%;position:absolute;'><video id='video' style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[s].mediaUrl+"' loop></video></div>"
+                                }
+                                $('#previews_div2').append(htmls)
+                            }
+                            var media = $('#previews_div2');
+                            for(var t=0;t<that.filesSelected.length;t++){
+                                media[0].childNodes[t].style.left = width * t +"px"    
+                            }
+                            if(that.filesSelected[0].type=='1'){
+                                media[0].childNodes[0].childNodes[0].play()
+                            }
+                            var animationMedia = setInterval(() => {
+                                ss++
+                                if(ss==that.filesSelected[i].duration||ss>that.filesSelected[i].duration){
+                                    ss = 0;
+                                    for(var t =0;t<that.filesSelected.length;t++){
+                                        media[0].childNodes[t].style.left = media[0].childNodes[t].offsetLeft-width+'px'
+                                    }
+                                    if(that.filesSelected[i].type=='1'){
+                                        media[0].childNodes[i].childNodes[0].pause();
+                                        media[0].childNodes[i].childNodes[0].currentTime=0;
+                                    }
+                                    i++
+                                    if(i==length){
+                                        i=0
+                                        for(var t=0;t<that.filesSelected.length;t++){
+                                            media[0].childNodes[t].style.left = width * t +"px"    
+                                        }
+                                    }
+                                    if(that.filesSelected[i].type=='1'){
+                                        media[0].childNodes[i].childNodes[0].play()
+                                    }
+                                }
+                            }, 1000);
+                        }
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                    $('#programSetting_previewS').on('hide.bs.modal', function () {
+                        clearInterval(animationMedia)
+                        $('#previews_div2').html('')
+                    })
+                }
+            })
+            
+            
         },
         //表格change事件
         tableChange1(val){
@@ -787,6 +965,13 @@ export default {
         },
         // 节目管理
         notice(){
+            if(sessionStorage.projectId=='0'){
+                this.$message({
+                    message: '此操作请选择具体项目!',
+                    type: 'warning'
+                });
+                return;
+            }
             $('#noticeModal').modal('show')
             this.noticeready()
             /* 完成拖拽 */
@@ -803,19 +988,20 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:sessionStorage.serverurl+'/program/getProgramList',
+                url:that.serverurl+'/program/getProgramList',
                 data:{
                    page:that.noticeIndex,
                    rows:that.noticeSize,
-                   programType:0,
+                   programType:'',
                    nickName:'',
+                   projectId:sessionStorage.projectId
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.noticetableData = data.result.list
                         that.noticeTotal = data.result.total
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode2(data.errorCode)
                     }
                 }
             })
@@ -875,7 +1061,7 @@ export default {
                         type:'post',
                         async:true,
                         dataType:'json',
-                        url:sessionStorage.serverurl+'/program/deleteProgram',
+                        url:that.serverurl+'/program/deleteProgram',
                         data:{
                             id:that.noticeSite[0].id
                         },
@@ -887,7 +1073,7 @@ export default {
                                 });
                                 that.noticeready()
                             }else{
-                                that.errorCode(data.errorCode)
+                                that.errorCode2(data.errorCode)
                             }
                         }
                     })
@@ -911,7 +1097,8 @@ export default {
             if(this.programDate.programName==''||this.programDate.programWidth==''||this.programDate.programHeight==''){
                 this.$message.error('必填字段不能为空');
                 return;
-            }
+            } 
+            this.filesSelected = []
             this.programDate.setProgramType = false
             this.mediaready()
             if(that.submitMeadioType=='1'){
@@ -919,19 +1106,46 @@ export default {
                     type:'get',
                     async:true,
                     dataType:'json',
-                    url:sessionStorage.serverurl+'/program/getProgramDetailsList',
+                    url:that.serverurl+'/program/getProgramDetailsList',
                     data:{
-                        programId:that.noticeSite[0].id
+                        programId:that.noticeSite[0].id,
+                        projectId:sessionStorage.projectId
                     },
                     success:function(data){
                         if(data.errorCode=='0'){
                             that.filesSelected = data.result.list
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode2(data.errorCode)
                         }
                     }
                 })
             }
+        },
+        //
+        setProgramChange(){
+            var that = this
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/media/getMediaList',
+                data:{
+                   page:that.mediaIndex,
+                   rows:that.mediaSize,
+                   audit:that.stateValue,
+                   type:that.setProgramValue,
+                   nickName:'',
+                   projectId:sessionStorage.projectId
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.mediartableData = data.result.list
+                        that.mediaTotal = data.result.total
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
         },
         //左侧选中媒体文件change事件
         leftMediaChange(val){
@@ -1004,12 +1218,10 @@ export default {
                 this.filesSelected.push(this.leftMediaSize[i])
                 this.filesSelected[this.filesSelected.length-1].mediaId = this.leftMediaSize[i].id
             }
-            console.log(this.filesSelected)
         },
         //移动改变数据位置
         fluctuation(val){
             var vals = '';
-            var data = {}
             if(this.centerMediaSize.length==0||this.centerMediaSize.length>1){
                 this.$message({
                     message: '请选择媒体文件进行改变位置操作',
@@ -1019,17 +1231,24 @@ export default {
                 return;
             }
             for(var i = 0;i<this.filesSelected.length;i++){
-                if(this.centerMediaSize[0].id==this.filesSelected[i].id){
+                if(this.centerMediaSize[0].mediaId==this.filesSelected[i].mediaId){
                     vals = i;
                 }
             }
-            data = this.centerMediaSize[0]
+            if(vals==0){
+                if(val=='0'){
+                    return;
+                }
+            }
+            var tem1 = this.filesSelected[vals]
+            var tem2 = this.filesSelected[vals+1]
+            var tem3 = this.filesSelected[vals-1]
             this.filesSelected.splice(vals,1)
             if(val=='0'){
-                this.filesSelected.splice(vals-1,0,data)
+                this.filesSelected.splice(vals-1,0,tem1)
             }
             if(val=='1'){
-                this.filesSelected.splice(vals+1,0,data)
+                this.filesSelected.splice(vals+1,0,tem1)
             }
         },
         //删除已选择文件
@@ -1049,17 +1268,6 @@ export default {
                 }
             }
             this.filesSelected.splice(vals,1)
-        },
-        //编辑已选择文件的播放时间
-        modificationMedia(){
-            if(this.centerMediaSize.length==0||this.centerMediaSize.length>1){
-                this.$message({
-                    message: '请选择一个媒体文件进行删除!',
-                    type:'error',
-                    showClose: true,
-                });
-                return;
-            }
         },
         //点击预览生成html
         preview(){
@@ -1083,8 +1291,8 @@ export default {
                 height = 299/val
             }else{
                 // 竖屏
-                height=298;
-                width=298*val
+                height=398;
+                width=398*val
             }
             var ss = 0;
             var htmls = ''
@@ -1095,17 +1303,19 @@ export default {
             $('#previews_div').css('height',height)
             if(this.filesSelected.length<2){
                 if(this.filesSelected[0].type=='0'){ //0为图片
-                    htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><img style='width:100%;height:100%;' src='"+sessionStorage.serverurl+that.filesSelected[0].mediaUrl+"'></div>"
+                    htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><img style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[0].mediaUrl+"'></div>"
                 }else{
-                    htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><video style='width:100%;height:100%;' src='"+sessionStorage.serverurl+that.filesSelected[0].mediaUrl+"' autoplay></video></div>"
+                    htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><video style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[0].mediaUrl+"' autoplay></video></div>"
                 }
                 $('#previews_div').append(htmls)
             }else{
+                console.log(this.filesSelected)
                 for(var s=0;s<this.filesSelected.length;s++){
+                    htmls=''
                     if(this.filesSelected[s].type=='0'){
-                        htmls = "<div id='previews_div_div' style='width:100%;height:100%;position:absolute;'><img style='width:100%;height:100%;' src='"+sessionStorage.serverurl+that.filesSelected[i].mediaUrl+"'></div>"
+                        htmls = "<div id='previews_div_div' style='width:100%;height:100%;position:absolute;'><img style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[s].mediaUrl+"'></div>"
                     }else{
-                        htmls = "<div id='previews_div_div' style='width:100%;height:100%;position:absolute;'><video id='video' style='width:100%;height:100%;' src='"+sessionStorage.serverurl+that.filesSelected[i].mediaUrl+"' loop></video></div>"
+                        htmls = "<div id='previews_div_div' style='width:100%;height:100%;position:absolute;'><video id='video' style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[s].mediaUrl+"' loop></video></div>"
                     }
                     $('#previews_div').append(htmls)
                 }
@@ -1116,8 +1326,6 @@ export default {
                 if(this.filesSelected[0].type=='1'){
                     media[0].childNodes[0].childNodes[0].play()
                 }
-                // htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><img style='width:100%;height:100%;' src='"+sessionStorage.serverurl+that.filesSelected[i].mediaUrl+"'></div>"
-                // $('#previews_div').append(htmls)
                 var animationMedia = setInterval(() => {
                     ss++
                     if(ss==this.filesSelected[i].duration||ss>this.filesSelected[i].duration){
@@ -1140,10 +1348,10 @@ export default {
                             media[0].childNodes[i].childNodes[0].play()
                         }
                         // if(this.filesSelected[i].type=='0'){//0为图片
-                        //     htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><img style='width:100%;height:100%;' src='"+sessionStorage.serverurl+that.filesSelected[i].mediaUrl+"'></div>"
+                        //     htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><img style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[i].mediaUrl+"'></div>"
                         //     $('#previews_div').append(htmls)
                         // }else{
-                        //     htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><video style='width:100%;height:100%;' src='"+sessionStorage.serverurl+that.filesSelected[i].mediaUrl+"' autoplay></video></div>"
+                        //     htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><video style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[i].mediaUrl+"' autoplay></video></div>"
                         //     $('#previews_div').append(htmls)
                         // }
                     }
@@ -1161,63 +1369,38 @@ export default {
             var url = '';
             var data = {};
             var array = []; //已选中节目的名称,以及播放时间
+            var programDetails = [];
             data.nickName = that.programDate.programName
             data.programType = that.programDate.programValue
             data.width = that.programDate.programWidth
             data.height = that.programDate.programHeight
             for(var i=0;i<that.filesSelected.length;i++){
                 var object = {}
+                var object2 = {}
                 object.nickName = that.filesSelected[i].nickName 
                 object.duration = that.filesSelected[i].duration
                 object.type = that.filesSelected[i].type
+                if(that.filesSelected[i].duration==''||that.filesSelected[i].duration==undefined){
+                    object2.duration = 10
+                }else{
+                    object2.duration = that.filesSelected[i].duration
+                }
+                object2.sort = i
                 object.sort = i
                 if(that.submitMeadioType=='0'){
                     object.mediaId = that.filesSelected[i].id
+                    object2.mediaId = that.filesSelected[i].id
                 }
                 if(that.submitMeadioType=='1'){
                     object.mediaId = that.filesSelected[i].mediaId
+                    object2.mediaId = that.filesSelected[i].mediaId
                 }
                 object.mediaName = that.filesSelected[i].mediaName
                 object.mediaUrl = that.filesSelected[i].mediaUrl
                 array.push(object)
+                programDetails.push(object2)
             }
-            data.programDetails = array
-            var html = "<!DOCTYPE html>"+
-            "<html lang='en'>"+
-                "<head>"+
-                    "<meta charset='UTF-8'>"+
-                    "<META HTTP-EQUIV='pragma' CONTENT='no-cache'>"+
-                    "<META HTTP-EQUIV='Cache-Control' CONTENT='no-cache, must-revalidate'>"+
-                    "<META HTTP-EQUIV='expires' CONTENT='0'>"+
-                    "<meta name='viewport' content='width=device-width, initial-scale=1.0'>"+
-                    "<meta http-equiv='X-UA-Compatible 'content='ie=edge'>"+
-                    "<title>测试</title>"+
-                    "<script src='../js/jquery.min.js'><\/script>"+
-                    "<style>*{margin:0;padding:0}</style>"+
-                "</head>"+
-                "<body>"+
-                    "<div id='previews_div' style='width:80px;height:160px;background:white;margin-top:1120px;margin-left:0;position:relative;'>"
-                        // "<div style='position:absolute;'>"
-                        //     '<iframe name="weather_inc" src="http://i.tianqi.com/index.php?c=code&id=10" width="100%" height="27" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" ></iframe>'+
-                        // "</div>"+
-                        // "<div id='previews_div'></div>"+
-                    "</div>"+
-                "</body>"+
-                "<script>var ss = 0;var htmls = '';var i = 0;"+
-                    "$('#previews_div').html('');"+
-                    "var array2 = "+JSON.stringify(array)+";"+
-                    "var array = array2;"+
-                    "var length = array.length;"+
-                    "var width ="+that.programDate.programWidth+";"+
-                    "var height ="+that.programDate.programHeight+";"+
-                    "$('#previews_div').css('width',width);"+
-                    "$('#previews_div').css('width',width);"+
-                    // "$('#previews').css('width',width);"+
-                    // "$('#previews').css('height',height);"+
-                "<\/script>"+
-                "<script src='../js/media.js'><\/script>"+
-            "</html>";
-            data.htmlMsg = html
+            data.programDetails = programDetails
             if(that.submitMeadioType=='0'){
                 url = '/program/addProgram'
             }
@@ -1225,11 +1408,12 @@ export default {
                 url = '/program/updateProgram'
                 data.id = this.noticeSite[0].id
             }
+            data.projectId=sessionStorage.projectId
             $.ajax({
                 type:'post',
                 async:true,
                 dataType:'json',
-                url:sessionStorage.serverurl+url,
+                url:that.serverurl+url,
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify(data),
                 success:function(data){
@@ -1251,13 +1435,20 @@ export default {
                         $('#addprogram').modal('hide')
                         that.noticeready()
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode2(data.errorCode)
                     }
                 }
             })
         },
         //媒体库
         mediaLibrary(){
+            if(sessionStorage.projectId=='0'){
+                this.$message({
+                    message: '此操作请选择具体项目!',
+                    type: 'warning'
+                });
+                return;
+            }
             $('#mediaLibraryModal').modal('show')
             this.mediaready()
             /* 完成拖拽 */
@@ -1267,6 +1458,9 @@ export default {
             });
             $('#mediaLibraryModal').css("overflow", "hidden")
         },
+        typeChange(){
+            this.mediaready()
+        },
         //媒体库列表获取
         mediaready(){
             var that = this
@@ -1274,20 +1468,21 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:sessionStorage.serverurl+'/media/getMediaList',
+                url:that.serverurl+'/media/getMediaList',
                 data:{
                    page:that.mediaIndex,
                    rows:that.mediaSize,
-                   audit:'0',
-                   type:'',
-                   nickName:''
+                   audit:that.stateValue,
+                   type:that.typeValue,
+                   nickName:'',
+                   projectId:sessionStorage.projectId
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.mediartableData = data.result.list
                         that.mediaTotal = data.result.total
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode2(data.errorCode)
                     }
                 }
             })
@@ -1329,7 +1524,7 @@ export default {
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:sessionStorage.serverurl+'/media/deleteMoreMedia',
+                    url:that.serverurl+'/media/deleteMoreMedia',
                     data:{
                         ids:ids.join(',')
                     },
@@ -1342,7 +1537,7 @@ export default {
                             });
                             that.mediaready()
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode2(data.errorCode)
                         }
                     }
                 })
@@ -1371,8 +1566,7 @@ export default {
         //上传文件确定
         uploadSubmit(){
             var that = this;
-            that.filesuploadLoading = true
-            var type = ''
+            var type = '';
             var value = this.$refs.upload.files[0].type.split('/')
             var that= this;
             var formdate = new FormData();
@@ -1381,13 +1575,21 @@ export default {
             formdate.append('creatorId',1)
             if(value[0]=='video'){
                 type='1'
-            }
-            if(value[0]=='image'){
+            }else if(value[0]=='image'){
                 type='0'
+            }else{
+                that.$message({
+                    message: '不支持的文件格式!',
+                    type:'success',
+                    showClose: true,
+                });
+                return;
             }
             formdate.append('type ',type)
+            formdate.append('projectId ',sessionStorage.projectId)
+            that.filesuploadLoading = true
             $.ajax({
-                url:sessionStorage.serverurl+'/media/addMedia',
+                url:that.serverurl+'/media/addMedia',
                 type: 'POST',
                 cache: false,
                 data: formdate,
@@ -1406,7 +1608,7 @@ export default {
                     that.mediaready()
                 }else{
                     that.filesuploadLoading = false
-                    that.errorCode(res.errorCode)
+                    that.errorCode2(res.errorCode)
                     $('#filesupload').modal('hide')
                 }
             }).error(function(res){
@@ -1417,31 +1619,7 @@ export default {
         download(val){
             var that = this;
             var url = val.mediaUrl
-            var data = {
-                fileName:sessionStorage.serverurl+url
-            }
-            window.open(sessionStorage.serverurl+"/file/download?fileName="+sessionStorage.serverurl+url)
-            $.get(sessionStorage.serverurl+"/file/download",data,function(data){
-                
-            })
-            // if(val.type=='0'){
-                // $.ajax({
-                //     type:'get',
-                //     async:true,
-                //     dataType:'json',
-                //     url:sessionStorage.serverurl+'/file/download',
-                //     data:{
-                //         fileName:sessionStorage.serverurl+url
-                //     },
-                //     success:function(data){
-                //         if(data.errorCode=='0'){
-
-                //         }else{
-                //             that.errorCode(data.errorCode)
-                //         }
-                //     }
-                // })
-            // }
+            window.open(that.serverurl+"/file/download?fileName="+that.serverurl+url)
         },
         //获取广告屏列表
         ready(){
@@ -1450,22 +1628,27 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:sessionStorage.serverurl+'/screen/getScreenList',
+                url:that.serverurl+'/screen/getScreenList',
                 data:{
                    page:that.pageIndex,
                    rows:that.pageSize,
-                   status:'',
-                   serialNumber:'',
+                   status:that.value,
+                   serialNumber:that.serialNumber,
+                   poleId:'',
+                   projectId:sessionStorage.projectId
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.tableData = data.result.list
                         that.total = data.result.total
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode2(data.errorCode)
                     }
                 }
             })
+        },
+        search(){
+            this.ready()
         },
         //获取节目下发进度
         status(val){
@@ -1484,22 +1667,23 @@ export default {
                         type:'get',
                         async:true,
                         dataType:'json',
-                        url:sessionStorage.serverurl+'/screen/getDownLoadProgress',
+                        url:that.serverurl+'/screen/getDownLoadProgress',
                         contentType:'application/json;charset=UTF-8',
                         data:{
                             programId:val.programId,
-                            serialNumber:val.serialNumber
+                            serialNumber:val.serialNumber,
+                            projectId:sessionStorage.projectId
                         },
                         success:function(data){
                             if(data.errorCode=='0'){
-                                if(data.result.num*100==100||data.result.num*100>100){
+                                if(Number(data.result.num)*100==100||Number(data.result.num)*100>100){
                                     that.ready()
                                     clearInterval(clearstatus)
                                 }
                                 that.percentage = Number(data.result.num*100)
                             }else{
                                 clearInterval(clearstatus)
-                                that.errorCode(data.errorCode)
+                                that.errorCode2(data.errorCode)
                                 that.ready()
                             }
                         }
@@ -1532,13 +1716,14 @@ export default {
             }
             var data = {
                 programId:this.tableSite1[0].id,
-                serialNumber:this.tableSite1[0].serialNumber
+                serialNumber:this.tableSite1[0].serialNumber,
+                projectId:sessionStorage.projectId
             }
             $.ajax({
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:sessionStorage.serverurl+'/screen/downloadJsToSD',
+                url:that.serverurl+'/screen/downloadJsToSD',
                 contentType:'application/json;charset=UTF-8',
                 data:data,
                 success:function(data){
@@ -1549,15 +1734,47 @@ export default {
                             showClose: true,
                         });
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode2(data.errorCode)
                     }
                 } 
+            })
+        },
+        //权限请求
+        Jurisdiction(){
+            var that = this
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/privilege/getMyOperatMenu',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    menuId:sessionStorage.menuId3
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='operation'){
+                                that.operation = true
+                            }
+                            if(data.result.operats[i].code=='programManagement'){
+                                that.programManagement = true
+                            }
+                            if(data.result.operats[i].code=='mediaLibrary'){
+                                that.mediaLibrarys = true
+                            }
+                        }
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                }
             })
         },
     },
     created(){
         var that = this 
         that.ready()
+        this.Jurisdiction()
     }
 }
 </script>
@@ -1567,6 +1784,8 @@ export default {
 .advertisingScreens>div{width: 100%;position: absolute;}
 .advertisingScreens_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;align-items: center;font-size: 16px;padding-left: 20px;}
 .advertisingScreens_bottom{top: 46px;border: 1px solid #E4E4F1;bottom: 0;padding: 5px;overflow:auto;}
+.advertisingScreens_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
+.advertisingScreens_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
 .block{text-align: center;}
 .table_button{height: 20px;padding: 5px;}
 .notice_bottom{margin-top: 10px;}
@@ -1577,7 +1796,7 @@ export default {
 .mediaLibrary_top>span,{font-size: 15px;line-height: 35px;}
 .mediaLibrary_top>span:nth-of-type(2){margin-left: 30px;}
 .mediaLibrary_bottom{width: 100%;height: auto;margin-top:5px;}
-.setProgram{width: 100%;display: flex;height: 350px;}
+.setProgram{width: 100%;display: flex;height: 450px;}
 .setProgram>div{width: 30%;border: 1px solid #e5e5e5;border-radius: 5px;position: relative;}
 .setProgram>div:nth-of-type(2){margin-left: 5%;margin-right: 5%;}.setProgram>div:nth-of-type(2){margin-left: 5%;margin-right: 5%;}
 .setProgram_div_top{width: 100%;height: 40px;line-height: 35px;border-bottom: 1px solid #e5e5e5;}
@@ -1589,4 +1808,8 @@ export default {
 .form-group{display:flex;justify-content: center;}
 .form-group>label{width: 75px;line-height: 34px;text-align: center;}
 .form-group>input{width: 196px;}
+
+.search{display: flex;}
+.search>label{width: 85px;}
+.search>input{width: 146px;margin-top:7px;height: 34px;}
 </style>

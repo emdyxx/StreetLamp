@@ -245,6 +245,7 @@ export default {
     name: 'user',
     data () {
         return {
+            serverurl:localStorage.serverurl,
             addtype:'0',  //判断添加还是编辑控制柜
             site:[], //列表选中数据
             tableData:[{

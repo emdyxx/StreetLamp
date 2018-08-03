@@ -138,6 +138,7 @@ export default {
     name: 'chargingPiles',
     data () {
         return {
+            serverurl:localStorage.serverurl,
             selectedOptions3:[1,2],
             options:[
                 {

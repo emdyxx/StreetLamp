@@ -7,10 +7,20 @@
           系统管理
         </div>
         <div class="header-center">
-          <div @click="headercolor(1)" :class="headercolorType=='1'?'header-center-color':''">用户</div>
-          <div @click="headercolor(2)" :class="headercolorType=='2'?'header-center-color':''">机构</div>
-          <div @click="headercolor(3)" :class="headercolorType=='3'?'header-center-color':''">项目</div>
-          <div @click="headercolor(4)" :class="headercolorType=='4'?'header-center-color':''">日志</div>
+          <template v-for="item in menu">
+            <template v-if="item.menuName=='用户管理'">
+              <div @click="headercolor(1,item.id)" :class="headercolorType=='1'?'header-center-color':''">用户</div>
+            </template>
+            <template v-if="item.menuName=='组织管理'">
+              <div @click="headercolor(2,item.id)" :class="headercolorType=='2'?'header-center-color':''">机构</div>
+            </template>
+            <template v-if="item.menuName=='项目管理'">
+              <div @click="headercolor(3,item.id)" :class="headercolorType=='3'?'header-center-color':''">项目</div>
+            </template>
+            <template v-if="item.menuName=='系统日志'">
+              <div @click="headercolor(4,item.id)" :class="headercolorType=='4'?'header-center-color':''">日志</div>
+            </template>
+          </template>
         </div>
         <div class="header-right">
           <i @click="backtrack" class="iconfont icon-guanbi"></i>
@@ -27,34 +37,19 @@ export default {
   name: 'usercenter',
   data () {
     return {
+      serverurl:localStorage.serverurl,
       headercolorType:'1',
-      data: [
-        {
-          label: '一级 1',
-          icon:'el-icon-search',
-          id:'1',
-          children: [{
-            label: '二级 1-1',
-            icon:'el-icon-search',
-            id:'2',
-          },{
-            label: '二级 1-2',
-            icon:'el-icon-search',
-            id:'3',
-          }]
-        }],
-        defaultProps: {
-          children: 'children',
-          label: 'label'
-        }
+      menu:[],
     }
   },
   mounted(){
     
   },
   methods:{
-    headercolor(val){
+    headercolor(val,id){
       this.headercolorType = val;
+      sessionStorage.menuId2 = id
+      sessionStorage.headercolorType = val
       if(val=='1'){
         this.$router.push({'path':'/user'})
       }
@@ -70,10 +65,32 @@ export default {
     },
     backtrack(){
       this.$router.push({'path':'/index'})
-    }
+    },
+    //请求权限
+    Jurisdiction(){
+        var that = this;
+        $.ajax({
+            type:'get',
+            async:true,
+            dataType:'json',
+            url:that.serverurl+'/privilege/getMyMenu',
+            contentType:'application/json;charset=UTF-8',
+            data:{
+                parentId:sessionStorage.menuId
+            },
+            success:function(data){
+                if(data.errorCode==0){
+                    that.menu = data.result.menus
+                }else{
+                    that.errorCode(data.errorCode)
+                }
+            },
+        })
+    },
   },
   created(){
-    
+    this.headercolorType = sessionStorage.headercolorType
+    this.Jurisdiction()
   },
 }
 </script>

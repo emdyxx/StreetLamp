@@ -2,87 +2,115 @@
     <div class="advertisingscreen">
         <!-- 广告屏 -->
         <div class="advertisingscreen_top">
-            <el-button @click="addadvertisingscreen(0)" type="primary" icon='el-icon-plus' size='small'>添加广告屏</el-button>
-            <el-button @click="addadvertisingscreen(1)" type="primary" icon="el-icon-edit" size='small'>编辑广告屏</el-button>
-            <el-button @click="deleteadvertisingscreen" type="primary" icon='el-icon-delete' size='small'>删除广告屏</el-button>
+            <el-button v-if="addScreenDeployment" @click="addadvertisingscreen(0)" type="primary" icon='el-icon-plus' size='small'>添加广告屏</el-button>
+            <el-button v-if="editScreenDeployment" @click="addadvertisingscreen(1)" type="primary" icon="el-icon-edit" size='small'>编辑广告屏</el-button>
+            <el-button v-if="delScreenDeployment" @click="deleteadvertisingscreen" type="primary" icon='el-icon-delete' size='small'>删除广告屏</el-button>
         </div>
         <div class="advertisingscreen_bottom">
-            <el-table
-                :data="tableData"
-                border
-                stripe
-                size='small'
-                tooltip-effect="dark"
-                @selection-change="userSelectionChange"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="nickName"
-                align='center'
-                label="名称"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="width"
-                align='center'
-                label="宽度"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="height"
-                align='center'
-                label="高度"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="serialNumber"
-                align='center'
-                label="屏幕序列号"
-                width="130">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                align='center'
-                label="设备型号"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="address"
-                align='center'
-                label="设备地址"
-                width="80">
-                </el-table-column>
-                <el-table-column
-                prop="remark"
-                align='center'
-                label="备注"
-                width="180">
-                </el-table-column>
-                <el-table-column
-                prop="ts"
-                label="创建时间"
-                align='center'
-                show-overflow-tooltip>
-                </el-table-column>
-            </el-table>
-            <div class="block">
-                <el-pagination
-                background
-                :current-page="pageIndex"
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="pageSize"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="total">
-                </el-pagination>
+            <div class="advertisingscreen_bottom_top">
+                <div class="search">
+                    <label>屏幕序列号:</label>
+                    <input type="text" v-model="serialNumber" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入屏幕序列号">
+                </div>
+                <div class="search">
+                    <label>屏幕状态:</label>
+                    <el-select v-model="value4" style="width:126px;" size='small' clearable placeholder="请选择">
+                        <el-option
+                        v-for="item in options4"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div style="margin-left:15px;">
+                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                </div>
+            </div>
+            <div class="advertisingscreen_bottom_bottom">
+                <el-table
+                    :data="tableData"
+                    border
+                    stripe
+                    size='small'
+                    tooltip-effect="dark"
+                    @selection-change="userSelectionChange"
+                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                    <el-table-column
+                    type="selection"
+                    align='center'
+                    width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="nickName"
+                    align='center'
+                    label="名称"
+                    width="110">
+                    </el-table-column>
+                    <el-table-column
+                    prop="width"
+                    align='center'
+                    label="宽度"
+                    width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="height"
+                    align='center'
+                    label="高度"
+                    width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="poleName"
+                    align='center'
+                    label="所属灯杆"
+                    width="110">
+                    </el-table-column>
+                    <el-table-column
+                    prop="serialNumber"
+                    align='center'
+                    label="屏幕序列号"
+                    width="130">
+                    </el-table-column>
+                    <el-table-column
+                    prop="modelName"
+                    align='center'
+                    label="设备型号"
+                    width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="location"
+                    align='center'
+                    label="位置"
+                    width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="remark"
+                    align='center'
+                    label="备注"
+                    width="180">
+                    </el-table-column>
+                    <el-table-column
+                    prop="createTime"
+                    label="创建时间"
+                    align='center'
+                    show-overflow-tooltip>
+                    </el-table-column>
+                </el-table>
+                <div class="block">
+                    <el-pagination
+                    background
+                    :current-page="pageIndex"
+                    :page-sizes="[10, 20, 30, 50]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+                    </el-pagination>
+                </div>
             </div>
         </div>
         <!-- 添加编辑模态框 -->
         <div class="modal fade" id="addModal" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:450px;">
+            <div class="modal-dialog" style="width:465px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -91,34 +119,38 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>名称:</label>
+                            <label><span class="Required">*</span>名称:</label>
                             <input type="text" v-model='form.nickName' class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
-                        </div> 
-                        <div class="form-group">
-                            <label>宽度:</label>
-                            <input type="text" v-model='form.width' class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入设备地址">
-                        </div> 
-                        <div class="form-group">
-                            <label>高度:</label>
-                            <input type="text" v-model='form.height' class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入设备地址">
-                        </div> 
-                        <div class="form-group">
-                            <label>设备型号:</label>
-                            <input type="text" v-model='form.model' class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入设备型号">
-                        </div> 
-                        <div class="form-group">
-                            <label>屏幕序列号:</label>
-                            <input type="text" v-model="form.serialNumber" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入设备ID">
-                        </div> 
-                        <div class="form-group">
-                            <label>设备地址:</label>
-                            <input type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入设备地址">
-                        </div> 
-                        <div class="form-group">
-                            <label>关联灯杆:</label>
-                            <el-select v-model="value" size='small' style="width:196px" placeholder="请选择关联灯杆">
+                            <label><span class="Required">*</span>型号:</label>
+                            <el-select v-model="form.modelId" size='small' style='width:126px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options"
+                                :key="item.id"
+                                :label="item.modelName"
+                                :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </div> 
+                        <div class="form-group">
+                            <label><span class="Required">*</span>屏幕宽度:</label>
+                            <input type="text" v-model='form.width' class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入宽度">
+                            <label><span class="Required">*</span>屏幕高度:</label>
+                            <input type="text" v-model='form.height' class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入高度">
+                        </div>
+                        <div class="form-group">
+                            <label>屏幕模式:</label>
+                            <el-select size='small' v-model="value2" style='width:126px;' placeholder="请选择">
+                                <el-option
+                                v-for="item in options2"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
+                            <label>节目播放位置:</label>
+                            <el-select size='small' v-model="value3" style='width:126px;' placeholder="请选择">
+                                <el-option
+                                v-for="item in options3"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
@@ -126,19 +158,101 @@
                             </el-select>
                         </div> 
                         <div class="form-group">
+                            <label><span class="Required">*</span>控制卡宽度:</label>
+                            <input type="text" v-model="form.controlCardWidth" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入控制卡宽">
+                            <label><span class="Required">*</span>控制卡高度:</label>
+                            <input type="text" v-model="form.controlCardHeight" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入控制卡高">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="Required">*</span>序列号:</label>
+                            <input type="text" v-model="form.serialNumber" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入屏幕序列号">
                             <label>备注:</label>
                             <el-input
                                 type="textarea"
                                 v-model='form.remark'
-                                :rows="2"
-                                style="width:196px;"
+                                :rows="1"
+                                style="width:126px;"
                                 placeholder="请输入备注">
                             </el-input>
-                        </div>
+                        </div>                                                                                                     
+                        <div class="form-group">
+                            <el-button v-if="relationPole" @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
+                        </div> 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                         <button type="button" @click="submit" class="btn btn-primary">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- 关联灯杆 -->
+        <div class="modal fade" id="LampPole_data" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4>请选择灯杆进行关联</h4>
+                    </div>
+                    <div class="modal-body">
+                        <el-table
+                            :data="tableData2"
+                            border
+                            stripe
+                            size='small'
+                            ref="multipleTable"
+                            tooltip-effect="dark"
+                            @selection-change="SelectionChange2"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="nickName"
+                            align='center'
+                            label="灯杆名称"
+                            width="120">
+                            </el-table-column>
+                            <el-table-column
+                            align='center'
+                            label="灯杆类型"
+                            width="80">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.poleType=='0'">普通灯杆</span>
+                                    <span v-if="scope.row.poleType=='1'">智慧灯杆</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                            prop="location"
+                            align='center'
+                            label="位置"
+                            width="150">
+                            </el-table-column>
+                            <el-table-column
+                            prop="remark"
+                            label="备注"
+                            align='center'
+                            width="162">
+                            </el-table-column>
+                        </el-table>
+                        <div class="block">
+                            <el-pagination
+                            background
+                            @size-change="sizechange2"
+                            @current-change="currentchange2"
+                            :current-page="pageIndex2"
+                            :page-sizes="[10, 20, 30, 50]"
+                            :page-size="pageSize2"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="total2">
+                            </el-pagination>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" @click="Relation" class="btn btn-primary">确认</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div>
@@ -150,37 +264,52 @@ export default {
     name: 'user',
     data () {
         return {
+            serverurl:localStorage.serverurl,
+            addScreenDeployment:false,
+            editScreenDeployment:false,
+            delScreenDeployment:false,
+            relationPole:false,
+            projectId:sessionStorage.projectId,
             site:[], //列表数据选中  进行修改编辑操作
             addType:'0',  //添加编辑类型
             tableData:[],
             pageSize:10,
             pageIndex:1,
             total:50, 
-            options:[
+            serialNumber:'',
+            options4:[
                 {
-                    value: 1,
-                    label: '浙江',
-                    children:[
-                        {
-                            value: 2,
-                            label: '杭州',
-                        },
-                        {
-                            value: 3,
-                            label: '嘉兴',
-                        },
-                    ]
+                    value:0,
+                    label:'关闭'
+                },
+                {
+                    value:1,
+                    label:'开启'
                 }
             ],
+            value4:'',
+            options:[],
+            options2:[{value:'1',label:'横屏'},{value:'2',label:'竖屏'}],
+            value2:'2',
+            options3:[{value:'1',label:'左上'},{value:'2',label:'右上'},{value:'3',label:'左下'},{value:'4',label:'右下'}],                
+            value3:'3',
             value:'',
             form:{
                 nickName:'',
                 width:'',
                 height:'',
-                model:'',
+                modelId:'',
                 serialNumber:'',
                 remark:'',
+                brightness:'1',
+                controlCardWidth:'',
+                controlCardHeight:'',
             },
+            tableData2:[],
+            site2:[],
+            pageSize2:10,
+            pageIndex2:1,
+            total2:10,
         }
     },
     mounted(){
@@ -191,18 +320,56 @@ export default {
         userSelectionChange(val){
             this.site = val
         },
+        //获取型号列表
+        ModelData(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/model/getModel',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    modelType:'2'
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.options = data.result.models
+                        if(that.addType=='0'){
+                            that.form.modelId = data.result.models[0].id
+                        }
+                        if(that.addType=='1'){
+                            that.form.modelId = that.site[0].modelId
+                        }
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
         //添加 编辑点击事件
         addadvertisingscreen(val){
+            if(sessionStorage.projectId=='0'){
+                this.$message({
+                    message: '此操作请选择具体项目!',
+                    type: 'warning'
+                });
+                return;
+            }
             var that = this
             // 0为添加 1为删除
-            this.addType = val
             if(val=='0'){
+                this.addType = val
+                this.ModelData()
                 that.form.nickName = ''
                 that.form.width = ''
                 that.form.height = ''
-                that.form.model = ''
                 that.form.serialNumber = ''
                 that.form.remark = ''
+                that.form.controlCardWidth = ''
+                that.form.controlCardHeight = ''
+                that.value2 = '2'
+                that.value3 = '3'
                 $('#addModal').modal('show')
             }
             if(val=='1'){
@@ -213,15 +380,22 @@ export default {
                         showClose: true,
                     });
                     return;
-                }else{
+                }
+                this.addType = val
+                this.ModelData()
+                setTimeout(function(){
                     that.form.nickName = that.site[0].nickName
                     that.form.width = that.site[0].width
                     that.form.height = that.site[0].height
-                    that.form.model = that.site[0].model
                     that.form.serialNumber = that.site[0].serialNumber
                     that.form.remark = that.site[0].remark
-                    $('#addModal').modal('show')
-                }
+                    that.form.controlCardWidth = that.site[0].controlCardWidth
+                    that.form.controlCardHeight = that.site[0].controlCardHeight
+                    that.value2 = String(that.site[0].placement)
+                    that.value3 = String(that.site[0].position)
+                },400)
+                
+                $('#addModal').modal('show')
             }
             /* 完成拖拽 */
             $('#addModal').draggable({
@@ -233,9 +407,9 @@ export default {
         //删除广告屏
         deleteadvertisingscreen(){
             var that = this
-            if(this.site.length==0||this.site.length>1){
+            if(this.site.length==0||this.site.length>=2){
                 this.$message({
-                    message: '请选择一个广告屏进行删除!',
+                    message: '请选择单个广告屏进行删除!',
                     type: 'warning'
                 });
                 return;
@@ -249,7 +423,7 @@ export default {
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:sessionStorage.serverurl+'/screen/deleteScreen',
+                    url:that.serverurl+'/screen/deleteScreen',
                     data:{
                         id:that.site[0].id
                     },
@@ -261,7 +435,7 @@ export default {
                             });
                             that.ready()
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode2(data.errorCode)
                         }
                     }
                 })
@@ -272,6 +446,69 @@ export default {
                 });          
             });
         },
+        //点击关联灯杆
+        LampPole_data(){
+            var that= this;
+            $('#LampPole_data').modal('show')
+            this.LampPoleData();
+        },
+        //查询所有灯杆数据
+        LampPoleData(){
+            var that = this;
+            var data = {
+                page:that.pageIndex,
+                rows:that.pageSize,
+                nickName:'',
+                poleType:'',
+                areaId:'',
+                projectId:sessionStorage.projectId
+            }
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/pole/getPoleList',
+                contentType:'application/json;charset=UTF-8',
+                data:data, 
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tableData2 = data.result.list
+                        that.total2 = data.result.total
+                        if(that.addType=='0'){
+                            var arr = []
+                            for(let i = 0;i<that.site2.length;i++){
+                                for(let j = 0;j<data.result.list.length;j++){
+                                    if(that.site2[i].id==data.result.list[j].id){
+                                        arr.push(data.result.list[j])
+                                    }
+                                }
+                            }
+                            setTimeout(function(){
+                                arr.forEach(row => {
+                                    that.$refs.multipleTable.toggleRowSelection(row);
+                                });
+                            },200)
+                        }
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
+        SelectionChange2(val){this.site2 = val;},
+        sizechange2(val){this.pageSize2 = val;this.LampPoleData();},
+        currentchange2(val){this.pageIndex2 = val;this.LampPoleData();},
+        //关联确认
+        Relation(){
+            if(this.site2.length>=2){
+                this.$message({
+                    message: '只能关联一个灯杆!',
+                    type: 'warning'
+                });
+                return;
+            }
+            $('#LampPole_data').modal('hide')
+        },
         //获取列表信息
         ready(){
             var that = this
@@ -279,40 +516,71 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:sessionStorage.serverurl+'/screen/getScreenList',
+                url:that.serverurl+'/screen/getScreenList',
                 // contentType:'application/json;charset=UTF-8',
                 data:{
                    page:that.pageIndex,
                    rows:that.pageSize,
-                   serialNumber:'',
-                   status:''
+                   serialNumber:that.serialNumber,
+                   status:that.value4,
+                   poleId:'',
+                   projectId:sessionStorage.projectId
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.tableData = data.result.list
                         that.total = data.result.total
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode2(data.errorCode)
                     }
                 }
             })
+        },
+        search(){
+            this.ready()
         },
         //添加修改广告屏提交
         submit(){
             var that = this
             var url = ''
+            var data = that.form
+            if(that.form.nickName==''||that.form.width==''||that.form.height==''){
+                that.$message({
+                    message: '必填字段不能为空!',
+                    type: 'error'
+                });
+                return;
+            }
+            if(that.form.controlCardWidth==''||that.form.controlCardHeight==''||that.form.serialNumber==''){
+                that.$message({
+                    message: '必填字段不能为空!',
+                    type: 'error'
+                });
+                return;
+            }
             if(this.addType=='0'){
                 url = '/screen/addScreen'
             }
             if(this.addType=='1'){
-                url = '/screen/updateScreen'
+                data.id = that.site[0].id
+                data.status = that.site[0].status
+                url = '/screen/updateScreen' 
+            }
+            data.projectId=sessionStorage.projectId
+            data.placement = that.value2
+            data.position = that.value3
+            if(this.site2.length==''){
+                datas.poleId=that.site[0].poleId
+            }else{
+                data.poleId = this.site2[0].id
             }
             $.ajax({
                 type:'post',
                 async:true,
                 dataType:'json',
-                url:sessionStorage.serverurl+url,
-                data:that.form,
+                url:that.serverurl+url,
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
                 success:function(data){
                     if(data.errorCode=='0'){
                         $('#addModal').modal('hide')
@@ -332,6 +600,40 @@ export default {
                         }
                         that.ready()
                     }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
+        //权限请求
+        Jurisdiction(){
+            var that = this
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/privilege/getMyOperatMenu',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    menuId:sessionStorage.menuId3
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='addScreenDeployment'){
+                                that.addScreenDeployment = true
+                            }
+                            if(data.result.operats[i].code=='editScreenDeployment'){
+                                that.editScreenDeployment = true
+                            }
+                            if(data.result.operats[i].code=='delScreenDeployment'){
+                                that.delScreenDeployment = true
+                            }
+                            if(data.result.operats[i].code=='relationPole'){
+                                that.relationPole = true
+                            }
+                        }
+                    }else{
                         that.errorCode(data.errorCode)
                     }
                 }
@@ -341,19 +643,27 @@ export default {
     created(){
         var that = this
         that.ready()
+        this.Jurisdiction()
     },
 }
 </script>
 <style lang='less' scoped>
+.Required{color: red;font-size: 17px;}
 .advertisingscreen{width: 100%;height: 100%;}
 .advertisingscreen>div{width: 100%;position: absolute;}
 .advertisingscreen_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
 .advertisingscreen_top>button{height:33px;margin:8px 0 0 10px;}
 .advertisingscreen_bottom{top: 46px;border: 1px solid #E4E4F1;bottom: 0;padding: 5px;overflow: auto;}
+.advertisingscreen_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
+.advertisingscreen_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
 .block{text-align: center;}
 
 .form-group{display:flex;justify-content: center;}
-.form-group>label{width: 75px;line-height: 34px;text-align: center;}
-.form-group>input{width: 196px;}
+.form-group>label{width: 95px;line-height: 34px;text-align: center;}
+.form-group>input{width: 126px;}
 .modal_body_table>div{margin-bottom: 10px;border: 1px solid #E4E4F1;padding: 5px;text-align: center;}
+
+.search{display: flex;}
+.search>label{width: 85px;}
+.search>input{width: 146px;margin-top:7px;height: 34px;}
 </style>

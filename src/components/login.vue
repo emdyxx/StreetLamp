@@ -10,13 +10,13 @@
       <div class="form-group" style="margin-top: 15px;">
         <label for="name">
           <i class="iconfont icon-zhanghao" style="font-size:16px;width:25px;left: 7px;top:4px;"></i>
-          <input type="text" class="form-control" id="name">
+          <input type="text" class="form-control" id="user" placeholder="账号">
         </label>
       </div>
       <div class="form-group">
         <label for="name">
           <i class="iconfont icon-mima" style="font-size:18px;width:27px;left: 5px;top:4px;"></i>
-          <input type="text" class="form-control" id="name">
+          <input type="password" class="form-control" id="password" placeholder="密码">
         </label>
       </div>
       <button type="button" @click="login" class="btn btn-success">登录</button>
@@ -29,12 +29,42 @@ export default {
   name: 'login',
   data () {
     return {
-      
+      serverurl:localStorage.serverurl
     }
   },
   methods:{
     login(){
-      this.$router.push({'path':'/index'})
+      var that = this;
+      var user = $('#user').val()
+      var password = $('#password').val()
+      if(user==''||password==''){
+        that.$message({
+            message: '账号密码不能为空!',
+            type: 'error'
+        });
+        return;
+      }
+      var data = {
+          username:user,
+          userPwd:password
+      };
+      $.ajax({
+        type:'post',
+        async:true,
+        dataType:'json',
+        url:that.serverurl+'/user/login',
+        contentType:'application/json;charset=UTF-8',
+        data:JSON.stringify(data),
+        success:function(data){
+          if(data.errorCode=='0'){
+            sessionStorage.token = data.result.token
+            that.$router.push({'path':'/index'})
+          }else{
+            that.errorCode(data.errorCode)
+          }
+        },
+      })
+      
     },
   },
   created(){
