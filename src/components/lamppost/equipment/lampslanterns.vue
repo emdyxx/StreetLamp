@@ -28,11 +28,11 @@
         <div class="lampslanterns_bottom">
             <div class="lampslanterns_bottom_top">
                 <div class="search">
-                    <label>单灯名称:</label>
+                    <label>名称:</label>
                     <input type="text" v-model="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入单灯名称">
                 </div>
                 <div class="search">
-                    <label>单灯序列号:</label>
+                    <label>序列号:</label>
                     <input type="text" v-model="serialNumber" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入序列号">
                 </div>
                 <div style="margin-left:15px;">
@@ -57,18 +57,18 @@
                     prop="nickName"
                     align='center'
                     label="名称"
-                    width="120">
+                    min-width="120">
                     </el-table-column>
                     <el-table-column
                     prop="serialNumber"
                     align='center'
                     label="序列号"
-                    width="120">
+                    min-width="120">
                     </el-table-column>
                     <el-table-column
                     align='center'
                     label="灯状态"
-                    width="80">
+                    min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.lampStatus=='0'">关闭</span>
                             <span v-if="scope.row.lampStatus=='1'">开启</span>
@@ -80,34 +80,34 @@
                     align='center'
                     :formatter="formatRole"
                     label="亮度"
-                    width="80">
+                    min-width="80">
                     </el-table-column>
                     <el-table-column
                     prop="voltage"
                     align='center'
                     :formatter="formatRole"
                     label="电压(V)"
-                    width="80">
+                    min-width="80">
                     </el-table-column>
                     <el-table-column
                     prop="electricity"
                     align='center'
                     :formatter="formatRole"
                     label="电流(A)"
-                    width="80">
+                    min-width="80">
                     </el-table-column>
                     <el-table-column
                     prop="power"
                     align='center'
                     :formatter="formatRole"
                     label="功率(W)"
-                    width="80">
+                    min-width="80">
                     </el-table-column>
                     <el-table-column
                     prop="location"
                     align='center'
                     label="区域"
-                    width="120">
+                    min-width="120">
                     </el-table-column>
                     <el-table-column
                     prop="timestamp"
@@ -212,9 +212,9 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>策略名称:</label>
+                            <label><span class="Required">*</span>策略名称:</label>
                             <input type="text" v-model="data.strategyName" class="form-control" id="email" placeholder="请输入策略名称">
-                            <label>策略有效期:</label>
+                            <label><span class="Required">*</span>有效期:</label>
                             <el-date-picker
                             v-model="data.expire"
                             size='small'
@@ -225,10 +225,20 @@
                             </el-date-picker>
                         </div> 
                         <div v-if="type3==0||type3=='1'">
-                            <label style="margin-left:30px;">操作:开灯/关灯</label>
-                            <label style="margin-left:15px;">亮度:</label>
-                            <el-input-number v-model="brightness" size='mini' :step="10" :min='0' :max="100"></el-input-number>
-                            <label style="margin-left:15px;">时间:</label>
+                            <label style="margin-left:30px;">
+                                操作:
+                                <el-select v-model="value1" @change="options1Change" size='mini' style="width:78px;" placeholder="请选择">
+                                    <el-option
+                                    v-for="item in options1"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </label>
+                            <label style="margin-left:10px;">亮度:</label>
+                            <el-input-number v-model="brightness" size='mini' :step="10" :min=minbrightness :max=maxbrightness></el-input-number>
+                            <label style="margin-left:10px;"><span class="Required">*</span>时间:</label>
                             <el-time-picker
                                 size='mini'
                                 style="width:145px;"
@@ -238,7 +248,6 @@
                             </el-time-picker>
                             <el-button @click="addnode(1)" type="primary" size='mini'>添加节点</el-button>
                         </div>
-                        <!-- <span style="color: #606266;font-size: 13px;">亮度为0即为关灯</span> -->
                         <div style="margin-top:10px;">
                             <el-table
                                 :data="tableData3"
@@ -264,17 +273,25 @@
                                 align='center'
                                 label="操作"
                                 width="92">
+                                    <template slot-scope="scope">
+                                        <span v-if="scope.row.brightness=='0'">关灯</span>
+                                        <span v-else>开灯</span>
+                                    </template>
                                 </el-table-column>
                                 <el-table-column
                                 prop="brightness"
                                 label="时间节点亮度"
                                 align='center'
-                                width="170">
+                                show-overflow-tooltip>
+                                    <template slot-scope="scope">
+                                        <span>{{scope.row.brightness}}%</span>
+                                    </template>
                                 </el-table-column>
                                 <el-table-column
                                 label="操作"
                                 align='center'
-                                width="130">
+                                width="130"
+                                v-if="type3!=5">
                                     <template slot-scope="scope">
                                         <el-button @click="addnode(2,scope.row)" type="primary" size='mini'>删除节点</el-button>
                                     </template>
@@ -282,7 +299,7 @@
                             </el-table>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer" v-if="type3!=5">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                         <button type="button" @click="addSubmit" class="btn btn-primary">保存</button>
                     </div>
@@ -321,13 +338,26 @@ export default {
                 strategyName:'',
                 expire:'',
             },
+            options1:[
+                {
+                    value: '0',
+                    label: '开灯'
+                },
+                {
+                    value: '1',
+                    label: '关灯'
+                }
+            ],
+            value1:'0',
             brightness:10,//节点亮度
+            minbrightness:0,
+            maxbrightness:100,
             timer:'',//时间节点
             strategyType:'',
         }
     },
     mounted(){
-
+        
     },
     methods:{
         formatRole:function(val, column, cellValue, index){
@@ -337,6 +367,18 @@ export default {
                 return cellValue
             }
         }, 
+        options1Change(){
+            if(this.value1=='0'){
+                this.minbrightness = 10
+                this.maxbrightness = 100
+                this.brightness = 10
+            }
+            if(this.value1=='1'){
+                this.minbrightness = 0
+                this.maxbrightness = 0
+                this.brightness = 0
+            }
+        },
         //添加时间节点
         addnode(val,data){
             var that = this;
@@ -367,11 +409,11 @@ export default {
                 var data = {}
                 data.timer = this.timer
                 data.brightness = this.brightness
-                if(this.brightness=='0'){
-                    data.brightness_type = '关灯'
-                }else{
-                    data.brightness_type = '开灯'
-                }
+                // if(this.brightness=='0'){
+                //     data.brightness_type = '关灯'
+                // }else{
+                //     data.brightness_type = '开灯'
+                // }
                 this.tableData3.push(data)
             }
             if(val=='2'){
@@ -389,6 +431,13 @@ export default {
         dropdown(val){
             var that = this;
             var lampIds = []
+            if(sessionStorage.projectId=='0'){
+                this.$message({
+                    message: '此操作请选择具体项目!',
+                    type: 'warning'
+                });
+                return;
+            }
             if(that.site.length==0){
                 that.$message({
                     message: '请选择灯具进行操作!',
@@ -515,6 +564,7 @@ export default {
                 var data = {
                     "command": val,
                     "lampIds": lampIds.join(','),
+                    projectId:sessionStorage.projectId
                 }
                 $.ajax({
                     type:'post',
@@ -651,6 +701,7 @@ export default {
             var that = this
             if(val=='1'){
                 $('#myModal2').modal('show')
+                this.options1Change()
                 this.type3 ='0'
                 this.data.strategyName = ''
                 this.data.expire = ''
@@ -675,6 +726,12 @@ export default {
                 this.data.strategyName = this.site2[0].strategyName
                 this.data.expire = this.site2[0].expire
                 this.tableData3 = JSON.parse(this.site2[0].strategy)
+                if(this.tableData3[0].brightness=='0'){
+                    this.value1 = '1'
+                }else{
+                    this.value1 = '0'
+                }
+                this.options1Change()
                 /* 完成拖拽 */
                 $('#myModal').draggable({
                     cursor: "move",
@@ -698,7 +755,7 @@ export default {
                     });
                     return;
                 }
-                that.$confirm('确认删除策略?', '提示', {
+                that.$confirm('是否删除所选策略？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -882,6 +939,7 @@ export default {
 }
 </script>
 <style scoped>
+.Required{color: red;font-size: 17px;}
 .lampslanterns{width: 100%;height: 100%;}
 .lampslanterns>div{width: 100%;border: 1px solid #E4E4F1;position: absolute;}
 .lampslanterns_top{height: 46px;border-bottom: none !important;display: flex;align-items: center;font-size: 16px;padding-left: 20px;}

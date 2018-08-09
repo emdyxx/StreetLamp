@@ -8,16 +8,16 @@
         </div>
         <div class="header-center">
           <template v-for="item in menu">
-            <template v-if="item.menuName=='用户管理'">
+            <template v-if="item.code=='userManage'">
               <div @click="headercolor(1,item.id)" :class="headercolorType=='1'?'header-center-color':''">用户</div>
             </template>
-            <template v-if="item.menuName=='组织管理'">
+            <template v-if="item.code=='orgManage'">
               <div @click="headercolor(2,item.id)" :class="headercolorType=='2'?'header-center-color':''">机构</div>
             </template>
-            <template v-if="item.menuName=='项目管理'">
+            <template v-if="item.code=='projectManage'">
               <div @click="headercolor(3,item.id)" :class="headercolorType=='3'?'header-center-color':''">项目</div>
             </template>
-            <template v-if="item.menuName=='系统日志'">
+            <template v-if="item.code=='managementLog'">
               <div @click="headercolor(4,item.id)" :class="headercolorType=='4'?'header-center-color':''">日志</div>
             </template>
           </template>
@@ -81,6 +81,23 @@ export default {
             success:function(data){
                 if(data.errorCode==0){
                     that.menu = data.result.menus
+                    sessionStorage.menuId2 = data.result.menus[0].id
+                    if(data.result.menus[0].id=='3'){
+                      sessionStorage.headercolorType = '1'
+                      that.$router.push({'path':'/user'})
+                    }
+                    if(data.result.menus[0].id=='4'){
+                      sessionStorage.headercolorType = '2'
+                      that.$router.push({'path':'/organization'})
+                    }
+                    if(data.result.menus[0].id=='5'){
+                      sessionStorage.headercolorType = '3'
+                      that.$router.push({'path':'/article'})
+                    }
+                    if(data.result.menus[0].id=='6'){
+                      sessionStorage.headercolorType = '4'
+                      that.$router.push({'path':'/journal'})
+                    }
                 }else{
                     that.errorCode(data.errorCode)
                 }
@@ -94,7 +111,7 @@ export default {
   },
 }
 </script>
-<style lang='less' scoped>
+<style scoped>
 .usercenter{width: 100%;height: 100%;}
 .header{width:100%;height: 60px;background: #409EFF;display: flex;}
 .header>i{font-size: 32px;color: white;cursor: pointer;position: absolute;left: 20px;top:10px;}

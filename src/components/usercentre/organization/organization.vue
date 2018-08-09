@@ -46,25 +46,25 @@
                         prop="orgName"
                         align='center'
                         label="机构名称"
-                        width="160">
+                        min-width="160">
                         </el-table-column>
                         <el-table-column
                         prop="parentName"
                         align='center'
                         label="所属机构"
-                        width="120">
+                        min-width="120">
                         </el-table-column>
                         <el-table-column
                         prop="principal"
                         align='center'
                         label="负责人"
-                        width="120">
+                        min-width="120">
                         </el-table-column>
                         <el-table-column
                         prop="mobile"
                         align='center'
                         label="电话"
-                        width="130">
+                        min-width="130">
                         </el-table-column>
                         <el-table-column
                         prop="createTime"
@@ -100,13 +100,13 @@
                     <div class="modal-body">
                         <ul id="myTab" class="nav nav-tabs">
                             <li class="active">
-                                <a href="#a" data-toggle="tab">机构</a>
+                                <a href="#a" data-toggle="tab">基本信息</a>
                             </li>
                             <li>
                                 <a href="#b" data-toggle="tab" @click="handleClick">管理员</a>
                             </li>
                             <li>
-                                <a href="#c" data-toggle="tab">权限</a>
+                                <a href="#c" data-toggle="tab" @click="handleClick">权限</a>
                             </li>
                         </ul>
                         <div id="myTabContent" class="tab-content">
@@ -127,7 +127,7 @@
                                     <label for="name2">邮箱:</label>
                                     <input type="email" v-model="data.email" class="form-control" placeholder="请输入邮箱">
                                 </div> 
-                                <div class="form-group">
+                                <div class="form-group" v-if="type=='0'">
                                     <label for="phone">所属机构:</label>
                                     <div class="block">
                                         <el-cascader
@@ -157,7 +157,7 @@
                             </div>
                             <div class="tab-pane fade" id="b" style='padding-left: 70px;'>
                                 <div class="form-group" v-if="type=='0'">
-                                    <label for="name"><span class="Required">*</span>账号:</label>
+                                    <label for="name"><span class="Required">*</span>用户名:</label>
                                     <input type="text" v-model="data.userName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
                                 </div> 
                                 <div class="form-group" v-if="type=='0'">
@@ -214,111 +214,6 @@
                                 </el-tree>
                             </div>
                         </div>
-                        <!-- <el-tabs v-model="activeName" tab-position="left" @tab-click='handleClick'>
-                            <el-tab-pane label="机构" name='1'>
-                                <div class="form-group">
-                                    <label for="name"><span class="Required">*</span>机构名称:</label>
-                                    <input type="text" v-model="data.orgName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入机构名称">
-                                </div> 
-                                <div class="form-group">
-                                    <label for="password"><span class="Required">*</span>负责人:</label>
-                                    <input type="text" v-model="data.principal" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入负责人">
-                                </div> 
-                                <div class="form-group">
-                                    <label for="password2"><span class="Required">*</span>电话:</label>
-                                    <input type="text" v-model="data.orgMobile" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
-                                </div> 
-                                <div class="form-group">
-                                    <label for="name2">邮箱:</label>
-                                    <input type="email" v-model="data.email" class="form-control" placeholder="请输入邮箱">
-                                </div> 
-                                <div class="form-group">
-                                    <label for="phone">所属机构:</label>
-                                    <div class="block">
-                                        <el-cascader
-                                            :options="options"
-                                            v-model="data.optionsValue"
-                                            :props='optionspros'
-                                            size='small'
-                                            change-on-select
-                                            style='width:196px'>
-                                        </el-cascader>
-                                    </div>
-                                </div> 
-                                <div class="form-group">
-                                    <label>背景图片:</label>
-                                    <div class="images">
-                                        <i @click="cancelImage(1)" class="iconfont icon-guanbi cancel"></i>
-                                        <label for="img1">
-                                            <img :src=imageUrl1>
-                                            <input type="file" ref="img1" id="img1" @change="images(1)">
-                                            <i class="el-icon-plus avatar-uploader-icon" style="font-size:20px;font-weight:600;"></i>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group"  v-if="type=='1'" style="justify-content: center;margin-left:-50px;">
-                                    <el-button @click="Appoint" size='small' type="primary">指定机构管理员</el-button>
-                                </div>
-                            </el-tab-pane>
-                            <el-tab-pane label="管理员" name='2'>
-                                <div class="form-group" v-if="type=='0'">
-                                    <label for="name"><span class="Required">*</span>账号:</label>
-                                    <input type="text" v-model="data.userName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
-                                </div> 
-                                <div class="form-group" v-if="type=='0'">
-                                    <label for="username"><span class="Required">*</span>密码:</label>
-                                    <input type="password" v-model="data.userPwd" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入密码">
-                                </div> 
-                                <div class="form-group">
-                                    <label for="password"><span class="Required">*</span>姓名:</label>
-                                    <input type="text" v-model="data.fullName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入姓名">
-                                </div> 
-                                <div class="form-group">
-                                    <label for="password2"><span class="Required">*</span>电话:</label>
-                                    <input type="text" v-model="data.userMobile" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
-                                </div> 
-                                <div class="form-group">
-                                    <label for="name2">邮箱:</label>
-                                    <input type="email" v-model="data.userEmail" class="form-control" placeholder="请输入邮箱">
-                                </div> 
-                                <div class="form-group">
-                                    <label for="phone">性别:</label>
-                                    <template>
-                                        <el-radio v-model="data.sex" label="0">男</el-radio>
-                                        <el-radio v-model="data.sex" label="1">女</el-radio>
-                                    </template>
-                                </div> 
-                                <div class="form-group">
-                                    <label>头像:</label>
-                                    <div class="images">
-                                        <i @click="cancelImage(2)" class="iconfont icon-guanbi cancel"></i>
-                                        <label for="img2">
-                                            <img :src=imageUrl2>
-                                            <input type="file" ref="img2" id="img2" @change="images(2)">
-                                            <i class="el-icon-plus avatar-uploader-icon" style="font-size:20px;font-weight:600;"></i>
-                                        </label>
-                                    </div>
-                                </div>
-                            </el-tab-pane>
-                            <el-tab-pane label="权限" name='3'>
-                                <div>
-                                    <template>
-                                        <el-checkbox v-model="radio1" @change="radioChange">读取权限</el-checkbox>
-                                        <el-checkbox v-model="radio2" @change="radioChange">操作权限</el-checkbox>
-                                    </template>
-                                </div>
-                                <el-tree
-                                :data="data2"
-                                show-checkbox
-                                accordion
-                                :default-expanded-keys='[1]'
-                                node-key="id"
-                                ref="tree"
-                                highlight-current
-                                :props="defaultProps">
-                                </el-tree>
-                            </el-tab-pane>
-                        </el-tabs> -->
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -573,6 +468,7 @@ export default {
                 this.radio1 = false
                 this.radio2 = false
                 $('#addorganizations').modal('show');
+                $('#myTab a:first').tab('show')
                 var file = document.getElementById('img1');
                 var file1 = document.getElementById('img2');
                 file.value = ''; //虽然file的value不能设为有字符的值，但是可以设置为空值
@@ -591,6 +487,7 @@ export default {
                 this.OrgTree(1);
                 this.details();
                 $('#addorganizations').modal('show')
+                $('#myTab a:first').tab('show')
                 this.data.orgName = this.site[0].orgName
                 this.data.principal = this.site[0].principal
                 this.data.orgMobile = this.site[0].mobile
@@ -900,12 +797,11 @@ export default {
                 });
                 return;
             }
-            this.$confirm('此操作将删除此机构, 是否继续?', '提示', {
+            this.$confirm('是否删除所选机构?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                
                 // 这里进行删除请求
                 $.ajax({
                     type:'post',
@@ -942,16 +838,19 @@ export default {
             $('#jstree').jstree({
                 "types" : {
                     "1" : {
-                        "icon" : that.serverurl+"/image/1.png",
+                        "icon" : 'jstree_mechanism1',
                     },
                     "2" : {
-                        "icon" : that.serverurl+"/image/2.png",
+                        "icon" : 'jstree_mechanism2',
                     },
                     "3" : {
-                        "icon" : that.serverurl+"/image/2.png",
+                        "icon" : 'jstree_mechanism3',
                     },
                     "4" : {
-                        "icon" : that.serverurl+"/image/2.png",
+                        "icon" : 'jstree_mechanism4',
+                    },
+                    "5" : {
+                        "icon" : 'jstree_mechanism5',
                     }
                 },
                 // "state" : { "key" : that.sizeType.text },
@@ -1029,8 +928,8 @@ export default {
         },
         search(){this.readyRight()},
         //条数/页数变化
-        organizationsizechange(val){thispageSize=val;this.readyRight();},
-        organizationcurrentchange(val){pageIndex=val;this.readyRight();},
+        organizationsizechange(val){this.pageSize=val;this.readyRight();},
+        organizationcurrentchange(val){this.pageIndex=val;this.readyRight();},
         //权限请求
         Jurisdiction(){
             var that = this
@@ -1068,7 +967,7 @@ export default {
     },
 }
 </script>
-<style lang='less' scoped>
+<style scoped>
 .Required{color: red;font-size: 17px;}
 .organization{width: 100%;height: 100%;padding: 5px;}
 .organization_left{width: 200px;height: 100%;border: 1px solid #E4E4F1;overflow: auto;}

@@ -1,11 +1,35 @@
-.jstree_1 {
-    background-image: url(1.png) !important;
+.jstree_mechanism1 {
+    background-image: url(img/mechanism1.png) !important;
 }
-.jstree_2 {
-    background-image: url(1.png) !important;
+.jstree_mechanism2 {
+    background-image: url(img/mechanism2.png) !important;
 }
-.jstree_3 {
-    background-image: url(1.png) !important;
+.jstree_mechanism3 {
+    background-image: url(img/mechanism3.png) !important;
+}
+.jstree_mechanism4 {
+    background-image: url(img/mechanism4.png) !important;
+}
+.jstree_mechanism5 {
+    background-image: url(img/mechanism5.png) !important;
+}
+.jstree_icon1{
+    background-image: url(img/icon1.png) !important;
+}
+.jstree_icon2{
+    background-image: url(img/icon2.png) !important;
+}
+.jstree_icon3{
+    background-image: url(img/icon3.png) !important;
+}
+.jstree_icon4{
+    background-image: url(img/icon4.png) !important;
+}
+.jstree_icon5{
+    background-image: url(img/icon5.png) !important;
+}
+.jstree_Journal{
+    background-image: url(img/Journal.png) !important;
 }
 
 .jstree-node,
@@ -462,9 +486,9 @@
 }
 
 .jstree-default .jstree-icon:empty {
-    width: 24px;
-    height: 24px;
-    line-height: 24px
+    width: 20px;
+    height: 20px;
+    line-height: 20px
 }
 
 .jstree-default.jstree-rtl .jstree-node {

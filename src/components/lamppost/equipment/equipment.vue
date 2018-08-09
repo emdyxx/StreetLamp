@@ -29,16 +29,19 @@ export default {
             $('#jstree').jstree({
                 "types" : {
                     "1" : {
-                        "icon" : that.serverurl+"/image/1.png",
+                        "icon" : 'jstree_icon1',
                     },
                     "2" : {
-                        "icon" : that.serverurl+"/image/2.png",
+                        "icon" : 'jstree_icon2',
                     },
                     "3" : {
-                        "icon" : that.serverurl+"/image/2.png",
+                        "icon" : 'jstree_icon3',
                     },
                     "4" : {
-                        "icon" : that.serverurl+"/image/2.png",
+                        "icon" : 'jstree_icon4',
+                    },
+                    "5" : {
+                        "icon" : 'jstree_icon5',
                     }
                 },
                 // "state" : { "key" : that.sizeType.text },
@@ -58,16 +61,24 @@ export default {
                                     var datas = [{
                                         text:'智慧灯杆',
                                         id:'02',
-                                        type:'2',
+                                        type:'1',
                                         "state": {"opened" : true},
                                         children:[]
                                     }]
                                     var arr = {}
                                     for(var i=0;i<data.result.menus.length;i++){
                                         arr = {}
+                                        if(data.result.menus[i].code=='lampManage'){
+                                            arr.type = '3'
+                                        }
+                                        if(data.result.menus[i].code=='screenManage'){
+                                            arr.type = '4'
+                                        }
+                                        if(data.result.menus[i].code=='sensorsManage'){
+                                            arr.type = '5'
+                                        }
                                         arr.text = data.result.menus[i].menuName
                                         arr.id = data.result.menus[i].id
-                                        arr.type = '2'
                                         datas[0].children.push(arr)
                                     }
                                     jsonarray= datas;
@@ -114,7 +125,7 @@ export default {
         },
     },
     created() {
-        console.log(789456123)
+        
     },
 }
 </script>

@@ -1,23 +1,24 @@
 <template>
     <div class="sensor">
-        <!-- 传感器部署 -->
+        <!-- 气象站部署 -->
         <div class="sensor_top">
-            <el-button v-if="addSensor" @click="addsensor(0)" type="primary" icon='el-icon-plus' size='small'>添加传感器</el-button>
-            <el-button v-if="editSensor" @click="addsensor(1)" type="primary" icon="el-icon-edit" size='small'>编辑传感器</el-button>
-            <el-button v-if="delSensor" @click="deletesensor" type="primary" icon='el-icon-delete' size='small'>删除传感器</el-button>
+            <el-button v-if="addSensor" @click="addsensor(0)" type="primary" icon='el-icon-plus' size='small'>添加气象站</el-button>
+            <el-button v-if="editSensor" @click="addsensor(1)" type="primary" icon="el-icon-edit" size='small'>编辑气象站</el-button>
+            <el-button v-if="delSensor" @click="deletesensor" type="primary" icon='el-icon-delete' size='small'>删除气象站</el-button>
+            <el-button v-if="sensorBindProject" @click="sensorBindProjects" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button>
         </div>
         <div class="sensor_bottom">
             <div class="sensor_bottom_top">
                 <div class="search">
-                    <label style="width:100px;">控制器序列号:</label>
-                    <input type="text" v-model="concentratorSN" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入控制器序列号">
+                    <label style="width:100px;">集中器标识:</label>
+                    <input type="text" v-model="concentratorSN" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入集中器标识">
                 </div>
                 <div class="search">
-                    <label style="width:90px;">传感器名称:</label>
-                    <input type="text" v-model="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入传感器名称">
+                    <label style="width:90px;">名称:</label>
+                    <input type="text" v-model="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入气象站名称">
                 </div>
                 <div class="search">
-                    <label>型号ID:</label>
+                    <label>型号:</label>
                     <el-select v-model="modelId" size='small' clearable style='width:146px;' placeholder="请选择">
                         <el-option
                         v-for="item in options"
@@ -48,25 +49,31 @@
                     <el-table-column
                     prop="nickName"
                     align='center'
-                    label="名称"
-                    width="110">
+                    label="昵称"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    prop="serialNumber"
+                    align='center'
+                    label="气象站编号"
+                    min-width="110">
                     </el-table-column>
                     <el-table-column
                     prop="concentratorSN"
                     align='center'
-                    label="控制器序列号"
-                    width="120">
+                    label="集中器标识"
+                    min-width="120">
                     </el-table-column>
                     <el-table-column
                     prop="modelName"
                     align='center'
                     label="型号"
-                    width="100">
+                    min-width="120">
                     </el-table-column>
                     <el-table-column
                     align='center'
                     label="状态"
-                    width="80">
+                    min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.online=='0'">离线</span>
                             <span v-if="scope.row.online=='1'">在线</span>
@@ -76,26 +83,26 @@
                     prop="poleName"
                     align='center'
                     label="所属灯杆"
-                    width="110"
+                    min-width="110"
                     :formatter="formatRole">
                     </el-table-column>
                     <el-table-column
                     prop="createTime"
                     align='center'
                     label="创建时间"
-                    width="140">
-                    </el-table-column>
-                    <el-table-column
-                    prop="mark"
-                    align='center'
-                    label="备注"
-                    width="180"
-                    :formatter="formatRole">
+                    min-width="140">
                     </el-table-column>
                     <el-table-column
                     prop="location"
                     label="位置"
                     align='center'
+                    :formatter="formatRole"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="mark"
+                    align='center'
+                    label="备注"
                     :formatter="formatRole"
                     show-overflow-tooltip>
                     </el-table-column>
@@ -114,26 +121,26 @@
                 </div>
             </div>
         </div>
-        <!-- 添加编辑传感器模态框 -->
+        <!-- 添加编辑气象站模态框 -->
         <div class="modal fade" id="addModal" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:450px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 v-if="addtype=='0'" class="modal-title" id="myModalLabel">添加传感器</h4>
-                        <h4 v-if="addtype=='1'" class="modal-title" id="myModalLabel">编辑传感器</h4>
+                        <h4 v-if="addtype=='0'" class="modal-title" id="myModalLabel">添加气象站</h4>
+                        <h4 v-if="addtype=='1'" class="modal-title" id="myModalLabel">编辑气象站</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label><span class="Required">*</span>名称:</label>
+                            <label><span class="Required">*</span>昵称:</label>
                             <input type="text" v-model="data.nickName" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>控制器序列号:</label>
-                            <input type="text" v-model="data.concentratorSN" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入控制器序列号">
+                            <label><span class="Required">*</span>集中器标识:</label>
+                            <input type="text" v-model="data.concentratorSN" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入集中器标识">
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>型号ID:</label>
+                            <label><span class="Required">*</span>型号:</label>
                             <el-select v-model="data.modelId" size='small' style='width:196px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options"
@@ -143,6 +150,10 @@
                                 </el-option>
                             </el-select>
                         </div> 
+                        <div class="form-group">
+                            <label><span class="Required">*</span>气象站编号:</label>
+                            <input type="text" v-model="data.serialNumber" id="serialNumber" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入气象站编号">
+                        </div>
                         <div class="form-group">
                             <label>备注:</label>
                             <el-input
@@ -235,6 +246,35 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
+        <!-- 绑定项目 -->
+        <div class="modal fade" id="sensorBindProjectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width:350px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">绑定项目</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <span style="line-height:35px;">项目:</span>
+                            <el-select size='small' v-model="value5" style="margin-left:20px;" placeholder="请选择">
+                                <el-option
+                                    v-for="item in options5"
+                                    style="height:30px;"
+                                    :key="item.id"
+                                    :label="item.projectName"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </div> 
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" @click="Submit_sensorBindProject" class="btn btn-primary">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
     </div>
 </template>
 <script>
@@ -247,8 +287,11 @@ export default {
             editSensor:false,
             delSensor:false,
             relationPole:false,
+            sensorBindProject:false,
             site:[], //列表选中数据列表
             addtype:'0', //判断是添加还是编辑类型的参数
+            options5:[],
+            value5:'',
             concentratorSN:'',
             nickName:'',
             modelId:'',
@@ -264,7 +307,8 @@ export default {
                 modelId:'',
                 online:'0',
                 mark:'',
-            },//添加传感器数据
+                serialNumber:''
+            },//添加气象站数据
             tableData2:[],
             site2:[],
             pageSize2:10,
@@ -310,7 +354,7 @@ export default {
                 }
             })
         },
-        // 添加,编辑传感器
+        // 添加,编辑气象站
         addsensor(val){
             if(sessionStorage.projectId=='0'){
                 this.$message({
@@ -319,6 +363,7 @@ export default {
                 });
                 return;
             }
+            
             // 0为添加,1为删除
             if(val=='0'){
                 this.addtype = val;
@@ -330,11 +375,12 @@ export default {
                 this.data.mark = ''
                 this.value = ''
                 $('#addModal').modal('show')
+                $('#serialNumber').removeAttr('disabled')
             }
             if(val=='1'){
                 if(this.site.length==0||this.site.length>=2){
                     this.$message({
-                        message: '请选择一个传感器进行编辑!',
+                        message: '请选择一个气象站进行编辑!',
                         type: 'error'
                     });
                     return;
@@ -346,8 +392,10 @@ export default {
                 this.data.modelId = this.site[0].modelId
                 this.data.location = this.site[0].location
                 this.data.mark = this.site[0].mark
+                this.data.serialNumber = this.site[0].serialNumber
                 // this.value = ''
                 $('#addModal').modal('show')
+                $('#serialNumber').attr('disabled','disabled')
             }
             /* 完成拖拽 */
             $('#addModal').draggable({
@@ -362,7 +410,7 @@ export default {
             var result = /[\u4E00-\u9FA5\uF900-\uFA2D]/;
             var url = '';
             var data = {};
-            if(this.data.nickName==''||this.data.concentratorSN==''||this.data.modelId==''){
+            if(this.data.nickName==''||this.data.concentratorSN==''||this.data.modelId==''||this.data.serialNumber==''){
                 this.$message({
                     message: '必填字段不能为空!',
                     type: 'error'
@@ -371,7 +419,7 @@ export default {
             }
             if(result.test(this.data.concentratorSN)){
                 that.$message({
-                    message: '控制器序列号不能有中文',
+                    message: '集中器标识不能有中文',
                     type: 'error',
                     showClose: true,
                 });
@@ -383,7 +431,11 @@ export default {
             if(this.addtype=='1'){url='/envSensors/updateEnvSensors';data.id=this.site[0].id}
             data.projectId = sessionStorage.projectId
             if(this.site2.length==0){
-                datas.poleId=that.site[0].poleId
+                if(this.addtype=='0'){
+                    data.poleId='0'
+                }else{
+                    data.poleId=that.site[0].poleId
+                }
             }else{
                 data.poleId = this.site2[0].id
             }
@@ -408,12 +460,12 @@ export default {
                 }
             })
         },
-        //删除传感器
+        //删除气象站
         deletesensor(){
             var that = this;
             if(this.site.length=='0'){
                 this.$message({
-                    message: '请选择传感器进行删除!',
+                    message: '请选择气象站进行删除!',
                     type: 'warning'
                 });
                 return;
@@ -422,7 +474,7 @@ export default {
             for(var i=0;i<that.site.length;i++){
                 arr.push(that.site[i].id)
             }
-            this.$confirm('此操作将删除此传感器, 是否继续?', '提示', {
+            this.$confirm('是否删除所选气象站？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -454,6 +506,69 @@ export default {
                 });          
             });
         },
+        //绑定项目
+        sensorBindProjects(){
+            var that = this;
+            if(this.site.length=='0'){
+                this.$message({
+                    message: '请选择灯杆进行绑定项目!',
+                    type: 'warning'
+                });
+                return;
+            }
+            $('#sensorBindProjectModal').modal('show')
+            this.project()
+        },
+        //请求所有项目接口
+        project(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/project/getMyAllProject',
+                contentType:'application/json;charset=UTF-8',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.options5 = data.result.projects
+                        that.value5 = ''
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                },
+            })
+        },
+        //绑定项目提交
+        Submit_sensorBindProject(){
+            var that = this;
+            var arr = [];
+            for(var i=0;i<this.site.length;i++){
+                arr.push(this.site[i].id)
+            }
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/envSensors/updateProjectBelong',
+                data:{
+                    ids:arr.join(','),
+                    projectId:that.value5
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '绑定成功!',
+                            type: 'success'
+                        });
+                        that.ready()
+                        $('#sensorBindProjectModal').modal('hide')
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                },
+            })
+        },
         //关联灯杆
         //点击关联灯杆
         LampPole_data(){
@@ -469,6 +584,7 @@ export default {
                 rows:that.pageSize,
                 nickName:'',
                 poleType:'',
+                serialNumber:'',
                 areaId:'',
                 projectId:sessionStorage.projectId
             }
@@ -518,7 +634,7 @@ export default {
             }
             $('#LampPole_data').modal('hide')
         },
-        //获取传感器列表数据
+        //获取气象站列表数据
         ready(){
             var that = this;
             var data = {
@@ -581,6 +697,9 @@ export default {
                             if(data.result.operats[i].code=='relationPole'){
                                 that.relationPole = true
                             }
+                            if(data.result.operats[i].code=='sensorBindProject'){
+                                that.sensorBindProject = true
+                            }
                         }
                     }else{
                         that.errorCode(data.errorCode)
@@ -595,7 +714,7 @@ export default {
     },
 }
 </script>
-<style lang='less' scoped>
+<style scoped>
 .Required{color: red;font-size: 17px;}
 .sensor{width: 100%;height: 100%;}
 .sensor>div{width: 100%;position: absolute;}

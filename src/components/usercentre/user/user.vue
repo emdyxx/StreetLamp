@@ -16,15 +16,15 @@
                     <div class="usermanage_bottom_top">
                         <div class="search">
                             <label>用户名:</label>
-                            <input type="text" v-model="username" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入用户名">
+                            <input type="text" v-model="username" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
                         </div>
                         <div class="search">
                             <label>姓名:</label>
-                            <input type="text" v-model="fullname" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入姓名">
+                            <input type="text" v-model="fullname" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入姓名">
                         </div>
                         <div class="search">
                             <label>电话:</label>
-                            <input type="text" v-model="mobile" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入电话">
+                            <input type="text" v-model="mobile" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
                         </div>
                         <div style="margin-left:15px;">
                             <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
@@ -48,19 +48,19 @@
                             prop="username"
                             align='center'
                             label="用户名"
-                            width="120">
+                            min-width="120">
                             </el-table-column>
                             <el-table-column
                             prop="fullName"
                             align='center'
                             label="用户姓名"
-                            width="120">
+                            min-width="120">
                             </el-table-column>
                             <el-table-column
                             prop="userType"
                             align='center'
                             label="用户类型"
-                            width="120">
+                            min-width="120">
                                 <template slot-scope="scope">
                                     <span v-if="scope.row.userType=='0'">普通用户</span>
                                     <span v-if="scope.row.userType=='1'">管理员</span>
@@ -70,12 +70,12 @@
                             prop="mobile"
                             align='center'
                             label="电话"
-                            width="150">
+                            min-width="150">
                             </el-table-column>
                             <el-table-column
                             align='center'
                             label="所属机构"
-                            width="120">
+                            min-width="120">
                                 <template slot-scope="scope">
                                     <span>{{scope.row.org.orgName}}</span>
                                 </template>
@@ -83,7 +83,7 @@
                             <el-table-column
                             align='center'
                             label="状态"
-                            width="80"
+                            min-width="80"
                             v-if="enabledUser">
                                 <template slot-scope="scope">
                                     <span v-if="scope.row.status=='0'">启用</span>
@@ -94,11 +94,12 @@
                             prop="createTime"
                             align='center'
                             label="创建时间"
-                            width="180">
+                            min-width="180">
                             </el-table-column>
                             <el-table-column
                             label="操作"
                             align='center'
+                            min-width="180"
                             show-overflow-tooltip>
                                 <template slot-scope="scope">
                                     <el-button v-if="scope.row.status=='0'" @click="userStatus(scope.row.id,scope.row.status)" type="danger" size='mini'>禁用</el-button>
@@ -132,7 +133,7 @@
                         <h4 v-if="type=='0'" class="modal-title" id="myModalLabel">添加用户</h4>
                         <h4 v-if="type=='1'" class="modal-title" id="myModalLabel">编辑用户</h4>
                     </div>
-                    <div class="modal-body" style='min-height:200px;max-height:590px'>
+                    <div class="modal-body" style='min-height:200px;max-height:590px;overflow:auto;'>
                         <ul id="myTab" class="nav nav-tabs">
                             <li class="active">
                                 <a href="#a" data-toggle="tab">基本信息</a>
@@ -155,8 +156,8 @@
                                     <input type="password" v-model="data.userPwd" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="userPwd" placeholder="请输入名称">
                                 </div>
                                 <div class="form-group">
-                                    <label for="fullName"><span class="Required">*</span>姓名:</label>
-                                    <input type="text" v-model="data.fullName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入名称">
+                                    <label for="fullName"><span class="Required">*</span>用户姓名:</label>
+                                    <input type="text" v-model="data.fullName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入名称">
                                 </div> 
                                 <div class="form-group">
                                     <label for="mobile"><span class="Required">*</span>电话:</label>
@@ -185,7 +186,7 @@
                                     </el-select>
                                 </div> 
                                 <div class="form-group">
-                                    <label for="phone">所属机构:</label>
+                                    <label for="phone"><span class="Required">*</span>所属机构:</label>
                                     <div class="block">
                                         <el-cascader
                                             :options="options1"
@@ -265,7 +266,7 @@
                                             </template>
                                         </el-table-column>
                                     </el-table>
-                                    <div class="block">
+                                    <!-- <div class="block">
                                         <el-pagination
                                         background
                                         @size-change="sizechange2"
@@ -276,7 +277,7 @@
                                         layout="total, sizes, prev, pager, next, jumper"
                                         :total="total2">
                                         </el-pagination>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -322,9 +323,10 @@ export default {
             },
             icon:'',
             tableData2:[],//项目数组
-            pageIndex2:1,
-            pageSize2:10,
-            total2:10,
+            // pageIndex2:1,
+            // pageSize2:10,
+            // total2:10,
+            // site2All:[],
             site2:[],
             options:[{label:'启用',value:'0'},{label:'禁用',value:'1'}],//状态
             value:'0',
@@ -399,8 +401,8 @@ export default {
                 url:that.serverurl+'/user/getMyProject',
                 contentType:'application/json;charset=UTF-8',
                 data:{
-                    page:that.pageIndex2,
-                    size:that.pageSize2
+                    // page:that.pageIndex2,
+                    // size:that.pageSize2
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -413,8 +415,8 @@ export default {
             })
         },
         userSelectionChange2(val){this.site2 = val;},
-        sizechange2(val){this.pageSize2=val;this.project();},
-        currentchange2(val){this.pageIndex2=val;this.project();},
+        // sizechange2(val){this.pageSize2=val;this.project();},
+        // currentchange2(val){this.pageIndex2=val;this.project();},
         //获取用户详情
         details(){
             var that = this;
@@ -436,7 +438,7 @@ export default {
                             arr.push(that.detailsData.projects[i].project)
                         }
                         that.tableData2 = arr
-                        // that.total2 = data.result.total
+                        that.total2 = data.result.total
                     }else{
                         that.errorCode(data.errorCode)
                     }
@@ -649,9 +651,16 @@ export default {
                     type: 'error',
                     showClose: true,
                 });
-                return false;
+                return;
             }
-            
+            if(that.options1Value.length==0||that.options1Value==''||that.options1Value==undefined||that.options1Value==null){
+                that.$message({
+                    message: '所属机构不能为空',
+                    type: 'error',
+                    showClose: true,
+                });
+                return;
+            }
             formdate.append("username", this.data.username)
             formdate.append("userPwd", this.data.userPwd)
             formdate.append("fullName", this.data.fullName)
@@ -721,7 +730,7 @@ export default {
                 });
                 return;
             }
-            this.$confirm('此操作将删除此用户, 是否继续?', '提示', {
+            this.$confirm('是否删除所选用户？?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -762,16 +771,19 @@ export default {
             $('#jstree').jstree({
                 "types" : {
                     "1" : {
-                        "icon" : 'jstree_1',
+                        "icon" : 'jstree_mechanism1',
                     },
                     "2" : {
-                        "icon" : that.serverurl+"/image/2.png",
+                        "icon" : 'jstree_mechanism2',
                     },
                     "3" : {
-                        "icon" : that.serverurl+"/image/2.png",
+                        "icon" : 'jstree_mechanism3',
                     },
                     "4" : {
-                        "icon" : that.serverurl+"/image/2.png",
+                        "icon" : 'jstree_mechanism4',
+                    },
+                    "5" : {
+                        "icon" : 'jstree_mechanism5',
                     }
                 },
                 // "state" : { "key" : that.sizeType.text },
@@ -855,17 +867,20 @@ export default {
         userStatus(id,val){
             var that = this
             var status = ''
+            var message = ''
             if(val=='0'){
                 status='1'
+                message='是否禁用该用户？'
             }
             if(val=='1'){
                 status='0'
+                message='是否启用该用户？'
             }
             var data = {
                 id:id,
                 status:status
             }
-            this.$confirm('请确认此操作!', '提示', {
+            this.$confirm(message, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -892,7 +907,7 @@ export default {
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消删除'
+                    message: '已取消此操作'
                 });          
             });
         },
@@ -940,7 +955,7 @@ export default {
     },
 }
 </script>
-<style lang='less' scoped>
+<style scoped>
 .Required{color: red;font-size: 17px;}
 .user{width:100%;height: 100%;padding: 5px;display: flex;}
 .user-left{width: 200px;height: 100%;border: 1px solid #E4E4F1;overflow: auto;}
@@ -952,7 +967,7 @@ export default {
 .usermanage_top>button{height:33px;margin:8px 0 0 10px;}
 .usermanage_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;}
 .usermanage_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.usermanage_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
+.usermanage_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
 .block{text-align: center;}
 .images{text-align: center;position: relative;}
 .images>label{width: 150px;height: 100px;border: 1px dashed #d9d9d9;border-radius: 6px; cursor: pointer;text-align: center;line-height: 35px;position: relative;}
@@ -963,7 +978,7 @@ export default {
 .cancel:hover{color: #20a0ff;}
 
 .form-group{display:flex;}
-.form-group>label{width: 65px;line-height: 34px;text-align: center;}
+.form-group>label{width: 75px;line-height: 34px;text-align: center;}
 .form-group>input{width: 196px;}
 
 .search{display: flex;}

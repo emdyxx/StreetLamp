@@ -2,14 +2,15 @@
     <div class="advertisingscreen">
         <!-- 广告屏 -->
         <div class="advertisingscreen_top">
-            <el-button v-if="addScreenDeployment" @click="addadvertisingscreen(0)" type="primary" icon='el-icon-plus' size='small'>添加广告屏</el-button>
-            <el-button v-if="editScreenDeployment" @click="addadvertisingscreen(1)" type="primary" icon="el-icon-edit" size='small'>编辑广告屏</el-button>
-            <el-button v-if="delScreenDeployment" @click="deleteadvertisingscreen" type="primary" icon='el-icon-delete' size='small'>删除广告屏</el-button>
+            <el-button v-if="addScreenDeployment" @click="addadvertisingscreen(0)" type="primary" icon='el-icon-plus' size='small'>添加屏幕</el-button>
+            <el-button v-if="editScreenDeployment" @click="addadvertisingscreen(1)" type="primary" icon="el-icon-edit" size='small'>编辑屏幕</el-button>
+            <el-button v-if="delScreenDeployment" @click="deleteadvertisingscreen" type="primary" icon='el-icon-delete' size='small'>删除屏幕</el-button>
+            <el-button v-if="screenBindProject" @click="screenBindProjectss" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button>
         </div>
         <div class="advertisingscreen_bottom">
             <div class="advertisingscreen_bottom_top">
                 <div class="search">
-                    <label>屏幕序列号:</label>
+                    <label>屏幕标识:</label>
                     <input type="text" v-model="serialNumber" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入屏幕序列号">
                 </div>
                 <div class="search">
@@ -44,61 +45,66 @@
                     <el-table-column
                     prop="nickName"
                     align='center'
-                    label="名称"
-                    width="110">
+                    label="昵称"
+                    min-width="100">
                     </el-table-column>
                     <el-table-column
                     prop="width"
                     align='center'
-                    label="宽度"
-                    width="80">
+                    label="宽度(像素)"
+                    min-width="80">
                     </el-table-column>
                     <el-table-column
                     prop="height"
                     align='center'
-                    label="高度"
-                    width="80">
+                    label="高度(像素)"
+                    min-width="80">
                     </el-table-column>
                     <el-table-column
                     prop="poleName"
                     align='center'
                     label="所属灯杆"
-                    width="110">
+                    :formatter="formatRole"
+                    min-width="100">
                     </el-table-column>
                     <el-table-column
                     prop="serialNumber"
                     align='center'
-                    label="屏幕序列号"
-                    width="130">
+                    label="屏幕标识"
+                    min-width="140">
                     </el-table-column>
                     <el-table-column
                     prop="modelName"
                     align='center'
-                    label="设备型号"
-                    width="80">
+                    label="型号"
+                    min-width="100">
                     </el-table-column>
                     <el-table-column
                     prop="location"
                     align='center'
                     label="位置"
-                    width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="remark"
-                    align='center'
-                    label="备注"
-                    width="180">
+                    :formatter="formatRole"
+                    min-width="120">
                     </el-table-column>
                     <el-table-column
                     prop="createTime"
                     label="创建时间"
                     align='center'
+                    min-width="160">
+                    </el-table-column>
+                    <el-table-column
+                    prop="remark"
+                    align='center'
+                    label="备注"
+                    :formatter="formatRole"
                     show-overflow-tooltip>
                     </el-table-column>
                 </el-table>
                 <div class="block">
                     <el-pagination
                     background
+                    @size-change="sizechange"
+                    @current-change="currentchange"
                     :current-page="pageIndex"
                     :page-sizes="[10, 20, 30, 50]"
                     :page-size="pageSize"
@@ -114,12 +120,12 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 v-if="addType=='0'" class="modal-title" id="myModalLabel">添加广告屏</h4>
-                        <h4 v-if="addType=='1'" class="modal-title" id="myModalLabel">编辑广告屏</h4>
+                        <h4 v-if="addType=='0'" class="modal-title" id="myModalLabel">添加屏幕</h4>
+                        <h4 v-if="addType=='1'" class="modal-title" id="myModalLabel">编辑屏幕</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label><span class="Required">*</span>名称:</label>
+                            <label><span class="Required">*</span>昵称:</label>
                             <input type="text" v-model='form.nickName' class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                             <label><span class="Required">*</span>型号:</label>
                             <el-select v-model="form.modelId" size='small' style='width:126px;' placeholder="请选择">
@@ -132,13 +138,13 @@
                             </el-select>
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>屏幕宽度:</label>
+                            <label><span class="Required">*</span>屏宽(像素):</label>
                             <input type="text" v-model='form.width' class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入宽度">
-                            <label><span class="Required">*</span>屏幕高度:</label>
+                            <label><span class="Required">*</span>屏高(像素):</label>
                             <input type="text" v-model='form.height' class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入高度">
                         </div>
                         <div class="form-group">
-                            <label>屏幕模式:</label>
+                            <label>安装模式:</label>
                             <el-select size='small' v-model="value2" style='width:126px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options2"
@@ -164,7 +170,7 @@
                             <input type="text" v-model="form.controlCardHeight" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入控制卡高">
                         </div>
                         <div class="form-group">
-                            <label><span class="Required">*</span>序列号:</label>
+                            <label><span class="Required">*</span>屏幕标识:</label>
                             <input type="text" v-model="form.serialNumber" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入屏幕序列号">
                             <label>备注:</label>
                             <el-input
@@ -257,6 +263,35 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
+        <!-- 绑定项目 -->
+        <div class="modal fade" id="screenBindProjectsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width:350px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">绑定项目</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <span style="line-height:35px;">项目:</span>
+                            <el-select size='small' v-model="value5" style="margin-left:20px;" placeholder="请选择">
+                                <el-option
+                                    v-for="item in options5"
+                                    style="height:30px;"
+                                    :key="item.id"
+                                    :label="item.projectName"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </div> 
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" @click="Submit_screenBindProjects" class="btn btn-primary">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
     </div>
 </template>
 <script>
@@ -269,9 +304,12 @@ export default {
             editScreenDeployment:false,
             delScreenDeployment:false,
             relationPole:false,
+            screenBindProject:false,
             projectId:sessionStorage.projectId,
             site:[], //列表数据选中  进行修改编辑操作
             addType:'0',  //添加编辑类型
+            options5:[],
+            value5:'',
             tableData:[],
             pageSize:10,
             pageIndex:1,
@@ -316,6 +354,13 @@ export default {
         // 
     },
     methods:{
+        formatRole:function(val, column, cellValue, index){
+            if(cellValue == null||cellValue == undefined||cellValue == ''){
+                return '----'
+            }else{
+                return cellValue
+            }
+        },
         // 列表数据change事件 进行编辑,删除操作
         userSelectionChange(val){
             this.site = val
@@ -409,12 +454,12 @@ export default {
             var that = this
             if(this.site.length==0||this.site.length>=2){
                 this.$message({
-                    message: '请选择单个广告屏进行删除!',
+                    message: '请选择单个屏幕进行删除!',
                     type: 'warning'
                 });
                 return;
             }
-            this.$confirm('此操作将删除此广告屏, 是否继续?', '提示', {
+            this.$confirm('是否删除所选屏幕？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -446,6 +491,69 @@ export default {
                 });          
             });
         },
+        //绑定项目
+        screenBindProjectss(){
+            var that = this;
+            if(this.site.length=='0'){
+                this.$message({
+                    message: '请选择灯杆进行绑定项目!',
+                    type: 'warning'
+                });
+                return;
+            }
+            $('#screenBindProjectsModal').modal('show')
+            this.project()
+        },
+        //请求所有项目接口
+        project(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/project/getMyAllProject',
+                contentType:'application/json;charset=UTF-8',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.options5 = data.result.projects
+                        that.value5 = ''
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                },
+            })
+        },
+        //绑定项目提交
+        Submit_screenBindProjects(){
+            var that = this;
+            var arr = [];
+            for(var i=0;i<this.site.length;i++){
+                arr.push(this.site[i].id)
+            }
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/screen/screenBindProject',
+                data:{
+                    screenIds:arr.join(','),
+                    projectId:that.value5
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '绑定成功!',
+                            type: 'success'
+                        });
+                        that.ready()
+                        $('#screenBindProjectsModal').modal('hide')
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                },
+            })
+        },
         //点击关联灯杆
         LampPole_data(){
             var that= this;
@@ -459,6 +567,7 @@ export default {
                 page:that.pageIndex,
                 rows:that.pageSize,
                 nickName:'',
+                serialNumber:'',
                 poleType:'',
                 areaId:'',
                 projectId:sessionStorage.projectId
@@ -536,6 +645,8 @@ export default {
                 }
             })
         },
+        sizechange(val){this.pageSize = val;this.ready()},
+        currentchange(val){this.pageIndex = val;this.ready()},
         search(){
             this.ready()
         },
@@ -570,7 +681,11 @@ export default {
             data.placement = that.value2
             data.position = that.value3
             if(this.site2.length==''){
-                datas.poleId=that.site[0].poleId
+                if(this.addType=='0'){
+                    data.poleId='0'
+                }else{
+                    data.poleId=that.site[0].poleId
+                }
             }else{
                 data.poleId = this.site2[0].id
             }
@@ -632,6 +747,9 @@ export default {
                             if(data.result.operats[i].code=='relationPole'){
                                 that.relationPole = true
                             }
+                            if(data.result.operats[i].code=='screenBindProject'){
+                                that.screenBindProject = true
+                            }
                         }
                     }else{
                         that.errorCode(data.errorCode)
@@ -647,7 +765,7 @@ export default {
     },
 }
 </script>
-<style lang='less' scoped>
+<style scoped>
 .Required{color: red;font-size: 17px;}
 .advertisingscreen{width: 100%;height: 100%;}
 .advertisingscreen>div{width: 100%;position: absolute;}

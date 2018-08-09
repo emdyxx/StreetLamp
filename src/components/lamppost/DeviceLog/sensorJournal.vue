@@ -47,12 +47,12 @@
                 prop="username"
                 align='center'
                 label="操作用户"
-                width="100">
+                min-width="100">
                 </el-table-column>
                 <el-table-column
                 align='center'
                 label="操作类别"
-                width="80">
+                min-width="80">
                     <template slot-scope="scope">
                         <span v-if="scope.row.operatType=='0'">添加</span>
                         <span v-if="scope.row.operatType=='1'">编辑</span>
@@ -62,7 +62,7 @@
                 <el-table-column
                 align='center'
                 label="操作状态"
-                width="80">
+                min-width="80">
                     <template slot-scope="scope">
                         <span v-if="scope.row.operatStatus=='0'">成功</span>
                         <span v-if="scope.row.operatStatus=='1'">失败</span>
@@ -72,13 +72,13 @@
                 prop="concentratorSN"
                 align='center'
                 label="序列号"
-                width="120">
+                min-width="120">
                 </el-table-column>
                 <el-table-column
                 prop="createTime"
                 align='center'
                 label="操作时间"
-                width="150">
+                min-width="150">
                 </el-table-column>
                 <el-table-column
                 prop="content"

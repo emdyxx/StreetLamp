@@ -16,16 +16,16 @@
         </el-select>
         <div class="header_center">
           <template v-for="item in menu">
-            <template v-if="item.menuName=='灯杆概览'">
+            <template v-if="item.code=='poleOverview'">
               <div @click="headercolor(1,item.id)" :class="headercolorType=='1'?'header_center_color':''">灯杆概览</div>
             </template>
-            <template v-if="item.menuName=='设备管理'">
+            <template v-if="item.code=='deviceManage'">
               <div @click="headercolor(2,item.id)" :class="headercolorType=='2'?'header_center_color':''">设备管理</div>
             </template>
-            <template v-if="item.menuName=='设备部署'">
+            <template v-if="item.code=='deviceDeploy'">
               <div @click="headercolor(3,item.id)" :class="headercolorType=='3'?'header_center_color':''">设备部署</div>
             </template>
-            <template v-if="item.menuName=='设备日志'">
+            <template v-if="item.code=='deviceLog'">
               <div @click="headercolor(4,item.id)" :class="headercolorType=='4'?'header_center_color':''">设备日志</div>
             </template>
           </template>
@@ -89,11 +89,11 @@ export default {
         success:function(data){
           if(data.errorCode=='0'){
             that.options2 = data.result.projects
-            var datas = {
-              projectName:'全部',
-              id:0,
-            } 
-            that.options2.unshift(datas)
+            // var datas = {
+            //   projectName:'全部',
+            //   id:-1,
+            // } 
+            // that.options2.unshift(datas)
             that.value2 = that.options2[0].id
             sessionStorage.projectId = that.options2[0].id
           }else{
@@ -166,6 +166,23 @@ export default {
             success:function(data){
                 if(data.errorCode==0){
                     that.menu = data.result.menus
+                    sessionStorage.menuId2 = data.result.menus[0].id
+                    if(data.result.menus[0].id=='7'){
+                      sessionStorage.headercolorType = '1'
+                      that.$router.push({'path':'/pandect'})
+                    }
+                    if(data.result.menus[0].id=='8'){
+                      sessionStorage.headercolorType = '2'
+                      that.$router.push({'path':'/equipment'})
+                    }
+                    if(data.result.menus[0].id=='9'){
+                      sessionStorage.headercolorType = '3'
+                      that.$router.push({'path':'/deploy'})
+                    }
+                    if(data.result.menus[0].id=='20'){
+                      sessionStorage.headercolorType = '4'
+                      that.$router.push({'path':'/DeviceLog'})
+                    }
                 }else{
                     that.errorCode(data.errorCode)
                 }

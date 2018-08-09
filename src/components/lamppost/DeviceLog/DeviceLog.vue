@@ -29,11 +29,8 @@ export default {
             $('#jstree').jstree({
                 "types" : {
                     "1" : {
-                        "icon" : that.serverurl+"/image/1.png",
+                        "icon" : 'jstree_Journal',
                     },
-                    "2" : {
-                        "icon" : that.serverurl+"/image/2.png",
-                    }
                 },
                 // "state" : { "key" : that.sizeType.text },
                 "plugins" : ['types'],
@@ -51,12 +48,11 @@ export default {
                                 if(data.errorCode=='0'){
                                     var datas = []
                                     var arr = {}
-                                    
                                     for(var i=0;i<data.result.menus.length;i++){
                                         arr = {}
+                                        arr.type = '1'
                                         arr.text = data.result.menus[i].menuName
                                         arr.id = data.result.menus[i].id
-                                        arr.type = '1'
                                         datas.push(arr)
                                     }
                                     jsonarray= datas;

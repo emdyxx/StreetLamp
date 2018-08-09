@@ -346,7 +346,7 @@ export default {
     },
 }
 </script>
-<style lang='less' scoped>
+<style scoped>
 .controlhousing{width: 100%;height: 100%;}
 .controlhousing>div{width: 100%;position: absolute;}
 .controlhousing_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}

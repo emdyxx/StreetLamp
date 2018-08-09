@@ -28,7 +28,7 @@
                             :props='optionspros'
                             :options="options4"
                             clearable
-                            change-on-select=true
+                            :change-on-select=true
                             :show-all-levels="false"
                             v-model="orgId2">
                         </el-cascader>
@@ -55,19 +55,19 @@
                         prop="projectName"
                         align='center'
                         label="项目名称"
-                        width="150">
+                        min-width="150">
                         </el-table-column>
                         <el-table-column
                         prop="principal"
                         align='center'
                         label="负责人"
-                        width="120">
+                        min-width="120">
                         </el-table-column>
                         <el-table-column
                         prop="username"
                         align='center'
                         label="所属机构"
-                        width="120">
+                        min-width="120">
                             <template slot-scope="scope">
                                 <span>{{scope.row.org.orgName}}</span>
                             </template>
@@ -76,7 +76,7 @@
                         prop="name"
                         align='center'
                         label="区域"
-                        width="250">
+                        min-width="250">
                             <template slot-scope="scope">
                                 <span>{{scope.row.area.mergerName}}</span>
                             </template>
@@ -85,7 +85,7 @@
                         prop="remark"
                         align='center'
                         label="备注"
-                        width="120">
+                        min-width="120">
                         </el-table-column>
                         <el-table-column
                         prop="createTime"
@@ -469,7 +469,7 @@ export default {
                 });
                 return;
             }
-            this.$confirm('此操作将删除此项目, 是否继续?', '提示', {
+            this.$confirm('是否删除所选项目？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -628,7 +628,7 @@ export default {
     },
 }
 </script>
-<style lang='less' scoped>
+<style scoped>
 .Required{color: red;font-size: 17px;}
 .article{width: 100%;height: 100%;padding: 5px;}
 .article_left{width: 200px;height: 100%;border: 1px solid #E4E4F1;overflow: auto;}
@@ -648,5 +648,5 @@ export default {
 
 .search{display: flex;}
 .search>label{width: 70px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
+.search>input{height: 32px !important;width: 110px;margin-top: 6px;height: 33px;padding: 0;}
 </style>

@@ -64,11 +64,11 @@ export default {
           }
         },
       })
-      
     },
   },
   created(){
     var that = this
+    sessionStorage.clear() 
     window.onkeydown = function(e){
         if(e.keyCode==13){
           that.login()

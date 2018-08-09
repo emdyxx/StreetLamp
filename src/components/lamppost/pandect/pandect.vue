@@ -18,128 +18,145 @@ export default {
     },
     mounted(){
         var that = this
-        $(function () {
-            $('#jstree').jstree({
-                'core' : {
-                    'data' : [
-                        {
-                            "text" : "浙江",
-                            id:'1',
-                            level:'1',
-                            "state" : { "opened" : true },
-                            "children" : [
-                                {
-                                    "text" : "杭州",
-                                    id:'2',
-                                    level:'2',
-                                    'children':[
-                                        {
-                                            "text" : "滨江",
-                                            id:'5',
-                                            level:'3',
-                                            'children':[
-                                                {
-                                                    "text" : "测试灯杆添加",
-                                                    "icon" : "jstree-file",
-                                                    id:'6',
-                                                    level:'4',
-                                                }
-                                            ]
-                                        },
-                                        
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }); 
-        });
-        $('#jstree').on("changed.jstree", function (e, data) {
-            if(data.node.original.level=='4'){
-                that.$router.push({'path':'/pandecttwo'})
-            }else{
-                that.$router.push({'path':'/pandectone'})
-            }
-        });
-        // this.readyLeft()
+        this.readyLeft()
     },
     methods:{
         //请求左侧树
-        // readyLeft(){
-        //     var that = this;
-        //     $('#jstree').jstree("destroy");
-        //     $('#jstree').jstree({
-        //         "types" : {
-        //             "1" : {
-        //                 "icon" : that.serverurl+"/image/1.png",
-        //             },
-        //             "2" : {
-        //                 "icon" : that.serverurl+"/image/2.png",
-        //             },
-        //             "3" : {
-        //                 "icon" : that.serverurl+"/image/2.png",
-        //             },
-        //             "4" : {
-        //                 "icon" : that.serverurl+"/image/2.png",
-        //             }
-        //         },
-        //         // "state" : { "key" : that.sizeType.text },
-        //         "plugins" : ['types'],
-        //         'core' : {
-        //             'data':function(obj,callback){
-        //                 var jsonstr="[]";
-        //                 var jsonarray = eval('('+jsonstr+')');
-        //                 var datas = []
-        //                 var dataType = true
-        //                 $.ajax({
-        //                     type:'get',
-        //                     async:true,
-        //                     dataType:'json',
-        //                     url:that.serverurl+'/pole/getPoleTrueList',
-        //                     contentType:'application/json;charset=UTF-8',
-        //                     data:{projectId:sessionStorage.projectId}, 
-        //                     success:function(data){
-        //                         if(data.errorCode=='0'){
-                                    
-        //                         }else{
-        //                             that.errorCode2(data.errorCode)
-        //                         }
-        //                     }
-        //                 })
-                        
-        //                 jsonarray= datas;
-        //                 callback.call(this, jsonarray);
-        //                 if(sessionStorage.menuId3=='02'){
-        //                     that.$router.push({'path':'/homepage'})
-        //                 }
-        //                 if(sessionStorage.menuId3=='10'){
-        //                     that.$router.push({'path':'lampslanterns'})
-        //                 }
-        //                 if(sessionStorage.menuId3=='11'){
-        //                     that.$router.push({'path':'advertisingScreens'})
-        //                 }
-                        
-        //             }
-        //         }
-        //     });
-        //     $('#jstree').bind("activate_node.jstree.jstree", function (e, data) {
-        //         console.log(data.node);
-        //         if(data.node.id==''||data.node.id==undefined){
-        //         }else{
-        //             sessionStorage.menuId3 = data.node.id
-        //             if(data.node.id=='02'){
-        //                 that.$router.push({'path':'/homepage'})
-        //             }
-        //             if(data.node.id=='10'){
-        //                 that.$router.push({'path':'lampslanterns'})
-        //             }
-        //             if(data.node.id=='11'){
-        //                 that.$router.push({'path':'advertisingScreens'})
-        //             }
-        //         }
-        //     });
-        // },
+        readyLeft(){
+            var that = this;
+            $('#jstree').jstree("destroy");
+            $('#jstree').jstree({
+                "types" : {
+                    "1" : {
+                        "icon" : that.serverurl+"/image/1.png",
+                    },
+                    "2" : {
+                        "icon" : that.serverurl+"/image/2.png",
+                    },
+                    "3" : {
+                        "icon" : that.serverurl+"/image/2.png",
+                    },
+                    "4" : {
+                        "icon" : that.serverurl+"/image/2.png",
+                    }
+                },
+                // "state" : {},
+                "plugins" : ['types'],
+                'core' : {
+                    'check_callback': true,
+                    'data':function(obj,callback){
+                        var jsonstr="[]";
+                        var jsonarray = eval('('+jsonstr+')');
+                        var datas = []
+                        var dataType = true
+                        $.ajax({
+                            type:'get',
+                            async:true,
+                            dataType:'json',
+                            url:that.serverurl+'/pole/getPoleAreaTrueList',
+                            contentType:'application/json;charset=UTF-8',
+                            data:{projectId:sessionStorage.projectId}, 
+                            success:function(data){
+                                if(data.errorCode=='0'){
+                                    callback.call(this, data.result);
+                                }else{
+                                    that.errorCode2(data.errorCode)
+                                }
+                            }
+                        })
+                        if(sessionStorage.menuId3=='02'){
+                            that.$router.push({'path':'/homepage'})
+                        }
+                        if(sessionStorage.menuId3=='10'){
+                            that.$router.push({'path':'lampslanterns'})
+                        }
+                        if(sessionStorage.menuId3=='11'){
+                            that.$router.push({'path':'advertisingScreens'})
+                        }
+                    }
+                }
+            })
+            $('#jstree').bind("changed.jstree", function (e, data) {
+                if(data.node.type=='3'){
+                    var inst = data.instance;
+                    var selectedNode = inst.get_node(data.selected);
+                    console.log(data.node.id)
+                    $.ajax({
+                        url :that.serverurl+'/pole/getPoleTrueListByAreaId',
+                        async:true,
+                        dataType:"json",
+                        type:"get",
+                        contentType:'application/json;charset=UTF-8',
+                        data:{
+                            projectId:sessionStorage.projectId,
+                            areaId:data.node.original.areaId
+                        },
+                        success : function(data) {
+                            if(data.errorCode=='0') {
+                                var demo = data.result.list;
+                                selectedNode.children = [];
+                                $.each(demo, function (i, item) {
+                                    item.text = item.nickName
+                                    item.type = 4
+                                    inst.create_node(selectedNode,item,"last");
+                                });
+                                inst.open_node(selectedNode);
+                            }else{
+                                that.errorCode2(data.errorCode)
+                            }
+                        }
+                    })
+                }
+                if(data.node.id==''||data.node.id==undefined){
+                }else{
+                    sessionStorage.menuId3 = data.node.id
+                    if(data.node.id=='02'){
+                        that.$router.push({'path':'/homepage'})
+                    }
+                    if(data.node.id=='10'){
+                        that.$router.push({'path':'lampslanterns'})
+                    }
+                    if(data.node.id=='11'){
+                        that.$router.push({'path':'advertisingScreens'})
+                    }
+                }
+            });
+            $('#jstree').on("open_node.jstree",function(e, data){
+                if(data.node.type=='3'){
+                    that.loadConfig(e, data)
+                }
+            })
+        },
+        loadConfig(e, data){
+            var that = this
+            var inst = data.instance;
+            var selectedNode = inst.get_node(data.node.id);
+            $.ajax({
+                url :that.serverurl+'/pole/getPoleTrueListByAreaId',
+                async:true,
+                dataType:"json",
+                type:"get",
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    projectId:sessionStorage.projectId,
+                    areaId:data.node.original.areaId
+                },
+                success : function(data) {
+                    if(data.errorCode=='0') {
+                        var demo = data.result.list;
+                        selectedNode.children = [];
+                        $.each(demo, function (i, item) {
+                            item.text = item.nickName
+                            item.type = 4
+                            inst.create_node(selectedNode,item,"last");
+                        });
+                        inst.open_node(selectedNode);
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
     },
     created() {
         sessionStorage.menuId2 = 3

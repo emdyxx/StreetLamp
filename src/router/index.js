@@ -38,6 +38,9 @@ import lampJournal from '@/components/lamppost/DeviceLog/lampJournal' //灯具�
 import screenJournal from '@/components/lamppost/DeviceLog/screenJournal' //广告屏日志
 import sensorJournal from '@/components/lamppost/DeviceLog/sensorJournal' //传感器日志
 
+import mapHomgPage from '@/components/map/mapHomgPage' //地图主页
+
+//  
 Vue.use(Router)
 Vue.use(ElementUI);
 Vue.prototype.errorCode = function(code){
@@ -436,7 +439,7 @@ Vue.prototype.errorCode = function(code){
   }
   if(code=='11050'){
     this.$message({
-        message: '没权限在该组织选绑定用户',
+        message: '没权限在该组织下添加用户',
         type: 'error',
         showClose: true,
     });
@@ -465,6 +468,27 @@ Vue.prototype.errorCode = function(code){
   if(code=='11054'){
     this.$message({
         message: '二级组织用户不能将所属组织为系统组织的修改为其他组织',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='11055'){
+    this.$message({
+        message: '组织级数不能超过5级',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='11056'){
+    this.$message({
+        message: '用户没有项目权限查看',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='11057'){
+    this.$message({
+        message: '用户没有这个项目权限查看',
         type: 'error',
         showClose: true,
     });
@@ -515,7 +539,7 @@ Vue.prototype.errorCode2 = function(code){
   }
   if(code=='10202'){
     this.$message({
-        message: '文件大小大于500M',
+        message: '文件大小大于50M',
         type: 'error',
         showClose: true,
     });
@@ -765,6 +789,69 @@ Vue.prototype.errorCode2 = function(code){
         showClose: true,
     });
   }
+  if(code=='12036'){
+    this.$message({
+        message: '开启屏幕失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='12037'){
+    this.$message({
+        message: '屏幕绑定灯杆失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='12038'){
+    this.$message({
+        message: '屏幕解绑灯杆失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='12039'){
+    this.$message({
+        message: '屏幕宽高比不一致',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='12040'){
+    this.$message({
+        message: '屏幕设置节目播放位置失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='12041'){
+    this.$message({
+        message: '节目详情不存在',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='12042'){
+    this.$message({
+        message: '当前屏幕正在上传中',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='12043'){
+    this.$message({
+        message: '屏幕已经绑定灯杆，请先解绑灯杆才能更改所属项目',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='12044'){
+    this.$message({
+        message: '屏幕绑定项目失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
 
   if(code=='13001'){
     this.$message({
@@ -920,6 +1007,35 @@ Vue.prototype.errorCode2 = function(code){
         showClose: true,
     });
   }
+  if(code=='13023'){
+    this.$message({
+        message: '单灯绑定灯杆失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='13024'){
+    this.$message({
+        message: '单灯解绑灯杆失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='13025'){
+    this.$message({
+        message: '单灯绑定项目失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='13026'){
+    this.$message({
+        message: '单灯已经绑定灯杆，请先解绑灯杆才能更改所属项目',
+        type: 'error',
+        showClose: true,
+    });
+  }
+
   if(code=='14001'){
     this.$message({
         message: '屏幕发送命令，请求错误',
@@ -948,7 +1064,104 @@ Vue.prototype.errorCode2 = function(code){
         showClose: true,
     });
   }
-
+  if(code=='15001'){
+    this.$message({
+        message: '添加灯杆错误',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='15002'){
+    this.$message({
+        message: '添加灯杆日志失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='15003'){
+    this.$message({
+        message: '修改灯杆失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='15004'){
+    this.$message({
+        message: '删除灯杆失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='15005'){
+    this.$message({
+        message: '灯杆不存在',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='15006'){
+    this.$message({
+        message: '灯杆绑定单灯失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='15007'){
+    this.$message({
+        message: '单灯同步更新灯杆地址失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='15008'){
+    this.$message({
+        message: '屏幕同步更新灯杆地址失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='15009'){
+    this.$message({
+        message: '传感器同步更新灯杆地址失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='15010'){
+    this.$message({
+        message: '删除灯杆解绑单灯失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='15011'){
+    this.$message({
+        message: '删除灯杆解绑屏幕失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='15012'){
+    this.$message({
+        message: '删除灯杆解绑传感器失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='15013'){
+    this.$message({
+        message: '灯杆绑定项目失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='16001'){
+    this.$message({
+        message: '获取模型信息失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
   if(code=='17001'){
     this.$message({
         message: '没有操作该传感器的权限',
@@ -965,7 +1178,7 @@ Vue.prototype.errorCode2 = function(code){
   }
   if(code=='17003'){
     this.$message({
-        message: '该控制器序列号不存在',
+        message: '该集中器标识不存在',
         type: 'error',
         showClose: true,
     });
@@ -993,7 +1206,7 @@ Vue.prototype.errorCode2 = function(code){
   }
   if(code=='17007'){
     this.$message({
-        message: '该控制器序列号已经存在',
+        message: '该集中器标识已经存在',
         type: 'error',
         showClose: true,
     });
@@ -1008,6 +1221,20 @@ Vue.prototype.errorCode2 = function(code){
   if(code=='17009'){
     this.$message({
         message: '传感器网关请求失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='17010'){
+    this.$message({
+        message: '请先解除灯杆绑定在重新绑定项目',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='17011'){
+    this.$message({
+        message: '修改传感器失败',
         type: 'error',
         showClose: true,
     });
@@ -1253,6 +1480,11 @@ export default new Router({
           component: journal,
         }
       ]
+    },
+    {
+      path: '/mapHomgPage',
+      name: 'mapHomgPage',
+      component: mapHomgPage,
     }
   ]
 })

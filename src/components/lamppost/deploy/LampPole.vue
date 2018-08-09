@@ -5,6 +5,7 @@
             <el-button v-if="addPole" @click="addLampPole(0)" type="primary" icon='el-icon-plus' size='small'>添加灯杆</el-button>
             <el-button v-if="editPole" @click="addLampPole(1)" type="primary" icon="el-icon-edit" size='small'>编辑灯杆</el-button>
             <el-button v-if="delPole" @click="deleteLampPole" type="primary" icon='el-icon-delete' size='small'>删除灯杆</el-button>
+            <el-button v-if="poleBindProject" @click="poleBindProjects" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button>
         </div>
         <div class="LampPole_bottom">
             <div class="LampPole_bottom_top">
@@ -24,6 +25,10 @@
                     </el-select>
                 </div>
                 <div class="search">
+                    <label>灯杆编号:</label>
+                    <input type="text" v-model="serialNumber" style="width:126px;" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入灯杆名称">
+                </div>
+                <!-- <div class="search">
                     <label style="width:25px;">省:</label>
                     <el-select @change="city(3)" v-model="value1_search" clearable size='small' style="width: 126px;" placeholder="请选择">
                         <el-option
@@ -55,7 +60,7 @@
                         :value="item.id">
                         </el-option>
                     </el-select>
-                </div>
+                </div> -->
                 <div style="margin-left:15px;">
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
@@ -67,6 +72,7 @@
                     stripe
                     size='small'
                     tooltip-effect="dark"
+                    show-overflow-tooltip=true
                     @selection-change="SelectionChange"
                     style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                     <el-table-column
@@ -77,13 +83,19 @@
                     <el-table-column
                     prop="nickName"
                     align='center'
-                    label="灯杆名称"
-                    width="100">
+                    label="昵称"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="serialNumber"
+                    align='center'
+                    label="编号"
+                    min-width="80">
                     </el-table-column>
                     <el-table-column
                     align='center'
                     label="灯杆类型"
-                    width="80">
+                    min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.poleType=='0'">普通灯杆</span>
                             <span v-if="scope.row.poleType=='1'">智慧灯杆</span>
@@ -93,28 +105,29 @@
                     prop="location"
                     align='center'
                     label="位置"
-                    width="80">
+                    :formatter="formatRole"
+                    min-width="120">
                     </el-table-column>
                     <el-table-column
                     align='center'
-                    label="已关联灯具"
-                    width="110">
+                    label="关联灯具"
+                    min-width="80">
                         <template slot-scope="scope">
                             <button @click="LampPole_click(scope.row.id)" style="height:20px;line-height:15px;">...</button>
                         </template>
                     </el-table-column>
                     <el-table-column
-                    label="已关联广告屏"
+                    label="关联屏幕"
                     align='center'
-                    width="110">
+                    min-width="80">
                         <template slot-scope="scope">
                             <button @click="relevancelanterns(scope.row.id)" style="height:20px;line-height:15px;">...</button>
                         </template>
                     </el-table-column>
                     <el-table-column
-                    label="已关联传感器"
+                    label="关联气象站"
                     align='center'
-                    width="110">
+                    min-width="80">
                         <template slot-scope="scope">
                             <button @click="sensor(scope.row.id)" style="height:20px;line-height:15px;">...</button>
                         </template>
@@ -123,6 +136,7 @@
                     prop="remark"
                     label="备注"
                     align='center'
+                    :formatter="formatRole"
                     show-overflow-tooltip>
                     </el-table-column>
                 </el-table>
@@ -151,7 +165,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label><span class="Required">*</span>名称:</label>
+                            <label><span class="Required">*</span>昵称:</label>
                             <input type="text" v-model="LampPoleData.nickName" class="form-control" id="email" placeholder="请输入名称">
                             <label>灯杆类型:</label>
                             <el-select v-model="value" size='small' style="width:126px" placeholder="请选择">
@@ -211,6 +225,8 @@
                                 placeholder="请输入内容"
                                 v-model="LampPoleData.remark">
                             </el-input>
+                            <label><span class="Required">*</span>灯杆编号:</label>
+                            <input type="text" v-model="LampPoleData.serialNumber" id="serialNumber" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入灯杆编号">
                         </div>
                         <div class="form-group" v-if="addtype=='0'">
                             <el-button v-if="addLamp" @click="addlamp(0)" type="primary" size='small'>添加灯具</el-button>
@@ -374,12 +390,12 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <div>
-                            <el-button v-if='relationScreen' @click="relevancelanterntwo(0)" type="primary" size='small'>关联广告屏</el-button>
+                            <el-button v-if='relationScreen' @click="relevancelanterntwo(0)" type="primary" size='small'>关联屏幕</el-button>
                             <el-button v-if='relationScreen' @click="relevancelanterntwo(1)" type="primary" size='small'>解除关联</el-button>
                         </div>
                     </div>
                     <div class="modal-body">
-                        <div>已关联广告屏:</div>
+                        <div>已关联屏幕:</div>
                         <el-table
                             :data="tableData4"
                             border
@@ -428,7 +444,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>请选择广告屏进行关联</h4>
+                        <h4>请选择屏幕进行关联</h4>
                     </div>
                     <div class="modal-body">
                         <el-table
@@ -525,7 +541,7 @@
                             <el-table-column
                             prop="concentratorSN"
                             align='center'
-                            label="控制器序列号"
+                            label="集中器标识"
                             :formatter="formatRole"
                             width="130">
                             </el-table-column>
@@ -580,7 +596,7 @@
                             <el-table-column
                             prop="concentratorSN"
                             align='center'
-                            label="控制器序列号"
+                            label="集中器标识"
                             :formatter="formatRole"
                             width="130">
                             </el-table-column>
@@ -629,13 +645,13 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label><span class="Required">*</span>终端ID:</label>
+                            <label><span class="Required">*</span>灯控器标识:</label>
                             <input type="text" v-model="lampData.serialNumber" class="form-control" id="serialNumber" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入单灯序列号">
-                            <label><span class="Required">*</span>控制器ID:</label>
-                            <input type="text" v-model="lampData.concentratorSN" class="form-control" id="concentratorSN" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入控制器序列号">
+                            <label><span class="Required">*</span>集中器标识:</label>
+                            <input type="text" v-model="lampData.concentratorSN" class="form-control" id="concentratorSN" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入集中器标识">
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>名称:</label>
+                            <label><span class="Required">*</span>昵称:</label>
                             <input type="text" v-model="lampData.nickName" class="form-control" id="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入单灯名称">
                             <label><span class="Required">*</span>型号:</label>
                             <el-select v-model="lampData.modelId" size='small' style='width:126px;' placeholder="请选择">
@@ -667,6 +683,35 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
+        <!-- 绑定项目 -->
+        <div class="modal fade" id="poleBindProjectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width:350px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">绑定项目</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <span style="line-height:35px;">项目:</span>
+                            <el-select size='small' v-model="value5" style="margin-left:20px;" placeholder="请选择">
+                                <el-option
+                                    v-for="item in options5"
+                                    style="height:30px;"
+                                    :key="item.id"
+                                    :label="item.projectName"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </div> 
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" @click="Submit_poleBindProject" class="btn btn-primary">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
     </div>
 </template>
 <script>
@@ -681,7 +726,10 @@ export default {
             relationLamp:false,
             relationScreen:false,
             relationSensor:false,
+            poleBindProject:false,
             addLamp:false,
+            options5:[],
+            value5:'',
             site:[], //灯杆列表选中数据
             addtype:'0', //判断是添加还是编辑的参数
             tableData:[],
@@ -698,6 +746,7 @@ export default {
             value: 0,
             nickName:'',
             value_search:'',
+            serialNumber:'',
             radio1: '0', //模态框单选按钮
             options1:[],
             value1:'',
@@ -714,7 +763,7 @@ export default {
                 concentratorSN:'',
                 nickName:'',
                 modelId:'',
-                lampNumber:'',
+                lampNumber:'1',
                 mark:'',
             },//添加灯具的信息
             LampPoleData:{
@@ -724,6 +773,7 @@ export default {
                 
                 location:'',
                 remark:'',
+                serialNumber:''
             },//添加灯杆的信息
             tableData2:[],//已关联灯杆的灯具信息
             site2:[],
@@ -882,6 +932,7 @@ export default {
             // 0位添加 1为删除
             if(val=='0'){
                 $('#addModal').modal('show')
+                $('#serialNumber').removeAttr('disabled')
                 this.province(0)
                 this.addtype = val
                 this.LampPoleData.nickName = ''
@@ -901,6 +952,7 @@ export default {
                 this.addtype = val
                 this.province(1)
                 $('#addModal').modal('show')
+                $('#serialNumber').attr('disabled','disabled')
                 this.LampPoleData.nickName = this.site[0].nickName
                 this.value = this.site[0].poleType
                 this.LampPoleData.location = this.site[0].location
@@ -908,6 +960,7 @@ export default {
                 var arr = this.site[0].coord.split(','); 
                 this.LampPoleData.longitude = arr[0]
                 this.LampPoleData.latitude = arr[1]
+                this.LampPoleData.serialNumber = this.site[0].serialNumber
             }
             /* 完成拖拽 */
             $('#addModal').draggable({
@@ -944,6 +997,7 @@ export default {
             data.areaId = this.value3;
             data.location = this.LampPoleData.location;
             data.remark = this.LampPoleData.remark;
+            data.serialNumber = this.LampPoleData.serialNumber;
             data.projectId = sessionStorage.projectId
             $.ajax({
                 type:'post',
@@ -984,7 +1038,7 @@ export default {
             for(var i=0;i<that.site.length;i++){
                 arr.push(that.site[i].id)
             }
-            this.$confirm('此操作将删除此灯杆, 是否继续?', '提示', {
+            this.$confirm('是否删除所选灯杆？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -1017,7 +1071,70 @@ export default {
                 });          
             });
         },
-        
+        //绑定项目
+        poleBindProjects(){
+            var that = this;
+            if(this.site.length=='0'){
+                this.$message({
+                    message: '请选择灯杆进行绑定项目!',
+                    type: 'warning'
+                });
+                return;
+            }
+            $('#poleBindProjectModal').modal('show')
+            this.project()
+        },
+        //请求所有项目接口
+        project(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/project/getMyAllProject',
+                contentType:'application/json;charset=UTF-8',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.options5 = data.result.projects
+                        that.value5 = ''
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                },
+            })
+        },
+        //绑定项目提交
+        Submit_poleBindProject(){
+            var that = this;
+            var arr = [];
+            for(var i=0;i<this.site.length;i++){
+                arr.push(this.site[i].id)
+            }
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/pole/poleBindProject',
+                data:{
+                    poleIds:arr.join(','),
+                    projectId:that.value5
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '绑定成功!',
+                            type: 'success'
+                        });
+                        that.ready()
+                        $('#poleBindProjectModal').modal('hide')
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                },
+            })
+        },
+
         //关联灯具
         LampPole_click(val){
             if(sessionStorage.projectId=='0'){
@@ -1262,7 +1379,7 @@ export default {
                 var arr = [];
                 if(that.site4.length==0){
                     this.$message({
-                        message: '请选择广告屏进行解除关联!',
+                        message: '请选择屏幕进行解除关联!',
                         type: 'error'
                     });
                     return;
@@ -1357,7 +1474,6 @@ export default {
                 }
             })
         },
-
         //关联传感器
         sensor(val){
             if(sessionStorage.projectId=='0'){
@@ -1507,11 +1623,11 @@ export default {
                 }
             })
         },
-
         //添加灯具
         addlamp(){
             var that = this
             $('#addlamp').modal('show')
+            $('#lampNumber').attr('disabled','disabled')
             $.ajax({
                 type:'get',
                 async:true,
@@ -1534,7 +1650,7 @@ export default {
             this.lampData.concentratorSN=''
             this.lampData.nickName='',
             this.lampData.modelName=''
-            this.lampData.lampNumber = ''
+            // this.lampData.lampNumber = ''
             this.lampData.mark=''
             /* 完成拖拽 */
             $('#addlamp').draggable({
@@ -1618,6 +1734,7 @@ export default {
                 rows:that.pageSize,
                 nickName:that.nickName,
                 poleType:that.value_search,
+                serialNumber:that.serialNumber,
                 areaId:areaId,
                 projectId:sessionStorage.projectId
             }
@@ -1680,6 +1797,9 @@ export default {
                             if(data.result.operats[i].code=='addLamp'){
                                 that.addLamp = true
                             }
+                            if(data.result.operats[i].code=='poleBindProject'){
+                                that.poleBindProject = true
+                            }
                         }
                     }else{
                         that.errorCode(data.errorCode)
@@ -1694,7 +1814,7 @@ export default {
     },
 }
 </script>
-<style lang='less' scoped>
+<style scoped>
 .Required{color: red;font-size: 17px;}
 .LampPole{width: 100%;height: 100%;}
 .LampPole>div{width: 100%;position: absolute;}

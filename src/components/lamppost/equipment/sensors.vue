@@ -2,20 +2,20 @@
     <!-- 传感器管理 -->
     <div class="cameras">
         <div class="cameras_top">
-            <el-button v-if="deliverySensor" @click="details" type="primary" icon='el-icon-search' size='small'>查询实时数据</el-button>
+            <el-button v-if="deliverySensor" @click="details" type="primary" icon='el-icon-search' size='small'>获取数据</el-button>
         </div>
         <div class="cameras_bottom">
             <div class="cameras_bottom_top">
                 <div class="search">
-                    <label style="width:100px;">控制器序列号:</label>
+                    <label style="width:100px;">集中器标识:</label>
                     <input type="text" v-model="concentratorSN" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入控制器序列号">
                 </div>
                 <div class="search">
-                    <label style="width:90px;">传感器名称:</label>
+                    <label style="width:90px;">气象站名称:</label>
                     <input type="text" v-model="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入传感器名称">
                 </div>
                 <div class="search">
-                    <label>型号ID:</label>
+                    <label>型号标识:</label>
                     <el-select v-model="modelId" size='small' clearable style='width:146px;' placeholder="请选择">
                         <el-option
                         v-for="item in options"
@@ -46,25 +46,25 @@
                     <el-table-column
                     prop="nickName"
                     align='center'
-                    label="名称"
-                    width="110">
+                    label="气象站名称"
+                    min-width="110">
                     </el-table-column>
                     <el-table-column
                     prop="concentratorSN"
                     align='center'
-                    label="控制器序列号"
-                    width="120">
+                    label="集中器标识"
+                    min-width="120">
                     </el-table-column>
                     <el-table-column
                     prop="modelName"
                     align='center'
-                    label="型号"
-                    width="100">
+                    label="型号标识"
+                    min-width="100">
                     </el-table-column>
                     <el-table-column
                     align='center'
                     label="状态"
-                    width="80">
+                    min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.online=='0'">离线</span>
                             <span v-if="scope.row.online=='1'">在线</span>
@@ -73,54 +73,54 @@
                     <el-table-column
                     prop="windDirectionAverage"
                     align='center'
-                    label="平均风向"
-                    width="110"
+                    label="风向"
+                    min-width="80"
                     :formatter="formatRole">
                     </el-table-column>
                     <el-table-column
                     prop="windSpeedAverage"
                     align='center'
-                    label="平均风速"
-                    width="110"
+                    label="风速"
+                    min-width="80"
                     :formatter="formatRole">
                     </el-table-column>
                     <el-table-column
                     prop="temperature"
                     align='center'
                     label="温度"
-                    width="110"
+                    min-width="80"
                     :formatter="formatRole">
                     </el-table-column>
                     <el-table-column
                     prop="humidity"
                     align='center'
                     label="湿度"
-                    width="110"
+                    min-width="80"
                     :formatter="formatRole">
                     </el-table-column>
                     <el-table-column
                     prop="pressure"
                     align='center'
                     label="气压"
-                    width="110"
+                    min-width="80"
                     :formatter="formatRole">
                     </el-table-column>
                     <el-table-column
                     prop="noiseAverage"
                     align='center'
-                    label="平均噪声"
-                    width="140">
+                    label="噪声"
+                    min-width="80">
                     </el-table-column>
                     <el-table-column
                     prop="PM2"
                     align='center'
-                    label="pm2.5"
-                    width="180"
+                    label="PM2.5"
+                    min-width="80"
                     :formatter="formatRole">
                     </el-table-column>
                     <el-table-column
                     prop="PM10"
-                    label="pm10"
+                    label="PM10"
                     align='center'
                     :formatter="formatRole"
                     show-overflow-tooltip>

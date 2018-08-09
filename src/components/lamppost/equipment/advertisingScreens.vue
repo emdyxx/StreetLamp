@@ -19,11 +19,11 @@
         <div class="advertisingScreens_bottom">
             <div class="advertisingScreens_bottom_top">
                 <div class="search">
-                    <label>屏幕序列号:</label>
+                    <label>序列号:</label>
                     <input type="text" v-model="serialNumber" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入屏幕序列号">
                 </div>
                 <div class="search">
-                    <label>屏幕状态:</label>
+                    <label>状态:</label>
                     <el-select v-model="value" style="width:126px;" size='small' clearable placeholder="请选择">
                         <el-option
                         v-for="item in options"
@@ -55,50 +55,46 @@
                     prop="nickName"
                     align='center'
                     label="名称"
-                    width="80">
+                    min-width="80">
                     </el-table-column>
                     <el-table-column
                     prop="serialNumber"
                     align='center'
-                    label="屏幕序列号"
-                    width="125">
+                    label="序列号"
+                    min-width="125">
                     </el-table-column>
                     <el-table-column
                     prop="width"
                     align='center'
-                    label="宽度"
-                    width="80">
+                    label="宽度(像素)"
+                    min-width="80">
                     </el-table-column>
                     <el-table-column
                     prop="height"
                     align='center'
-                    label="高度"
-                    width="80">
+                    label="高度(像素)"
+                    min-width="80">
                     </el-table-column>
                     <el-table-column
                     align='center'
-                    label="屏幕状态"
-                    width="80">
+                    label="状态"
+                    min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.status=='0'">关闭</span>
                             <span v-if="scope.row.status=='1'">开启</span>
                         </template>
                     </el-table-column>
                     <el-table-column
+                    prop="programName"
                     align='center'
-                    label="当前节目状态"
-                    width="110">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.uploadStatus=='0'">未上传</span>
-                            <span v-if="scope.row.uploadStatus=='1'">上传中</span>
-                            <span v-if="scope.row.uploadStatus=='2'">上传成功</span>
-                            <span v-if="scope.row.uploadStatus=='3'">上传失败</span>
-                        </template>
+                    label="当前播放节目"
+                    :formatter="formatRole"
+                    min-width="110">
                     </el-table-column>
                     <el-table-column
                     align='center'
                     label="操作"
-                    width="130">
+                    min-width="130">
                         <template slot-scope="scope">
                             <el-button type="primary" size='small' @click="status(scope.row)">节目下发进度</el-button>
                         </template>
@@ -107,12 +103,15 @@
                     prop="remark"
                     label="备注"
                     align='center'
+                    :formatter="formatRole"
                     show-overflow-tooltip>
                     </el-table-column>
                 </el-table>
                 <div class="block">
                     <el-pagination
                     background
+                    @size-change="sizechange"
+                    @current-change="currentchange"
                     :current-page="pageIndex"
                     :page-sizes="[10, 20, 30, 50]"
                     :page-size="pageSize"
@@ -171,7 +170,7 @@
                                 <el-table-column
                                 prop="nickName"
                                 align='center'
-                                label="名称"
+                                label="文件名"
                                 width="170">
                                 </el-table-column>
                                 <el-table-column
@@ -276,13 +275,13 @@
                                 <el-table-column
                                 prop="width"
                                 align='center'
-                                label="宽"
+                                label="宽(像素)"
                                 width="80">
                                 </el-table-column>
                                 <el-table-column
                                 prop="height"
                                 align='center'
-                                label="高"
+                                label="高(像素)"
                                 width="80">
                                 </el-table-column>
                                 <el-table-column
@@ -295,6 +294,8 @@
                             <div class="block">
                                 <el-pagination
                                 background
+                                @size-change="sizechange2"
+                                @current-change="currentchange2"
                                 :current-page="noticeIndex"
                                 :page-sizes="[10, 20, 30, 50]"
                                 :page-size="noticeSize"
@@ -332,11 +333,12 @@
                                     :value="item.value">
                                 </el-option>
                             </el-select>
-                            <span style="margin-left:30px;"><i>*</i>宽:</span>
+                            <span style="margin-left:30px;"><i>*</i>宽(像素):</span>
                             <el-input v-model="programDate.programWidth" size='small' style="width:146px" placeholder="请输入宽"></el-input>
-                            <span style="margin-left:30px;"><i>*</i>高:</span>
+                            <span style="margin-left:30px;"><i>*</i>高(像素):</span>
                             <el-input v-model="programDate.programHeight" size='small' style="width:146px" placeholder="请输入高"></el-input>
                         </div>
+                        <div class="el-upload__tip" style="text-align: center;">请谨慎设置节目宽高,须与屏幕宽高保持一致</div>
                         <div class="setProgram" v-if="programDate.setProgramType==false">
                             <div class="setProgram_left">
                                 <div class="setProgram_div_top">
@@ -435,8 +437,8 @@
                             </div>
                             <div class="setProgram_right">
                                 <div class="setProgram_div_top">
-                                    <span style="margin-left:15px;">宽:{{programDate.programWidth}}</span>
-                                    <span style="margin-left:15px;">高:{{programDate.programHeight}}</span>
+                                    <span style="margin-left:15px;">宽:{{programDate.programWidth}}px</span>
+                                    <span style="margin-left:15px;">高:{{programDate.programHeight}}px</span>
                                     <el-button type="primary" @click="preview" size='small' style="margin:4px 0 0 15px;">预览</el-button>
                                 </div>
                                 <div class="setProgram_div_bottom previews" style="display:flex;justify-content: center;align-items: center;">
@@ -467,12 +469,13 @@
                         <h4 class="modal-title" id="myModalLabel">文件上传</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group" style="padding-left:80px;">
+                        <div class="form-group" style="padding-left:80px;margin-bottom:0;">
                             <input type="file" ref="upload" @change="uploadChange">
                         </div>
+                        <div class="el-upload__tip" style="text-align: center;">只能上传jpg/png/git图片，MP4/MKV视频,且不超过50M</div>
                         <div class="form-group">
-                            <label>名称:</label>
-                            <input type="text" id="nickName" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
+                            <label>文件名:</label>
+                            <input type="text" id="nickName" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入文件名">
                         </div> 
                     </div>
                     <div class="modal-footer">
@@ -540,7 +543,7 @@
                                     <el-table-column
                                     label="操作"
                                     align='center'
-                                    width="80">
+                                    width="176">
                                         <template slot-scope="scope">
                                             <el-button @click="previewS(scope.row)" type="primary" size='mini'>预览</el-button>
                                         </template>
@@ -705,6 +708,13 @@ export default {
         
     },
     methods:{
+        formatRole:function(val, column, cellValue, index){
+            if(cellValue == null||cellValue == undefined||cellValue == ''){
+                return '----'
+            }else{
+                return cellValue
+            }
+        },
         //操作按钮点击事件
         handleCommand(val){
             var that = this
@@ -722,6 +732,21 @@ export default {
                         type: 'warning'
                     });
                     return;
+                }
+                var arr = []
+                for(var i=0;i<this.tableSite1.length;i++){
+                    arr.push(this.tableSite1[i].height/this.tableSite1[i].width)
+                }
+                for(var j=0;j<arr.length;j++){
+                    if(arr[0]==arr[j]){
+
+                    }else{
+                        that.$message({
+                            message: '所选屏幕宽高比例不一致,不能进行此操作!',
+                            type: 'error'
+                        });
+                        return;
+                    }
                 }
                 $('#programSetting').modal('show')
                 $.ajax({
@@ -805,7 +830,6 @@ export default {
         sendMedia(){
             var that = this
             var arr = [];
-            var Proportion = ''
             if(that.programSettingSite.length=='0'||that.programSettingSite.length>1){
                 that.$message({
                     message: '请选择一个节目进行下发!',
@@ -813,24 +837,16 @@ export default {
                 });
                 return;
             }
-            Proportion = that.programSettingSite[0].width/that.programSettingSite[0].height
-            var arr1 = [];
-            // var s=0;
-            for(var i=0;i<this.tableSite1.length;i++){
-                arr1.push(this.tableSite1[i].width/this.tableSite1[i].height)
-            }
-            for(let i=0;i<arr1.length;i++){
-                if(Proportion==arr1[i]){
+            var Proportion = that.programSettingSite[0].height/that.programSettingSite[0].width
+            var Proportion2 = this.tableSite1[0].height/this.tableSite1[0].width
+            if(Proportion==Proportion2){
 
-                }else if(arr1[i]/Proportion<=2){
-
-                }else{
-                    that.$message({
-                        message: '所选宽高比例不一致或比例相差太大,节目不能下发!',
-                        type: 'error'
-                    });
-                    return;
-                }
+            }else{
+                that.$message({
+                    message: '所选节目宽高比例与屏幕宽高比例不一致,不能下发!',
+                    type: 'error'
+                });
+                return;
             }
             for(var i = 0;i<this.tableSite1.length;i++){
                 arr.push(this.tableSite1[i].id)
@@ -1006,6 +1022,8 @@ export default {
                 }
             })
         },
+        sizechange2(val){this.noticeSize = val;this.noticeready();},
+        currentchange2(val){this.noticeIndex = val;this.noticeready();},
         //选择节目列表数据
         noticeTableChange(val){
             this.noticeSite = val
@@ -1052,7 +1070,7 @@ export default {
                     });
                     return;
                 }
-                that.$confirm('此操作将删除此节目, 是否继续?', '提示', {
+                that.$confirm('是否删除所选项目？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -1175,6 +1193,14 @@ export default {
                 });
                 return;
             }
+            if(this.filesSelected.length>=10){
+                this.$message({
+                    message: '最多添加10个媒体文件!',
+                    type:'error',
+                    showClose: true,
+                });
+                return;
+            }
             for(var i = 0;i<this.filesSelected.length;i++){
                 if(this.filesSelected[i].type=='1'){
                     type = type+1
@@ -1205,15 +1231,6 @@ export default {
                     }
                 }
             }
-            if(this.filesSelected.length>10){
-                this.$message({
-                    message: '最多添加10个媒体文件!',
-                    type:'error',
-                    showClose: true,
-                });
-                return;
-            }
-            
             for(var i = 0;i<this.leftMediaSize.length;i++){
                 this.filesSelected.push(this.leftMediaSize[i])
                 this.filesSelected[this.filesSelected.length-1].mediaId = this.leftMediaSize[i].id
@@ -1515,7 +1532,7 @@ export default {
             for(var i = 0;i<that.mediaSite.length;i++){
                 ids.push(that.mediaSite[i].id)
             }
-            that.$confirm('此操作将删除选中媒体, 是否继续?', '提示', {
+            that.$confirm('是否删除所选媒体？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -1647,6 +1664,8 @@ export default {
                 }
             })
         },
+        sizechange(val){this.pageSize = val;this.ready()},
+        currentchange(val){this.pageIndex = val;this.ready()},
         search(){
             this.ready()
         },
@@ -1796,8 +1815,8 @@ export default {
 .mediaLibrary_top>span,{font-size: 15px;line-height: 35px;}
 .mediaLibrary_top>span:nth-of-type(2){margin-left: 30px;}
 .mediaLibrary_bottom{width: 100%;height: auto;margin-top:5px;}
-.setProgram{width: 100%;display: flex;height: 450px;}
-.setProgram>div{width: 30%;border: 1px solid #e5e5e5;border-radius: 5px;position: relative;}
+.setProgram{width: 100%;display: flex;height: 450px;overflow: auto;}
+.setProgram>div{width: 30%;border: 1px solid #e5e5e5;border-radius: 5px;position: relative;overflow: auto;}
 .setProgram>div:nth-of-type(2){margin-left: 5%;margin-right: 5%;}.setProgram>div:nth-of-type(2){margin-left: 5%;margin-right: 5%;}
 .setProgram_div_top{width: 100%;height: 40px;line-height: 35px;border-bottom: 1px solid #e5e5e5;}
 .setProgram_div_bottom{position: absolute;top:40px;bottom: 0;left: 0;right: 0;padding: 5px;}

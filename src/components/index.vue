@@ -117,161 +117,160 @@
 
 <script>
 export default {
-  name: 'index',
-  data () {
-    return {
-        serverurl:localStorage.serverurl,
-        versionNumber:localStorage.versionNumber,  //版本号
-        menu:[],
-        data:{
-            org:{orgName:''},
-            icon:''
-        },
-        password1:'',
-        password2:"",
-        password3:''
-    }
-  },
-  methods:{
-    // 退出登录
-    dropout(){
-        var that = this;
-        sessionStorage.token = ''
-        that.$router.push({'path':'/'})
-    },
-    //点击修改密码弹出框
-    removePassword(){
-        $('#myModal2').modal('show')
-        this.password1 = ''
-        this.password2 = ''
-        this.password3 = ''
-    },
-    //修改密码提交
-    addSubmit(){
-        var that = this;
-        if(this.password1==''||this.password2==''||this.password3==''){
-            this.$message({
-                message: '必填字段不能为空!',
-                type: 'error'
-            });
-            return;
-        }
-        if(this.password1==this.password2){
-            this.$message({
-                message: '新密码不能与旧密码相同!',
-                type: 'error'
-            });
-            return;
-        }
-        if(this.password2!=this.password3){
-            this.$message({
-                message: '两次新密码不一致!',
-                type: 'error'
-            });
-            return;
-        }
-        var data = {
-            newPassword:that.password2,
-            confirmPassword:that.password3,
-            oldPassword:that.password1
-        }
-        $.ajax({
-            type:'post',
-            async:true,
-            dataType:'json',
-            url:that.serverurl+'/user/updateUserPwd',
-            contentType:'application/json;charset=UTF-8',
-            data:JSON.stringify(data),
-            success:function(data){
-                if(data.errorCode=='0'){
-                    that.$message({
-                        message: '密码修改成功!',
-                        type: 'success'
-                    });
-                    $('#myModal2').modal('hide')
-                }else{
-                    that.errorCode(data.errorCode)
-                }
-            }
-        })
-    },
-    //点击右上角图像
-    imagemanage(){
-        $('#MyModal').modal('show')
-    },
-    //用户管理系统(用户中心)
-    usermanage(val){
-        sessionStorage.menuId = val
-        sessionStorage.headercolorType = '1'
-        this.$router.push({'path':'/usercenter'})
-    },
-    //智慧灯杆系统
-    lamppost(val){
-        sessionStorage.menuId = val
-        sessionStorage.headercolorType = '1'
-        this.$router.push({'path':'/lamppost'})
-    },
-    //gis地图系统
-    map(val){
-        this.$message({
-            message: 'GIS功能正于开发中,请稍后!',
-            type: 'success'
-        });
-    },
-    //请求权限
-    Jurisdiction(){
-        var that = this;
-        $.ajax({
-            type:'get',
-            async:true,
-            dataType:'json',
-            url:that.serverurl+'/privilege/getMyMenu',
-            contentType:'application/json;charset=UTF-8',
+    name: 'index',
+    data () {
+        return {
+            serverurl:localStorage.serverurl,
+            versionNumber:localStorage.versionNumber,  //版本号
+            menu:[],
             data:{
-                parentId:'0'
+                org:{orgName:''},
+                icon:''
             },
-            success:function(data){
-                if(data.errorCode==0){
-                    that.menu = data.result.menus
-                }else{
-                    that.errorCode(data.errorCode)
-                }
-            },
-        })
+            password1:'',
+            password2:"",
+            password3:''
+        }
     },
-    //请求用户基本信息
-    ready(){
-        var that = this;
-        var myDate = new Date();
-        var ts = myDate.toLocaleString();
-        $.ajax({
-            type:'get',
-            async:true,
-            dataType:'json',
-            url:that.serverurl+'/user/getMyInformation',
-            contentType:'application/json;charset=UTF-8',
-            data:{},
-            success:function(data){
-                if(data.errorCode=='0'){
-                    that.data = data.result.user
-                    that.data.ts = ts
-                    var url=that.serverurl+data.result.user.org.backdrop
-                    $('.index').css({
-                        "background-image":"url("+url+")",
-                        "background-size":"100% 100%",
-                        "background-repeat":"no-repeat",
-                    })
-                }else{
-                    that.errorCode(data.errorCode)
-                }
+    methods:{
+        // 退出登录
+        dropout(){
+            var that = this;
+            sessionStorage.token = ''
+            that.$router.push({'path':'/'})
+        },
+        //点击修改密码弹出框
+        removePassword(){
+            $('#myModal2').modal('show')
+            this.password1 = ''
+            this.password2 = ''
+            this.password3 = ''
+        },
+        //修改密码提交
+        addSubmit(){
+            var that = this;
+            if(this.password1==''||this.password2==''||this.password3==''){
+                this.$message({
+                    message: '必填字段不能为空!',
+                    type: 'error'
+                });
+                return;
             }
-        })
+            if(this.password1==this.password2){
+                this.$message({
+                    message: '新密码不能与旧密码相同!',
+                    type: 'error'
+                });
+                return;
+            }
+            if(this.password2!=this.password3){
+                this.$message({
+                    message: '两次新密码不一致!',
+                    type: 'error'
+                });
+                return;
+            }
+            var data = {
+                newPassword:that.password2,
+                confirmPassword:that.password3,
+                oldPassword:that.password1
+            }
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/user/updateUserPwd',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '密码修改成功!',
+                            type: 'success'
+                        });
+                        $('#myModal2').modal('hide')
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                }
+            })
+        },
+        //点击右上角图像
+        imagemanage(){
+            $('#MyModal').modal('show')
+        },
+        //用户管理系统(用户中心)
+        usermanage(val){
+            sessionStorage.menuId = val
+            sessionStorage.headercolorType = '1'
+            this.$router.push({'path':'/usercenter'})
+        },
+        //智慧灯杆系统
+        lamppost(val){
+            sessionStorage.menuId = val
+            sessionStorage.headercolorType = '1'
+            this.$router.push({'path':'/lamppost'})
+        },
+        //gis地图系统
+        map(val){
+            sessionStorage.menuId = val
+            sessionStorage.headercolorType = '1'
+            this.$router.push({'path':'/mapHomgPage'})
+        },
+        //请求权限
+        Jurisdiction(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/privilege/getMyMenu',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    parentId:'0'
+                },
+                success:function(data){
+                    if(data.errorCode==0){
+                        that.menu = data.result.menus
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                },
+            })
+        },
+        //请求用户基本信息
+        ready(){
+            var that = this;
+            var myDate = new Date();
+            var ts = myDate.toLocaleString();
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/user/getMyInformation',
+                contentType:'application/json;charset=UTF-8',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.data = data.result.user
+                        that.data.ts = ts
+                        var url=that.serverurl+data.result.user.org.backdrop
+                        $('.index').css({
+                            "background-image":"url("+url+")",
+                            "background-size":"100% 100%",
+                            "background-repeat":"no-repeat",
+                        })
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                }
+            })
+        },
     },
-  },
-  created() {
+    created() {
         this.Jurisdiction();
         this.ready();
-  },
+    },
 }
 </script>
 <style scoped>

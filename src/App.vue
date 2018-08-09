@@ -8,7 +8,7 @@
 export default {
   name: 'App',
   created(){
-    localStorage.serverurl = 'http://192.168.10.89:8010/solin-consumer'
+    localStorage.serverurl = 'http://192.168.10.89:8021/solin-consumer'
     // localStorage.serverurl = 'http://192.168.10.129:8010/solin-consumer'
       
     // $.ajax({

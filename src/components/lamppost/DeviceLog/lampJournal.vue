@@ -2,7 +2,7 @@
     <!-- 灯具日志 -->
     <div class="lampJournal">
         <el-tabs v-model="activeName" style="height:100%;" type="border-card" @tab-click="handleClick">
-            <el-tab-pane label="操作日志" name='0' style="height: 100%;position:relative;">
+            <el-tab-pane label="操作日志" v-if="viewLampOperatLog" name='0' style="height: 100%;position:relative;">
                 <div class="lampJournal_top">
                     <div class="search">
                         <span>单灯序列号:</span>
@@ -38,18 +38,18 @@
                         prop="username"
                         align='center'
                         label="操作用户"
-                        width="100">
+                        min-width="100">
                         </el-table-column>
                         <el-table-column
                         prop="serialNumber"
                         align='center'
                         label="单灯序列号"
-                        width="130">
+                        min-width="130">
                         </el-table-column>
                         <el-table-column
                         align='center'
                         label="操作模块"
-                        width="80">
+                        min-width="80">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.operatModule=='0'">单灯</span>
                                 <span v-if="scope.row.operatModule=='1'">单灯策略</span>
@@ -58,7 +58,7 @@
                         <el-table-column
                         align='center'
                         label="操作类别"
-                        width="80">
+                        min-width="80">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.operatType=='0'">添加</span>
                                 <span v-if="scope.row.operatType=='1'">编辑</span>
@@ -71,7 +71,7 @@
                         prop="createTime"
                         align='center'
                         label="操作时间"
-                        width="145">
+                        min-width="145">
                         </el-table-column>
                         <el-table-column
                         prop="content"
@@ -94,7 +94,7 @@
                     </div>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="控制日志" name='1' style="height: 100%;position:relative;">
+            <el-tab-pane label="控制日志" v-if="viewLampControlLog" name='1' style="height: 100%;position:relative;">
                 <div class="lampJournal_top">
                     <div class="search">
                         <span>单灯序列号:</span>
@@ -119,18 +119,18 @@
                         prop="username"
                         align='center'
                         label="操作用户"
-                        width="100">
+                        min-width="100">
                         </el-table-column>
                         <el-table-column
                         prop="serialNumber"
                         align='center'
                         label="单灯序列号"
-                        width="130">
+                        min-width="130">
                         </el-table-column>
                         <el-table-column
                         align='center'
                         label="操控类别"
-                        width="80">
+                        min-width="80">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.controlType=='0'">关闭</span>
                                 <span v-if="scope.row.controlType=='1'">开启</span>
@@ -141,7 +141,7 @@
                         <el-table-column
                         align='center'
                         label="操控状态"
-                        width="80">
+                        min-width="80">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.controlStatus=='0'">成功</span>
                                 <span v-if="scope.row.controlStatus=='1'">失败</span>
@@ -151,7 +151,7 @@
                         prop="createTime"
                         align='center'
                         label="操作时间"
-                        width="145">
+                        min-width="145">
                         </el-table-column>
                         <el-table-column
                         prop="content"
@@ -174,7 +174,7 @@
                     </div>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="告警日志" name='2' style="height: 100%;position:relative;">
+            <el-tab-pane label="告警日志" v-if="viewLampAlarmLog" name='2' style="height: 100%;position:relative;">
                 <div class="lampJournal_top">
                     <div class="search">
                         <span>单灯序列号:</span>
@@ -221,12 +221,12 @@
                         prop="serialNumber"
                         align='center'
                         label="单灯序列号"
-                        width="130">
+                        min-width="130">
                         </el-table-column>
                         <el-table-column
                         align='center'
                         label="告警类别"
-                        width="80">
+                        min-width="80">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.alarmType=='1'">故障</span>
                                 <span v-if="scope.row.alarmType=='2'">待定</span>
@@ -235,7 +235,7 @@
                         <el-table-column
                         align='center'
                         label="告警级别"
-                        width="80">
+                        min-width="80">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.alarmLevel=='1'">紧急</span>
                                 <span v-if="scope.row.alarmLevel=='2'">严重</span>
@@ -245,7 +245,7 @@
                         prop="createTime"
                         align='center'
                         label="操作时间"
-                        width="145">
+                        min-width="145">
                         </el-table-column>
                         <el-table-column
                         prop="content"
@@ -291,6 +291,9 @@ export default {
     data () {
         return {
             serverurl:localStorage.serverurl,
+            viewLampOperatLog:false,
+            viewLampControlLog:false,
+            viewLampAlarmLog:false,
             tableData:[],
             tableData2:[],
             pageIndex:1,
@@ -385,9 +388,41 @@ export default {
             this.pageSize = val;
             this.ready()
         },
+        //权限请求
+        Jurisdiction(){
+            var that = this
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/privilege/getMyOperatMenu',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    menuId:sessionStorage.menuId3
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewLampOperatLog'){
+                                that.viewLampOperatLog = true
+                            }
+                            if(data.result.operats[i].code=='viewLampControlLog'){
+                                that.viewLampControlLog = true
+                            }
+                            if(data.result.operats[i].code=='viewLampAlarmLog'){
+                                that.viewLampAlarmLog = true
+                            }
+                        }
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                }
+            })
+        },
     },
     created() {
         var that = this
+        this.Jurisdiction()
         this.ready()
     },
 }

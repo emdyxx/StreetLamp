@@ -2,7 +2,7 @@
     <!-- 广告屏日志 -->
     <div class="screenJournal">
         <el-tabs v-model="activeName" style="height:100%;" type="border-card" @tab-click="handleClick">
-            <el-tab-pane label="操作日志" name='0' style="height: 100%;position:relative;">
+            <el-tab-pane label="操作日志" v-if="viewScreenDeliveryLog" name='0' style="height: 100%;position:relative;">
                 <div class="screenJournal_top">
                     <div class="search">
                         <span>操作模块:</span>
@@ -39,24 +39,24 @@
                         <el-table-column
                         type="selection"
                         align='center'
-                        width="55">
+                        min-width="55">
                         </el-table-column>
                         <el-table-column
                         prop="username"
                         align='center'
                         label="操作用户"
-                        width="100">
+                        min-width="100">
                         </el-table-column>
                         <el-table-column
                         prop="serialNumber"
                         align='center'
                         label="屏幕序列号"
-                        width="130">
+                        min-width="130">
                         </el-table-column>
                         <el-table-column
                         align='center'
                         label="操做模块"
-                        width="80">
+                        min-width="80">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.operatModule=='0'">屏幕</span>
                                 <span v-if="scope.row.operatModule=='1'">节目</span>
@@ -66,7 +66,7 @@
                         <el-table-column
                         align='center'
                         label="操做类别"
-                        width="80">
+                        min-width="80">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.operatType=='0'">添加</span>
                                 <span v-if="scope.row.operatType=='1'">编辑</span>
@@ -78,7 +78,7 @@
                         <el-table-column
                         align='center'
                         label="操做状态"
-                        width="80">
+                        min-width="80">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.operatStatus=='0'">成功</span>
                                 <span v-if="scope.row.operatStatus=='1'">失败</span>
@@ -88,7 +88,7 @@
                         prop="createTime"
                         align='center'
                         label="操作时间"
-                        width="145">
+                        min-width="145">
                         </el-table-column>
                         <el-table-column
                         prop="content"
@@ -111,7 +111,7 @@
                     </div>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="控制日志" name='1' style="height: 100%;position:relative;">
+            <el-tab-pane label="控制日志" v-if="viewScreenControlLog" name='1' style="height: 100%;position:relative;">
                 <div class="screenJournal_top">
                     <div class="search">
                         <span>设备序列号:</span>
@@ -158,28 +158,26 @@
                         prop="username"
                         align='center'
                         label="操作用户"
-                        width="100">
+                        min-width="100">
                         </el-table-column>
                         <el-table-column
                         prop="serialNumber"
                         align='center'
                         label="屏幕序列号"
-                        width="130">
+                        min-width="130">
                         </el-table-column>
                         <el-table-column
                         align='center'
                         label="操作类别"
-                        width="80">
+                        min-width="80">
                             <template slot-scope="scope">
-                                <span v-if="scope.row.controlType=='0'">添加</span>
-                                <span v-if="scope.row.controlType=='1'">编辑</span>
-                                <span v-if="scope.row.controlType=='2'">删除</span>
+                                <span v-if="scope.row.controlType=='0'">下发节目</span>
                             </template>
                         </el-table-column>
                         <el-table-column
                         align='center'
                         label="操作状态"
-                        width="80">
+                        min-width="80">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.controlStatus=='0'">成功</span>
                                 <span v-if="scope.row.controlStatus=='1'">失败</span>
@@ -189,7 +187,7 @@
                         prop="createTime"
                         align='center'
                         label="操作时间"
-                        width="145">
+                        min-width="145">
                         </el-table-column>
                         <el-table-column
                         prop="content"
@@ -221,6 +219,8 @@ export default {
     data () {
         return {
             serverurl:localStorage.serverurl,
+            viewScreenControlLog:false,
+            viewScreenDeliveryLog:false,
             activeName:'0',
             tableData:[],
             pageIndex:1,
@@ -318,8 +318,37 @@ export default {
         },
         sizechange(val){this.pageSize=val;this.ready();},
         currentchange(val){this.pageIndex=val;this.ready();},
+        //权限请求
+        Jurisdiction(){
+            var that = this
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/privilege/getMyOperatMenu',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    menuId:sessionStorage.menuId3
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewScreenControlLog'){
+                                that.viewScreenControlLog = true
+                            }
+                            if(data.result.operats[i].code=='viewScreenDeliveryLog'){
+                                that.viewScreenDeliveryLog = true
+                            }
+                        }
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                }
+            })
+        },
     },
     created() {
+        this.Jurisdiction()
         this.ready()
     },
 }

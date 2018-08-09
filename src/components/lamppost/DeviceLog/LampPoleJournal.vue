@@ -13,6 +13,10 @@
                     </el-option>
                 </el-select>
             </div>
+            <div class="search">
+                <label>灯杆编号:</label>
+                <input type="text" v-model="serialNumber" style="width:126px;" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入灯杆名称">
+            </div>
             <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
         </div>
         <div class="LampPoleJournal_bottom">
@@ -33,12 +37,12 @@
                     prop="username"
                     align='center'
                     label="操作用户"
-                    width="100">
+                    min-width="100">
                     </el-table-column>
                     <el-table-column
                     align='center'
                     label="操作类别"
-                    width="80">
+                    min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.operatType=='0'">添加</span>
                             <span v-if="scope.row.operatType=='1'">编辑</span>
@@ -50,7 +54,7 @@
                     <el-table-column
                     align='center'
                     label="操作状态"
-                    width="80">
+                    min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.operatStatus=='0'">成功</span>
                             <span v-if="scope.row.operatStatus=='1'">失败</span>
@@ -60,7 +64,7 @@
                     prop="createTime"
                     align='center'
                     label="操作时间"
-                    width="150">
+                    min-width="150">
                     </el-table-column>
                     <el-table-column
                     prop="content"
@@ -82,7 +86,6 @@
                     </el-pagination>
                 </div>
             </div>
-            
         </div>
     </div>
 </template>
@@ -104,6 +107,7 @@ export default {
                 }
             ],
             value:'',
+            serialNumber:'',
             tableData:[],
             pageIndex:1,
             pageSize:10,
@@ -127,6 +131,7 @@ export default {
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     operatType:that.value,
+                    serialNumber:that.serialNumber,
                     page:that.pageIndex,
                     rows:that.pageSize,
                     projectId:sessionStorage.projectId
