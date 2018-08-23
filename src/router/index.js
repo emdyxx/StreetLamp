@@ -27,6 +27,8 @@ import sensor from '@/components/lamppost/deploy/sensor'
 import chargingPiles from '@/components/lamppost/equipment/chargingPiles'
 import advertisingScreens from '@/components/lamppost/equipment/advertisingScreens'
 import sensors from '@/components/lamppost/equipment/sensors'
+import historicalData from '@/components/lamppost/equipment/historicalData'
+
 
 import pandect from '@/components/lamppost/pandect/pandect'
 import pandectone from '@/components/lamppost/pandect/pandectone'
@@ -852,6 +854,41 @@ Vue.prototype.errorCode2 = function(code){
         showClose: true,
     });
   }
+  if(code=='12045'){
+    this.$message({
+        message: '编辑媒体别名失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='12046'){
+    this.$message({
+        message: '媒体不存在',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='12047'){
+    this.$message({
+        message: '屏幕重置坐标信息失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='12048'){
+    this.$message({
+        message: '节目滚动文字不存在',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='12049'){
+    this.$message({
+        message: '获取屏幕详情失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
 
   if(code=='13001'){
     this.$message({
@@ -1035,6 +1072,27 @@ Vue.prototype.errorCode2 = function(code){
         showClose: true,
     });
   }
+  if(code=='13027'){
+    this.$message({
+        message: '单灯已离线,操作失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='13028'){
+    this.$message({
+        message: '单灯重置坐标信息失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='13029'){
+    this.$message({
+        message: '获取单灯信息失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
 
   if(code=='14001'){
     this.$message({
@@ -1151,6 +1209,20 @@ Vue.prototype.errorCode2 = function(code){
   if(code=='15013'){
     this.$message({
         message: '灯杆绑定项目失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='15014'){
+    this.$message({
+        message: '灯杆已存在',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='15015'){
+    this.$message({
+        message: '灯杆重置坐标信息失败',
         type: 'error',
         showClose: true,
     });
@@ -1371,6 +1443,11 @@ export default new Router({
               name: 'sensors',
               component: sensors,
             },
+            {
+              path: '/historicalData',
+              name: 'historicalData',
+              component: historicalData,
+            }
           ]
         },
         {

@@ -10,7 +10,7 @@
                     </div>
                     <div class="search">
                         <span>日志模块:</span>
-                        <el-select v-model="value2" size='small' placeholder="请选择">
+                        <el-select v-model="value2" clearable size='small' placeholder="请选择">
                             <el-option
                             v-for="item in options2"
                             :key="item.value"
@@ -132,10 +132,11 @@
                         label="操控类别"
                         min-width="80">
                             <template slot-scope="scope">
-                                <span v-if="scope.row.controlType=='0'">关闭</span>
                                 <span v-if="scope.row.controlType=='1'">开启</span>
-                                <span v-if="scope.row.controlType=='2'">调光</span>
-                                <span v-if="scope.row.controlType=='3'">刷新状态</span>
+                                <span v-if="scope.row.controlType=='2'">关闭</span>
+                                <span v-if="scope.row.controlType=='3'">调光</span>
+                                <span v-if="scope.row.controlType=='4'">刷新状态</span>
+                                <span v-if="scope.row.controlType=='5'">下发策略</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -256,13 +257,13 @@
                                 <template v-if="scope.row.jsonContent.closeLanmpAlarm!=undefined||scope.row.jsonContent.closeLanmpAlarm!=''">
                                     <span v-if="scope.row.jsonContent.closeLanmpAlarm=='breakdown'">关灯故障</span>
                                 </template>
-                                <template v-else-if="scope.row.jsonContent.IAMAlarm!=undefined||scope.row.jsonContent.IAMAlarm!=''">
+                                <template v-if="scope.row.jsonContent.IAMAlarm!=undefined||scope.row.jsonContent.IAMAlarm!=''">
                                     <span v-if="scope.row.jsonContent.IAMAlarm=='overload'">电流过载</span>
                                 </template>
-                                <template v-else-if="scope.row.jsonContent.electricRelayAlarm!=undefined||scope.row.jsonContent.electricRelayAlarm!=''">
+                                <template v-if="scope.row.jsonContent.electricRelayAlarm!=undefined||scope.row.jsonContent.electricRelayAlarm!=''">
                                     <span v-if="scope.row.jsonContent.electricRelayAlarm=='breakdown'">继电器故障</span>
                                 </template>
-                                <template v-else-if="scope.row.jsonContent.lampAlarm!=undefined||scope.row.jsonContent.lampAlarm!=''">
+                                <template v-if="scope.row.jsonContent.lampAlarm!=undefined||scope.row.jsonContent.lampAlarm!=''">
                                     <span v-if="scope.row.jsonContent.lampAlarm=='breakdown'">光源故障</span>
                                 </template>
                             </template>

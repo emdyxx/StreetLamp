@@ -8,11 +8,11 @@
             <div class="cameras_bottom_top">
                 <div class="search">
                     <label style="width:100px;">集中器标识:</label>
-                    <input type="text" v-model="concentratorSN" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入控制器序列号">
+                    <input type="text" v-model="concentratorSN" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入集中器标识">
                 </div>
                 <div class="search">
                     <label style="width:90px;">气象站名称:</label>
-                    <input type="text" v-model="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入传感器名称">
+                    <input type="text" v-model="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入气象站名称">
                 </div>
                 <div class="search">
                     <label>型号标识:</label>
@@ -122,8 +122,16 @@
                     prop="PM10"
                     label="PM10"
                     align='center'
-                    :formatter="formatRole"
-                    show-overflow-tooltip>
+                    min-width="80"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    label="操作"
+                    align='center'
+                    min-width="120">
+                        <template slot-scope="scope">
+                            <el-button @click="historicalData(scope.row.concentratorSN)" type="primary" size='small'>历史数据</el-button>
+                        </template>
                     </el-table-column>
                 </el-table>
                 <div class="block">
@@ -229,6 +237,12 @@ export default {
                     }
                 },
             })
+        },
+        //查看历史数据
+        historicalData(val){
+            console.log(val)
+            sessionStorage.concentratorSN = val
+            this.$router.push({'path':'/historicalData'})
         },
         ready(){
             var that = this;

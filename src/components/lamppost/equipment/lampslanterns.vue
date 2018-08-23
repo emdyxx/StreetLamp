@@ -67,6 +67,15 @@
                     </el-table-column>
                     <el-table-column
                     align='center'
+                    label="在线状态"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.online=='0'">离线</span>
+                            <span v-if="scope.row.online=='1'">在线</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    align='center'
                     label="灯状态"
                     min-width="80">
                         <template slot-scope="scope">
@@ -74,6 +83,13 @@
                             <span v-if="scope.row.lampStatus=='1'">开启</span>
                             <span v-if="scope.row.lampStatus=='2'">告警</span>
                         </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="lampNumber"
+                    align='center'
+                    label="灯具编号"
+                    :formatter="formatRole"
+                    min-width="80">
                     </el-table-column>
                     <el-table-column
                     prop="brightness"
@@ -214,7 +230,7 @@
                         <div class="form-group">
                             <label><span class="Required">*</span>策略名称:</label>
                             <input type="text" v-model="data.strategyName" class="form-control" id="email" placeholder="请输入策略名称">
-                            <label><span class="Required">*</span>有效期:</label>
+                            <label>有效期:</label>
                             <el-date-picker
                             v-model="data.expire"
                             size='small'
@@ -257,11 +273,6 @@
                                 tooltip-effect="dark"
                                 @selection-change="SelectionChange3"
                                 style="width: 100%;overflow:auto;height:auto;max-height:90%;">
-                                <el-table-column
-                                type="selection"
-                                align='center'
-                                width="55">
-                                </el-table-column>
                                 <el-table-column
                                 prop="timer"
                                 align='center'
@@ -627,14 +638,13 @@ export default {
                 expire:that.data.expire,
                 strategyList:[],
             }
-            if(that.data.strategyName==''||that.data.expire==''){
+            if(that.data.strategyName==''){
                this.$message({
                     message: '必填字段不能为空!',
                     type: 'error'
                 });
                 return; 
             }
-            console.log(this.type3)
             data.strategyList = that.tableData3
             data.projectId=sessionStorage.projectId
             if(this.type3 =='0'){url='/lampStrategy/addLampStrategy'}
@@ -952,6 +962,7 @@ export default {
 .strategy_bottom{width: 100%;}
 .form-group{display:flex;justify-content: center;}
 .form-group>label{width: 95px;line-height: 34px;text-align: center;}
+.form-group>div{height: 34px;line-height: 34px;}
 .form-group>input{width: 185px;}
 
 .search{display: flex;}

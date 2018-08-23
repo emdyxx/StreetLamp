@@ -6,7 +6,7 @@
                 <div class="screenJournal_top">
                     <div class="search">
                         <span>操作模块:</span>
-                        <el-select v-model="value3" size='small' placeholder="请选择">
+                        <el-select v-model="value3" clearable size='small' placeholder="请选择">
                             <el-option
                             v-for="item in options3"
                             :key="item.value"
@@ -17,7 +17,7 @@
                     </div>
                     <div class="search">
                         <span>操作类别:</span>
-                        <el-select v-model="value" size='small' placeholder="请选择">
+                        <el-select v-model="value" clearable size='small' placeholder="请选择">
                             <el-option
                             v-for="item in options"
                             :key="item.value"
@@ -119,7 +119,7 @@
                     </div>
                     <div class="search">
                         <span>操作状态:</span>
-                        <el-select v-model="value1" size='small' placeholder="请选择">
+                        <el-select v-model="value1" clearable size='small' placeholder="请选择">
                             <el-option
                             v-for="item in options1"
                             :key="item.value"
@@ -130,7 +130,7 @@
                     </div>
                     <div class="search">
                         <span>操作类别:</span>
-                        <el-select v-model="value2" size='small' placeholder="请选择">
+                        <el-select v-model="value2" clearable size='small' placeholder="请选择">
                             <el-option
                             v-for="item in options2"
                             :key="item.value"

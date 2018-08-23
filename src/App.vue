@@ -8,7 +8,7 @@
 export default {
   name: 'App',
   created(){
-    localStorage.serverurl = 'http://192.168.10.89:8021/solin-consumer'
+    localStorage.serverurl = 'http://192.168.10.89:8010/solin-consumer'
     // localStorage.serverurl = 'http://192.168.10.129:8010/solin-consumer'
       
     // $.ajax({
@@ -40,8 +40,8 @@ export default {
   width:100%;
   height:100%;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; */
   color: #2c3e50;
 }
 </style>

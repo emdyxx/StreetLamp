@@ -125,7 +125,7 @@
             </div>
         </div>
         <!-- 添加  修改  用户 -->
-        <div class="modal fade" id="addedituser" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addedituser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:450px;">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -614,6 +614,14 @@ export default {
                     this.$message({
                         message: '必填字段不能为空!',
                         type: 'error'
+                    });
+                    return;
+                }
+                if(result.test(this.data.username)){
+                    that.$message({
+                        message: '用户名不能有中文',
+                        type: 'error',
+                        showClose: true,
                     });
                     return;
                 }

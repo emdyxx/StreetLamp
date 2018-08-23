@@ -18,7 +18,9 @@ export default {
     },
     mounted(){
         var that = this
-        this.readyLeft()
+        setTimeout(function(){
+            that.readyLeft()
+        },500)
     },
     methods:{
         //请求左侧树
@@ -75,7 +77,7 @@ export default {
                         }
                     }
                 }
-            })
+            });
             $('#jstree').bind("changed.jstree", function (e, data) {
                 if(data.node.type=='3'){
                     var inst = data.instance;
@@ -125,7 +127,7 @@ export default {
                 if(data.node.type=='3'){
                     that.loadConfig(e, data)
                 }
-            })
+            });
         },
         loadConfig(e, data){
             var that = this

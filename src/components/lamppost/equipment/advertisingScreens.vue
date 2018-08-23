@@ -122,7 +122,7 @@
             </div>
         </div>
         <!-- 媒体库 -->
-        <div class="modal fade" id="mediaLibraryModal" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="mediaLibraryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:850px;">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -158,6 +158,7 @@
                                 border
                                 stripe
                                 size='small'
+                                ref="mediartableData"
                                 tooltip-effect="dark"
                                 height='250'
                                 style="width: 100%;overflow:auto;max-height:80%;margin-bottom:10px;"
@@ -168,41 +169,46 @@
                                 width="55">
                                 </el-table-column>
                                 <el-table-column
-                                prop="nickName"
                                 align='center'
-                                label="文件名"
-                                width="170">
+                                label="文件别名"
+                                min-width="200">
+                                    <template slot-scope="scope">
+                                        <span v-if="!scope.row.isFocus">{{scope.row.nickName}}</span>
+                                        <span v-if="!scope.row.isFocus" @click="handleEdit(scope.row)"><i class="el-icon-edit" style="font-size:18px;color:#409EFF;"></i></span>
+                                        <span v-if="scope.row.isFocus==true" style="display: inline-block;">
+                                            <input type="text" v-model="inputColumn" @blur='handleSave(scope.row)' style='width:110px;' class="form-control" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入文件别名">
+                                        </span>
+                                    </template>
                                 </el-table-column>
                                 <el-table-column
                                 prop="mediaSizeKb"
                                 align='center'
                                 label="文件大小"
-                                width="80">
+                                min-width="80">
                                 </el-table-column>
                                 <el-table-column
-                                prop="ts"
+                                prop="createTime"
                                 align='center'
                                 label="上传时间"
-                                width="190">
+                                min-width="180">
                                 </el-table-column>
                                 <el-table-column
-                                prop="creator"
+                                prop="username"
                                 align='center'
                                 label="上传者"
-                                width="80">
+                                min-width="80">
                                 </el-table-column>
-                                <el-table-column
+                                <!-- <el-table-column
                                 prop="duration"
                                 align='center'
                                 label="审核者"
                                 width="80">
-                                </el-table-column>
+                                </el-table-column> -->
                                 <el-table-column
                                 label="操作"
                                 align='center'
-                                width="140">
+                                min-width="140">
                                     <template slot-scope="scope">
-                                        <!-- <a @click="download(scope.row.mediaUrl)" id="download">下载</a> -->
                                         <el-button type="primary" @click="download(scope.row)" size='mini'>下载</el-button>
                                     </template>
                                 </el-table-column>
@@ -221,15 +227,11 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary">确定</button>
-                    </div> -->
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
         <!-- 节目管理模态框 -->
-        <div class="modal fade" id="noticeModal" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="noticeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:800px;">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -313,14 +315,14 @@
             </div>
         </div><!-- /.modal -->
         <!-- 创建编辑节目 -->
-        <div class="modal fade" id="addprogram" style="width:1070px;" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:1070px;">
+        <div class="modal fade" id="addprogram" style="width:1070px;"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width:695px;overflow:auto;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="addprogramModalLabel">创建节目</h4>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" style="overflow:auto;">
                         <div class="setPercentage" v-if="programDate.setProgramType==true">
                             <span><i>*</i>节目名称:</span>
                             <el-input v-model="programDate.programName" size='small' style="width:146px" placeholder="请输入节目名称"></el-input>
@@ -333,12 +335,13 @@
                                     :value="item.value">
                                 </el-option>
                             </el-select>
-                            <span style="margin-left:30px;"><i>*</i>宽(像素):</span>
+                            <br>
+                            <span><i>*</i>宽(像素):</span>
                             <el-input v-model="programDate.programWidth" size='small' style="width:146px" placeholder="请输入宽"></el-input>
-                            <span style="margin-left:30px;"><i>*</i>高(像素):</span>
+                            <span style="margin-left:5px;"><i>*</i>高(像素):</span>
                             <el-input v-model="programDate.programHeight" size='small' style="width:146px" placeholder="请输入高"></el-input>
                         </div>
-                        <div class="el-upload__tip" style="text-align: center;">请谨慎设置节目宽高,须与屏幕宽高保持一致</div>
+                        <div class="el-upload__tip" v-if="programDate.setProgramType==true" style="text-align: center;">请谨慎设置节目宽高,须与屏幕宽高保持一致</div>
                         <div class="setProgram" v-if="programDate.setProgramType==false">
                             <div class="setProgram_left">
                                 <div class="setProgram_div_top">
@@ -400,8 +403,7 @@
                                     <el-button type="primary" @click="fluctuation(0)" size='small' style="margin:4px 0 0 8px;">上移</el-button>
                                     <el-button type="primary" @click="fluctuation(1)" size='small' style="margin:4px 0 0 8px;">下移</el-button>
                                     <el-button type="primary" @click="deleteMedia" size='small' style="margin:4px 0 0 8px;">删除</el-button>
-                                    <!-- <el-button type="primary" @click="modificationMedia" size='small' style="margin:4px 0 0 8px;">修改</el-button> -->
-                                    <!-- <span style="font-size:12px;color: #606266;">已选择文件</span> -->
+                                    <el-button type="primary" @click="preview" size='small' style="margin:4px 0 0 15px;">预览</el-button>
                                 </div>
                                 <div class="setProgram_div_bottom">
                                     <el-table
@@ -411,7 +413,7 @@
                                         size='small'
                                         tooltip-effect="dark"
                                         height='370'
-                                        style="width: 100%;overflow:auto;max-height:85%;margin-bottom:10px;"
+                                        style="width: 100%;overflow:auto;max-height:85%;margin-bottom:5px;"
                                         @selection-change="centerMediaChange">
                                         <el-table-column
                                         type="selection"
@@ -421,7 +423,7 @@
                                         <el-table-column
                                         align='center'
                                         label="播放时长"
-                                        width="80">
+                                        min-width="80">
                                             <template slot-scope="scope">
                                                 <el-input v-model=scope.row.duration placeholder="请输入内容" size='mini'></el-input>
                                             </template>
@@ -430,23 +432,12 @@
                                         prop="nickName"
                                         label="文件名"
                                         align='center'
-                                        show-overflow-tooltip>
+                                        min-width="120">
                                         </el-table-column>
                                     </el-table>
-                                </div>
-                            </div>
-                            <div class="setProgram_right">
-                                <div class="setProgram_div_top">
-                                    <span style="margin-left:15px;">宽:{{programDate.programWidth}}px</span>
-                                    <span style="margin-left:15px;">高:{{programDate.programHeight}}px</span>
-                                    <el-button type="primary" @click="preview" size='small' style="margin:4px 0 0 15px;">预览</el-button>
-                                </div>
-                                <div class="setProgram_div_bottom previews" style="display:flex;justify-content: center;align-items: center;">
-                                    <div id="previews_div" style='position:relative;border: 1px solid red;overflow: hidden;'>
-                                        <!-- <div style='position:absolute;'>
-                                            <iframe name="weather_inc" src="http://i.tianqi.com/index.php?c=code&id=10" width="100%" height="27" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" ></iframe>
-                                        </div> -->
-                                        <!-- <div id="previews_div" style="position:relative;border: 1px solid red;overflow: hidden;"></div> -->
+                                    <div>
+                                        <el-checkbox v-model="programDate.checked">是否使用滚动文字</el-checkbox>
+                                        <input v-model="programDate.text" type="text" onkeyUp="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入滚动文字">
                                     </div>
                                 </div>
                             </div>
@@ -461,7 +452,7 @@
             </div>
         </div><!-- /.modal -->
         <!-- 上传 -->
-        <div class="modal fade" id="filesupload" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="filesupload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content" v-loading="filesuploadLoading" element-loading-text="文件上传中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.3)">
                     <div class="modal-header">
@@ -469,14 +460,14 @@
                         <h4 class="modal-title" id="myModalLabel">文件上传</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group" style="padding-left:80px;margin-bottom:0;">
-                            <input type="file" ref="upload" @change="uploadChange">
-                        </div>
-                        <div class="el-upload__tip" style="text-align: center;">只能上传jpg/png/git图片，MP4/MKV视频,且不超过50M</div>
                         <div class="form-group">
-                            <label>文件名:</label>
-                            <input type="text" id="nickName" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入文件名">
+                            <input style="margin-left: -50px;" type="file" ref="upload" @change="uploadChange">
+                        </div>
+                        <div class="form-group">
+                            <label>文件别名:</label>
+                            <input type="text" id="nickName" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入文件别名">
                         </div> 
+                        <div class="el-upload__tip" style="text-align: center;font-size: 14px;">只能上传jpg/png/git图片，MP4/MKV视频,且不超过50M</div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -509,7 +500,7 @@
                                     style="width: 100%;overflow:auto;max-height:80%;margin-bottom:10px;"
                                     @selection-change="programSettingChange">
                                     <el-table-column
-                                    type="selection"
+                                    type="selection"                                                                                                                                                                                               
                                     align='center'
                                     width="55">
                                     </el-table-column>
@@ -565,6 +556,21 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
+        <!-- 创建节目-点击预览 -->
+        <div class="modal fade" id="myModal_preview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content previews_div_content">
+                    <div class="modal-body previews_div_body">
+                        <div id="previews_div" style='position:relative;border: 1px solid red;overflow: hidden;'>
+                               
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="text-align: center;padding:5px;">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
         <!-- 节目设置-预览模态框 -->
         <div class="modal fade" id="programSetting_previewS" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog previewS_width" style="width:309px;">
@@ -587,6 +593,7 @@
         center>
         <span>
             <el-progress :percentage=percentage status="success"></el-progress>
+            <span style="position: absolute;right: 10px;top: 76px;">{{percentage}}%</span>
         </span>
         </el-dialog>
     </div>
@@ -596,6 +603,7 @@ export default {
     name: 'chargingPile',
     data () {
         return {
+            inputColumn:'',
             serverurl:localStorage.serverurl,
             operation:false,
             programManagement:false,
@@ -677,6 +685,8 @@ export default {
                 programValue:0, //节目类型
                 programWidth:'', //节目宽度
                 programHeight:'', //节目高度
+                checked:false, //是否使用滚动文字
+                text:'',//滚动文字内容
             },// 创建节目数据
             leftMediaSize:[],
             centerMediaSize:[],
@@ -688,7 +698,6 @@ export default {
             programSettingIndex:1,
             programSettingSize:10,
             programSettingTotal:10,
-
             input:'',
             checked1:'',
             setProgramOptions:[
@@ -1116,9 +1125,11 @@ export default {
                 this.$message.error('必填字段不能为空');
                 return;
             } 
+            this.animationMediaType = 0
             this.filesSelected = []
             this.programDate.setProgramType = false
             this.mediaready()
+            this.previewType = 0
             if(that.submitMeadioType=='1'){
                 $.ajax({
                     type:'get',
@@ -1211,9 +1222,9 @@ export default {
                     type = type+1
                 }
             }
-            if(type>2){
+            if(type>4){
                 this.$message({
-                    message: '已选取媒体文件最多存在两个媒体视频文件',
+                    message: '已选取媒体文件最多存在四个媒体视频文件',
                     type:'error',
                     showClose: true,
                 });
@@ -1271,25 +1282,24 @@ export default {
         //删除已选择文件
         deleteMedia(){
             var vals = '';
-            if(this.centerMediaSize.length==0||this.centerMediaSize.length>1){
+            if(this.centerMediaSize.length==0){
                 this.$message({
-                    message: '请选择一个媒体文件进行删除!',
+                    message: '请选择媒体文件进行删除!',
                     type:'error',
                     showClose: true,
                 });
                 return;
             }
-            for(var i = 0;i<this.filesSelected.length;i++){
-                if(this.centerMediaSize[0].mediaId==this.filesSelected[i].mediaId){
-                    vals = i;
+            for(var i=0;i<this.centerMediaSize.length;i++){
+                for(var j=0;j<this.filesSelected.length;j++){
+                    if(this.centerMediaSize[i].mediaId==this.filesSelected[j].mediaId){
+                        this.filesSelected.splice(j,1)
+                    }
                 }
             }
-            this.filesSelected.splice(vals,1)
         },
         //点击预览生成html
-        preview(){
-            clearInterval(animationMedia)
-            $('#previews_div').html('')
+        preview(vals){
             var that = this
             if(this.filesSelected.length==0){
                 this.$message({
@@ -1299,6 +1309,8 @@ export default {
                 });
                 return;
             }
+            $('#myModal_preview').modal('show')
+            var htmls = '';
             var width='';
             var height='';
             var val = this.programDate.programWidth/this.programDate.programHeight
@@ -1311,13 +1323,12 @@ export default {
                 height=398;
                 width=398*val
             }
-            var ss = 0;
-            var htmls = ''
             var length = this.filesSelected.length
-            var i = 0;
             // previews
             $('#previews_div').css('width',width)
             $('#previews_div').css('height',height)
+            $('.previews_div_body').css('width',width)
+            $('.previews_div_content').css('width',width+32)
             if(this.filesSelected.length<2){
                 if(this.filesSelected[0].type=='0'){ //0为图片
                     htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><img style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[0].mediaUrl+"'></div>"
@@ -1326,24 +1337,25 @@ export default {
                 }
                 $('#previews_div').append(htmls)
             }else{
-                console.log(this.filesSelected)
-                for(var s=0;s<this.filesSelected.length;s++){
-                    htmls=''
-                    if(this.filesSelected[s].type=='0'){
-                        htmls = "<div id='previews_div_div' style='width:100%;height:100%;position:absolute;'><img style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[s].mediaUrl+"'></div>"
-                    }else{
-                        htmls = "<div id='previews_div_div' style='width:100%;height:100%;position:absolute;'><video id='video' style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[s].mediaUrl+"' loop></video></div>"
-                    }
-                    $('#previews_div').append(htmls)
-                }
                 var media = $('#previews_div');
+                    for(var s=0;s<this.filesSelected.length;s++){
+                        htmls=''
+                        if(this.filesSelected[s].type=='0'){
+                            htmls = "<div id='previews_div_div' style='width:100%;height:100%;position:absolute;'><img style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[s].mediaUrl+"'></div>"
+                        }else{
+                            htmls = "<div id='previews_div_div' style='width:100%;height:100%;position:absolute;'><video id='video' style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[s].mediaUrl+"' loop></video></div>"
+                        }
+                        $('#previews_div').append(htmls)
+                    }
+                    if(this.filesSelected[0].type=='1'){
+                        media[0].childNodes[0].childNodes[0].play()
+                    }
                 for(var t=0;t<this.filesSelected.length;t++){
                     media[0].childNodes[t].style.left = width * t +"px"    
                 }
-                if(this.filesSelected[0].type=='1'){
-                    media[0].childNodes[0].childNodes[0].play()
-                }
-                var animationMedia = setInterval(() => {
+                var ss = 0;
+                var i = 0;
+                var animationMedia = window.setInterval(() => {
                     ss++
                     if(ss==this.filesSelected[i].duration||ss>this.filesSelected[i].duration){
                         ss = 0;
@@ -1364,18 +1376,11 @@ export default {
                         if(this.filesSelected[i].type=='1'){
                             media[0].childNodes[i].childNodes[0].play()
                         }
-                        // if(this.filesSelected[i].type=='0'){//0为图片
-                        //     htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><img style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[i].mediaUrl+"'></div>"
-                        //     $('#previews_div').append(htmls)
-                        // }else{
-                        //     htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><video style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[i].mediaUrl+"' autoplay></video></div>"
-                        //     $('#previews_div').append(htmls)
-                        // }
                     }
                     console.log(i,ss)
                 }, 1000);
             }
-            $('#addprogram').on('hide.bs.modal', function () {
+            $('#myModal_preview').on('hide.bs.modal', function () {
                 clearInterval(animationMedia)
                 $('#previews_div').html('')
             })
@@ -1416,6 +1421,12 @@ export default {
                 object.mediaUrl = that.filesSelected[i].mediaUrl
                 array.push(object)
                 programDetails.push(object2)
+            }
+            if(that.programDate.checked==false){
+                data.isAddText = 0
+            }else{
+                data.isAddText = 1
+                data.textContent = that.programDate.text
             }
             data.programDetails = programDetails
             if(that.submitMeadioType=='0'){
@@ -1498,6 +1509,48 @@ export default {
                     if(data.errorCode=='0'){
                         that.mediartableData = data.result.list
                         that.mediaTotal = data.result.total
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
+        //修改媒体别名
+        handleEdit(val){
+            for(var i=0;i<this.mediartableData.length;i++){
+                if(this.mediartableData[i].id==val.id){
+                    this.mediartableData[i].isFocus = true
+                }
+            }
+            this.inputColumn = val.nickName
+        },
+        handleSave(val){
+            var that =this
+            if(this.inputColumn==''){
+                this.$message({
+                    message: '文件别名不能为空!',
+                    type: 'warning'
+                });
+                return;  
+            }
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/media/editMediaName',
+                // contentType:'application/json;charset=UTF-8',
+                data:{
+                    mediaId:val.id,
+                    projectId:sessionStorage.projectId,
+                    nickName:that.inputColumn
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '修改成功!',
+                            type: 'success'
+                        });
+                        that.mediaready()
                     }else{
                         that.errorCode2(data.errorCode)
                     }
@@ -1799,8 +1852,8 @@ export default {
 </script>
 <style scoped>
 .setPercentage i{color: red;}
-.advertisingScreens{width: 100%;height: 100%;}
-.advertisingScreens>div{width: 100%;position: absolute;}
+.advertisingScreens{width: 100%;height: 100%;overflow:auto;}
+.advertisingScreens>div{width: 100%;position: absolute;overflow:auto;}
 .advertisingScreens_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;align-items: center;font-size: 16px;padding-left: 20px;}
 .advertisingScreens_bottom{top: 46px;border: 1px solid #E4E4F1;bottom: 0;padding: 5px;overflow:auto;}
 .advertisingScreens_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
@@ -1808,7 +1861,7 @@ export default {
 .block{text-align: center;}
 .table_button{height: 20px;padding: 5px;}
 .notice_bottom{margin-top: 10px;}
-.setPercentage{width: 100%;height: 45px;text-align: center;}
+.setPercentage{width: 100%;text-align: center;}
 .setPercentage>span{font-size: 15px;line-height: 35px;}
 .setPercentage>p{font-size: 12px;color: #606266;margin-top: 7px;}
 .mediaLibrary_top,{width: 100%;height: 35px;}
@@ -1816,8 +1869,9 @@ export default {
 .mediaLibrary_top>span:nth-of-type(2){margin-left: 30px;}
 .mediaLibrary_bottom{width: 100%;height: auto;margin-top:5px;}
 .setProgram{width: 100%;display: flex;height: 450px;overflow: auto;}
-.setProgram>div{width: 30%;border: 1px solid #e5e5e5;border-radius: 5px;position: relative;overflow: auto;}
-.setProgram>div:nth-of-type(2){margin-left: 5%;margin-right: 5%;}.setProgram>div:nth-of-type(2){margin-left: 5%;margin-right: 5%;}
+.setProgram>div{width:320px;border: 1px solid #e5e5e5;border-radius: 5px;position: relative;overflow: auto;}
+.setProgram_left{}
+.setProgram_center{margin-left: 5%;}
 .setProgram_div_top{width: 100%;height: 40px;line-height: 35px;border-bottom: 1px solid #e5e5e5;}
 .setProgram_div_bottom{position: absolute;top:40px;bottom: 0;left: 0;right: 0;padding: 5px;}
 .positionTop{position: absolute;top: 0;left:0;right: 0;width: 100%;height:50px;background: red;}

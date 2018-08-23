@@ -115,7 +115,7 @@
             </div>
         </div>
         <!-- 添加编辑模态框 -->
-        <div class="modal fade" id="addModal" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:465px;">
                 <div class="modal-content">
                     <div class="modal-header">

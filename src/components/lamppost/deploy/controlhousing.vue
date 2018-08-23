@@ -78,7 +78,7 @@
             </div>
         </div>
         <!-- 添加编辑控制柜 -->
-        <div class="modal fade" id="addModal" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:450px;">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -125,7 +125,7 @@
             </div>
         </div><!-- /.modal -->
         <!-- 关联灯杆 -->
-        <div class="modal fade" id="relevancelampposts" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="relevancelampposts"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -184,7 +184,7 @@
             </div>
         </div><!-- /.modal -->
         <!-- 点击关联灯杆 -->
-        <div class="modal fade" id="relevancelamppoststwo" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="relevancelamppoststwo"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">

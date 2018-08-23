@@ -53,7 +53,13 @@ export default {
     }
   },
   methods:{
-    backtrack(){this.$router.push({'path':'/index'})},
+    backtrack(){
+      this.$router.push({'path':'/index'})
+      sessionStorage.removeItem('menuId');
+      sessionStorage.removeItem('menuId2');
+      sessionStorage.removeItem('menuId3');
+      sessionStorage.removeItem('projectId');
+    },
     headercolor(val,id){
       var that = this
       sessionStorage.menuId2 = id
@@ -166,22 +172,24 @@ export default {
             success:function(data){
                 if(data.errorCode==0){
                     that.menu = data.result.menus
-                    sessionStorage.menuId2 = data.result.menus[0].id
-                    if(data.result.menus[0].id=='7'){
-                      sessionStorage.headercolorType = '1'
-                      that.$router.push({'path':'/pandect'})
-                    }
-                    if(data.result.menus[0].id=='8'){
-                      sessionStorage.headercolorType = '2'
-                      that.$router.push({'path':'/equipment'})
-                    }
-                    if(data.result.menus[0].id=='9'){
-                      sessionStorage.headercolorType = '3'
-                      that.$router.push({'path':'/deploy'})
-                    }
-                    if(data.result.menus[0].id=='20'){
-                      sessionStorage.headercolorType = '4'
-                      that.$router.push({'path':'/DeviceLog'})
+                    if(sessionStorage.menuId2==''||sessionStorage.menuId2==undefined||sessionStorage.menuId2==null){
+                      sessionStorage.menuId2 = data.result.menus[0].id
+                      if(data.result.menus[0].id=='7'){
+                        sessionStorage.headercolorType = '1'
+                        that.$router.push({'path':'/pandect'})
+                      }
+                      if(data.result.menus[0].id=='8'){
+                        sessionStorage.headercolorType = '2'
+                        that.$router.push({'path':'/equipment'})
+                      }
+                      if(data.result.menus[0].id=='9'){
+                        sessionStorage.headercolorType = '3'
+                        that.$router.push({'path':'/deploy'})
+                      }
+                      if(data.result.menus[0].id=='20'){
+                        sessionStorage.headercolorType = '4'
+                        that.$router.push({'path':'/DeviceLog'})
+                      }
                     }
                 }else{
                     that.errorCode(data.errorCode)

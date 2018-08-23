@@ -89,7 +89,7 @@
             </div>
         </div>
         <!--添加编辑模态框-->
-        <div class="modal fade" id="addorganizations" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addorganizations" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style='width:450px;'>
                 <div class="modal-content">
                     <div class="modal-header">
@@ -222,7 +222,7 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal -->
         </div>
-        <div class="modal fade" id="AppointModal" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="AppointModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style='width:500px;'>
                 <div class="modal-content">
                     <div class="modal-header">

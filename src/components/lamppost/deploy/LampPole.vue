@@ -26,7 +26,7 @@
                 </div>
                 <div class="search">
                     <label>灯杆编号:</label>
-                    <input type="text" v-model="serialNumber" style="width:126px;" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入灯杆名称">
+                    <input type="text" v-model="serialNumber" style="width:126px;" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入灯杆编号">
                 </div>
                 <!-- <div class="search">
                     <label style="width:25px;">省:</label>
@@ -155,7 +155,7 @@
             </div>
         </div>
         <!-- 添加编辑灯杆 -->
-        <div class="modal fade" id="addModal" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:500px;">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -241,7 +241,7 @@
             </div>
         </div><!-- /.modal -->
         <!-- 关联灯具 -->
-        <div class="modal fade" id="LampPole_click" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="LampPole_click"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -306,7 +306,7 @@
             </div>
         </div><!-- /.modal -->
         <!-- 点击关联灯具 -->
-        <div class="modal fade" id="LampPole_data" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="LampPole_data"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -384,7 +384,7 @@
             </div>
         </div><!-- /.modal -->
         <!-- 关联广告屏 -->
-        <div class="modal fade" id="relevanceadvertising" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="relevanceadvertising"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -439,7 +439,7 @@
             </div>
         </div><!-- /.modal -->
         <!-- 点击关联广告屏 -->
-        <div class="modal fade" id="relevanceadvertisingtwo" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="relevanceadvertisingtwo"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -506,7 +506,7 @@
             </div>
         </div><!-- /.modal -->
         <!-- 关联传感器 -->
-        <div class="modal fade" id="sensorModal" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="sensorModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -565,7 +565,7 @@
             </div>
         </div><!-- /.modal -->
         <!-- 点击关联传感器 -->
-        <div class="modal fade" id="sensorModalTwo" draggable="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="sensorModalTwo"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -981,6 +981,7 @@ export default {
             }
             var data = {};
             var url = '';
+
             var coord = [this.LampPoleData.longitude,this.LampPoleData.latitude];
             var lampIds = []
             if(this.addtype=='0'){
@@ -993,7 +994,11 @@ export default {
             if(this.addtype=='1'){url='/pole/updatePole';data.id=this.site[0].id;};
             data.nickName = this.LampPoleData.nickName;
             data.poleType = this.value;
-            data.coord = coord.join(',');
+            if(this.LampPoleData.longitude=='0'||this.LampPoleData.latitude==''){
+                data.coord=''
+            }else{
+                data.coord = coord.join(',');
+            }
             data.areaId = this.value3;
             data.location = this.LampPoleData.location;
             data.remark = this.LampPoleData.remark;
