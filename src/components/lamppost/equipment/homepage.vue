@@ -42,7 +42,10 @@ export default {
         }
     },
     mounted(){
-        this.ready()
+        var that = this
+        setTimeout(function(){
+            that.ready()
+        },500)
     },
     methods:{
         ready(){

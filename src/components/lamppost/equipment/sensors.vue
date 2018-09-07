@@ -15,7 +15,7 @@
                     <input type="text" v-model="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入气象站名称">
                 </div>
                 <div class="search">
-                    <label>型号标识:</label>
+                    <label>型号:</label>
                     <el-select v-model="modelId" size='small' clearable style='width:146px;' placeholder="请选择">
                         <el-option
                         v-for="item in options"

@@ -41,6 +41,8 @@ import screenJournal from '@/components/lamppost/DeviceLog/screenJournal' //广�
 import sensorJournal from '@/components/lamppost/DeviceLog/sensorJournal' //传感器日志
 
 import mapHomgPage from '@/components/map/mapHomgPage' //地图主页
+import mapDetails from '@/components/map/mapDetails' //地图主页
+
 
 //  
 Vue.use(Router)
@@ -1311,6 +1313,20 @@ Vue.prototype.errorCode2 = function(code){
         showClose: true,
     });
   }
+  if(code=='17012'){
+    this.$message({
+        message: '气象站编号已经存在',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='17013'){
+    this.$message({
+        message: '传感器重置坐标信息失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
 }
 Vue.prototype.Verification = function(val,type){
   var that = this
@@ -1371,13 +1387,13 @@ export default new Router({
       children:[
         {
           path: '/',
-          name: 'pandect',
-          component: pandect,
+          name: 'equipment',
+          component: equipment,
           children:[
             {
               path: '/',
-              name: 'pandectone',
-              component: pandectone,
+              name: 'homepage',
+              component: homepage,
             },
           ]
         },
@@ -1386,28 +1402,28 @@ export default new Router({
           name: 'Refresh',
           component: Refresh
         },
-        {
-          path: '/pandect',
-          name: 'pandect',
-          component: pandect,
-          children:[
-            {
-              path: '/',
-              name: 'pandectone',
-              component: pandectone,
-            },
-            {
-              path: '/pandectone',
-              name: 'pandectone',
-              component: pandectone,
-            },
-            {
-              path: '/pandecttwo',
-              name: 'pandecttwo',
-              component: pandecttwo
-            },
-          ]
-        },
+        // {
+        //   path: '/pandect',
+        //   name: 'pandect',
+        //   component: pandect,
+        //   children:[
+        //     {
+        //       path: '/',
+        //       name: 'pandectone',
+        //       component: pandectone,
+        //     },
+        //     {
+        //       path: '/pandectone',
+        //       name: 'pandectone',
+        //       component: pandectone,
+        //     },
+        //     {
+        //       path: '/pandecttwo',
+        //       name: 'pandecttwo',
+        //       component: pandecttwo
+        //     },
+        //   ]
+        // },
         {
           path: '/equipment',
           name: 'equipment',
@@ -1562,6 +1578,11 @@ export default new Router({
       path: '/mapHomgPage',
       name: 'mapHomgPage',
       component: mapHomgPage,
+    },
+    {
+      path: '/mapDetails',
+      name: 'mapDetails',
+      component: mapDetails,
     }
   ]
 })

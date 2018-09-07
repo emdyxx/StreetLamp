@@ -287,7 +287,7 @@ export default {
             site:[],
             pageSize:10,
             pageIndex:1,
-            total:50, 
+            total:10, 
             nickName:'',
             serialNumber:'',
             options:[],

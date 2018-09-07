@@ -505,19 +505,19 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
-        <!-- 关联传感器 -->
+        <!-- 关联气象站 -->
         <div class="modal fade" id="sensorModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <div>
-                            <el-button v-if="relationSensor" @click="sensor_data(0)" type="primary" size='small'>关联传感器</el-button>
+                            <el-button v-if="relationSensor" @click="sensor_data(0)" type="primary" size='small'>关联气象站</el-button>
                             <el-button v-if="relationSensor" @click="sensor_data(1)" type="primary" size='small'>解除关联</el-button>
                         </div>
                     </div>
                     <div class="modal-body">
-                        <div>已关联传感器:</div>
+                        <div>已关联气象站:</div>
                         <el-table
                             :data="tableData6"
                             border
@@ -564,13 +564,13 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
-        <!-- 点击关联传感器 -->
+        <!-- 点击关联气象站 -->
         <div class="modal fade" id="sensorModalTwo"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>请选择传感器进行关联</h4>
+                        <h4>请选择气象站进行关联</h4>
                     </div>
                     <div class="modal-body">
                         <el-table
@@ -791,7 +791,7 @@ export default {
             pageIndex5:1,
             pageSize5:10,
             total5:10,
-            tableData6:[],//已关联灯杆的传感器信息
+            tableData6:[],//已关联灯杆的气象站信息
             site6:[],
             tableData7:[],
             site7:[],
@@ -1479,7 +1479,7 @@ export default {
                 }
             })
         },
-        //关联传感器
+        //关联气象站
         sensor(val){
             if(sessionStorage.projectId=='0'){
                 this.$message({
@@ -1498,7 +1498,7 @@ export default {
             });
             $('#sensorModal').css("overflow", "hidden")
         },
-        //获取已关联灯杆的传感器
+        //获取已关联灯杆的气象站
         sensorData(){
             var that = this;
             var data = {
@@ -1525,7 +1525,7 @@ export default {
             })
         },  
         SelectionChange6(val){this.site6=val;},
-        //点击关联传感器/解除关联传感器
+        //点击关联气象站/解除关联气象站
         sensor_data(val){
             var that = this;
             if(val=='0'){
@@ -1535,7 +1535,7 @@ export default {
             if(val=='1'){
                 if(this.site6.length==0){
                     this.$message({
-                        message: '请选择传感器进行操作!',
+                        message: '请选择气象站进行操作!',
                         type: 'error'
                     });
                     return;
@@ -1568,7 +1568,7 @@ export default {
                 })
             }
         },
-        //获取未关联灯杆的传感器
+        //获取未关联灯杆的气象站
         sensorDataTwo(){
             var that = this;
             var data = {
@@ -1597,7 +1597,7 @@ export default {
         SelectionChange7(val){this.site7=val;},
         sizechange7(val){this.pageSize7=val;this.sensorDataTwo()},
         currentchange7(val){this.pageIndex7=val;this.sensorDataTwo()},
-        //关联传感器--确定按钮
+        //关联气象站--确定按钮
         Relationthree(){
             var that = this
             var data = {};

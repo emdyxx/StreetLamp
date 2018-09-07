@@ -1,7 +1,7 @@
 <template>
     <div class="pandecttwo">
         <div class="pandecttwo_img">
-            <img src="../../../assets/lampPole.jpg" alt="">
+            <!-- <img src="../../../assets/lampPole.jpg" alt=""> -->
         </div>
     </div>
 </template>

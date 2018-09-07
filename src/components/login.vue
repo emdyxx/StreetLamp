@@ -29,7 +29,7 @@ export default {
   name: 'login',
   data () {
     return {
-      serverurl:localStorage.serverurl
+      serverurl:''
     }
   },
   methods:{
@@ -74,6 +74,8 @@ export default {
           that.login()
         }
     }
+    that.serverurl = localStorage.serverurl
+    console.log(that.serverurl+'/user/login')
   },
 }
 </script>

@@ -172,6 +172,27 @@
                             </el-select>
                         </div> 
                         <div class="form-group">
+                            <label>地图类型:</label>
+                            <el-select v-model="value5" @change="mapChange" size='small' style="width: 196px;" placeholder="请选择">
+                                <el-option
+                                v-for="item in options5"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="form-group" v-if="mapType">
+                            <label><span class="Required">*</span>平面图:</label>
+                            <div class="images">
+                                <label for="img1">
+                                    <img :src=imageUrl1>
+                                    <input type="file" ref="img1" id="img1" @change="images(1)">
+                                    <i class="el-icon-plus avatar-uploader-icon" style="font-size:20px;font-weight:600;"></i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="name2">备注:</label>
                             <el-input
                                 type="textarea"
@@ -228,6 +249,20 @@ export default {
             options3: [],
             value3:'',
             detailsData:[],//项目详情
+            options5:[
+                {
+                    name:'百度地图',
+                    id:'1'
+                },
+                {
+                    name:'平面图',
+                    id:'0'
+                }
+            ], //地图类型
+            value5:'1',
+            imgurl:'',
+            imageUrl1:'',
+            mapType:false,
         }
     },
     mounted(){
@@ -236,6 +271,23 @@ export default {
         that.OrgTree(0)
     },
     methods:{
+        // 图片转base64位
+        imgPreview (file,val) {
+            var that = this;
+            // 看支持不支持FileReader
+            if (!file || !window.FileReader) return;
+    
+            if (/^image/.test(file.type)) {
+                // 创建一个reader
+                var reader = new FileReader();
+                // 将图片将转成 base64 格式
+                reader.readAsDataURL(file);
+                // 读取成功后的回调
+                reader.onloadend = function () {
+                    if(val=='1'){that.imageUrl1 = this.result;}
+                }
+            }
+        },
         //省请求
         province(val){
             var that = this;
@@ -359,6 +411,11 @@ export default {
                 that.projectName = ''
                 that.principal = ''
                 that.mark = ''
+                if(that.value5=='0'){
+                    var file = document.getElementById('img1');
+                    file.value = '';
+                    that.imageUrl1 = ''
+                }
                 $('#addarticles').modal('show')
             }
             if(val=='1'){
@@ -372,6 +429,10 @@ export default {
                 }
                 this.OrgTree(1)
                 this.details()
+                if(that.value5=='0'){
+                    var file = document.getElementById('img1');
+                    file.value = '';
+                }
                 $('#addarticles').modal('show')
             }
             /* 完成拖拽 */
@@ -401,6 +462,10 @@ export default {
                         that.projectName = that.detailsData.projectName
                         that.principal = that.detailsData.pricipal
                         that.mark = that.site[0].remark
+                        that.value5 = String(that.detailsData.locationType)
+                        that.imgurl = that.detailsData.planUrl
+                        that.imageUrl1 = that.serverurl+that.detailsData.planUrl
+                        that.mapChange()
                         that.province(that.type)
                     }else{
                         that.errorCode(data.errorCode)
@@ -408,11 +473,37 @@ export default {
                 }
             })
         },
+        mapChange(){
+            var that = this;
+            if(that.value5=='0'){
+                that.mapType = true
+            }else{
+                that.mapType = false
+            }
+        },
+        images(val){
+            var that = this;
+            var type = ''
+            if(val=='1'){
+                type = this.$refs.img1.files[0].name.split('.')
+            }
+            if(type[1]=='png'||type[1]=='PNG'||type[1]=='jpg'||type[1]=='JPG'||type[1]=='jpeg'){
+                if(val=='1'){this.imgPreview(this.$refs.img1.files[0],1)} 
+            }else{
+                this.$message({
+                    message: '图片格式错误',
+                    type:'error',
+                    showClose: true,
+                });
+                if(val==1){this.imageUrl1 = ''}
+            }
+        },
         //添加修改保存
         addSubmit(){
             var that = this;
             var url = '';
             var data = {}
+            var formdate = new FormData();
             if(that.projectName==''||that.principal==''){
                 that.$message({
                     message: '必填字段不能为空!',
@@ -425,33 +516,50 @@ export default {
             }
             if(this.type=='1'){
                 url='/project/updateProjectInformation'
-                data.id = that.site[0].id
+                formdate.append("id",that.site[0].id)
             }
-            data.projectName = that.projectName
-            data.principal = that.principal
-            data.areaId = that.value3
-            data.orgId = that.value[that.value.length-1]
-            data.remark = that.mark
+            if(this.value5=='0'){
+                if(this.$refs.img1.files[0]==''||this.$refs.img1.files[0]==undefined){
+                    that.$message({
+                        message: '平面图片不能为空!',
+                        type: 'error'
+                    });
+                    return;
+                }
+                if(this.type=='0'){
+                    formdate.append("planFile", this.$refs.img1.files[0])
+                }
+                if(this.type=='1'){
+                    formdate.append("planFile", this.$refs.img1.files[0])
+                    formdate.append("planUrl", this.imgurl)
+                }
+            }
+            formdate.append("projectName",that.projectName)
+            formdate.append("principal",that.principal)
+            formdate.append("areaId",that.value3)
+            formdate.append("orgId",that.value[that.value.length-1])
+            formdate.append("remark",that.mark)
+            formdate.append("locationType",that.value5)
             $.ajax({
-                type:'post',
-                async:true,
-                dataType:'json',
                 url:that.serverurl+url,
-                contentType:'application/json;charset=UTF-8',
-                data:JSON.stringify(data),
-                success:function(data){
-                    if(data.errorCode=='0'){
-                        that.$message({
-                            message: '保存成功',
-                            type:'success',
-                            showClose: true,
-                        });
-                        that.leftReady(0)
-                        $('#addarticles').modal('hide')
-                        $('#jstree').jstree('select_node',that.sizeType.id);
-                    }else{
-                        that.errorCode(data.errorCode)
-                    }
+                type:'POST',
+                cache:false,
+                data:formdate,
+                dataType:'json',
+                processData: false,
+                contentType: false
+            }).done(function(data){
+                if(data.errorCode=='0'){
+                    that.$message({
+                        message: '保存成功',
+                        type:'success',
+                        showClose: true,
+                    });
+                    that.leftReady(0)
+                    $('#addarticles').modal('hide')
+                    $('#jstree').jstree('select_node',that.sizeType.id);
+                }else{
+                    that.errorCode(data.errorCode)
                 }
             })
         },
@@ -474,18 +582,15 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                console.log(123)
                 $.ajax({
                     type:'post',
                     async:true,
                     dataType:'json',
                     url:that.serverurl+'/project/deleteProject',
-                    // contentType:'application/json;charset=UTF-8',
                     data:{id:that.site[0].id},
                     success:function(data){
                         if(data.errorCode=='0'){
                             $('#jstree').jstree(true).refresh();
-                            that.readyRight();
                             that.$message({
                                 type: 'success',
                                 message: '删除成功!'
@@ -496,8 +601,7 @@ export default {
                     }
                 })
             }).catch(() => {
-                console.log(456)
-                this.$message({
+                that.$message({
                     type: 'info',
                     message: '已取消删除'
                 });          
@@ -641,6 +745,11 @@ export default {
 .article_right_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
 .block{text-align: center;}
 
+.images{text-align: center;position: relative;}
+.images>label{width: 150px;height: 100px;border: 1px dashed #d9d9d9;border-radius: 6px; cursor: pointer;text-align: center;line-height: 35px;position: relative;}
+.images img{width: 100%;height: 100%;position: absolute;left: 0;}
+.images>label:hover{border-color: #20a0ff;}
+.images>label>input{margin-left: -9999px;}
 
 .form-group{display:flex;justify-content: center;}
 .form-group>label{width: 90px;line-height: 32px;text-align: center;}

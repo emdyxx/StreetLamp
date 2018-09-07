@@ -467,7 +467,7 @@
                             <label>文件别名:</label>
                             <input type="text" id="nickName" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入文件别名">
                         </div> 
-                        <div class="el-upload__tip" style="text-align: center;font-size: 14px;">只能上传jpg/png/git图片，MP4/MKV视频,且不超过50M</div>
+                        <div class="el-upload__tip" style="text-align: center;font-size: 14px;">只能上传jpg/png/gif图片，MP4/MKV视频,且不超过50M</div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -575,8 +575,8 @@
         <div class="modal fade" id="programSetting_previewS" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog previewS_width" style="width:309px;">
                 <div class="modal-content">
-                    <div class="modal-body previewS_height" style="height:409px;overflow: hidden;padding:0;marggin:0;">
-                        <div id="previews_div2" style="margin: 0 auto;">
+                    <div class="modal-body previewS_height  previews_div_body2" style="height:409px;overflow: hidden;padding:0;marggin:0;">
+                        <div id="previews_div2" style="position:relative;margin: 0 auto;">
                             
                         </div>
                     </div>
@@ -613,7 +613,7 @@ export default {
             tableSite1:[],                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
             pageSize:10,
             pageIndex:1,
-            total:50,
+            total:10,
             site:[],
             centerDialogVisible:false,
             percentage:0,
@@ -902,6 +902,14 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.filesSelected = data.result.list
+                        if(data.result.isAddText=='0'){
+                            that.programDate.checked = false
+                            that.programDate.text = ''
+                        }
+                        if(data.result.isAddText=='1'){
+                            that.programDate.checked = true
+                            that.programDate.text = data.result.textContent
+                        }
                         $('#programSetting_previewS').modal('show')
                         clearInterval(animationMedia)
                         var width='';
@@ -923,7 +931,7 @@ export default {
                         $('#previews_div2').css('width',width)
                         $('#previews_div2').css('height',height)
                         $('.previewS_width').css('width',width)
-                        $('.previewS_height').css('height',height)
+                        $('.previewS_height').css('height',height+32)
                         if(that.filesSelected.length<2){
                             if(that.filesSelected[0].type=='0'){ //0为图片
                                 htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><img style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[0].mediaUrl+"'></div>"
@@ -943,7 +951,8 @@ export default {
                             }
                             var media = $('#previews_div2');
                             for(var t=0;t<that.filesSelected.length;t++){
-                                media[0].childNodes[t].style.left = width * t +"px"    
+                                $('#previews_div2>div').eq(t).css('left',width * t +"px" )
+                                // media[0].childNodes[t].style.left = width * t +"px"    
                             }
                             if(that.filesSelected[0].type=='1'){
                                 media[0].childNodes[0].childNodes[0].play()
@@ -953,7 +962,10 @@ export default {
                                 if(ss==that.filesSelected[i].duration||ss>that.filesSelected[i].duration){
                                     ss = 0;
                                     for(var t =0;t<that.filesSelected.length;t++){
-                                        media[0].childNodes[t].style.left = media[0].childNodes[t].offsetLeft-width+'px'
+                                        var widths = $('#previews_div2>div').eq(t).css('left')
+                                        widths = widths.split('px')
+                                        $('#previews_div2>div').eq(t).css('left',widths[0]-width+"px" )
+                                        // media[0].childNodes[t].style.left = media[0].childNodes[t].offsetLeft-width+'px'
                                     }
                                     if(that.filesSelected[i].type=='1'){
                                         media[0].childNodes[i].childNodes[0].pause();
@@ -963,7 +975,8 @@ export default {
                                     if(i==length){
                                         i=0
                                         for(var t=0;t<that.filesSelected.length;t++){
-                                            media[0].childNodes[t].style.left = width * t +"px"    
+                                            $('#previews_div2>div').eq(t).css('left',width * t +"px" )
+                                            // media[0].childNodes[t].style.left = width * t +"px"    
                                         }
                                     }
                                     if(that.filesSelected[i].type=='1'){
@@ -972,17 +985,34 @@ export default {
                                 }
                             }, 1000);
                         }
+                        if(that.programDate.checked==true){
+                            var html = "<div id='RollTexts' style='background:black;color:white;font-size:14px;text-align:center;line-height:30px;overflow:hidden;white-space:nowrap;'>"+that.programDate.text+"</div>"
+                            $('.previews_div_body2').append(html)
+                            $('#RollTexts').css('width',width)
+                            $('#RollTexts').css('height','30px')
+                            var obj = document.getElementById("RollTexts");
+                            var timer2 = setInterval(function(){
+                                var tmp=(obj.scrollLeft)++;
+                                if(obj.scrollLeft==tmp){
+                                    obj.innerHTML += obj.innerHTML;
+                                }
+                                if(obj.scrollLeft>=obj.firstChild.offsetWidth){
+                                    obj.scrollLeft=0;
+                                }
+                            },50)
+                        }
                     }else{
                         that.errorCode2(data.errorCode)
                     }
+
                     $('#programSetting_previewS').on('hide.bs.modal', function () {
                         clearInterval(animationMedia)
+                        clearInterval(timer2)
+                        $("#RollTexts").remove();
                         $('#previews_div2').html('')
                     })
                 }
-            })
-            
-            
+            })     
         },
         //表格change事件
         tableChange1(val){
@@ -1068,6 +1098,8 @@ export default {
                 that.programDate.programWidth = that.noticeSite[0].width
                 that.programDate.programHeight = that.noticeSite[0].height
                 this.programDate.setProgramType = true
+                that.programDate.checked = false
+                that.programDate.text = ''
             }
             if(val=='2'){
                 //删除
@@ -1143,6 +1175,15 @@ export default {
                     success:function(data){
                         if(data.errorCode=='0'){
                             that.filesSelected = data.result.list
+                            console.log(data.result.isAddText)
+                            if(data.result.isAddText=='0'){
+                                that.programDate.checked = false
+                                that.programDate.text = ''
+                            }
+                            if(data.result.isAddText=='1'){
+                                that.programDate.checked = true
+                                that.programDate.text = data.result.textContent
+                            }
                         }else{
                             that.errorCode2(data.errorCode)
                         }
@@ -1309,6 +1350,16 @@ export default {
                 });
                 return;
             }
+            if(that.programDate.checked==true){
+                if(that.programDate.text==''){
+                    this.$message({
+                        message: '请输入滚动文字!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+            }
             $('#myModal_preview').modal('show')
             var htmls = '';
             var width='';
@@ -1327,7 +1378,7 @@ export default {
             // previews
             $('#previews_div').css('width',width)
             $('#previews_div').css('height',height)
-            $('.previews_div_body').css('width',width)
+            $('.previews_div_body').css('width',width+32)
             $('.previews_div_content').css('width',width+32)
             if(this.filesSelected.length<2){
                 if(this.filesSelected[0].type=='0'){ //0为图片
@@ -1351,7 +1402,8 @@ export default {
                         media[0].childNodes[0].childNodes[0].play()
                     }
                 for(var t=0;t<this.filesSelected.length;t++){
-                    media[0].childNodes[t].style.left = width * t +"px"    
+                    $('#previews_div>div').eq(t).css('left',width * t +"px" )
+                    // media[0].childNodes[t].style.left = width * t +"px"    
                 }
                 var ss = 0;
                 var i = 0;
@@ -1360,7 +1412,10 @@ export default {
                     if(ss==this.filesSelected[i].duration||ss>this.filesSelected[i].duration){
                         ss = 0;
                         for(var t =0;t<this.filesSelected.length;t++){
-                            media[0].childNodes[t].style.left = media[0].childNodes[t].offsetLeft-width+'px'
+                            var widths = $('#previews_div>div').eq(t).css('left')
+                            widths = widths.split('px')
+                            $('#previews_div>div').eq(t).css('left',widths[0]-width+"px" )
+                            // media[0].childNodes[t].style.left = media[0].childNodes[t].offsetLeft-width+'px'
                         }
                         if(this.filesSelected[i].type=='1'){
                             media[0].childNodes[i].childNodes[0].pause();
@@ -1370,18 +1425,36 @@ export default {
                         if(i==length){
                             i=0
                             for(var t=0;t<this.filesSelected.length;t++){
-                                media[0].childNodes[t].style.left = width * t +"px"    
+                                $('#previews_div>div').eq(t).css('left',width * t +"px" )
+                                // media[0].childNodes[t].style.left = width * t +"px"    
                             }
                         }
                         if(this.filesSelected[i].type=='1'){
                             media[0].childNodes[i].childNodes[0].play()
                         }
                     }
-                    console.log(i,ss)
                 }, 1000);
+            }
+            if(that.programDate.checked==true){
+                var html = "<div id='RollText' style='background:black;color:white;font-size:14px;text-align:center;line-height:30px;overflow:hidden;white-space:nowrap;'>"+that.programDate.text+"</div>"
+                $('.previews_div_body').append(html)
+                $('#RollText').css('width',width)
+                $('#RollText').css('height','30px')
+                var obj = document.getElementById("RollText");
+                var timer = setInterval(function(){
+                     var tmp=(obj.scrollLeft)++;
+                    if(obj.scrollLeft==tmp){
+                        obj.innerHTML += obj.innerHTML;
+                    }
+                    if(obj.scrollLeft>=obj.firstChild.offsetWidth){
+                        obj.scrollLeft=0;
+                    }
+                },50)
             }
             $('#myModal_preview').on('hide.bs.modal', function () {
                 clearInterval(animationMedia)
+                clearInterval(timer)
+                $("#RollText").remove();
                 $('#previews_div').html('')
             })
         },
@@ -1645,6 +1718,16 @@ export default {
             formdate.append('creatorId',1)
             if(value[0]=='video'){
                 type='1'
+                if(value[1]=='mp4'||value[1]=='mkv'||value[1]=='MP4'||value[1]=='MKV'){
+                    
+                }else{
+                    that.$message({
+                        message: '不支持的文件格式!',
+                        type:'success',
+                        showClose: true,
+                    });
+                    return;
+                }
             }else if(value[0]=='image'){
                 type='0'
             }else{
@@ -1734,32 +1817,38 @@ export default {
             }
             if(val.uploadStatus=='1'){
                 this.centerDialogVisible = true
+                var s = 0
                 var clearstatus = setInterval(function(){
-                    $.ajax({
-                        type:'get',
-                        async:true,
-                        dataType:'json',
-                        url:that.serverurl+'/screen/getDownLoadProgress',
-                        contentType:'application/json;charset=UTF-8',
-                        data:{
-                            programId:val.programId,
-                            serialNumber:val.serialNumber,
-                            projectId:sessionStorage.projectId
-                        },
-                        success:function(data){
-                            if(data.errorCode=='0'){
-                                if(Number(data.result.num)*100==100||Number(data.result.num)*100>100){
-                                    that.ready()
+                    if(s==0){
+                        s++
+                        $.ajax({
+                            type:'get',
+                            async:true,
+                            dataType:'json',
+                            url:that.serverurl+'/screen/getDownLoadProgress',
+                            contentType:'application/json;charset=UTF-8',
+                            data:{
+                                programId:val.programId,
+                                serialNumber:val.serialNumber,
+                                projectId:sessionStorage.projectId
+                            },
+                            success:function(data){
+                                if(data.errorCode=='0'){
+                                    s=0
+                                    if(Number(data.result.num)*100==100||Number(data.result.num)*100>100){
+                                        that.ready()
+                                        clearInterval(clearstatus)
+                                    }
+                                    that.percentage = Number(data.result.num*100).toFixed(1)
+                                }else{
+                                    s=0
                                     clearInterval(clearstatus)
+                                    that.errorCode2(data.errorCode)
+                                    that.ready()
                                 }
-                                that.percentage = Number(data.result.num*100)
-                            }else{
-                                clearInterval(clearstatus)
-                                that.errorCode2(data.errorCode)
-                                that.ready()
                             }
-                        }
-                    })
+                        })
+                    }
                 },2000)
             }
             if(val.uploadStatus=='2'){

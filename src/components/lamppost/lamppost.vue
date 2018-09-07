@@ -16,9 +16,9 @@
         </el-select>
         <div class="header_center">
           <template v-for="item in menu">
-            <template v-if="item.code=='poleOverview'">
+            <!-- <template v-if="item.code=='poleOverview'">
               <div @click="headercolor(1,item.id)" :class="headercolorType=='1'?'header_center_color':''">灯杆概览</div>
-            </template>
+            </template> -->
             <template v-if="item.code=='deviceManage'">
               <div @click="headercolor(2,item.id)" :class="headercolorType=='2'?'header_center_color':''">设备管理</div>
             </template>
@@ -65,10 +65,10 @@ export default {
       sessionStorage.menuId2 = id
       sessionStorage.headercolorType = val
       this.headercolorType = val
-      if(val=='1'){
-        sessionStorage.menuId3='01'
-        this.$router.push({'path':'/pandect'})
-      }
+      // if(val=='1'){
+      //   sessionStorage.menuId3='01'
+      //   this.$router.push({'path':'/pandect'})
+      // }
       if(val=='2'){
         sessionStorage.menuId3='02'
         this.$router.push({'path':'/equipment'})
@@ -174,10 +174,10 @@ export default {
                     that.menu = data.result.menus
                     if(sessionStorage.menuId2==''||sessionStorage.menuId2==undefined||sessionStorage.menuId2==null){
                       sessionStorage.menuId2 = data.result.menus[0].id
-                      if(data.result.menus[0].id=='7'){
-                        sessionStorage.headercolorType = '1'
-                        that.$router.push({'path':'/pandect'})
-                      }
+                      // if(data.result.menus[0].id=='7'){
+                      //   sessionStorage.headercolorType = '1'
+                      //   that.$router.push({'path':'/pandect'})
+                      // }
                       if(data.result.menus[0].id=='8'){
                         sessionStorage.headercolorType = '2'
                         that.$router.push({'path':'/equipment'})

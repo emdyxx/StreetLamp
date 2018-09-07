@@ -208,7 +208,7 @@ export default {
         //智慧灯杆系统
         lamppost(val){
             sessionStorage.menuId = val
-            sessionStorage.headercolorType = '1'
+            sessionStorage.headercolorType = '2'
             this.$router.push({'path':'/lamppost'})
         },
         //gis地图系统
@@ -254,6 +254,7 @@ export default {
                     if(data.errorCode=='0'){
                         that.data = data.result.user
                         that.data.ts = ts
+                        sessionStorage.userId = data.result.user.id
                         var url=that.serverurl+data.result.user.org.backdrop
                         $('.index').css({
                             "background-image":"url("+url+")",

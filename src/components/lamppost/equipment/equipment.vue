@@ -19,7 +19,9 @@ export default {
     mounted(){
         var that = this
         //初始化左侧树
-        this.readyLeft()
+        setTimeout(function(){
+            that.readyLeft()
+        },800)
     },
     methods:{
         //请求左侧树

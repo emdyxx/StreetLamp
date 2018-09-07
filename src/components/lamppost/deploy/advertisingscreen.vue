@@ -313,7 +313,7 @@ export default {
             tableData:[],
             pageSize:10,
             pageIndex:1,
-            total:50, 
+            total:10, 
             serialNumber:'',
             options4:[
                 {
