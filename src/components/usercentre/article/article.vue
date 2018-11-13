@@ -91,6 +91,7 @@
                         prop="createTime"
                         label="创建时间"
                         align='center'
+                        min-width="160"
                         show-overflow-tooltip>
                         </el-table-column>
                     </el-table>
@@ -464,7 +465,9 @@ export default {
                         that.mark = that.site[0].remark
                         that.value5 = String(that.detailsData.locationType)
                         that.imgurl = that.detailsData.planUrl
-                        that.imageUrl1 = that.serverurl+that.detailsData.planUrl
+                        if(that.detailsData.planUrl==''){}else{
+                            that.imageUrl1 = that.serverurl+that.detailsData.planUrl
+                        }
                         that.mapChange()
                         that.province(that.type)
                     }else{
@@ -513,23 +516,28 @@ export default {
             }
             if(this.type=='0'){
                 url='/project/addProject'
+                if(this.value5=='0'){
+                    if(this.$refs.img1.files[0]==''||this.$refs.img1.files[0]==undefined){
+                        that.$message({
+                            message: '平面图片不能为空!',
+                            type: 'error'
+                        });
+                        return;
+                    }
+                    formdate.append("planFile", this.$refs.img1.files[0])
+                }
             }
             if(this.type=='1'){
                 url='/project/updateProjectInformation'
                 formdate.append("id",that.site[0].id)
-            }
-            if(this.value5=='0'){
-                if(this.$refs.img1.files[0]==''||this.$refs.img1.files[0]==undefined){
-                    that.$message({
-                        message: '平面图片不能为空!',
-                        type: 'error'
-                    });
-                    return;
-                }
-                if(this.type=='0'){
-                    formdate.append("planFile", this.$refs.img1.files[0])
-                }
-                if(this.type=='1'){
+                if(this.value5=='0'){
+                    if(that.imageUrl1==''||that.imageUrl1==undefined){
+                        that.$message({
+                            message: '平面图片不能为空!',
+                            type: 'error'
+                        });
+                        return;
+                    }
                     formdate.append("planFile", this.$refs.img1.files[0])
                     formdate.append("planUrl", this.imgurl)
                 }

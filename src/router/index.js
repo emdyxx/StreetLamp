@@ -38,12 +38,14 @@ import DeviceLog from '@/components/lamppost/DeviceLog/DeviceLog' //设备日志
 import LampPoleJournal from '@/components/lamppost/DeviceLog/LampPoleJournal' //灯杆日志
 import lampJournal from '@/components/lamppost/DeviceLog/lampJournal' //灯具日志
 import screenJournal from '@/components/lamppost/DeviceLog/screenJournal' //广告屏日志
-import sensorJournal from '@/components/lamppost/DeviceLog/sensorJournal' //传感器日志
+import sensorJournal from '@/components/lamppost/DeviceLog/sensorJournal' //气象站日志
 
 import mapHomgPage from '@/components/map/mapHomgPage' //地图主页
 import mapDetails from '@/components/map/mapDetails' //地图主页
 
-
+import video from '@/components/video/video' //视频管理主页
+import wifi from '@/components/wifi/wifi' //WIFI管理主页
+import broadcast from '@/components/broadcast/broadcast' //广播管理主页
 //  
 Vue.use(Router)
 Vue.use(ElementUI);
@@ -548,6 +550,14 @@ Vue.prototype.errorCode2 = function(code){
         showClose: true,
     });
   }
+  if(code=='11009'){
+    this.$message({
+        message: '会话过期',
+        type: 'error',
+        showClose: true,
+    });
+    this.$router.push({'path':'/'})
+  }
   if(code=='12001'){
     this.$message({
         message: '添加屏幕失败',
@@ -620,21 +630,21 @@ Vue.prototype.errorCode2 = function(code){
   }
   if(code=='12011'){
     this.$message({
-        message: '添加/修改失败，媒体已存在',
+        message: '媒体已存在',
         type: 'error',
         showClose: true,
     });
   }
   if(code=='12012'){
     this.$message({
-        message: '添加/修改失败，节目已存在',
+        message: '节目已存在',
         type: 'error',
         showClose: true,
     });
   }
   if(code=='12013'){
     this.$message({
-        message: '添加/修改失败，屏幕已存在',
+        message: '屏幕已存在',
         type: 'error',
         showClose: true,
     });
@@ -891,6 +901,13 @@ Vue.prototype.errorCode2 = function(code){
         showClose: true,
     });
   }
+  if(code=='12050'){
+    this.$message({
+        message: '屏幕开关状态更新失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
 
   if(code=='13001'){
     this.$message({
@@ -1095,6 +1112,27 @@ Vue.prototype.errorCode2 = function(code){
         showClose: true,
     });
   }
+  if(code=='13030'){
+    this.$message({
+        message: '该项目下没有用户',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='13031'){
+    this.$message({
+        message: '策略已过期',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='13032'){
+    this.$message({
+        message: '策略内容为空',
+        type: 'error',
+        showClose: true,
+    });
+  }
 
   if(code=='14001'){
     this.$message({
@@ -1182,7 +1220,7 @@ Vue.prototype.errorCode2 = function(code){
   }
   if(code=='15009'){
     this.$message({
-        message: '传感器同步更新灯杆地址失败',
+        message: '气象站同步更新灯杆地址失败',
         type: 'error',
         showClose: true,
     });
@@ -1203,7 +1241,7 @@ Vue.prototype.errorCode2 = function(code){
   }
   if(code=='15012'){
     this.$message({
-        message: '删除灯杆解绑传感器失败',
+        message: '删除灯杆解绑气象站失败',
         type: 'error',
         showClose: true,
     });
@@ -1238,14 +1276,14 @@ Vue.prototype.errorCode2 = function(code){
   }
   if(code=='17001'){
     this.$message({
-        message: '没有操作该传感器的权限',
+        message: '没有操作该气象站的权限',
         type: 'error',
         showClose: true,
     });
   }
   if(code=='17002'){
     this.$message({
-        message: '添加传感器失败',
+        message: '添加气象站失败',
         type: 'error',
         showClose: true,
     });
@@ -1259,7 +1297,7 @@ Vue.prototype.errorCode2 = function(code){
   }
   if(code=='17004'){
     this.$message({
-        message: '该传感器不存在',
+        message: '该气象站不存在',
         type: 'error',
         showClose: true,
     });
@@ -1273,7 +1311,7 @@ Vue.prototype.errorCode2 = function(code){
   }
   if(code=='17006'){
     this.$message({
-        message: '请至少选择一个传感器',
+        message: '请至少选择一个气象站',
         type: 'error',
         showClose: true,
     });
@@ -1287,14 +1325,14 @@ Vue.prototype.errorCode2 = function(code){
   }
   if(code=='17008'){
     this.$message({
-        message: '传感器解绑灯杆失败',
+        message: '气象站解绑灯杆失败',
         type: 'error',
         showClose: true,
     });
   }
   if(code=='17009'){
     this.$message({
-        message: '传感器网关请求失败',
+        message: '气象站网关请求失败',
         type: 'error',
         showClose: true,
     });
@@ -1308,7 +1346,7 @@ Vue.prototype.errorCode2 = function(code){
   }
   if(code=='17011'){
     this.$message({
-        message: '修改传感器失败',
+        message: '修改气象站失败',
         type: 'error',
         showClose: true,
     });
@@ -1322,7 +1360,7 @@ Vue.prototype.errorCode2 = function(code){
   }
   if(code=='17013'){
     this.$message({
-        message: '传感器重置坐标信息失败',
+        message: '气象站重置坐标信息失败',
         type: 'error',
         showClose: true,
     });
@@ -1392,8 +1430,8 @@ export default new Router({
           children:[
             {
               path: '/',
-              name: 'homepage',
-              component: homepage,
+              name: 'lampslanterns',
+              component: lampslanterns,
             },
           ]
         },
@@ -1431,14 +1469,14 @@ export default new Router({
           children:[
             {
               path: '/',
-              name: 'homepage',
-              component: homepage,
+              name: 'lampslanterns',
+              component: lampslanterns,
             },
-            {
-              path: '/homepage',
-              name: 'homepage',
-              component: homepage,
-            },
+            // {
+            //   path: '/homepage',
+            //   name: 'homepage',
+            //   component: homepage,
+            // },
             {
               path: '/lampslanterns',
               name: 'lampslanterns',
@@ -1473,14 +1511,14 @@ export default new Router({
           children:[
             {
               path: '/',
-              name: 'deployhomepage',
-              component: deployhomepage,
+              name: 'LampPole',
+              component: LampPole,
             },
-            {
-              path: '/deployhomepage',
-              name: 'deployhomepage',
-              component: deployhomepage,
-            },
+            // {
+            //   path: '/deployhomepage',
+            //   name: 'deployhomepage',
+            //   component: deployhomepage,
+            // },
             {
               path: '/controlhousing',
               name: 'controlhousing',
@@ -1583,6 +1621,21 @@ export default new Router({
       path: '/mapDetails',
       name: 'mapDetails',
       component: mapDetails,
-    }
+    },
+    {
+      path: '/video',
+      name: 'video',
+      component: video,
+    },
+    {
+      path: '/wifi',
+      name: 'wifi',
+      component: wifi,
+    },
+    {
+      path: '/broadcast',
+      name: 'broadcast',
+      component: broadcast,
+    },
   ]
 })

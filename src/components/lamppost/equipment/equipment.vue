@@ -84,9 +84,6 @@ export default {
                                         datas[0].children.push(arr)
                                     }
                                     jsonarray= datas;
-                                    if(sessionStorage.menuId3=='02'){
-                                        that.$router.push({'path':'/homepage'})
-                                    }
                                     if(sessionStorage.menuId3=='10'){
                                         that.$router.push({'path':'lampslanterns'})
                                     }
@@ -110,9 +107,6 @@ export default {
                 if(data.node.id==''||data.node.id==undefined){
                 }else{
                     sessionStorage.menuId3 = data.node.id
-                    if(data.node.id=='02'){
-                        that.$router.push({'path':'/homepage'})
-                    }
                     if(data.node.id=='10'){
                         that.$router.push({'path':'lampslanterns'})
                     }

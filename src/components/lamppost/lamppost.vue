@@ -70,11 +70,11 @@ export default {
       //   this.$router.push({'path':'/pandect'})
       // }
       if(val=='2'){
-        sessionStorage.menuId3='02'
+        sessionStorage.menuId3='10'
         this.$router.push({'path':'/equipment'})
       }
       if(val=='3'){
-        sessionStorage.menuId3='03'
+        sessionStorage.menuId3='14'
         this.$router.push({'path':'/deploy'})
       }
       if(val=='4'){
@@ -95,13 +95,13 @@ export default {
         success:function(data){
           if(data.errorCode=='0'){
             that.options2 = data.result.projects
-            // var datas = {
-            //   projectName:'全部',
-            //   id:-1,
-            // } 
-            // that.options2.unshift(datas)
-            that.value2 = that.options2[0].id
-            sessionStorage.projectId = that.options2[0].id
+            if(sessionStorage.projectId==''||sessionStorage.projectId==undefined||sessionStorage.projectId==null){
+              that.value2 = that.options2[0].id
+              sessionStorage.projectId = that.options2[0].id
+            }else{
+              that.value2 = Number(sessionStorage.projectId)
+            }
+            
           }else{
             that.errorCode(data.errorCode)
           }
@@ -174,12 +174,9 @@ export default {
                     that.menu = data.result.menus
                     if(sessionStorage.menuId2==''||sessionStorage.menuId2==undefined||sessionStorage.menuId2==null){
                       sessionStorage.menuId2 = data.result.menus[0].id
-                      // if(data.result.menus[0].id=='7'){
-                      //   sessionStorage.headercolorType = '1'
-                      //   that.$router.push({'path':'/pandect'})
-                      // }
                       if(data.result.menus[0].id=='8'){
                         sessionStorage.headercolorType = '2'
+                        sessionStorage.menuId3 = '10'
                         that.$router.push({'path':'/equipment'})
                       }
                       if(data.result.menus[0].id=='9'){

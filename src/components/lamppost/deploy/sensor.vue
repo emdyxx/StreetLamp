@@ -363,13 +363,13 @@ export default {
                 });
                 return;
             }
-            
-            // 0为添加,1为删除
+            // 0为添加,1为编辑
             if(val=='0'){
                 this.addtype = val;
                 this.ModelData()
                 this.data.nickName = ''
                 this.data.concentratorSN = ''
+                this.data.serialNumber = ''
                 this.data.modelId = ''
                 this.data.location = ''
                 this.data.mark = ''
@@ -511,7 +511,7 @@ export default {
             var that = this;
             if(this.site.length=='0'){
                 this.$message({
-                    message: '请选择灯杆进行绑定项目!',
+                    message: '请选择气象站进行绑定项目!',
                     type: 'warning'
                 });
                 return;

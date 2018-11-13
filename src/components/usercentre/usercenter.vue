@@ -65,6 +65,8 @@ export default {
     },
     backtrack(){
       this.$router.push({'path':'/index'})
+      sessionStorage.removeItem('menuId');
+      sessionStorage.removeItem('menuId2');
     },
     //请求权限
     Jurisdiction(){

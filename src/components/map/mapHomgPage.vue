@@ -6,25 +6,29 @@
         </div>
         <div class="plane">
             <div @mouseup="uplift" @mousedown='mousedown' class="plane_div" id="plane_div" style="position:absolute;">
-                <img :src=serverurl+planUrl alt="" class="plane_div_bgimg">
+                <img :src=planUrl alt="" class="plane_div_bgimg">
                 <template v-if="value1=='0'">
                     <template v-for="item in data">
-                        <img v-if="item.coord!=''" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" src='http://192.168.70.10/solin-platform/image/icon1.png'>
+                        <img v-if="item.coord!=''" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src=imgserverurl+image/img/rod.png>
                     </template>
                 </template>
                 <template v-if="value1=='1'">
                     <template v-for="item in data">
-                        <img v-if="item.coord!=''" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" src='http://192.168.70.10/solin-platform/image/icon2.png'>
+                        <img v-if="item.coord!=''&&item.lampStatus=='2'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src=imgserverurl+image/img/lamp_3.png>
+                        <img v-else-if="item.coord!=''&&item.online=='1'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src=imgserverurl+image/img/lamp_1.png>
+                        <img v-else-if="item.coord!=''" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src=imgserverurl+image/img/lamp_2.png>
                     </template>
                 </template>
                 <template v-if="value1=='2'">
                     <template v-for="item in data">
-                        <img v-if="item.coord!=''" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" src='http://192.168.70.10/solin-platform/image/icon3.png'>
+                        <img v-if="item.coord!=''&&item.status=='1'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src=imgserverurl+image/img/screen_1.png>
+                        <img v-if="item.coord!=''&&item.status=='0'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src=imgserverurl+image/img/screen_2.png>
                     </template>
                 </template>
                 <template v-if="value1=='3'">
                     <template v-for="item in data">
-                        <img v-if="item.coord!=''" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" src='http://192.168.70.10/solin-platform/image/icon4.png'>
+                        <img v-if="item.coord!=''&&item.online=='0'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src=imgserverurl+image/img/sensor_2.png>
+                        <img v-if="item.coord!=''&&item.online=='1'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src=imgserverurl+image/img/sensor_1.png>
                     </template>
                 </template>
                 <div id="menu3" style="z-index:2;background-color:#969696">
@@ -47,7 +51,7 @@
         </div>
         <div class="map_left">
             <div class="map_left_left">
-                <el-select v-model="value" size='small' style="width:280px;" placeholder="请选择">
+                <el-select v-model="value" @change="projectChange" size='small' style="width:280px;" placeholder="请选择">
                     <el-option
                     v-for="item in options"
                     :key="item.id"
@@ -163,6 +167,69 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
+        <!-- 右侧灯杆基本信息 -->
+        <div class="rightfloat">
+            <div class="concentright_top">
+                <p v-if="value1=='0'">灯杆基本信息</p>
+                <p v-if="value1=='1'">灯具基本信息</p>
+                <p v-if="value1=='2'">广告屏基本信息</p>
+                <p v-if="value1=='3'">气象站基本信息</p>
+                <i @click="Closeconcent" class="backtrack iconfont icon-guanbi"></i>
+            </div>
+            <div class="concentright_bottom">
+                <!-- 灯杆基本信息 -->
+                <div v-if="value1=='0'&&contentTabledata!=''" class="concentlampPole">
+                    <p>灯杆名称:{{contentTabledata.poleDto.nickName}}</p>
+                    <template v-if="contentTabledata.poleDto.poleType=='0'">
+                        <p>灯杆类型:普通灯杆</p>
+                    </template>
+                    <template v-if="contentTabledata.poleDto.poleType=='1'">
+                        <p>灯杆类型:智慧灯杆</p>
+                    </template>
+                    <p>灯杆位置:{{contentTabledata.poleDto.location}}</p>
+                    <p style="font-weight: 600;">已关联灯具:</p>
+                    <p v-for="(item,key) in contentTabledata.lampDtoList">
+                        <span>名称:{{item.nickName}}</span>
+                        <span>型号:{{item.serialNumber}}</span>
+                    </p>
+                    <p style="font-weight: 600;">已关联屏幕:</p>
+                    <p v-for="(item,key) in contentTabledata.screenDtoList">
+                        <span>名称:{{item.nickName}}</span>
+                        <span>型号:{{item.serialNumber}}</span>
+                    </p>
+                    <p style="font-weight: 600;">已关联气象站:</p>
+                    <p v-for="(item,key) in contentTabledata.EnvSensorDtoList">
+                        <span>名称:{{item.nickName}}</span>
+                        <span>型号:{{item.modelName}}</span>
+                    </p>
+                </div>
+                <!-- 灯具基本信息 -->
+                <div v-if="value1=='1'&&contentTabledata!=''" class="concentlampPole">
+                    <p>灯具名称:{{contentTabledata.lampDto.nickName}}</p>
+                    <p>灯控器标示:{{contentTabledata.lampDto.serialNumber}}</p>
+                    <p>集中器标示:{{contentTabledata.lampDto.concentratorSN}}</p>
+                    <p v-if="contentTabledata.lampDto.lampStatus=='0'">灯状态:关闭</p>
+                    <p v-if="contentTabledata.lampDto.lampStatus=='1'">灯状态:开启</p>
+                    <p v-if="contentTabledata.lampDto.lampStatus=='2'">灯状态:告警</p>
+                </div>
+                <!-- 广告屏基本信息 -->
+                <div v-if="value1=='2'&&contentTabledata!=''" class="concentlampPole">
+                    <p>屏幕名称:{{contentTabledata.screenDto.nickName}}</p>
+                    <p>屏幕标识:{{contentTabledata.screenDto.serialNumber}}</p>
+                    <p>屏幕型号:{{contentTabledata.screenDto.modelName}}</p>
+                    <p v-if="contentTabledata.screenDto.status=='1'">屏幕状态:开启</p>
+                    <p v-else>屏幕状态:关闭</p>
+                </div>
+                <!-- 气象站基本信息 -->
+                <div v-if="value1=='3'&&contentTabledata!=''" class="concentlampPole">
+                    <p>气象站名称:{{contentTabledata.nickName}}</p>
+                    <p>型号别标识:{{contentTabledata.modelName}}</p>
+                    <p>集中器标识:{{contentTabledata.concentratorSN}}</p>
+                    <p v-if="contentTabledata.online=='1'">状态:在线</p>
+                    <p v-else>状态:离线</p>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -171,9 +238,9 @@ export default {
     data () {
         return {
             serverurl:localStorage.serverurl,
+            imgserverurl:'',
             addPoleIcon:false,
             deletePoleIcon:false,
-            serverurl:localStorage.serverurl,
             options:[],//项目
             value:'',
             locationType:'',//地图类型
@@ -233,7 +300,9 @@ export default {
             y:0,
             l:0,
             t:0,
-            isDown:false
+            isDown:false,
+
+            contentTabledata:'',//右侧设备基本信息
         }
     },
     mounted(){
@@ -269,6 +338,7 @@ export default {
     },
     methods:{
         formatRole:function(val, column, cellValue, index){
+            
             if(cellValue == null||cellValue == undefined||cellValue == ''){
                 return '----'
             }else{
@@ -290,12 +360,31 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.options = data.result.projects
-                        that.value = that.options[0].id
-                        that.locationType = data.result.projects[0].locationType
-                        if(data.result.projects[0].locationType=='1'){
-                            that.getcoord=[data.result.projects[0].area.lng,data.result.projects[0].area.lat]
+                        if(sessionStorage.projectID==''||sessionStorage.projectID==undefined||sessionStorage.projectID==null){
+                            that.value = that.options[0].id
+                            that.locationType = data.result.projects[0].locationType
+                            if(data.result.projects[0].locationType=='1'){
+                                that.getcoord=[data.result.projects[0].area.lng,data.result.projects[0].area.lat]
+                            }else{
+                                that.planUrl = that.serverurl+data.result.projects[0].planUrl
+                            }
                         }else{
-                            that.planUrl = data.result.projects[0].planUrl
+                            that.value = Number(sessionStorage.projectID)
+                            for(var i=0;i<data.result.projects.length;i++){
+                                if(data.result.projects[i].id==sessionStorage.projectID){
+                                    that.locationType = data.result.projects[i].locationType
+                                    if(data.result.projects[i].locationType=='1'){
+                                        that.getcoord=[data.result.projects[i].area.lng,data.result.projects[i].area.lat]
+                                    }else{
+                                        that.planUrl = that.serverurl+data.result.projects[i].planUrl
+                                    }
+                                }
+                            }
+                        }
+                        if(sessionStorage.projectID2==''||sessionStorage.projectID2==undefined||sessionStorage.projectID2==null){
+                            that.value1 = '0'
+                        }else{
+                            that.value1 = sessionStorage.projectID2
                         }
                     }else{
                         that.errorCode(data.errorCode)
@@ -303,7 +392,11 @@ export default {
                 },
             })
         },
+        projectChange(val){
+            sessionStorage.projectID = val
+        },
         optionChange(val){
+            sessionStorage.projectID2 = val
             if(val=='1'){
                 this.options2[1].disabled = false
             }else{
@@ -322,7 +415,7 @@ export default {
                 if(that.options[i].id==that.value){
                     that.locationType = that.options[i].locationType  
                     if(that.options[i].locationType=='0'){
-                        that.planUrl = that.options[i].planUrl
+                        that.planUrl = that.serverurl+that.options[i].planUrl
                         $('.plane').css('display','flex')
                         $('.allmap').css('display','none')
                     }else{
@@ -330,7 +423,7 @@ export default {
                         $('.allmap').css('display','inline-block')
                     }
                     if(that.options[i].area==''||that.options[i].area==null||that.options[i].area==undefined){
-
+                        
                     }else{
                         that.getcoord=[that.options[i].area.lng,that.options[i].area.lat]
                     }
@@ -379,12 +472,36 @@ export default {
         },
         //平面图设备右键事件
         uplifttwo(ev){
-            this.isDown = false;
             var that = this
-            window.event.cancelBubble = true
+            // window.event.cancelBubble = true
             $('#menu3').css('display','none')
             ev = ev || window.event;
             var btn = ev.button;
+            this.isDown = false;
+            if(btn==0){
+                $('.rightfloat').css({
+                    "display":"inline-block",
+                    "right":"0",
+                })
+                console.log(ev.target.id)
+                var url = ''
+                var data = {}
+                if(that.value1=='0'){url='/pole/getBindDeviceListByPoleId';data.poleId = ev.target.id;}
+                if(that.value1=='1'){url='/lamp/getLampDetailsById';data.lampId = ev.target.id;}
+                if(that.value1=='2'){url='/screen/getScreenDetailsById';data.screenId = ev.target.id;}
+                if(that.value1=='3'){url='/envSensors/getEnvSensorsInformation';data.id = ev.target.id;}
+                $.ajax({
+                    type:'get',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+url,
+                    contentType:'application/json;charset=UTF-8',
+                    data:data,
+                    success:function(data){
+                        that.contentTabledata = data.result
+                    }
+                })
+            }   
             if( btn == 2){
                 var array = ev.target.name.split(",")
                 array[0] = Number(array[0])+24
@@ -397,6 +514,12 @@ export default {
                 that.click.id = ev.target.id
                 that.click.type = that.value1
             } 
+        },
+        Closeconcent(){
+            $('.rightfloat').css({
+                "display":"none",
+                "right":"-250px",
+            })
         },
         //厂区图缩小
         narrow(){
@@ -452,10 +575,14 @@ export default {
                             map.centerAndZoom(new BMap.Point(that.getcoord[0],that.getcoord[1]),that.getZoom);// 初始化地图,设置中心点坐标和地图级别
                             map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
                             //添加鼠标右键事件
-                            var icon1 = new BMap.Icon("http://192.168.70.10/solin-platform/image/icon1.png", new BMap.Size(48,80));
-                            var icon2 = new BMap.Icon("http://192.168.70.10/solin-platform/image/icon2.png", new BMap.Size(48,80));
-                            var icon3 = new BMap.Icon("http://192.168.70.10/solin-platform/image/icon3.png", new BMap.Size(48,80));
-                            var icon4 = new BMap.Icon("http://192.168.70.10/solin-platform/image/icon4.png", new BMap.Size(48,80));
+                            var rod = new BMap.Icon(that.imgserverurl+"image/img/rod.png", new BMap.Size(48,80));
+                            var lamp_1 = new BMap.Icon(that.imgserverurl+"image/img/lamp_1.png", new BMap.Size(48,80));
+                            var lamp_2 = new BMap.Icon(that.imgserverurl+"image/img/lamp_2.png", new BMap.Size(48,80));
+                            var lamp_3 = new BMap.Icon(that.imgserverurl+"image/img/lamp_3.png", new BMap.Size(48,80));
+                            var screen_1 = new BMap.Icon(that.imgserverurl+"image/img/screen_1.png", new BMap.Size(48,80));
+                            var screen_2 = new BMap.Icon(that.imgserverurl+"image/img/screen_2.png", new BMap.Size(48,80));
+                            var sensor_1 = new BMap.Icon(that.imgserverurl+"image/img/sensor_1.png", new BMap.Size(48,80));
+                            var sensor_2 = new BMap.Icon(that.imgserverurl+"image/img/sensor_2.png", new BMap.Size(48,80));
                             for(var i=0;i<data.result.list.length;i++){
                                 if(data.result.list[i].coord==''||data.result.list[i].coord==undefined||data.result.list[i].coord==null){
                                     
@@ -463,20 +590,60 @@ export default {
                                     var coord = data.result.list[i].coord
                                     var point = new BMap.Point(coord.split(",")[0],coord.split(",")[1]);
                                     if(that.value1=='0'){
-                                        var marker = new BMap.Marker(point,{icon:icon1});
+                                        var marker = new BMap.Marker(point,{icon:rod});
                                     }
                                     if(that.value1=='1'){
-                                        var marker = new BMap.Marker(point,{icon:icon2});
+                                        if(data.result.list[i].lampStatus=='2'){
+                                            var marker = new BMap.Marker(point,{icon:lamp_3});
+                                        }else if(data.result.list[i].online=='1'){
+                                            var marker = new BMap.Marker(point,{icon:lamp_1});
+                                        }else{
+                                            var marker = new BMap.Marker(point,{icon:lamp_2});
+                                        }
                                     }
                                     if(that.value1=='2'){
-                                        var marker = new BMap.Marker(point,{icon:icon3});
+                                        if(data.result.list[i].status=='0'){
+                                            var marker = new BMap.Marker(point,{icon:screen_2});
+                                        }
+                                        if(data.result.list[i].status=='1'){
+                                            var marker = new BMap.Marker(point,{icon:screen_1});
+                                        }
                                     }
                                     if(that.value1=='3'){
-                                        var marker = new BMap.Marker(point,{icon:icon4});
+                                        if(data.result.list[i].online=='0'){
+                                            var marker = new BMap.Marker(point,{icon:sensor_2});
+                                        }
+                                        if(data.result.list[i].online=='1'){
+                                            var marker = new BMap.Marker(point,{icon:sensor_1});
+                                        }
                                     }
                                     marker.setTitle(data.result.list[i].nickName); //这里设置maker的title 
                                     marker.id=data.result.list[i].id
                                     marker.type=that.value1
+                                    marker.addEventListener('click',function(e){
+                                        console.log(e.target.id)
+                                        $('.rightfloat').css({
+                                            "display":"inline-block",
+                                            "right":"0",
+                                        })
+                                        var url = ''
+                                        var data = {}
+                                        if(that.value1=='0'){url='/pole/getBindDeviceListByPoleId';data.poleId = e.target.id;}
+                                        if(that.value1=='1'){url='/lamp/getLampDetailsById';data.lampId = e.target.id;}
+                                        if(that.value1=='2'){url='/screen/getScreenDetailsById';data.screenId = e.target.id;}
+                                        if(that.value1=='3'){url='/envSensors/getEnvSensorsInformation';data.id = e.target.id;}
+                                        $.ajax({
+                                            type:'get',
+                                            async:true,
+                                            dataType:'json',
+                                            url:that.serverurl+url,
+                                            contentType:'application/json;charset=UTF-8',
+                                            data:data,
+                                            success:function(data){
+                                                that.contentTabledata = data.result
+                                            }
+                                        })
+                                    })
                                     map.addOverlay(marker);
                                 }
                             }
@@ -603,7 +770,7 @@ export default {
                                     mymenu.style.display = "inline-block";
                                     mymenu.style.left = e.clientX + 2 +"px";
                                     mymenu.style.top = e.clientY + 2 + "px";
-                                
+                                           
                                     var mymenu = document.getElementById("menu");
                                     mymenu.style.display = "none";
                                     return false;
@@ -657,6 +824,7 @@ export default {
                                 $('.plane_div').css({"transform":'scale(2)'})
                             }
                             that.data = data.result.list
+                            console.log(that.data)
                         }
                     }else{
                         that.errorCode2(data.errorCode)
@@ -843,6 +1011,9 @@ export default {
     created(){
         var that = this
         document.body.onselectstart=document.body.oncontextmenu=function(){ return false;} 
+        //设置img的路径
+        var url = localStorage.serverurl.split('/')
+        that.imgserverurl = url[0]+'//'+url[2]+'/solin-platform/'
         this.project()
         this.Jurisdiction()
         setTimeout(function(){
@@ -881,6 +1052,14 @@ export default {
 #menu>ul>li,#menu2>ul>li,#menu3>ul>li,#menu4>ul>li{list-style: none;padding: 2px 2px 2px 2px;background: white;border-radius: 5px;cursor: pointer;}
 #menu>ul>li:nth-of-type(2),#menu2>ul>li:nth-of-type(2),#menu3>ul>li:nth-of-type(2),#menu4>ul>li:nth-of-type(2){margin-top: 5px;}
 #menu>ul>li>a,#menu2>ul>li>a,#menu3>ul>li>a,#menu4>ul>li>a{text-decoration: none;font: 12px;}
+
+.rightfloat{display:none;position: absolute;padding: 5px;right: -250px;width: 250px;top:130px;background: white;border-radius: 3px;border: 1px solid gray;}
+.concentright_top{width: 100%;height:25px;border-bottom: 1px solid gray;}
+.concentright_top>p{margin: 0;display: inline-block;height: 100%;line-height: 25px;font-weight: 600;padding-left: 10px;}
+.concentright_top>i{font-size: 20px;position: absolute;right: 5px;}
+.concentright_bottom p{margin: 0 !important;padding:2px 0 2px 5px;}
+.concentlampPole span{display: block;width:99%;}
+
 
 .demo-table-expand {font-size: 0;}
 .demo-table-expand>div{margin-right: 3%;margin-bottom: 0;}

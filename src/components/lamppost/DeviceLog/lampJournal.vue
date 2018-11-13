@@ -97,8 +97,26 @@
             <el-tab-pane label="控制日志" v-if="viewLampControlLog" name='1' style="height: 100%;position:relative;">
                 <div class="lampJournal_top">
                     <div class="search">
-                        <span>单灯序列号:</span>
-                        <input type="text" v-model="serialNumber" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入单灯序列号">
+                        <span>操作类别:</span>
+                        <el-select v-model="value5" clearable size='small' placeholder="请选择">
+                            <el-option
+                            v-for="item in options5"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="search">
+                        <span>操作状态:</span>
+                        <el-select v-model="value6" clearable size='small' placeholder="请选择">
+                            <el-option
+                            v-for="item in options6"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
                     </div>
                     <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
                 </div>
@@ -122,10 +140,12 @@
                         min-width="100">
                         </el-table-column>
                         <el-table-column
-                        prop="serialNumber"
                         align='center'
                         label="单灯序列号"
-                        min-width="130">
+                        min-width="80">
+                            <template slot-scope="scope">
+                                <button @click="serialNumber_click(scope.row.serialNumbers)" style="height:20px;line-height:15px;">...</button>
+                            </template>
                         </el-table-column>
                         <el-table-column
                         align='center'
@@ -266,6 +286,12 @@
                                 <template v-if="scope.row.jsonContent.lampAlarm!=undefined||scope.row.jsonContent.lampAlarm!=''">
                                     <span v-if="scope.row.jsonContent.lampAlarm=='breakdown'">光源故障</span>
                                 </template>
+                                <template v-if="scope.row.jsonContent.underVoltage!=undefined||scope.row.jsonContent.underVoltage!=''">
+                                    <span v-if="scope.row.jsonContent.underVoltage=='overload'">欠压</span>
+                                </template>
+                                <template v-if="scope.row.jsonContent.overVoltage!=undefined||scope.row.jsonContent.overVoltage!=''">
+                                    <span v-if="scope.row.jsonContent.overVoltage=='overload'">过压</span>
+                                </template>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -282,8 +308,21 @@
                         </el-pagination>
                     </div>
                 </div>
-            </el-tab-pane>
+            </el-tab-pane>  
         </el-tabs>
+        <el-dialog
+            title="单灯序列号列表"
+            :visible.sync="dialogVisible"
+            width="25%">
+            <span style="display: inline-block;width: 100%;max-height: 300px;overflow: auto;">
+                <p v-for="item in serialNumberData" style="text-align: center;margin: 5px 0 5px 0;">
+                    {{item.lampSerialNumber}}
+                </p>
+            </span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">关闭</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -323,6 +362,42 @@ export default {
                 }
             ],
             value4:'',
+            dialogVisible:false,
+            serialNumberData:'',
+            options5:[
+                {
+                    value: '1',
+                    label: '开启'
+                },
+                {
+                    value: '2',
+                    label: '关闭'
+                },
+                {
+                    value: '3',
+                    label: '调光'
+                },
+                {
+                    value: '4',
+                    label: '刷新状态'
+                },
+                {
+                    value: '5',
+                    label: '下发策略'
+                }
+            ],
+            value5:'',
+            options6:[
+                {
+                    value: '0',
+                    label: '成功'
+                },
+                {
+                    value: '1',
+                    label: '失败'
+                }
+            ],
+            value6:'',
         }
     },
     mounted(){
@@ -346,18 +421,21 @@ export default {
             };
             var url = '';
             data.projectId = sessionStorage.projectId
-            data.serialNumber = this.serialNumber
             if(this.activeName=='0'){
                 url='/lampOperatLogControl/getLampOperatLogList'
                 data.operatModule = this.value2
+                data.serialNumber = this.serialNumber
             }
             if(this.activeName=='1'){
                 url='/lampControlLogControl/getLampControlLogList'
+                data.controlType = that.value5
+                data.controlStatus = that.value6
             }
             if(this.activeName=='2'){
                 url='/lampAlarmLogControl/getLampAlarmLogList'
                 data.alarmType = this.value3
                 data.alarmLevel = this.value4
+                data.serialNumber = this.serialNumber
             }
             $.ajax({
                 type:'get',
@@ -388,6 +466,13 @@ export default {
         sizechange(val){
             this.pageSize = val;
             this.ready()
+        },
+        //请求单灯序列号列表
+        serialNumber_click(val){
+            var array = [];
+            var val = JSON.parse(val)
+            this.serialNumberData = val
+            this.dialogVisible = true
         },
         //权限请求
         Jurisdiction(){

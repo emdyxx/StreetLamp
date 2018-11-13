@@ -1,5 +1,5 @@
 <template>
-    <!-- 传感器日志 -->
+    <!-- 气象站日志 -->
     <div class="sensorJournal">
         <div class="sensorJournal_top">
             <div class="search">

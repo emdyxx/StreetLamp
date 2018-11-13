@@ -570,7 +570,7 @@ export default {
             var that = this;
             if(this.site.length=='0'){
                 this.$message({
-                    message: '请选择灯杆进行绑定项目!',
+                    message: '请选择灯具进行绑定项目!',
                     type: 'warning'
                 });
                 return;
@@ -637,7 +637,8 @@ export default {
                 nickName:that.nickName,
                 serialNumber:that.serialNumber,
                 poleId:'',
-                projectId:sessionStorage.projectId
+                projectId:sessionStorage.projectId,
+                online:''
             }
             $.ajax({
                 type:'get',

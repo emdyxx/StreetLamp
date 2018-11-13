@@ -2,8 +2,18 @@
     <div class="lampslanterns">
         <!-- 灯具 -->
         <div class="lampslanterns_top">
-            <el-button v-if="turnOnLight" @click="switchOff('1')" type="primary" size='small'>开灯</el-button>
-            <el-button v-if="turnOffLight" @click="switchOff('2')" type="primary" size='small'>关灯</el-button>
+            <!-- <el-button v-if="turnOnLight" @click="switchOff('1')" type="primary" size='small'>开灯</el-button>
+            <el-button v-if="turnOffLight" @click="switchOff('2')" type="primary" size='small'>关灯</el-button> -->
+            <el-dropdown style="margin-left:10px;" @command='operation'>
+                <el-button type="primary" size='small' style="width:85px;">
+                    操作<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown"> 
+                    <el-dropdown-item v-if="turnOnLight" command='1'>开灯</el-dropdown-item>
+                    <el-dropdown-item v-if="turnOffLight" command='2'>关灯</el-dropdown-item>
+                    <el-dropdown-item v-if="refreshStatus" command='3'>刷新状态</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>    
             <el-dropdown v-if="dimming" style="margin-left:10px;" @command='dropdown'>
                 <el-button type="primary" size='small' style="width:85px;">
                     调光<i class="el-icon-arrow-down el-icon--right"></i>
@@ -22,8 +32,9 @@
                 </el-dropdown-menu>
             </el-dropdown>
             <el-button v-if="strategyManagement" @click='switchOff(6)' type="primary" size='small' style="margin-left:10px;">下发策略</el-button>
-            <el-button v-if="refreshStatus" @click="switchOff('4')" type="primary" size='small' style="margin-left:10px;">刷新状态</el-button>
+            <!-- <el-button v-if="refreshStatus" @click="switchOff('4')" type="primary" size='small' style="margin-left:10px;">刷新状态</el-button> -->
             <el-button v-if="strategyManagement" @click="switchOff('5')" type="primary" size='small' style="margin-left:10px;">策略管理</el-button>
+            <el-button @click="switchOff('7')" type="primary" size='small' style="margin-left:10px;">清空策略</el-button>
         </div>
         <div class="lampslanterns_bottom">
             <div class="lampslanterns_bottom_top">
@@ -34,6 +45,17 @@
                 <div class="search">
                     <label>序列号:</label>
                     <input type="text" v-model="serialNumber" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入序列号">
+                </div>
+                <div class="search">
+                    <label>在线状态:</label>
+                    <el-select v-model="value" clearable placeholder="请选择" size='small'>
+                        <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
                 </div>
                 <div style="margin-left:15px;">
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
@@ -92,6 +114,13 @@
                     min-width="80">
                     </el-table-column>
                     <el-table-column
+                    prop="strategyName"
+                    align='center'
+                    label="当前策略"
+                    :formatter="formatRole"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
                     prop="brightness"
                     align='center'
                     :formatter="formatRole"
@@ -130,7 +159,7 @@
                     :formatter="formatRole"
                     label="采集时间"
                     align='center'
-                    show-overflow-tooltip>
+                    min-width="160">
                     </el-table-column>
                 </el-table>
                 <div class="block">
@@ -229,10 +258,11 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label><span class="Required">*</span>策略名称:</label>
-                            <input type="text" v-model="data.strategyName" class="form-control" id="email" placeholder="请输入策略名称">
+                            <input type="text" id="strategyName" v-model="data.strategyName" class="form-control" placeholder="请输入策略名称">
                             <label>有效期:</label>
                             <el-date-picker
                             v-model="data.expire"
+                            :disabled=datetimeType
                             size='small'
                             style="width:185px;"
                             type="datetime"
@@ -241,17 +271,17 @@
                             </el-date-picker>
                         </div> 
                         <div v-if="type3==0||type3=='1'">
-                            <label style="margin-left:30px;">
+                            <label>
                                 操作:
-                                <el-select v-model="value1" @change="options1Change" size='mini' style="width:78px;" placeholder="请选择">
-                                    <el-option
-                                    v-for="item in options1"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                    </el-option>
-                                </el-select>
                             </label>
+                            <el-select v-model="value1" @change="options1Change" size='mini' style="width:108px;" placeholder="请选择">
+                                <el-option
+                                v-for="item in options1"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
                             <label style="margin-left:10px;">亮度:</label>
                             <el-input-number v-model="brightness" size='mini' :step="10" :min=minbrightness :max=maxbrightness></el-input-number>
                             <label style="margin-left:10px;"><span class="Required">*</span>时间:</label>
@@ -332,6 +362,8 @@ export default {
             strategyManagement:false,
             nickName:'',
             serialNumber:'',
+            options:[{value: '1',label: '在线'},{value: '0',label: '离线'}],
+            value:'',
             tableData:[],
             site:[],
             pageSize:10,
@@ -349,6 +381,7 @@ export default {
                 strategyName:'',
                 expire:'',
             },
+            datetimeType:true,
             options1:[
                 {
                     value: '0',
@@ -360,7 +393,7 @@ export default {
                 }
             ],
             value1:'0',
-            brightness:10,//节点亮度
+            brightness:100,//节点亮度
             minbrightness:0,
             maxbrightness:100,
             timer:'',//时间节点
@@ -368,7 +401,11 @@ export default {
         }
     },
     mounted(){
-        
+        var that = this
+        setTimeout(function(){
+            that.ready()
+            that.Jurisdiction()
+        },900)
     },
     methods:{
         formatRole:function(val, column, cellValue, index){
@@ -382,7 +419,7 @@ export default {
             if(this.value1=='0'){
                 this.minbrightness = 10
                 this.maxbrightness = 100
-                this.brightness = 10
+                this.brightness = 100
             }
             if(this.value1=='1'){
                 this.minbrightness = 0
@@ -390,7 +427,7 @@ export default {
                 this.brightness = 0
             }
         },
-        //添加时间节点
+        // 添加时间节点
         addnode(val,data){
             var that = this;
             if(val=='1'){
@@ -420,11 +457,6 @@ export default {
                 var data = {}
                 data.timer = this.timer
                 data.brightness = this.brightness
-                // if(this.brightness=='0'){
-                //     data.brightness_type = '关灯'
-                // }else{
-                //     data.brightness_type = '开灯'
-                // }
                 this.tableData3.push(data)
             }
             if(val=='2'){
@@ -483,7 +515,9 @@ export default {
                                 message: '亮度调节成功!',
                                 type: 'success'
                             });
-                            that.ready()
+                            setTimeout(function(){
+                                that.ready()
+                            },5000)
                         }else{
                             that.errorCode2(data.errorCode)
                         }
@@ -496,9 +530,9 @@ export default {
                 });          
             });
         },
-        //开/关灯/刷新状态/策略管理/下发策略
-        switchOff(val){
-            var that = this
+        //操作按钮
+        operation(val){
+            var that = this;
             var lampIds = []
             for(var i=0;i<that.site.length;i++){
                 lampIds.push(that.site[i].id)
@@ -558,22 +592,22 @@ export default {
                         }
                     })
                 }).catch(() => {
-                    this.$message({
+                    that.$message({
                         type: 'info',
                         message: '已取消此操作'
                     });          
                 });
             }
-            if(val=='4'){
-                if(that.site.length==0){
+            if(val=='3'){
+                if(that.site.length==0||that.site.length>=2){
                     that.$message({
-                        message: '请选择灯具进行状态刷新!',
+                        message: '请选择单个灯具进行状态刷新!',
                         type: 'error'
                     });
                     return;
                 }
                 var data = {
-                    "command": val,
+                    "command": 4,
                     "lampIds": lampIds.join(','),
                     projectId:sessionStorage.projectId
                 }
@@ -598,6 +632,21 @@ export default {
                         }
                     }
                 })
+            }
+        },
+        // 策略管理/下发策略/策略清空
+        switchOff(val){
+            var that = this
+            var lampIds = []
+            for(var i=0;i<that.site.length;i++){
+                lampIds.push(that.site[i].id)
+            }
+            if(sessionStorage.projectId=='0'){
+                this.$message({
+                    message: '此操作请选择具体项目!',
+                    type: 'warning'
+                });
+                return;
             }
             if(val=='5'){
                 this.strategyType='0'
@@ -628,8 +677,41 @@ export default {
                 });
                 $('#myModal').css("overflow", "hidden")
             }
+            if(val=='7'){
+                if(this.site.length==0){
+                    that.$message({
+                        message: '请选择灯具进行操作!',
+                        type: 'error'
+                    });
+                    return;
+                }
+                var data = {}
+                var lampId = []
+                for(var i=0;i<that.site.length;i++){
+                    lampId.push(that.site[i].id)
+                }
+                data.lampIds = lampId.join(',')
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/lampStrategy/resetLampStrategy',
+                    data:data,
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '策略清空成功',
+                                type: 'success'
+                            });
+                            that.ready()
+                        }else{
+                            that.errorCode2(data.errorCode)
+                        }
+                    }
+                })
+            }
         },
-        //策略保存
+        // 策略保存
         addSubmit(){
             var that = this;
             var url = ''
@@ -639,11 +721,21 @@ export default {
                 strategyList:[],
             }
             if(that.data.strategyName==''){
-               this.$message({
+                this.$message({
                     message: '必填字段不能为空!',
                     type: 'error'
                 });
                 return; 
+            }
+            if(that.tableData3.length==0){
+                this.$message({
+                    message: '策略时间节点不能为空!',
+                    type: 'error'
+                });
+                return; 
+            }
+            if(data.expire==''||data.expire==null||data.expire==undefined){
+                data.expire = ''
             }
             data.strategyList = that.tableData3
             data.projectId=sessionStorage.projectId
@@ -670,7 +762,7 @@ export default {
                 }
             })
         },
-        //获取策略列表
+        // 获取策略列表
         strategyData(){
             var that = this;
             $.ajax({
@@ -706,11 +798,13 @@ export default {
             this.pageIndex2 = val;
             this.strategyData()
         },
-        //策略管理列表  增加/删除/修改/下发/查看详情
+        // 策略管理列表  增加/删除/修改/下发/查看详情
         strategy(val,datas){
             var that = this
             if(val=='1'){
                 $('#myModal2').modal('show')
+                this.datetimeType = false
+                $('#strategyName').removeAttr("disabled");
                 this.options1Change()
                 this.type3 ='0'
                 this.data.strategyName = ''
@@ -732,6 +826,8 @@ export default {
                     return;
                 }
                 $('#myModal2').modal('show')
+                this.datetimeType = false
+                $('#strategyName').removeAttr("disabled");
                 this.type3 ='1'
                 this.data.strategyName = this.site2[0].strategyName
                 this.data.expire = this.site2[0].expire
@@ -830,7 +926,6 @@ export default {
                         async:true,
                         dataType:'json',
                         url:that.serverurl+'/lampControl/sendLampStrategy',
-                        // contentType:'application/json;charset=UTF-8',
                         data:data,
                         success:function(data){
                             if(data.errorCode=='0'){
@@ -839,7 +934,7 @@ export default {
                                     type: 'success'
                                 });
                                 $('#myModal').modal('hide')
-                                that.strategyData()
+                                that.ready()
                             }else{
                                 that.errorCode2(data.errorCode)
                             }
@@ -856,13 +951,14 @@ export default {
             if(val=='5'){
                 this.type3 ='5'
                 $('#myModal2').modal('show')
-                console.log(datas)
+                this.datetimeType = true
+                $('#strategyName').attr("disabled","disabled");
                 this.data.strategyName = datas.strategyName
                 this.data.expire = datas.expire
                 this.tableData3 = JSON.parse(datas.strategy)
             }
         },
-        //初始化列表
+        // 初始化列表
         ready(){
             var that = this;
             var data = {
@@ -871,7 +967,8 @@ export default {
                 nickName:that.nickName,
                 serialNumber:that.serialNumber,
                 poleId:'',
-                projectId:sessionStorage.projectId
+                projectId:sessionStorage.projectId,
+                online:that.value
             }
             $.ajax({
                 type:'get',
@@ -904,7 +1001,7 @@ export default {
             this.pageIndex = val
             this.ready();
         },
-        //权限请求
+        // 权限请求
         Jurisdiction(){
             var that = this
             $.ajax({
@@ -943,8 +1040,7 @@ export default {
         },
     },
     created(){
-        this.ready()
-        this.Jurisdiction()
+        
     },
 }
 </script>
@@ -968,4 +1064,5 @@ export default {
 .search{display: flex;}
 .search>label{width: 85px;}
 .search>input{width: 146px;margin-top:7px;height: 34px;}
+.search>div{width: 106px;}
 </style>

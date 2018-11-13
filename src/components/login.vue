@@ -19,7 +19,7 @@
           <input type="password" class="form-control" id="password" placeholder="密码">
         </label>
       </div>
-      <button type="button" @click="login" class="btn btn-success">登录</button>
+      <el-button type="success" @click="login" size='small' :loading="loading">登录</el-button>
     </div>
   </div>
 </template>
@@ -29,12 +29,27 @@ export default {
   name: 'login',
   data () {
     return {
-      serverurl:''
+      serverurl:'',
+      loading: false
     }
+  },
+  mounted(){
+    this.serverurl = localStorage.serverurl
   },
   methods:{
     login(){
       var that = this;
+      var theUA = window.navigator.userAgent.toLowerCase();
+      if ((theUA.match(/msie\s\d+/) && theUA.match(/msie\s\d+/)[0]) || (theUA.match(/trident\s?\d+/) && theUA.match(/trident\s?\d+/)[0])) {
+          var ieVersion = theUA.match(/msie\s\d+/)[0].match(/\d+/)[0] || theUA.match(/trident\s?\d+/)[0];
+          if (ieVersion < 10) {
+              that.$message({
+                  message: '如果您的使用的是360,搜狗,QQ等双核浏览器，请在最顶部切换到极速模式访问!',
+                  type: 'error'
+              });
+              return
+          }
+      }
       var user = $('#user').val()
       var password = $('#password').val()
       if(user==''||password==''){
@@ -44,6 +59,7 @@ export default {
         });
         return;
       }
+      that.loading = true
       var data = {
           username:user,
           userPwd:password
@@ -56,6 +72,7 @@ export default {
         contentType:'application/json;charset=UTF-8',
         data:JSON.stringify(data),
         success:function(data){
+          that.loading = false
           if(data.errorCode=='0'){
             sessionStorage.token = data.result.token
             that.$router.push({'path':'/index'})
@@ -69,13 +86,33 @@ export default {
   created(){
     var that = this
     sessionStorage.clear() 
+    var theUA = window.navigator.userAgent.toLowerCase();
+    if ((theUA.match(/msie\s\d+/) && theUA.match(/msie\s\d+/)[0]) || (theUA.match(/trident\s?\d+/) && theUA.match(/trident\s?\d+/)[0])) {
+        var ieVersion = theUA.match(/msie\s\d+/)[0].match(/\d+/)[0] || theUA.match(/trident\s?\d+/)[0];
+        if (ieVersion < 10) {
+            that.$message({
+                message: '如果您的使用的是360、搜狗、QQ等双核浏览器，请在最顶部切换到极速模式访问!',
+                type: 'error'
+            });
+            return
+        }
+    }
     window.onkeydown = function(e){
+        if ((theUA.match(/msie\s\d+/) && theUA.match(/msie\s\d+/)[0]) || (theUA.match(/trident\s?\d+/) && theUA.match(/trident\s?\d+/)[0])) {
+            var ieVersion = theUA.match(/msie\s\d+/)[0].match(/\d+/)[0] || theUA.match(/trident\s?\d+/)[0];
+            if (ieVersion < 10) {
+                that.$message({
+                    message: '如果您的使用的是360、搜狗、QQ等双核浏览器，请在最顶部切换到极速模式访问!',
+                    type: 'error'
+                });
+                return
+            }
+        }
         if(e.keyCode==13){
           that.login()
         }
     }
     that.serverurl = localStorage.serverurl
-    console.log(that.serverurl+'/user/login')
   },
 }
 </script>
@@ -91,5 +128,5 @@ export default {
 .form-group>label{position: relative;}
 .form-group i{position: absolute;height:22px;color:#abadb3;border-right: 1px solid #abadb3;}
 .form-group input{width: 245px;height: 28px;border-radius: 8px;padding-left: 35px;}
-.login_center>button{width: 65px;height: 30px;line-height: 1;margin-left: 225px;}
+.login_center>button{margin-left: 235px;}
 </style>

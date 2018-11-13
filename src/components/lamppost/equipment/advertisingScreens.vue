@@ -425,7 +425,7 @@
                                         label="播放时长"
                                         min-width="80">
                                             <template slot-scope="scope">
-                                                <el-input v-model=scope.row.duration placeholder="请输入内容" size='mini'></el-input>
+                                                <el-input v-model=scope.row.duration  placeholder="请输入内容" size='mini'></el-input>
                                             </template>
                                         </el-table-column>
                                         <el-table-column
@@ -437,7 +437,7 @@
                                     </el-table>
                                     <div>
                                         <el-checkbox v-model="programDate.checked">是否使用滚动文字</el-checkbox>
-                                        <input v-model="programDate.text" type="text" onkeyUp="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入滚动文字">
+                                        <input v-model="programDate.text" type="text" class="form-control" id="fullName" placeholder="请输入滚动文字">
                                     </div>
                                 </div>
                             </div>
@@ -589,6 +589,8 @@
         <el-dialog
         title="节目下发进度"
         :visible.sync="centerDialogVisible"
+        :close-on-click-modal='false'
+        :close-on-press-escape='false'
         width="50"
         center>
         <span>
@@ -789,9 +791,10 @@ export default {
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/screen/openScreen',
+                    url:that.serverurl+'/screen/setScreenOpen',
                     data:{
-                       screenIds:arr.join(',')
+                       screenIds:arr.join(','),
+                       controlType:true
                     },
                     success:function(data){
                         if(data.errorCode=='0'){
@@ -799,11 +802,36 @@ export default {
                                 message: '屏幕开启成功!',
                                 type: 'success'
                             });
+                            setTimeout(function(){
+                                that.ready()
+                            },3000)
                         }else{
                             that.errorCode2(data.errorCode)
                         }
                     }
                 }) 
+                // $.ajax({
+                //     type:'post',
+                //     async:true,
+                //     dataType:'json',
+                //     url:that.serverurl+'/screen/openScreen',
+                //     data:{
+                //        screenIds:arr.join(',')
+                //     },
+                //     success:function(data){
+                //         if(data.errorCode=='0'){
+                //             that.$message({
+                //                 message: '屏幕开启成功!',
+                //                 type: 'success'
+                //             });
+                //             setTimeout(function(){
+                //                 that.ready()
+                //             },3000)
+                //         }else{
+                //             that.errorCode2(data.errorCode)
+                //         }
+                //     }
+                // }) 
             }
             if(val=='2'){
                 var arr = []
@@ -814,9 +842,10 @@ export default {
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/screen/shutScreen',
+                    url:that.serverurl+'/screen/setScreenOpen',
                     data:{
-                       screenIds:arr.join(',')
+                       screenIds:arr.join(','),
+                       controlType:false,
                     },
                     success:function(data){
                         if(data.errorCode=='0'){
@@ -824,11 +853,36 @@ export default {
                                 message: '屏幕关闭成功!',
                                 type: 'success'
                             });
+                            setTimeout(function(){
+                                that.ready()
+                            },3000)
                         }else{
                             that.errorCode2(data.errorCode)
                         }
                     }
                 }) 
+                // $.ajax({
+                //     type:'post',
+                //     async:true,
+                //     dataType:'json',
+                //     url:that.serverurl+'/screen/shutScreen',
+                //     data:{
+                //        screenIds:arr.join(',')
+                //     },
+                //     success:function(data){
+                //         if(data.errorCode=='0'){
+                //             that.$message({
+                //                 message: '屏幕关闭成功!',
+                //                 type: 'success'
+                //             });
+                //             setTimeout(function(){
+                //                 that.ready()
+                //             },3000)
+                //         }else{
+                //             that.errorCode2(data.errorCode)
+                //         }
+                //     }
+                // }) 
             }
         },
         //节目设置表格选择事件
@@ -1224,11 +1278,11 @@ export default {
         //左侧分页
         leftMediaSizechange(val){
             this.mediaSize = val
-            this.mediaready()
+            this.setProgramChange()
         },
         leftMediaCurrentchange(val){
             this.mediaIndex = val
-            this.mediaready()
+            this.setProgramChange()
         },
         //中间选中媒体文件change事件
         centerMediaChange(val){
@@ -1716,6 +1770,7 @@ export default {
             formdate.append("file", this.$refs.upload.files[0]);
             formdate.append('nickName',$('#nickName').val())
             formdate.append('creatorId',1)
+            console.log(value)
             if(value[0]=='video'){
                 type='1'
                 if(value[1]=='mp4'||value[1]=='mkv'||value[1]=='MP4'||value[1]=='MKV'){
@@ -1772,7 +1827,8 @@ export default {
         download(val){
             var that = this;
             var url = val.mediaUrl
-            window.open(that.serverurl+"/file/download?fileName="+that.serverurl+url)
+            console.log(that.serverurl+url)
+            // window.open(that.serverurl+"/file/download?fileName="+that.serverurl+url)
         },
         //获取广告屏列表
         ready(){
@@ -1817,6 +1873,7 @@ export default {
             }
             if(val.uploadStatus=='1'){
                 this.centerDialogVisible = true
+                that.percentage = 0
                 var s = 0
                 var clearstatus = setInterval(function(){
                     if(s==0){
@@ -1828,7 +1885,7 @@ export default {
                             url:that.serverurl+'/screen/getDownLoadProgress',
                             contentType:'application/json;charset=UTF-8',
                             data:{
-                                programId:val.programId,
+                                programId:that.programSettingSite[0].id,
                                 serialNumber:val.serialNumber,
                                 projectId:sessionStorage.projectId
                             },
@@ -1850,6 +1907,9 @@ export default {
                         })
                     }
                 },2000)
+                $('#myModal_preview').on('hide.bs.modal', function () {
+                    clearInterval(clearstatus) 
+                })
             }
             if(val.uploadStatus=='2'){
                 that.percentage = 100

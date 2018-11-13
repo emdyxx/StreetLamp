@@ -145,7 +145,7 @@
                         </div>
                         <div class="form-group">
                             <label>安装模式:</label>
-                            <el-select size='small' v-model="value2" style='width:126px;' placeholder="请选择">
+                            <el-select size='small' v-model="value2" @change="Pattern" style='width:126px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options2"
                                 :key="item.value"
@@ -153,7 +153,11 @@
                                 :value="item.value">
                                 </el-option>
                             </el-select>
-                            <label>节目播放位置:</label>
+                            <label><span class="Required">*</span>控制卡标识:</label>
+                            <input type="text" v-model="form.serialNumber" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入屏幕标识">
+                        </div> 
+                        <div class="form-group">
+                            <label>播放位置:</label>
                             <el-select size='small' v-model="value3" style='width:126px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options3"
@@ -162,16 +166,12 @@
                                 :value="item.value">
                                 </el-option>
                             </el-select>
-                        </div> 
-                        <div class="form-group">
                             <label><span class="Required">*</span>控制卡宽度:</label>
                             <input type="text" v-model="form.controlCardWidth" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入控制卡宽">
-                            <label><span class="Required">*</span>控制卡高度:</label>
-                            <input type="text" v-model="form.controlCardHeight" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入控制卡高">
                         </div>
                         <div class="form-group">
-                            <label><span class="Required">*</span>屏幕标识:</label>
-                            <input type="text" v-model="form.serialNumber" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入屏幕序列号">
+                            <label><span class="Required">*</span>控制卡高度:</label>
+                            <input type="text" v-model="form.controlCardHeight" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入控制卡高">
                             <label>备注:</label>
                             <el-input
                                 type="textarea"
@@ -330,7 +330,7 @@ export default {
             options2:[{value:'1',label:'横屏'},{value:'2',label:'竖屏'}],
             value2:'2',
             options3:[{value:'1',label:'左上'},{value:'2',label:'右上'},{value:'3',label:'左下'},{value:'4',label:'右下'}],                
-            value3:'3',
+            value3:'1',
             value:'',
             form:{
                 nickName:'',
@@ -392,6 +392,18 @@ export default {
                 }
             })
         },
+        //屏幕安装模式
+        Pattern(){
+            console.log(this.value2)
+            if(this.value2=='1'){
+                this.form.controlCardWidth = '1280'
+                this.form.controlCardHeight = '512'
+            }
+            if(this.value2=='2'){
+                this.form.controlCardWidth = '512'
+                this.form.controlCardHeight = '1280'
+            }
+        },
         //添加 编辑点击事件
         addadvertisingscreen(val){
             if(sessionStorage.projectId=='0'){
@@ -406,13 +418,12 @@ export default {
             if(val=='0'){
                 this.addType = val
                 this.ModelData()
+                this.Pattern()
                 that.form.nickName = ''
                 that.form.width = ''
                 that.form.height = ''
                 that.form.serialNumber = ''
                 that.form.remark = ''
-                that.form.controlCardWidth = ''
-                that.form.controlCardHeight = ''
                 that.value2 = '2'
                 that.value3 = '3'
                 $('#addModal').modal('show')
@@ -496,7 +507,7 @@ export default {
             var that = this;
             if(this.site.length=='0'){
                 this.$message({
-                    message: '请选择灯杆进行绑定项目!',
+                    message: '请选择屏幕进行绑定项目!',
                     type: 'warning'
                 });
                 return;

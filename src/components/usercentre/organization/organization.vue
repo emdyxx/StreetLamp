@@ -70,6 +70,7 @@
                         prop="createTime"
                         label="创建时间"
                         align='center'
+                        min-width="160"
                         show-overflow-tooltip>
                         </el-table-column>
                     </el-table>
@@ -580,11 +581,13 @@ export default {
         cancelImage(val){
             if(val=='1'){
                 this.imageUrl1='';
+                this.icon=''
                 var file = document.getElementById('img1');
                 file.value = ''; //虽然file的value不能设为有字符的值，但是可以设置为空值
             }
             if(val=='2'){
                 this.imageUrl2='';
+                this.icon1=''
                 var file1 = document.getElementById('img2');
                 file1.value = '';
             }

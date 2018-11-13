@@ -581,6 +581,7 @@ export default {
         //清除图片
         cancelImage(){
             this.imageUrl1=''
+            this.icon = ''
             var file = document.getElementById('img1');
             file.value = '';
         },

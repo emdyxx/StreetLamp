@@ -252,7 +252,7 @@
                         </div>
                     </div>
                     <div class="modal-body">
-                        <div>已关联灯具:</div>
+                        <div style="text-align: left;">已关联灯具</div>
                         <el-table
                             :data="tableData2"
                             border
@@ -395,7 +395,7 @@
                         </div>
                     </div>
                     <div class="modal-body">
-                        <div>已关联屏幕:</div>
+                        <div style="text-align: left;">已关联屏幕</div>
                         <el-table
                             :data="tableData4"
                             border
@@ -517,7 +517,7 @@
                         </div>
                     </div>
                     <div class="modal-body">
-                        <div>已关联气象站:</div>
+                        <div style="text-align: left;">已关联气象站</div>
                         <el-table
                             :data="tableData6"
                             border
@@ -929,7 +929,7 @@ export default {
                 });
                 return;
             }
-            // 0位添加 1为删除
+            // 0位添加 1为编辑
             if(val=='0'){
                 $('#addModal').modal('show')
                 $('#serialNumber').removeAttr('disabled')
@@ -940,6 +940,7 @@ export default {
                 this.LampPoleData.latitude = ''
                 this.LampPoleData.location = ''
                 this.LampPoleData.remark = ''
+                this.LampPoleData.serialNumber = ''
             }
             if(val=='1'){
                 if(this.site.length==0||this.site.length>=2){
@@ -1175,7 +1176,8 @@ export default {
                     serialNumber:'',
                     areaId:'',
                     poleId:val,
-                    projectId:sessionStorage.projectId
+                    projectId:sessionStorage.projectId,
+                    online:''
                 }, 
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -1256,7 +1258,8 @@ export default {
                     serialNumber:'',
                     areaId:'',
                     poleId:'0',
-                    projectId:sessionStorage.projectId
+                    projectId:sessionStorage.projectId,
+                    online:'',
                 }, 
                 success:function(data){
                     if(data.errorCode=='0'){

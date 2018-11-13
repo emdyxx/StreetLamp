@@ -8,7 +8,7 @@
                 <p @click="dropout" style="padding-top:7px;margin:0;">{{versionNumber}}</p>
             </div>
             <div class="index_top_right_img" @click="imagemanage">
-                <img :src=serverurl+data.icon alt="">
+                <img :src=data.icon alt="">
             </div>
         </div>
     </div>
@@ -18,7 +18,7 @@
             <div class="modal-content">
                 <div class="modal-header" style="display:flex;">
                     <div class="header_img">
-                        <img :src=serverurl+data.icon alt="">
+                        <img :src=data.icon alt="">
                     </div>
                     <div class="header_right">
                         <p>
@@ -62,25 +62,29 @@
     <div class="index_center">
         <div class="index_center_top">
             <template v-for="item in menu">
-                <template v-if="item.menuName=='系统管理'">
+                <template v-if="item.code=='management'">
                     <div class=index_center_top_usercentre :id=item.id @click="usermanage(item.id)">{{item.menuName}}</div>  
                 </template>
-                <template v-if="item.menuName=='智慧灯杆'">
+                <template v-if="item.code=='intelligentPole'">
                     <div class='index_center_top_lampost' :id=item.id @click="lamppost(item.id)">{{item.menuName}}</div>  
                 </template>
-                <template v-if="item.menuName=='GIS地图'">
+                <template v-if="item.code=='GISMap'">
                     <div class='index_center_top_coordinate' :id=item.id @click="map(item.id)">{{item.menuName}}</div>  
                 </template>
             </template>
-            <!-- <div class="index_center_top_usercentre" @click="usermanage">系统管理</div>
-            <div class="index_center_top_lampost" @click="lamppost">智慧灯杆系统</div> -->
         </div>
         <div class="index_center_bottom">
-            
-            <!-- <div class="index_center_top_img05">
-                <img src="../assets/login/icon_18.png" alt="">
-                <p>项目管理</p>
-            </div> -->
+            <template v-for="item in menu">
+                <template v-if="item.code=='videoManagement'">
+                    <div class='index_center_bottom_video' :id=item.id @click="video(item.id)">{{item.menuName}}</div>  
+                </template>
+                <template v-if="item.code=='WIFIManagement'">
+                    <div class='index_center_bottom_wifi' :id=item.id @click="wifi(item.id)">{{item.menuName}}</div>  
+                </template>
+                <template v-if="item.code=='broadcastManagement'">
+                    <div class='index_center_bottom_broadcast' :id=item.id @click="broadcast(item.id)">{{item.menuName}}</div>  
+                </template>
+            </template>
         </div>
     </div>
     <!-- 修改密码模态框 -->
@@ -209,6 +213,7 @@ export default {
         lamppost(val){
             sessionStorage.menuId = val
             sessionStorage.headercolorType = '2'
+            sessionStorage.menuId3='10'
             this.$router.push({'path':'/lamppost'})
         },
         //gis地图系统
@@ -216,6 +221,21 @@ export default {
             sessionStorage.menuId = val
             sessionStorage.headercolorType = '1'
             this.$router.push({'path':'/mapHomgPage'})
+        },
+        //视频管理
+        video(val){
+            sessionStorage.menuId = val
+            this.$router.push({'path':'/video'})
+        },
+        //wifi管理
+        wifi(val){
+            sessionStorage.menuId = val
+            this.$router.push({'path':'/wifi'})
+        },
+        //广播管理
+        broadcast(val){
+            sessionStorage.menuId = val
+            this.$router.push({'path':'/broadcast'})
         },
         //请求权限
         Jurisdiction(){
@@ -256,6 +276,7 @@ export default {
                         that.data.ts = ts
                         sessionStorage.userId = data.result.user.id
                         var url=that.serverurl+data.result.user.org.backdrop
+                        that.data.icon = that.serverurl+data.result.user.icon
                         $('.index').css({
                             "background-image":"url("+url+")",
                             "background-size":"100% 100%",
@@ -290,13 +311,15 @@ export default {
 .index_center div{margin-right: 30px;margin-left:30px;cursor: pointer;}
 .index_center div>img{transition: all 1S;-webkit-transition: all 1S;}
 .index_center p{color: white;margin-top:10px;font-size: 16px}
-.index_center_top{display: flex;justify-content: center;}
-.index_center_top>div{width: 150px;height: 20px;background-repeat: no-repeat !important;background-position: center 25% !important;color: #FFF;text-align: center;font-size: 14px;opacity: 0.9;padding: 99px 5px 15px 10px;margin: 10px 10px 10px 10px;line-height: 5px;cursor: pointer;border: 2px solid transparent;}
-.index_center_top>div:hover{border: 2px solid white;}
+.index_center_top,.index_center_bottom{display: flex;justify-content: center;}
+.index_center_top>div,.index_center_bottom>div{width: 150px;height: 20px;background-repeat: no-repeat !important;background-position: center 25% !important;color: #FFF;text-align: center;font-size: 14px;opacity: 0.9;padding: 99px 5px 15px 10px;margin: 10px 10px 10px 10px;line-height: 5px;cursor: pointer;border: 2px solid transparent;}
+.index_center_top>div:hover,.index_center_bottom>div:hover{border: 2px solid white;}
 .index_center_top_usercentre{background: #2196F3 url('../assets/user.png');}
-.index_center_top_lampost{background:#9C27B0 url('../assets/smartpole.png'); }
-.index_center_top_coordinate{background:#67C23A url('../assets/coordinate.png'); }
-
+.index_center_top_lampost{background:#9C27B0 url('../assets/smartpole.png');}
+.index_center_top_coordinate{background:#67C23A url('../assets/coordinate.png');}
+.index_center_bottom_video{background:#BB6F6B url('../assets/video.png');}
+.index_center_bottom_wifi{background:#79BD8F url('../assets/wifi.png');}
+.index_center_bottom_broadcast{background:#E6A23C url('../assets/broadcast.png');}
 
 .header_img{text-align: left;margin-left: 30px;}
 .header_img>img{width: 80px;height: 80px;border-radius: 50%;}

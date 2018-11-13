@@ -5,7 +5,9 @@
             <i @click="backtrack" class="backtrack iconfont icon-guanbi"></i>
         </div>
         <div style="position:relative;" class="mapDetails_div">
-            <!-- 灯具 -->
+            <!-- 灯光效果 -->
+            <img v-if='lighting' id="dg" src="../../assets/dg.png" alt="">
+            <!-- 灯杆 灯具 -->
             <img id="lampPole" src="../../assets/lampPole.png" alt=""> 
             <canvas id="lampPolecanvas" style="position:absolute;left:-150px;top:0;" width="300" height="120"></canvas>
             <div class="lampPoleDiv" v-if="lampPoleType">
@@ -18,11 +20,11 @@
                                     <span>编号:{{item.lampNumber}}</span>
                                     <a data-toggle="collapse" data-parent="#accordion" :id="'iconright'+key"
                                     :href="'#lampDtoList'+key" @click="lamprotate(key)">
-                                        <i class="iconfont icon-right" style="position:absolute;right:0;"></i>
+                                        <i class="iconfont icon-right rotatebottom" style="position:absolute;right:0;"></i>
                                     </a>
                                 </h4>
                             </div>
-                            <div :id="'lampDtoList'+key" class="panel-collapse collapse" style="background: #172856;color: #cac2c2;">
+                            <div :id="'lampDtoList'+key" class="panel-collapse collapse in" style="background: #172856;color: #cac2c2;">
                                 <div class="panel-body" style="border-top: 1px solid black;">
                                     <div>灯控器标识:{{item.serialNumber}}</div>
                                     <div>集中器标识:{{item.concentratorSN}}</div>
@@ -43,7 +45,7 @@
                                             </tr>
                                             <tr>
                                                 <td>亮度:</td>
-                                                <td>{{item.brightness*10}}%</td>
+                                                <td>{{item.brightness}}%</td>
                                                 <td>电流:</td>
                                                 <td>{{item.electricity}}A</td>
                                             </tr>
@@ -75,6 +77,12 @@
                                                     <template v-if="item.jsonContent.lampAlarm!=undefined||item.jsonContent.lampAlarm!=''">
                                                         <td v-if="item.jsonContent.lampAlarm=='breakdown'" style="color:#F56C6C;">光源故障</td>
                                                     </template>
+                                                    <template v-if="item.jsonContent.underVoltage!=undefined||item.jsonContent.underVoltage!=''">
+                                                        <td v-if="item.jsonContent.underVoltage=='overload'">欠压</td>
+                                                    </template>
+                                                    <template v-if="item.jsonContent.overVoltage!=undefined||item.jsonContent.overVoltage!=''">
+                                                        <td v-if="item.jsonContent.overVoltage=='overload'">过压</td>
+                                                    </template>
                                                 </tr>
                                             </table>
                                         </template>
@@ -100,11 +108,11 @@
                                     <span style="margin-right:30px;">名称:{{item.nickName}}</span>
                                     <a data-toggle="collapse" data-parent="#accordionc" :id="'iconright3'+key"
                                     :href="'#screenList'+key" @click="screenrotate(key)">
-                                        <i class="iconfont icon-right" style="position:absolute;right:0;"></i>
+                                        <i class="iconfont icon-right rotatebottom" style="position:absolute;right:0;"></i>
                                     </a>
                                 </h4>
                             </div>
-                            <div :id="'screenList'+key" class="panel-collapse collapse" style="background: #172856;color: #cac2c2;">
+                            <div :id="'screenList'+key" class="panel-collapse collapse in" style="background: #172856;color: #cac2c2;">
                                 <div class="panel-body" style="border-top: 1px solid black;">
                                     <div>屏幕标识:{{item.serialNumber}}</div>
                                     <div>型号:{{item.modelName}}</div>
@@ -137,7 +145,7 @@
             <!-- 气象站 -->
             <img v-if="sensorsType" id="sensors" src="../../assets/sensors.png" alt=""> 
             <canvas id="sensorscanvas" style="position:absolute;top:0px;left:102px;" width="300" height="120"></canvas>
-            <div class="sensorsDiv" v-if="sensorsType">
+            <div class="sensorsDiv" id="sensorsDiv" v-if="sensorsType">
                 <div class="panel-group" id="accordions">
                     <template v-for="(item,key) in tableData5">
                         <div class="panel panel-default" style="border: none;">
@@ -147,11 +155,11 @@
                                     <span>编号:{{item.serialNumber}}</span>
                                     <a data-toggle="collapse" data-parent="#accordions" :id="'iconright2'+key"
                                     :href="'#sensorsList'+key" @click="sensorsrotate(key)">
-                                        <i class="iconfont icon-right" style="position:absolute;right:0;"></i>
+                                        <i class="iconfont icon-right rotatebottom" style="position:absolute;right:0;"></i>
                                     </a>
                                 </h4>
                             </div>
-                            <div :id="'sensorsList'+key" class="panel-collapse collapse" style="background: #172856;color: #cac2c2;">
+                            <div :id="'sensorsList'+key" class="panel-collapse collapse in" style="background: #172856;color: #cac2c2;">
                                 <div class="panel-body" style="border-top: 1px solid black;">
                                     <div>型号标识:{{item.modelName}}</div>
                                     <div>集中器标识:{{item.concentratorSN}}</div>
@@ -195,7 +203,7 @@
                         </div>
                     </template>
                 </div>
-            </div>
+            </div>   
         </div>
     </div>
 </template>
@@ -213,10 +221,13 @@ export default {
             lampPoleType:false,
             screenType:false,
             sensorsType:false,
+            lighting:false,//灯光
         }
     },
     mounted(){
         var that = this
+        var bodyHeight = $('.mapDetails').height()
+        $('#lampPole').css('height', bodyHeight*0.8+'px')
         window.onresize = function temp() {
             that.readytwo(that.tableDataType)
         };
@@ -294,6 +305,20 @@ export default {
                     ctx.lineTo(120,50); 
                     ctx.strokeStyle = "#00ffff";
                     ctx.stroke(); //绘制路径。
+                    setTimeout(function(){
+                        for(var i=0;i<that.tableData3.length;i++){
+                            if(that.tableData3[i].lampStatus=='1'){
+                                that.lighting = true
+                            }else{
+                                that.lighting = false
+                            }
+                        }
+                    },20)
+                    setTimeout(function(){
+                        $('#dg').css('height',bodyHeight*0.5+'px',)
+                        var screenWidth = $('#dg').width()
+                        $('#dg').css('left','-'+screenWidth/2.3+'px')
+                    },60)
                 }
                 //广告屏
                 if(this.tableData4.length==0||this.tableData4==undefined){       
@@ -367,6 +392,7 @@ export default {
                 //灯具
                 if(this.tableData3.length==0||this.tableData3==undefined){       
                 }else{
+                    this.lampPoleType = true
                     var canvas = document.getElementById('lampPolecanvas');
                     var ctx = canvas.getContext("2d");
                     ctx.beginPath(); //新建一条path
@@ -375,12 +401,28 @@ export default {
                     ctx.lineTo(120,50); 
                     ctx.strokeStyle = "#00ffff";
                     ctx.stroke(); //绘制路径。
+                    setTimeout(function(){
+                        for(var i=0;i<that.tableData3.length;i++){
+                            if(that.tableData3[i].lampStatus=='1'){
+                                that.lighting = true
+                            }else{
+                                that.lighting = false
+                            }
+                        }
+                    },20)
+                    setTimeout(function(){
+                        $('#dg').css('height',bodyHeight*0.5+'px',)
+                        var screenWidth = $('#dg').width()
+                        $('#dg').css('left','-'+screenWidth/2.3+'px')
+                    },60)
                 }
                 var right = $('.mapDetails_div').width()+30
-                $('.lampPoleDiv').css({
-                    'right':right+'px',
-                    'width':bodyWidth*0.3+'px'
-                })
+                setTimeout(function(){
+                    $('.lampPoleDiv').css({
+                        'right':right+'px',
+                        'width':bodyWidth*0.3+'px'
+                    })
+                },20)
             }
             if(type==2){
                 $('.lampPoleDiv').css('display','none')
@@ -404,10 +446,12 @@ export default {
                     ctx.stroke(); //绘制路径。
                 } 
                 var screenWidth = $('#screen').width()
-                $('.screenDiv').css({
-                    'left':lampPoleWidth+screenWidth+75+'px',
-                    'width':bodyWidth*0.3+'px'
-                })
+                setTimeout(function(){
+                    $('.screenDiv').css({
+                        'left':lampPoleWidth+screenWidth+75+'px',
+                        'width':bodyWidth*0.3+'px'
+                    })
+                },20)
             }
             if(type==3){
                 $('.lampPoleDiv').css('display','none')
@@ -442,10 +486,12 @@ export default {
                     ctx.strokeStyle = "#00ffff";
                     ctx.stroke(); //绘制路径。
                 }
-                $('.sensorsDiv').css({
-                    'left':lampPoleWidth+130+'px',
-                    'width':bodyWidth*0.3+'px'
-                })
+                setTimeout(function(){
+                    $('.sensorsDiv').css({
+                        'left':lampPoleWidth+130+'px',
+                        'width':bodyWidth*0.3+'px'
+                    })
+                },20)
             }
         },
         //点击灯具  展开数据
@@ -455,7 +501,7 @@ export default {
                 $("#iconright"+key+'>i').addClass("rotatebottom");
             }else{
                 $("#iconright"+key+'>i').removeClass("rotatebottom");
-            } 
+            }
         },
         //点击传感器  展开数据
         sensorsrotate(key){
@@ -480,20 +526,22 @@ export default {
     },
     created(){
         // this.ready(this.$route.query.id,this.$route.query.type)
-        
-    }
+    },
+    beforeDestroy() {
+        window.onresize="";
+    },
 }
 </script>
 <style scoped>
 .mapDetails{width: 100%;height:100%;background: linear-gradient(to right, #050913, #0a235c, #2161d6, #0a235c, #010920);display: flex;justify-content: center;align-items: center;overflow: auto;}
 /* .mapDetails>img{height:800px;} */
-.lampPoleDiv,.sensorsDiv,.screenDiv{position: absolute;max-width:380px;min-height:150px;border: 1px solid #00ffff;top: 0px;background: #0a1839;padding: 10px;}
+#dg{position: absolute;top:15px;}
+.lampPoleDiv,.sensorsDiv,.screenDiv{position: absolute;max-width:380px;min-height:70px;border: 1px solid #00ffff;top: 0px;background: #0a1839;padding: 10px;}
 .screenDiv{top:50%;margin-top:70px;}
 .rotatebottom{transform:rotate(90deg);}
 .table>tr>td:nth-of-type(3){padding-left: 25px;}
 .table>tr>td:nth-of-type(2n){padding-left: 5px;}
 .table>tr>td:nth-child(2n+1){text-align: right;}
-
 
 
 .map_right{position: absolute;right: 20px;top: 15px;height: 45px;width: 45px;background: white;border-radius: 50%;line-height: 45px;text-align: center;    box-shadow: 1px 2px 1px rgba(0,0,0,.15);}

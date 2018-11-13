@@ -179,6 +179,7 @@
                         prop="content"
                         label="描述"
                         align='center'
+                        min-width="180"
                         show-overflow-tooltip>
                         </el-table-column>
                     </el-table>
