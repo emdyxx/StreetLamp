@@ -35,6 +35,8 @@
             <div class="sensor_bottom_bottom">
                 <el-table
                     :data="tableData"
+                    @row-click="clickRow" 
+                    ref="moviesTable"
                     border
                     stripe
                     size='small'
@@ -186,10 +188,11 @@
                     <div class="modal-body">
                         <el-table
                             :data="tableData2"
+                            @row-click="clickRow2" 
+                            ref="multipleTable"
                             border
                             stripe
                             size='small'
-                            ref="multipleTable"
                             tooltip-effect="dark"
                             @selection-change="SelectionChange2"
                             style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
@@ -326,6 +329,12 @@ export default {
             }else{
                 return cellValue
             }
+        },
+        clickRow(row){
+            this.$refs.moviesTable.toggleRowSelection(row)
+        },
+        clickRow2(row){
+            this.$refs.multipleTable.toggleRowSelection(row)
         },
         //获取型号列表
         ModelData(){
@@ -574,14 +583,15 @@ export default {
         LampPole_data(){
             var that= this;
             $('#LampPole_data').modal('show')
+            this.site2 = []
             this.LampPoleData();
         },
         //查询所有灯杆数据
         LampPoleData(){
             var that = this;
             var data = {
-                page:that.pageIndex,
-                rows:that.pageSize,
+                page:that.pageIndex2,
+                rows:that.pageSize2,
                 nickName:'',
                 poleType:'',
                 serialNumber:'',

@@ -26,6 +26,8 @@
                 <div class="journal_bottom">
                     <el-table
                         :data="tableData"
+                        @row-click="clickRow" 
+                        ref="moviesTable"
                         border
                         stripe
                         size='small'
@@ -126,6 +128,8 @@
                 <div class="journal_bottom">
                     <el-table
                         :data="tableData"
+                        @row-click="clickRow2" 
+                        ref="moviesTable2"
                         border
                         stripe
                         size='small'
@@ -246,6 +250,12 @@ export default {
         
     },
     methods:{
+        clickRow(row){
+            this.$refs.moviesTable.toggleRowSelection(row)
+        },
+        clickRow2(row){
+            this.$refs.moviesTable2.toggleRowSelection(row)
+        },
         handleClick(){
             this.pageIndex = 1
             this.pageSize = 10

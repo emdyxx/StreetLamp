@@ -101,8 +101,9 @@ export default {
             }else{
               that.value2 = Number(sessionStorage.projectId)
             }
-            
+            that.Jurisdiction()
           }else{
+            that.Jurisdiction()
             that.errorCode(data.errorCode)
           }
         },
@@ -197,7 +198,6 @@ export default {
   },
   created(){
     this.headercolorType = sessionStorage.headercolorType
-    this.Jurisdiction()
     this.project()
   },
 }

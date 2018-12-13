@@ -34,7 +34,10 @@ export default {
     }
   },
   mounted(){
-    this.serverurl = localStorage.serverurl
+    var that = this;
+    setTimeout(function(){
+      that.serverurl = localStorage.serverurl
+    },1000)
   },
   methods:{
     login(){
@@ -64,6 +67,8 @@ export default {
           username:user,
           userPwd:password
       };
+      console.log(that.serverurl)
+      console.log(that.serverurl+'/user/login')
       $.ajax({
         type:'post',
         async:true,

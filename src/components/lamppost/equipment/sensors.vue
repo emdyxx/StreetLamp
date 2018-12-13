@@ -32,6 +32,8 @@
             <div class="cameras_bottom_bottom">
                 <el-table
                     :data="tableData"
+                    @row-click="clickRow" 
+                    ref="moviesTable"
                     border
                     stripe
                     size='small'
@@ -178,6 +180,9 @@ export default {
             }else{
                 return cellValue
             }
+        },
+        clickRow(row){
+            this.$refs.moviesTable.toggleRowSelection(row)
         },
         //获取型号列表
         ModelData(){

@@ -33,6 +33,8 @@
                     <div class="usermanage_bottom_bottom">
                         <el-table
                             :data="tableData"
+                            @row-click="clickRow" 
+                            ref="moviesTable"
                             border
                             stripe
                             size='small'
@@ -233,6 +235,7 @@
                                     <el-table
                                         :data="tableData2"
                                         ref='multipleTable'
+                                        @row-click="clickRow2" 
                                         border
                                         stripe
                                         size='small'
@@ -266,18 +269,6 @@
                                             </template>
                                         </el-table-column>
                                     </el-table>
-                                    <!-- <div class="block">
-                                        <el-pagination
-                                        background
-                                        @size-change="sizechange2"
-                                        @current-change="currentchange2"
-                                        :current-page="pageIndex2"
-                                        :page-sizes="[10, 20, 30, 50]"
-                                        :page-size="pageSize2"
-                                        layout="total, sizes, prev, pager, next, jumper"
-                                        :total="total2">
-                                        </el-pagination>
-                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -354,6 +345,12 @@ export default {
         this.readyLeft()
     },
     methods:{
+        clickRow(row){
+            this.$refs.moviesTable.toggleRowSelection(row)
+        },    
+        clickRow2(row){
+            this.$refs.multipleTable.toggleRowSelection(row)
+        },
         // 用户选中(进行修改,删除操作)
         userSelectionChange(val){
             this.site = val;

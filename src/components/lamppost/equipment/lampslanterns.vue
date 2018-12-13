@@ -64,6 +64,8 @@
             <div class="lampslanterns_bottom_bottom">
                 <el-table
                     :data="tableData"
+                    @row-click="clickRow" 
+                    ref="moviesTable"
                     border
                     stripe
                     size='small'
@@ -125,6 +127,13 @@
                     align='center'
                     :formatter="formatRole"
                     label="亮度"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="envBrightness"
+                    align='center'
+                    :formatter="formatRole"
+                    label="环境亮度"
                     min-width="80">
                     </el-table-column>
                     <el-table-column
@@ -195,6 +204,8 @@
                             <div class="strategy_bottom">
                                 <el-table
                                     :data="tableData2"
+                                    @row-click="clickRow2" 
+                                    ref="moviesTable2"
                                     border
                                     stripe
                                     size='small'
@@ -415,6 +426,12 @@ export default {
                 return cellValue
             }
         }, 
+        clickRow(row){
+            this.$refs.moviesTable.toggleRowSelection(row)
+        },
+        clickRow2(row){
+            this.$refs.moviesTable2.toggleRowSelection(row)
+        },
         options1Change(){
             if(this.value1=='0'){
                 this.minbrightness = 10

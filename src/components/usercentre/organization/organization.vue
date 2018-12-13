@@ -31,6 +31,8 @@
                 <div class="organization_right_bottom_bottom">
                     <el-table
                         :data="tableData"
+                        @row-click="clickRow" 
+                        ref="moviesTable"
                         border
                         stripe
                         size='small'
@@ -356,6 +358,9 @@ export default {
         this.readyLeft()
     },
     methods:{
+        clickRow(row){
+            this.$refs.moviesTable.toggleRowSelection(row)
+        },
         // 用户选中(进行修改,删除操作)
         userSelectionChange(val){
             this.site = val

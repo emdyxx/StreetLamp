@@ -9,26 +9,28 @@
                 <img :src=planUrl alt="" class="plane_div_bgimg">
                 <template v-if="value1=='0'">
                     <template v-for="item in data">
-                        <img v-if="item.coord!=''" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src=imgserverurl+image/img/rod.png>
+                        <img v-if="item.x!=''&&item.y!=''&&item.lampStatus=='2'" :src='imgserverurl+"image/img/rod3.png"' class="plane_div_icon" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" >
+                        <img v-else-if="item.x!=''&&item.y!=''&&item.lampOnlie=='1'" :src='imgserverurl+"image/img/rod1.png"' class="plane_div_icon" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" >
+                        <img v-else-if="item.x!=''&&item.y!=''" :src='imgserverurl+"image/img/rod2.png"' class="plane_div_icon" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" >
                     </template>
                 </template>
                 <template v-if="value1=='1'">
                     <template v-for="item in data">
-                        <img v-if="item.coord!=''&&item.lampStatus=='2'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src=imgserverurl+image/img/lamp_3.png>
-                        <img v-else-if="item.coord!=''&&item.online=='1'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src=imgserverurl+image/img/lamp_1.png>
-                        <img v-else-if="item.coord!=''" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src=imgserverurl+image/img/lamp_2.png>
+                        <img v-if="item.x!=''&&item.y!=''&&item.lampStatus=='2'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src='imgserverurl+"image/img/lamp_3.png"'>
+                        <img v-else-if="item.x!=''&&item.y!=''&&item.online=='1'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src='imgserverurl+"image/img/lamp_1.png"'>
+                        <img v-else-if="item.x!=''&&item.y!=''" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src='imgserverurl+"image/img/lamp_2.png"'>
                     </template>
                 </template>
                 <template v-if="value1=='2'">
                     <template v-for="item in data">
-                        <img v-if="item.coord!=''&&item.status=='1'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src=imgserverurl+image/img/screen_1.png>
-                        <img v-if="item.coord!=''&&item.status=='0'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src=imgserverurl+image/img/screen_2.png>
+                        <img v-if="item.x!=''&&item.y!=''&&item.status=='1'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src='imgserverurl+"image/img/screen_1.png"'>
+                        <img v-else-if="item.x!=''&&item.y!=''&&item.status=='0'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src='imgserverurl+"image/img/screen_2.png"'>
                     </template>
                 </template>
                 <template v-if="value1=='3'">
                     <template v-for="item in data">
-                        <img v-if="item.coord!=''&&item.online=='0'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src=imgserverurl+image/img/sensor_2.png>
-                        <img v-if="item.coord!=''&&item.online=='1'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src=imgserverurl+image/img/sensor_1.png>
+                        <img v-if="item.x!=''&&item.y!=''&&item.online=='0'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src="imgserverurl+'image/img/sensor_2.png'">
+                        <img v-else-if="item.x!=''&&item.y!=''&&item.online=='1'" class="plane_div_icon" :name="item.coord" :id="item.id" :key="item.id" @mouseup.stop="uplifttwo" :style="`left:${item.x}px;top:${item.y}px;`" :src="imgserverurl+'image/img/sensor_1.png'">
                     </template>
                 </template>
                 <div id="menu3" style="z-index:2;background-color:#969696">
@@ -80,10 +82,13 @@
             <div class="map_left_right" @click="search">
                 <i class="el-icon-search"></i>
             </div>
+            <div class="map_left_right" style='left: 460px;' @click="backtrack">
+                <i class="el-icon-back"></i>
+            </div>
         </div>
         <div class="map_right">
-            <!-- <div class="map_right_left"></div> -->
-            <i @click="backtrack" class="backtrack iconfont icon-guanbi"></i>
+            <p class="map_right_left" style="font-size:19px;">{{FullYear}}/{{Month}}/{{Dates}} 星期{{getDay}}</p>
+            <p class="map_right_left" style="font-size:46px;">{{Hours}}:{{Minutes}}:{{Seconds}}</p>
         </div>
         <div id="menu" style="z-index:2;background-color:#969696">
 			<ul v-if="value1=='0'">
@@ -108,6 +113,8 @@
                         <div class="LampPole">
                             <el-table
                                 :data="tableData"
+                                @row-click="clickRow" 
+                                ref="moviesTable"
                                 border
                                 stripe
                                 size='small'
@@ -130,13 +137,13 @@
                                 prop="serialNumber"
                                 align='center'
                                 label="编号"
-                                min-width="80">
+                                min-width="60">
                                 </el-table-column>
                                 <el-table-column
                                 prop="coord"
                                 align='center'
                                 label="坐标"
-                                min-width="80">
+                                min-width="100">
                                 </el-table-column>
                                 <el-table-column
                                 prop="remark"
@@ -167,6 +174,39 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
+        <!-- 左侧设备基本信息 -->
+        <div class="homepage_center">
+            <div class="homepage_indent">
+                <i class="el-icon-d-arrow-left" @click="homepageIndent"></i>
+            </div>
+            <div class="homepage_top">
+                <span>设备</span>
+                <span>数量</span>
+                <span>警报</span>
+            </div>
+            <div class="homepage_bottom">
+                <div>
+                    <span>灯杆</span>
+                    <span>{{data2.poleCount}}</span>
+                    <span>{{data2.poleAlarmCount}}</span>
+                </div>
+                <div>
+                    <span>灯具</span>
+                    <span>{{data2.lampCount}}</span>
+                    <span>{{data2.lampAlarmCount}}</span>
+                </div>
+                <div>
+                    <span>广告屏</span>
+                    <span>{{data2.screenCount}}</span>
+                    <span>{{data2.screenAlarmCount}}</span>
+                </div>
+                <div>
+                    <span>传感设备</span>
+                    <span>{{data2.sensorsCount}}</span>
+                    <span>{{data2.sensorsAlarmCount}}</span>
+                </div>
+            </div>
+        </div>
         <!-- 右侧灯杆基本信息 -->
         <div class="rightfloat">
             <div class="concentright_top">
@@ -237,6 +277,7 @@ export default {
     name: 'index',
     data () {
         return {
+            time:null,
             serverurl:localStorage.serverurl,
             imgserverurl:'',
             addPoleIcon:false,
@@ -303,13 +344,23 @@ export default {
             isDown:false,
 
             contentTabledata:'',//右侧设备基本信息
+
+            FullYear:'',
+            Month:'',
+            Dates:'',
+            Hours:'',
+            Minutes:'',
+            Seconds:'',
+            getDay:'',
+            data2:'',
+            homepageType:true,
         }
     },
     mounted(){
         var that = this;
-        setTimeout(function(){
-            that.ready()
-        },1000)
+        // setTimeout(function(){
+            
+        // },1000)
         //鼠标移动
         window.onmousemove = function(e) {
             var dv = document.getElementById('plane_div');
@@ -335,6 +386,39 @@ export default {
                 that.narrow()
             }
         });
+        this.time=setInterval(function(){
+            
+            var myDate = new Date();//获取系统当前时间
+            that.FullYear = myDate.getFullYear(); //获取完整的年份
+            that.Month = myDate.getMonth()+1; //获取当前月份
+            that.Dates = myDate.getDate(); //获取当前日
+            var d = myDate.getHours(); //获取当前小时数
+            var e = myDate.getMinutes(); //获取当前分钟数
+            var f = myDate.getSeconds(); //获取当前秒数
+            var g = myDate.getDay(); //获取当前星期X(0-6,0代表星期天)
+            if(d<10){
+                that.Hours = '0'+d
+            }else{
+                that.Hours = d
+            }
+            if(e<10){
+                that.Minutes = '0'+e
+            }else{
+                that.Minutes = e
+            }
+            if(f<10){
+                that.Seconds = '0'+f
+            }else{
+                that.Seconds = f
+            }
+            if(g==0){that.getDay='日'}
+            if(g==1){that.getDay='一'}
+            if(g==2){that.getDay='二'}
+            if(g==3){that.getDay='三'}
+            if(g==4){that.getDay='四'}
+            if(g==5){that.getDay='五'}
+            if(g==6){that.getDay='六'}
+        },1000)
     },
     methods:{
         formatRole:function(val, column, cellValue, index){
@@ -344,6 +428,50 @@ export default {
             }else{
                 return cellValue
             }
+        },
+        clickRow(row){
+            this.$refs.moviesTable.toggleRowSelection(row)
+        },
+        //左侧设备基本信息缩进
+        homepageIndent(){
+            if(this.homepageType==true){
+                this.homepageType=false
+                $('.homepage_center').animate({'left':'-285px'})
+                $('.homepage_indent>i').css({
+                    'transform':'rotate(180deg)',
+                    '-ms-transform':'rotate(180deg)',
+                    '-moz-transform':'rotate(180deg)',
+                    '-webkit-transform':'rotate(180deg)',
+                    '-o-transform':'rotate(180deg)',
+                })
+                return;
+            }
+            if(this.homepageType==false){
+                this.homepageType=true
+                $('.homepage_center').animate({'left':'0px'})
+                $('.homepage_indent>i').css({
+                    'transform':'rotate(0deg)',
+                    '-ms-transform':'rotate(0deg)',
+                    '-moz-transform':'rotate(0deg)',
+                    '-webkit-transform':'rotate(0deg)',
+                    '-o-transform':'rotate(0deg)',
+                })
+                return;
+            }
+        },
+        //获取统计数据
+        Statistics(){
+            var that = this;
+            $.ajax({
+                type:"GET",
+                url:that.serverurl+'/statistics/getCount',
+                dataType:"json",
+                async: false,
+                data:{projectId:that.value},
+                success:function(data){
+                    that.data2 = data.result
+                }
+            })
         },
         //获取有权限的项目
         project(){
@@ -363,7 +491,8 @@ export default {
                         if(sessionStorage.projectID==''||sessionStorage.projectID==undefined||sessionStorage.projectID==null){
                             that.value = that.options[0].id
                             that.locationType = data.result.projects[0].locationType
-                            if(data.result.projects[0].locationType=='1'){
+                            sessionStorage.projectID =data.result.projects[0].id
+                            if(data.result.projects[0].locationType=='1'&&data.result.projects[0].area!=null){
                                 that.getcoord=[data.result.projects[0].area.lng,data.result.projects[0].area.lat]
                             }else{
                                 that.planUrl = that.serverurl+data.result.projects[0].planUrl
@@ -386,6 +515,8 @@ export default {
                         }else{
                             that.value1 = sessionStorage.projectID2
                         }
+                        that.ready()
+                        that.Statistics()
                     }else{
                         that.errorCode(data.errorCode)
                     }
@@ -431,6 +562,7 @@ export default {
             }
             console.log(that.locationType)
             that.ready()
+            that.Statistics()
             that.websokwt()
         },
         //平面图拖拽
@@ -503,13 +635,12 @@ export default {
                 })
             }   
             if( btn == 2){
-                var array = ev.target.name.split(",")
-                array[0] = Number(array[0])+24
-                array[1] = Number(array[1])+48
+                var left = ev.target.style.left.split('px')
+                var top = ev.target.style.top.split('px')
                 $('#menu4').css({
                     "display":"inline-block",
-                    "left":array[0]+"px",
-                    "top":array[1]+"px"
+                    "left":Number(left[0])+24+"px",
+                    "top":Number(top[0])+48+"px"
                 })
                 that.click.id = ev.target.id
                 that.click.type = that.value1
@@ -575,7 +706,9 @@ export default {
                             map.centerAndZoom(new BMap.Point(that.getcoord[0],that.getcoord[1]),that.getZoom);// 初始化地图,设置中心点坐标和地图级别
                             map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
                             //添加鼠标右键事件
-                            var rod = new BMap.Icon(that.imgserverurl+"image/img/rod.png", new BMap.Size(48,80));
+                            var rod1 = new BMap.Icon(that.imgserverurl+"image/img/rod1.png", new BMap.Size(40,48));
+                            var rod2 = new BMap.Icon(that.imgserverurl+"image/img/rod2.png", new BMap.Size(40,48));
+                            var rod3 = new BMap.Icon(that.imgserverurl+"image/img/rod3.png", new BMap.Size(40,48));
                             var lamp_1 = new BMap.Icon(that.imgserverurl+"image/img/lamp_1.png", new BMap.Size(48,80));
                             var lamp_2 = new BMap.Icon(that.imgserverurl+"image/img/lamp_2.png", new BMap.Size(48,80));
                             var lamp_3 = new BMap.Icon(that.imgserverurl+"image/img/lamp_3.png", new BMap.Size(48,80));
@@ -590,7 +723,13 @@ export default {
                                     var coord = data.result.list[i].coord
                                     var point = new BMap.Point(coord.split(",")[0],coord.split(",")[1]);
                                     if(that.value1=='0'){
-                                        var marker = new BMap.Marker(point,{icon:rod});
+                                        if(data.result.list[i].lampStatus=='2'){
+                                            var marker = new BMap.Marker(point,{icon:rod3});
+                                        }else if(data.result.list[i].lampOnlie=='1'){
+                                            var marker = new BMap.Marker(point,{icon:rod1});
+                                        }else{
+                                            var marker = new BMap.Marker(point,{icon:rod2});
+                                        }
                                     }
                                     if(that.value1=='1'){
                                         if(data.result.list[i].lampStatus=='2'){
@@ -995,7 +1134,6 @@ export default {
             ws.onopen = function(){}
             ws.onmessage = function (evt){
                 // var data = JSON.parse(evt.data)
-                console.log(evt)
                 that.$notify({
                     title: '警告',
                     message: evt.data,
@@ -1019,11 +1157,18 @@ export default {
         setTimeout(function(){
             that.websokwt()
         },1000)
+        clearInterval(this.time);        
+        this.time = null;
+    },
+    beforeDestroy() {
+        clearInterval(this.time);        
+        this.time = null;
     },
 }
 </script>
 <style scoped>
-.mapHomgPage{width: 100%;height: 100%;position: relative;overflow: auto;}
+.block{text-align: center;}
+.mapHomgPage{width: 100%;height: 100%;position: relative;overflow: hidden;}
 .allmap,#allmap,.plane{width: 100%;height: 100%;}
 .plane{display: flex;justify-content: center;align-items: center;background: linear-gradient(to right, #050913, #0a235c, #2161d6, #0a235c, #010920);overflow: hidden;position: relative;}
 .plane_div{position: relative;}
@@ -1034,16 +1179,15 @@ export default {
 .map_left_right{border-radius: 5px;position: absolute;width: 50px;height: 100%;right: 0;top: 0;background:#3385ff;cursor: pointer;text-align: center;line-height: 47px;}
 .map_left_right>i{color: rgb(68, 8, 8);font-size: 24px;}
 .map_left_right:hover{background:#5D9CF9;}
-
 .shrink{position: absolute;left: 35px;top:60px;}
 
-.map_right{position: absolute;right: 20px;top: 15px;height: 45px;width: 45px;background: white;border-radius: 50%;line-height: 45px;text-align: center;    box-shadow: 1px 2px 1px rgba(0,0,0,.15);}
-.map_right_left{position: absolute;right:50px;top:7px;width: 300px;height: 35px;background: white;}
+.map_right{position: absolute;right: 20px;top: 15px;width:240px;height:90px;box-shadow: 5px 5px 15px #000;
+border-radius: 15px;background: #fff;opacity: .8;}
+.map_right_left{color: #73879c;text-align: center;margin:0;
+font-family:cursive;text-shadow:-1px -1px 1px #fff}
 .backtrack{font-size: 34px;cursor: pointer;}
 .backtrack:hover{color: aquamarine;}
 .LampPole{width: 100%;height: 300px;}
-
-.block{text-align: center;}
 
 #menu,#menu2,#menu3,#menu4{position: absolute;display:none;background:rgba(170, 168, 168, 0.5) !important;padding: 5px;border-radius: 5px;}
 #menu3{width:118px;display: none;}
@@ -1060,8 +1204,18 @@ export default {
 .concentright_bottom p{margin: 0 !important;padding:2px 0 2px 5px;}
 .concentlampPole span{display: block;width:99%;}
 
-
 .demo-table-expand {font-size: 0;}
 .demo-table-expand>div{margin-right: 3%;margin-bottom: 0;}
 .demo-table-expand label {width: 90px;color: #99a9bf;}
+
+.homepage_center{position: absolute;top: 70px;width:300px;height:350px;background: #6E7A81;border-radius: 5px;opacity: 0.7;}
+.homepage_top,.homepage_bottom>div{width: 90%;padding: 5px;display: flex;justify-content: center;margin: 0 auto;}
+.homepage_top>span,.homepage_bottom>div>span{display: inline-block;width: 135px;height: 100%;text-align: center;font-size: 18px;}
+.homepage_top{border-bottom:1px solid white;color: white;height:56px;}
+.homepage_top>span{line-height:63px;}
+.homepage_bottom>div>span{line-height:63px;}
+.homepage_bottom{background: white;width: 90%;margin: 0 auto;margin-top: 20px;border-radius: 5px;}
+.homepage_bottom>div{height: 63px;}
+.homepage_indent{width: 35px;height: 20px;position: absolute;background: #6E7A81;left: 300px;top: 3px;border-top-right-radius: 15px;border-bottom-right-radius: 15px;}
+.homepage_indent>i{color: white;font-size: 22px;padding-left: 7px;}
 </style>

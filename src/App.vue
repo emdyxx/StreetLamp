@@ -10,7 +10,7 @@ export default {
   created(){
     // localStorage.serverurl = 'http://192.168.10.89:8010/solin-consumer'
     localStorage.serverurl = 'http://192.168.70.10/solin-consumer'
-    // localStorage.serverurl = 'http://192.168.10.129:8010/solin-consumer'
+    // localStorage.serverurl = 'http://192.168.10.102/solin-consumer'
       
     // $.ajax({
     //   type:'post',

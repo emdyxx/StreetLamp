@@ -68,6 +68,8 @@
             <div class="LampPole_bottom_bottom">
                 <el-table
                     :data="tableData"
+                    @row-click="clickRow" 
+                    ref="moviesTable"
                     border
                     stripe
                     size='small'
@@ -255,6 +257,8 @@
                         <div style="text-align: left;">已关联灯具</div>
                         <el-table
                             :data="tableData2"
+                            @row-click="clickRow2" 
+                            ref="moviesTable2"
                             border
                             stripe
                             size='small'
@@ -313,12 +317,13 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4>请选择灯具进行关联</h4>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" style='max-height:600px;overflow:auto;'>
                         <el-table
                             :data="tableData3"
+                            @row-click="clickRow3" 
+                            ref="multipleTable"
                             border
                             stripe
-                            ref="multipleTable"
                             size='small'
                             tooltip-effect="dark"
                             @selection-change="SelectionChange3"
@@ -339,7 +344,7 @@
                             align='center'
                             label="终端ID"
                             :formatter="formatRole"
-                            width="120">
+                            width="140">
                             </el-table-column>
                             <el-table-column
                             prop="concentratorSN"
@@ -360,7 +365,7 @@
                             align='center'
                             label="编号"
                             :formatter="formatRole"
-                            width="80">
+                            width="60">
                             </el-table-column>
                         </el-table>
                         <div class="block">
@@ -398,6 +403,8 @@
                         <div style="text-align: left;">已关联屏幕</div>
                         <el-table
                             :data="tableData4"
+                            @row-click="clickRow4" 
+                            ref="moviesTable4"
                             border
                             stripe
                             size='small'
@@ -449,6 +456,8 @@
                     <div class="modal-body">
                         <el-table
                             :data="tableData5"
+                            @row-click="clickRow5" 
+                            ref="moviesTable5"
                             border
                             stripe
                             size='small'
@@ -520,6 +529,8 @@
                         <div style="text-align: left;">已关联气象站</div>
                         <el-table
                             :data="tableData6"
+                            @row-click="clickRow6" 
+                            ref="moviesTable6"
                             border
                             stripe
                             size='small'
@@ -575,6 +586,8 @@
                     <div class="modal-body">
                         <el-table
                             :data="tableData7"
+                            @row-click="clickRow7" 
+                            ref="moviesTable7"
                             border
                             stripe
                             size='small'
@@ -810,6 +823,27 @@ export default {
             }else{
                 return cellValue
             }
+        },
+        clickRow(row){
+            this.$refs.moviesTable.toggleRowSelection(row)
+        },
+        clickRow2(row){
+            this.$refs.moviesTable2.toggleRowSelection(row)
+        },
+        clickRow3(row){
+            this.$refs.multipleTable.toggleRowSelection(row)
+        },
+        clickRow4(row){
+            this.$refs.moviesTable4.toggleRowSelection(row)
+        },
+        clickRow5(row){
+            this.$refs.moviesTable5.toggleRowSelection(row)
+        },
+        clickRow6(row){
+            this.$refs.moviesTable6.toggleRowSelection(row)
+        },
+        clickRow7(row){
+            this.$refs.moviesTable7.toggleRowSelection(row)
         },
         //省请求
         province(val){

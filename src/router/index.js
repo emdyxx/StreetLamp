@@ -908,6 +908,20 @@ Vue.prototype.errorCode2 = function(code){
         showClose: true,
     });
   }
+  if(code=='12051'){
+    this.$message({
+        message: '设置屏幕控制卡开关失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  if(code=='12052'){
+    this.$message({
+        message: '节目未上传!',
+        type: 'error',
+        showClose: true,
+    });
+  }
 
   if(code=='13001'){
     this.$message({
@@ -1133,6 +1147,14 @@ Vue.prototype.errorCode2 = function(code){
         showClose: true,
     });
   }
+  if(code=='13033'){
+    this.$message({
+        message: '清空策略失败',
+        type: 'error',
+        showClose: true,
+    });
+  }
+  
 
   if(code=='14001'){
     this.$message({

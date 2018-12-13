@@ -40,6 +40,8 @@
                 <div class="article_right_bottom_bottom">
                     <el-table
                         :data="tableData"
+                        @row-click="clickRow" 
+                        ref="moviesTable"
                         border
                         stripe
                         size='small'
@@ -272,6 +274,9 @@ export default {
         that.OrgTree(0)
     },
     methods:{
+        clickRow(row){
+            this.$refs.moviesTable.toggleRowSelection(row)
+        },
         // 图片转base64位
         imgPreview (file,val) {
             var that = this;

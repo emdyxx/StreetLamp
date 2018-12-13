@@ -40,11 +40,13 @@
             <div class="advertisingScreens_bottom_bottom">
                 <el-table
                     :data="tableData"
+                    @row-click="clickRow" 
+                    ref="moviesTable"
                     border
                     stripe
                     size='small'
                     tooltip-effect="dark"
-                    style="width: 100%;max-height:80%;margin-bottom:10px;"
+                    style="width: 100%;max-height:80%;margin-bottom:10px;overflow:auto;"
                     @selection-change="tableChange1">
                     <el-table-column
                     type="selection"
@@ -96,7 +98,7 @@
                     label="操作"
                     min-width="130">
                         <template slot-scope="scope">
-                            <el-button type="primary" size='small' @click="status(scope.row)">节目下发进度</el-button>
+                            <el-button type="primary" size='mini' @click="status(scope.row)">节目下发进度</el-button>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -155,6 +157,7 @@
                         <div class="mediaLibrary_bottom">
                             <el-table
                                 :data="mediartableData"
+                                @row-click="clickRow2" 
                                 border
                                 stripe
                                 size='small'
@@ -247,6 +250,8 @@
                         <div class="notice_bottom">
                             <el-table
                                 :data="noticetableData"
+                                @row-click="clickRow3" 
+                                ref="moviesTable3" 
                                 border
                                 stripe
                                 size='small'
@@ -359,6 +364,8 @@
                                 <div class="setProgram_div_bottom">
                                     <el-table
                                         :data="mediartableData"
+                                        @row-click="clickRow4" 
+                                        ref="moviesTable4" 
                                         border
                                         stripe
                                         size='small'
@@ -408,6 +415,8 @@
                                 <div class="setProgram_div_bottom">
                                     <el-table
                                         :data="filesSelected"
+                                        @row-click="clickRow5" 
+                                        ref="moviesTable5" 
                                         border
                                         stripe
                                         size='small'
@@ -492,6 +501,8 @@
                             <div class="programSetting_bottom">
                                 <el-table
                                     :data="programSettingData"
+                                    @row-click="clickRow6" 
+                                    ref="moviesTable6"
                                     border
                                     stripe
                                     size='small'
@@ -713,6 +724,7 @@ export default {
                 }
             ],
             setProgramValue:'',
+            timer2:null,
         }
     },
     mounted(){
@@ -725,6 +737,24 @@ export default {
             }else{
                 return cellValue
             }
+        },
+        clickRow(row){
+            this.$refs.moviesTable.toggleRowSelection(row)
+        },
+        clickRow2(row){
+            this.$refs.mediartableData.toggleRowSelection(row)
+        },
+        clickRow3(row){
+            this.$refs.moviesTable3.toggleRowSelection(row)
+        },
+        clickRow4(row){
+            this.$refs.moviesTable4.toggleRowSelection(row)
+        },
+        clickRow5(row){
+            this.$refs.moviesTable5.toggleRowSelection(row)
+        },
+        clickRow6(row){
+            this.$refs.moviesTable6.toggleRowSelection(row)
         },
         //操作按钮点击事件
         handleCommand(val){
@@ -1040,20 +1070,63 @@ export default {
                             }, 1000);
                         }
                         if(that.programDate.checked==true){
-                            var html = "<div id='RollTexts' style='background:black;color:white;font-size:14px;text-align:center;line-height:30px;overflow:hidden;white-space:nowrap;'>"+that.programDate.text+"</div>"
+                            var html = "<div id='RollTexts_a' style='position:relative;background:black;color:white;font-size:16px;text-align:center;height:30px;line-height:30px;overflow:hidden;white-space:nowrap;'></div>"
+                            var div = "<div id='RollTexts' style='position:absolute;left:0;'>"+that.programDate.text+"</div>"
                             $('.previews_div_body2').append(html)
-                            $('#RollTexts').css('width',width)
-                            $('#RollTexts').css('height','30px')
-                            var obj = document.getElementById("RollTexts");
-                            var timer2 = setInterval(function(){
-                                var tmp=(obj.scrollLeft)++;
-                                if(obj.scrollLeft==tmp){
-                                    obj.innerHTML += obj.innerHTML;
+                            $('#RollTexts_a').append(div)
+                            setTimeout(function(){
+                                var rollWord = {
+                                    container:document.getElementById("RollTexts"),
+                                    content:document.getElementById("RollTexts"),
+                                    _containerWidth:1,
+                                    _contentWidth:1,
+                                    _speed:1,
+                                    setSpeed:function(opt){
+                                        var This = this;
+                                        This._speed = opt;
+                                    },
+                                    setContainerWidth:function(){
+                                        var This = this;
+                                        This._containerWidth = This.container.offsetWidth;
+                                    },
+                                    setContentWidth:function(){
+                                        var This = this;
+                                        This._contentWidth = This.content.offsetWidth;
+                                        console.log(This.content.offsetWidth)
+                                    },
+                                    roll:function(){
+                                        var This = this;
+                                        This.content.style.left = 95 + "px";
+                                        that.timer2 = setInterval(function(){This.move()},20);
+                                        This.container.onmouseover = function(){
+                                            clearInterval(that.timer2);
+                                        };
+                                        This.container.onmouseout = function(){
+                                            that.timer2 = setInterval(function(){This.move()},20);
+                                        };
+                                    },
+                                    move:function(){
+                                        var This = this;
+                                        if(parseInt(This.content.style.left)+This._contentWidth > 0)
+                                        {
+                                            This.content.style.left = parseInt(This.content.style.left)-This._speed + "px";
+                                        }
+                                        else
+                                        {
+                                            This.content.style.left = 95 + "px";
+                                        }                 
+                                    },
+                                    init:function(opt){
+                                        var This = this;
+                                        var speed = opt.speed || 1;
+                                        This.setSpeed(speed);
+                                        This.setContainerWidth();
+                                        This.setContentWidth();
+                                        This.roll();
+                                    }
                                 }
-                                if(obj.scrollLeft>=obj.firstChild.offsetWidth){
-                                    obj.scrollLeft=0;
-                                }
-                            },50)
+                                rollWord.init({speed:1});  //数值越小，滚动速度越慢。
+                            },500)
                         }
                     }else{
                         that.errorCode2(data.errorCode)
@@ -1061,8 +1134,8 @@ export default {
 
                     $('#programSetting_previewS').on('hide.bs.modal', function () {
                         clearInterval(animationMedia)
-                        clearInterval(timer2)
-                        $("#RollTexts").remove();
+                        clearInterval(that.timer2)
+                        $("#RollTexts_a").remove();
                         $('#previews_div2').html('')
                     })
                 }
@@ -1216,6 +1289,8 @@ export default {
             this.programDate.setProgramType = false
             this.mediaready()
             this.previewType = 0
+            that.programDate.checked = false
+            that.programDate.text = ''
             if(that.submitMeadioType=='1'){
                 $.ajax({
                     type:'get',
@@ -1490,25 +1565,83 @@ export default {
                 }, 1000);
             }
             if(that.programDate.checked==true){
-                var html = "<div id='RollText' style='background:black;color:white;font-size:14px;text-align:center;line-height:30px;overflow:hidden;white-space:nowrap;'>"+that.programDate.text+"</div>"
+                // var html = "<div id='RollText' style='background:black;color:white;font-size:14px;text-align:center;line-height:30px;overflow:hidden;white-space:nowrap;'>"+that.programDate.text+"</div>"
+                // $('.previews_div_body').append(html)
+                // $('#RollText').css('width',width)
+                // $('#RollText').css('height','30px')
+                // var obj = document.getElementById("RollText");
+                // var timer = setInterval(function(){
+                //      var tmp=(obj.scrollLeft)++;
+                //     if(obj.scrollLeft==tmp){
+                //         obj.innerHTML += obj.innerHTML;
+                //     }
+                //     if(obj.scrollLeft>=obj.firstChild.offsetWidth){
+                //         obj.scrollLeft=0;
+                //     }
+                // },50)
+                var html = "<div id='RollTexts_a' style='position:relative;background:black;color:white;font-size:16px;text-align:center;height:30px;line-height:30px;overflow:hidden;white-space:nowrap;'></div>"
+                var div = "<div id='RollTexts' style='position:absolute;left:0;'>"+that.programDate.text+"</div>"
                 $('.previews_div_body').append(html)
-                $('#RollText').css('width',width)
-                $('#RollText').css('height','30px')
-                var obj = document.getElementById("RollText");
-                var timer = setInterval(function(){
-                     var tmp=(obj.scrollLeft)++;
-                    if(obj.scrollLeft==tmp){
-                        obj.innerHTML += obj.innerHTML;
+                $('#RollTexts_a').append(div)
+                setTimeout(function(){
+                    var rollWord = {
+                        container:document.getElementById("RollTexts"),
+                        content:document.getElementById("RollTexts"),
+                        _containerWidth:1,
+                        _contentWidth:1,
+                        _speed:1,
+                        setSpeed:function(opt){
+                            var This = this;
+                            This._speed = opt;
+                        },
+                        setContainerWidth:function(){
+                            var This = this;
+                            This._containerWidth = This.container.offsetWidth;
+                        },
+                        setContentWidth:function(){
+                            var This = this;
+                            This._contentWidth = This.content.offsetWidth;
+                            console.log(This.content.offsetWidth)
+                        },
+                        roll:function(){
+                            var This = this;
+                            This.content.style.left = 95 + "px";
+                            that.timer2 = setInterval(function(){This.move()},20);
+                            This.container.onmouseover = function(){
+                                clearInterval(that.timer2);
+                            };
+                            This.container.onmouseout = function(){
+                                that.timer2 = setInterval(function(){This.move()},20);
+                            };
+                        },
+                        move:function(){
+                            var This = this;
+                            if(parseInt(This.content.style.left)+This._contentWidth > 0)
+                            {
+                                This.content.style.left = parseInt(This.content.style.left)-This._speed + "px";
+                            }
+                            else
+                            {
+                                This.content.style.left = 95 + "px";
+                            }                 
+                        },
+                        init:function(opt){
+                            var This = this;
+                            var speed = opt.speed || 1;
+                            This.setSpeed(speed);
+                            This.setContainerWidth();
+                            This.setContentWidth();
+                            This.roll();
+                        }
                     }
-                    if(obj.scrollLeft>=obj.firstChild.offsetWidth){
-                        obj.scrollLeft=0;
-                    }
-                },50)
+                    rollWord.init({speed:1});  //数值越小，滚动速度越慢。
+                },500)
+                
             }
             $('#myModal_preview').on('hide.bs.modal', function () {
                 clearInterval(animationMedia)
-                clearInterval(timer)
-                $("#RollText").remove();
+                clearInterval(that.timer2)
+                $("#RollTexts_a").remove();
                 $('#previews_div').html('')
             })
         },
@@ -1827,8 +1960,7 @@ export default {
         download(val){
             var that = this;
             var url = val.mediaUrl
-            console.log(that.serverurl+url)
-            // window.open(that.serverurl+"/file/download?fileName="+that.serverurl+url)
+            window.open(that.serverurl+"/file/download?fileName="+that.serverurl+url)
         },
         //获取广告屏列表
         ready(){
@@ -1864,65 +1996,45 @@ export default {
         //获取节目下发进度
         status(val){
             var that = this
-            if(val.uploadStatus=='0'){
-                that.$message({
-                    message: '节目未上传!',
-                    type:'error',
-                    showClose: true,
-                });
-            }
-            if(val.uploadStatus=='1'){
-                this.centerDialogVisible = true
-                that.percentage = 0
-                var s = 0
-                var clearstatus = setInterval(function(){
-                    if(s==0){
-                        s++
-                        $.ajax({
-                            type:'get',
-                            async:true,
-                            dataType:'json',
-                            url:that.serverurl+'/screen/getDownLoadProgress',
-                            contentType:'application/json;charset=UTF-8',
-                            data:{
-                                programId:that.programSettingSite[0].id,
-                                serialNumber:val.serialNumber,
-                                projectId:sessionStorage.projectId
-                            },
-                            success:function(data){
-                                if(data.errorCode=='0'){
-                                    s=0
-                                    if(Number(data.result.num)*100==100||Number(data.result.num)*100>100){
-                                        that.ready()
-                                        clearInterval(clearstatus)
-                                    }
-                                    that.percentage = Number(data.result.num*100).toFixed(1)
-                                }else{
-                                    s=0
-                                    clearInterval(clearstatus)
-                                    that.errorCode2(data.errorCode)
+            this.centerDialogVisible = true
+            that.percentage = 0
+            var s = 0
+            var clearstatus = setInterval(function(){
+                if(s==0){
+                    s++
+                    $.ajax({
+                        type:'get',
+                        async:true,
+                        dataType:'json',
+                        url:that.serverurl+'/screen/getDownLoadProgress',
+                        contentType:'application/json;charset=UTF-8',
+                        data:{
+                            // programId:that.programSettingSite[0].id,
+                            serialNumber:val.serialNumber,
+                            // projectId:sessionStorage.projectId
+                        },
+                        success:function(data){
+                            if(data.errorCode=='0'){
+                                s=0
+                                if(Number(data.result.num)*100==100||Number(data.result.num)*100>100){
                                     that.ready()
+                                    clearInterval(clearstatus)
                                 }
+                                that.percentage = Number(data.result.num*100).toFixed(1)
+                            }else{
+                                s=0
+                                clearInterval(clearstatus)
+                                that.centerDialogVisible = false
+                                that.errorCode2(data.errorCode)
+                                that.ready()
                             }
-                        })
-                    }
-                },2000)
-                $('#myModal_preview').on('hide.bs.modal', function () {
-                    clearInterval(clearstatus) 
-                })
-            }
-            if(val.uploadStatus=='2'){
-                that.percentage = 100
-                this.centerDialogVisible = true    
-            }
-            if(val.uploadStatus=='3'){
-                // 70
-                that.$message({
-                    message: '节目上传失败!',
-                    type:'error',
-                    showClose: true,
-                });
-            }
+                        }
+                    })
+                }
+            },2000)
+            $('#myModal_preview').on('hide.bs.modal', function () {
+                clearInterval(clearstatus) 
+            })
         },
         //初始化配置js
         readymeadia(){
