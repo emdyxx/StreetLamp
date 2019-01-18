@@ -54,6 +54,7 @@ export default {
           }
       }
       var user = $('#user').val()
+      // var password = md5($('#password').val())
       var password = $('#password').val()
       if(user==''||password==''){
         that.$message({
@@ -67,12 +68,11 @@ export default {
           username:user,
           userPwd:password
       };
-      console.log(that.serverurl)
-      console.log(that.serverurl+'/user/login')
       $.ajax({
         type:'post',
         async:true,
         dataType:'json',
+        // url:that.serverurl+'/v1/manage/token',
         url:that.serverurl+'/user/login',
         contentType:'application/json;charset=UTF-8',
         data:JSON.stringify(data),
@@ -80,6 +80,7 @@ export default {
           that.loading = false
           if(data.errorCode=='0'){
             sessionStorage.token = data.result.token
+            // that.$router.push({'path':'/program'})
             that.$router.push({'path':'/index'})
           }else{
             that.errorCode(data.errorCode)

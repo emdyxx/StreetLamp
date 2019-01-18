@@ -6,6 +6,7 @@
             <el-button v-if="editLanternsDeployment" @click="addchargingpile(1)" type="primary" icon="el-icon-edit" size='small'>编辑灯具</el-button>
             <el-button v-if="delLanternsDeployment" @click="deletechargingpile" type="primary" icon='el-icon-delete' size='small'>删除灯具</el-button>
             <el-button v-if="lampBindProject" @click="lampBindProjects" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button>
+            <el-button @click="Powerfailuretime" type="primary" icon='el-icon-time' size='small'>断电时间</el-button>
         </div>
         <div class="chargingpile_bottom">
             <div class="chargingpile_bottom_top">
@@ -270,6 +271,158 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
+        <!-- 已关联断电时间灯杆 -->
+        <div class="modal fade" id="Powerfailuretime" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width:600px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">断电时间配置</h4>
+                    </div>
+                    <div class="modal-body" style="text-align:center;">
+                        <div>
+                            <el-button @click="saveTime(0)" type="primary" size='small'>保存时间</el-button>
+                            <el-button @click="saveTime(1)" type="primary" size='small'>清除时间</el-button>
+                            <!-- <el-time-picker
+                                style="margin-top:10px;"
+                                is-range
+                                v-model="value4"
+                                size='small'
+                                value-format='HH:mm'
+                                range-separator="至"
+                                start-placeholder="开始时间"
+                                end-placeholder="结束时间"
+                                placeholder="选择时间范围">
+                            </el-time-picker> -->
+                        </div>
+                        <div style="margin-top:10px;display:flex;justify-content: center;">
+                            <div class="input-group clockpicker" style="width:126px;">
+                                <input type="text" v-model.lazy="startTime" class="form-control startTime">
+                                <span class="input-group-addon">
+                                    <span class="iconfont icon-shijian"></span>
+                                </span>
+                            </div>
+                            <span style="line-height:34px;padding:0 10px 0 10px;">至</span>
+                            <div class="input-group clockpicker" style="width:126px;">
+                                <input type="text" v-model.lazy="endTime" class="form-control endTime">
+                                <span class="input-group-addon">
+                                    <span class="iconfont icon-shijian"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <el-button @click="PowerfailuretimeRelation(0)" type="primary" size='small' style="margin:10px 0 10px 0;">关联设备</el-button>
+                        <el-button @click="PowerfailuretimeRelation(1)" type="primary" size='small'>解除关联</el-button>
+                        <el-table
+                            :data="PowerfailuretimeData1"
+                            ref="multipleTable"
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            @selection-change="PowerfailuretimeChange1"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="nickName"
+                            align='center'
+                            label="灯杆名称"
+                            width="150">
+                            </el-table-column>
+                            <el-table-column
+                            prop="location"
+                            align='center'
+                            label="位置"
+                            width="180">
+                            </el-table-column>
+                            <el-table-column
+                            prop="remark"
+                            label="备注"
+                            align='center'
+                            width="182">
+                            </el-table-column>
+                        </el-table>
+                        <div class="block">
+                            <el-pagination
+                            background
+                            @size-change="Time_sizechange"
+                            @current-change="Time_currentchange"
+                            :current-page="Time_pageIndex"
+                            :page-sizes="[10, 20, 30, 50]"
+                            :page-size="Time_pageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="Time_total">
+                            </el-pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 未关联断电时间灯杆 -->
+        <div class="modal fade" id="Powerfailuretime2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width:600px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">断电时间配置</h4>
+                    </div>
+                    <div class="modal-body" style="text-align:center;">
+                        <el-table
+                            :data="PowerfailuretimeData2"
+                            ref="multipleTable"
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            @selection-change="PowerfailuretimeChange2"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="nickName"
+                            align='center'
+                            label="灯杆名称"
+                            width="150">
+                            </el-table-column>
+                            <el-table-column
+                            prop="location"
+                            align='center'
+                            label="位置"
+                            width="180">
+                            </el-table-column>
+                            <el-table-column
+                            prop="remark"
+                            label="备注"
+                            align='center'
+                            width="182">
+                            </el-table-column>
+                        </el-table>
+                        <div class="block">
+                            <el-pagination
+                            background
+                            @size-change="Time_sizechange2"
+                            @current-change="Time_currentchange2"
+                            :current-page="Time_pageIndex2"
+                            :page-sizes="[10, 20, 30, 50]"
+                            :page-size="Time_pageSize2"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="Time_total2">
+                            </el-pagination>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button @click="savelamp" type="button" class="btn btn-primary">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -309,6 +462,19 @@ export default {
             pageSize2:10,
             pageIndex2:1,
             total2:10, 
+            startTime:'',//断电时间
+            endTime:'',
+            PowerfailuretimeDatas:[],
+            PowerfailuretimeData1:[],
+            PowerfailuretimeDataSite1:[],
+            PowerfailuretimeData2:[],
+            PowerfailuretimeDataSite2:[],
+            Time_pageIndex:1,
+            Time_pageSize:10,
+            Time_total:30,
+            Time_pageIndex2:1,
+            Time_pageSize2:10,
+            Time_total2:30,
         }
     },
     mounted(){
@@ -327,6 +493,241 @@ export default {
         },
         clickRow2(row){
             this.$refs.multipleTable.toggleRowSelection(row)
+        },
+        //请求断电时间信息
+        dataTime(){
+            var that = this;
+            that.startTime = ''
+            that.endTime = ''
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/lampOutage/getLampOutageByProjectId/'+sessionStorage.projectId,
+                contentType:'application/json;charset=UTF-8',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.PowerfailuretimeDatas = data.result.lampOutageDto
+                        setTimeout(function(){
+                            that.startTime=data.result.lampOutageDto.startTime
+                            that.endTime=data.result.lampOutageDto.endTime
+                        },200)
+                        if(data.result.lampOutageDto==undefined||data.result.lampOutageDto==null||data.result.lampOutageDto==''){   
+                        }else{
+                            that.PowerfailureDa1()
+                        }
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
+        Time_currentchange2(val){this.Time_pageIndex2 = val;this.PowerfailureDa2();},
+        Time_sizechange2(val){this.Time_pageSize2=val;this.PowerfailureDa2();},
+        //请求未关联断电时间设备
+        PowerfailureDa2(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/lamp/getLampByOutageId/'+that.Time_pageIndex2+'/'+that.Time_pageSize2+'/0/'+sessionStorage.projectId,
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.Time_total2 = data.result.total
+                        that.PowerfailuretimeData2 = data.result.list
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
+        Time_currentchange(val){this.Time_pageIndex = val;this.PowerfailureDa1();},
+        Time_sizechange(val){this.Time_pageSize=val;this.PowerfailureDa1();},
+        //请求已关联断电时间设备
+        PowerfailureDa1(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/lamp/getLampByOutageId/'+that.Time_pageIndex2+'/'+that.Time_pageSize2+'/'+that.PowerfailuretimeDatas.id+'/'+sessionStorage.projectId,
+                contentType:'application/json;charset=UTF-8',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.Time_total = data.result.total
+                        that.PowerfailuretimeData1 = data.result.list
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
+        //点击断电时间按钮
+        Powerfailuretime(){
+            var that = this
+            $('#Powerfailuretime').modal('show')
+            $('.clockpicker').clockpicker();
+            this.dataTime()
+        },
+        //点击保存断电时间和清除时间按钮
+        saveTime(val){
+            var that = this;
+            if(val=='0'){
+                var url = ''
+                if($('.startTime').val()==''||$('.endTime').val()==''){
+                    that.$message({
+                        message: '请选择断电时间!',
+                        type: 'error'
+                    });
+                    return;
+                }
+                var data = {
+                    startTime:$('.startTime').val(),
+                    endTime:$('.endTime').val(),
+                    projectId:sessionStorage.projectId
+                }
+                if(that.PowerfailuretimeDatas==''||that.PowerfailuretimeDatas==null||that.PowerfailuretimeDatas==undefined){
+                    url = that.serverurl+'/lampOutage/addLampOutage'
+                }else{
+                    url = that.serverurl+'/lampOutage/updateLampOutage'
+                    data.id = that.PowerfailuretimeDatas.id
+                }
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:url,
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '断电时间保存成功!',
+                                type: 'success'
+                            });
+                            that.dataTime()
+                        }else{
+                            that.errorCode2(data.errorCode)
+                        }
+                    }
+                })
+            }
+            if(val=='1'){
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/lampOutage/deleteLampOutage/'+that.PowerfailuretimeDatas.id,
+                    contentType:'application/json;charset=UTF-8',
+                    data:{},
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '断电时间清除成功!',
+                                type: 'success'
+                            });
+                            that.dataTime()
+                        }else{
+                            that.errorCode2(data.errorCode)
+                        }
+                    }
+                })
+            }
+        },
+        //点击关联灯杆,解除关联按钮
+        PowerfailuretimeRelation(val){
+            var that = this
+            if(val=='0'){
+                $('#Powerfailuretime2').modal('show')
+                this.PowerfailureDa2()
+            }
+            if(val=='1'){
+                var array = []
+                if(that.PowerfailuretimeDataSite1.length==0){
+                    that.$message({
+                        message: '请选择灯杆!',
+                        type: 'error'
+                    });
+                    return;
+                }
+                for(var i =0;i<that.PowerfailuretimeDataSite1.length;i++){
+                    array.push(that.PowerfailuretimeDataSite1[i].id)
+                }
+                var data = {
+                    lampIds:array.join(','),
+                    outageId:that.PowerfailuretimeDatas.id
+                }
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    // url:that.serverurl+'/lamp/lampSetOutage',
+                    data:data,
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '关联断电时间解除成功!',
+                                type: 'success'
+                            });
+                            $('#Powerfailuretime2').modal('hide')
+                            that.PowerfailureDa1()
+                        }else{
+                            that.errorCode2(data.errorCode)
+                        }
+                    }
+                })
+            }
+        },
+        //灯具关联断电时间
+        savelamp(){
+            var that = this
+            var array = []
+            if(that.PowerfailuretimeDataSite2.length==0){
+                that.$message({
+                    message: '请选择灯杆!',
+                    type: 'error'
+                });
+                return;
+            }
+            for(var i =0;i<that.PowerfailuretimeDataSite2.length;i++){
+                array.push(that.PowerfailuretimeDataSite2[i].id)
+            }
+            var data = {
+                lampIds:array.join(','),
+                outageId:that.PowerfailuretimeDatas.id
+            }
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/lamp/lampSetOutage',
+                data:data,
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '关联断电时间成功!',
+                            type: 'success'
+                        });
+                        $('#Powerfailuretime2').modal('hide')
+                        that.PowerfailureDa1()
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
+        PowerfailuretimeChange1(val){
+            this.PowerfailuretimeDataSite1 = val
+        },
+        PowerfailuretimeChange2(val){
+            this.PowerfailuretimeDataSite2 = val
         },
         // 表格数据change时间进行编辑删除
         userSelectionChange(val){

@@ -46,6 +46,13 @@ import mapDetails from '@/components/map/mapDetails' //地图主页
 import video from '@/components/video/video' //视频管理主页
 import wifi from '@/components/wifi/wifi' //WIFI管理主页
 import broadcast from '@/components/broadcast/broadcast' //广播管理主页
+
+import program from '@/components/program/program' //节目管理页面
+import programSimple from '@/components/program/programSimple' //简易节目页面
+import programSenior from '@/components/program/programSenior' //高级节目页面
+
+
+
 //  
 Vue.use(Router)
 Vue.use(ElementUI);
@@ -1435,6 +1442,21 @@ export default new Router({
       name: 'login',
       component: login
     },
+    // {
+    //   path: '/program',
+    //   name: 'program',
+    //   component: program,
+    // },
+    // {
+    //   path: '/programSimple',
+    //   name: 'programSimple',
+    //   component: programSimple
+    // },
+    // {
+    //   path: '/programSenior',
+    //   name: 'programSenior',
+    //   component: programSenior
+    // },
     {
       path: '/index',
       name: 'index',

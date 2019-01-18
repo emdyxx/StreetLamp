@@ -60,7 +60,46 @@
         </div>
     </div>
     <div class="index_center">
-        <div class="index_center_top">
+        <template v-for="item in menu">
+            <template v-if="item.code=='management'">
+                <div class=index_center_top_usercentre @click="usermanage(item.id)" :id=item.id :key=item.id>
+                    <img src="../assets/user.png" alt="">
+                    <span>{{item.menuName}}</span>
+                </div>
+                
+            </template>
+            <template v-if="item.code=='intelligentPole'">
+                <div class='index_center_top_lampost' @click="lamppost(item.id)" :id=item.id :key=item.id>
+                    <img src="../assets/smartpole.png" alt="">
+                    <span>{{item.menuName}}</span>
+                </div>  
+            </template>
+            <template v-if="item.code=='GISMap'">
+                <div class='index_center_top_coordinate' @click="map(item.id)" :id=item.id :key=item.id>
+                    <img src="../assets/coordinate.png" alt="">
+                    <span>{{item.menuName}}</span>
+                </div>  
+            </template>
+            <template v-if="item.code=='videoManagement'">
+                <div class='index_center_bottom_video' @click="video(item.id)" :id=item.id :key=item.id>
+                    <img src="../assets/video.png" alt="">
+                    <span>{{item.menuName}}</span>
+                </div>  
+            </template>
+            <template v-if="item.code=='WIFIManagement'">
+                <div class='index_center_bottom_wifi' @click="wifi(item.id)" :id=item.id :key=item.id>
+                    <img src="../assets/wifi.png" alt="">
+                    <span>{{item.menuName}}</span>
+                </div>  
+            </template>
+            <template v-if="item.code=='broadcastManagement'">
+                <div class='index_center_bottom_broadcast' @click="wifi(item.id)" :id=item.id :key=item.id>
+                    <img src="../assets/broadcast.png" alt="">
+                    <span>{{item.menuName}}</span>
+                </div>  
+            </template>
+        </template>
+        <!-- <div class="index_center_top">
             <template v-for="item in menu">
                 <template v-if="item.code=='management'">
                     <div class=index_center_top_usercentre :id=item.id @click="usermanage(item.id)">{{item.menuName}}</div>  
@@ -85,7 +124,7 @@
                     <div class='index_center_bottom_broadcast' :id=item.id @click="broadcast(item.id)">{{item.menuName}}</div>  
                 </template>
             </template>
-        </div>
+        </div> -->
     </div>
     <!-- 修改密码模态框 -->
     <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -307,19 +346,34 @@ export default {
 .index_top_right_text{width: 100px;height: 100%;text-align: center;}
 .index_top_right_text>p{color:white;font-size: 16px;}
 .index_top_right_img>img{width:90px;height: 90px;border-radius: 50%;}
-.index_center{margin: 40px auto;}
+
+.index_center{position: absolute;top: 25%;left: 25%;width: 140px;height: 125px;}
+.index_center>div{width:140px;height: 125px;background-size:100% 100%;text-align: center;color: white;cursor: pointer;background-repeat: no-repeat;}
+.index_center>div>span{position: absolute;bottom:5px;width: 100%;left: 0;}
+.index_center>div>img{width: 100px;height: 100px;}
+.index_center_top_usercentre{background: url('../assets/images/L-1-1.png');}
+.index_center_top_lampost{background: url('../assets/images/L-2-1.png');position: absolute;top: -65px;left: 110px;}
+.index_center_top_coordinate{background: url('../assets/images/L-3-1.png');position: absolute;top: 65px;left: 110px;}
+.index_center_top_coordinate>img{width: 90px !important;height: 90px !important;margin-top: 5px;}
+.index_center_bottom_video{background: url('../assets/images/L-4-1.png');position: absolute;top: 0;left: 220px;}
+.index_center_bottom_video>img{width: 75px !important;height: 75px !important;margin-top: 15px;margin-left: 3px;}
+.index_center_bottom_wifi{background: url('../assets/images/L-5-1.png');position: absolute;top: -65px;left: 330px;}
+.index_center_bottom_wifi>img{width: 95px !important;height: 95px !important;margin-top: 5px;}
+.index_center_bottom_broadcast{background: url('../assets/images/L-6-1.png');position: absolute;top: 65px;left: 330px;}
+.index_center_bottom_broadcast>img{width: 77px !important;height: 77px !important;margin-top: 15px;margin-left: 10px;}
+/* .index_center{margin: 40px auto;}
 .index_center div{margin-right: 30px;margin-left:30px;cursor: pointer;}
 .index_center div>img{transition: all 1S;-webkit-transition: all 1S;}
-.index_center p{color: white;margin-top:10px;font-size: 16px}
-.index_center_top,.index_center_bottom{display: flex;justify-content: center;}
+.index_center p{color: white;margin-top:10px;font-size: 16px} */
+/* .index_center_top,.index_center_bottom{display: flex;justify-content: center;}
 .index_center_top>div,.index_center_bottom>div{width: 150px;height: 20px;background-repeat: no-repeat !important;background-position: center 25% !important;color: #FFF;text-align: center;font-size: 14px;opacity: 0.9;padding: 99px 5px 15px 10px;margin: 10px 10px 10px 10px;line-height: 5px;cursor: pointer;border: 2px solid transparent;}
-.index_center_top>div:hover,.index_center_bottom>div:hover{border: 2px solid white;}
-.index_center_top_usercentre{background: #2196F3 url('../assets/user.png');}
+.index_center_top>div:hover,.index_center_bottom>div:hover{border: 2px solid white;} */
+/* .index_center_top_usercentre{background: #2196F3 url('../assets/user.png');}
 .index_center_top_lampost{background:#9C27B0 url('../assets/smartpole.png');}
 .index_center_top_coordinate{background:#67C23A url('../assets/coordinate.png');}
 .index_center_bottom_video{background:#BB6F6B url('../assets/video.png');}
 .index_center_bottom_wifi{background:#79BD8F url('../assets/wifi.png');}
-.index_center_bottom_broadcast{background:#E6A23C url('../assets/broadcast.png');}
+.index_center_bottom_broadcast{background:#E6A23C url('../assets/broadcast.png');} */
 
 .header_img{text-align: left;margin-left: 30px;}
 .header_img>img{width: 80px;height: 80px;border-radius: 50%;}

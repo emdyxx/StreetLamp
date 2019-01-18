@@ -1238,7 +1238,7 @@ export default {
                     });
                     return;
                 }
-                that.$confirm('是否删除所选项目？', '提示', {
+                that.$confirm('是否删除所选节目？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
