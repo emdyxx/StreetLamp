@@ -3,6 +3,9 @@ import Router from 'vue-router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 
+import Editor from 'wangeditor'
+import 'wangeditor/release/wangEditor.min.css'
+
 import login from '@/components/login'
 import index from '@/components/index'
 // 用户中心
@@ -1442,26 +1445,26 @@ export default new Router({
       name: 'login',
       component: login
     },
-    // {
-    //   path: '/program',
-    //   name: 'program',
-    //   component: program,
-    // },
-    // {
-    //   path: '/programSimple',
-    //   name: 'programSimple',
-    //   component: programSimple
-    // },
-    // {
-    //   path: '/programSenior',
-    //   name: 'programSenior',
-    //   component: programSenior
-    // },
     {
-      path: '/index',
-      name: 'index',
-      component: index
+      path: '/program',
+      name: 'program',
+      component: program,
     },
+    {
+      path: '/programSimple',
+      name: 'programSimple',
+      component: programSimple
+    },
+    {
+      path: '/programSenior',
+      name: 'programSenior',
+      component: programSenior
+    },
+    // {
+    //   path: '/index',
+    //   name: 'index',
+    //   component: index
+    // },
     {
       path: '/lamppost',
       name: 'lamppost',

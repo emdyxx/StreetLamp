@@ -120,14 +120,14 @@
                             <span>{{item.nickName}}</span>
                             <span style="margin-top:20px;">
                                 <template v-if="item.mediaType=='0'">
-                                    <el-input v-model="item.playTime" placeholder="播放时长" size='small' style='width:126px;'></el-input>
+                                    <el-input v-model="item.timeSpan" placeholder="播放时长" size='small' style='width:126px;'></el-input>
                                 </template>
                                 <template v-if="item.mediaType=='1'">
-                                    <el-input v-model="item.playTime" placeholder="播放时长" :disabled="true" size='small' style='width:126px;'></el-input>
+                                    <el-input v-model="item.timeSpan" placeholder="播放时长" :disabled="true" size='small' style='width:126px;'></el-input>
                                 </template>
                             </span>
                             <span style="margin-top:20px;">
-                                <el-button type="primary" size='small' icon='el-icon-download'>下载</el-button>
+                                <el-button @click="Download(item.mediaUrl)" type="primary" size='small' icon='el-icon-download'>下载</el-button>
                             </span>
                         </p>
                     </li>
@@ -155,6 +155,7 @@ export default {
     data () {
         return {
             serverurl:localStorage.serverurl,
+            programName:'',
             width:sessionStorage.width,
             height:sessionStorage.height,
             mediatableData:[],
@@ -165,12 +166,12 @@ export default {
             mediaIndex2:1,
             mediaSize2:5,
             mediaTotal2:5,
-            programName:'',
             mediaVlaue:'1',
             mediadata:[],
             checked:false,
             checkKey:[],
             previewData:'',
+            
         }
     },
     mounted(){},
@@ -250,7 +251,6 @@ export default {
                 }
             }
             this.checkKey = this.checkKey.sort()
-            console.log(this.checkKey)
         },
         //媒体位置移动及删除
         mediaMove(val){
@@ -290,7 +290,6 @@ export default {
                 this.mediadata.splice(this.checkKey[0],1)
                 this.mediadata.splice(this.checkKey[0]+1,0,data)
                 this.checkKey[0] = Number(this.checkKey[0])+1
-                console.log(this.checkKey[0])
             }
             //删除媒体
             if(val=='3'){
@@ -300,46 +299,70 @@ export default {
         },
         //点击图片 视图开始预览
         preview(val){
-            console.log(val)
             this.previewData = val
+        },
+        //点击下载媒体
+        Download(val){
+            var that = this
+            window.open(that.serverurl+"/v1/solin/file/download?fileName="+that.serverurl+val)
         },
         //点击保存简易节目
         mediaSave(){
             var that = this;
-            var data = {};
-            var array = [];
-            for(let i=0;i<that.mediadata.length;i++){
-                that.mediadata[i].mediaId = that.mediadata[i].id
-                that.entryEffect = 'None'
-                that.entryEffectTimeSpan =  0
-                that.exitEffect = 'None'
-                that.exitEffectTimeSpan =  0
-                that.height = 0
-                that.layer = 0
-                that.marginLeft = 0
-                that.mediaId = 0
-                that.playTime = 0
-                that.programId = 0
-                that.repeatPlay = true
-                that.rollDirection = 0
-                that.sort = 0
-                that.speed = 0
-                that.textMsg = ''
-                that.timeSpan = 0
-                that.top = 0
-                that.type = 0
-                that.width = 0
+            if(that.programName==''){
+                that.$message({
+                    message: '节目名称不能为空',
+                    type:'error',
+                    showClose: true,
+                });
+                return;
             }
-            var url = '/v1/solin/program/addProgram';
+            var data = {};
+            var url = '';
+            var type = ''
+            for(let i=0;i<that.mediadata.length;i++){
+                that.mediadata[i].entryEffect = 'None'
+                that.mediadata[i].entryEffectTimeSpan =  0
+                that.mediadata[i].exitEffect = 'None'
+                that.mediadata[i].exitEffectTimeSpan =  0
+                that.mediadata[i].height = 0
+                that.mediadata[i].layer = 0
+                that.mediadata[i].marginLeft = 0
+                that.mediadata[i].programId = 0
+                that.mediadata[i].repeatPlay = true
+                that.mediadata[i].rollDirection = 0
+                that.mediadata[i].speed = 0
+                that.mediadata[i].textMsg = ''
+                that.mediadata[i].top = 0
+                that.mediadata[i].type = 1
+                that.mediadata[i].width = 0
+                that.mediadata[i].sort = i
+                if(sessionStorage.programtype=='0'){
+                    that.mediadata[i].mediaId = that.mediadata[i].id
+                }
+                if(i==0){
+                    that.mediadata[i].playTime = 0
+                }else{
+                    that.mediadata[i].playTime = that.mediadata[i-1].playTime+that.mediadata[i-1].timeSpan
+                }
+            }
+            if(sessionStorage.programtype=='0'){
+                url = '/v1/solin/program/addProgram'; 
+                type = 'post'
+            }else{
+                url = '/v1/solin/program/updateProgram'
+                type = 'put'
+                data.id = sessionStorage.programId
+            }
             data.width = sessionStorage.width;
             data.height = sessionStorage.height;
-            data.nickName = that.programNanme;
+            data.nickName = that.programName;
             // data.projectId = sessionStorage.projectId
             data.projectId = '1';
             data.programType = '0';
             data.programDetailsDtos = that.mediadata
             $.ajax({
-                type:'post',
+                type:type,
                 async:true,
                 dataType:'json',
                 url:that.serverurl+url,
@@ -348,7 +371,7 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.$message({
-                            message: '节目添加成功;',
+                            message: '节目保存成功;',
                             type:'success',
                             showClose: true,
                         });
@@ -358,6 +381,7 @@ export default {
                 }
             })
         },
+        //获取节目详细信息
         ready(){
             var that = this;
             $.ajax({
@@ -365,9 +389,7 @@ export default {
                 async:true,
                 dataType:'json',
                 url:that.serverurl+'/v1/solin/program/getProgramDetails/'+sessionStorage.programId,
-                data:{
-                    
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.programName = data.result.programName
@@ -381,8 +403,9 @@ export default {
     },
     created(){
         this.mediaready()
+        //programtype 0为创建节目 1为修改节目
         if(sessionStorage.programtype=='0'){
-
+            
         }else{
             this.ready();
         }

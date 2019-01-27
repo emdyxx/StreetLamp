@@ -3,6 +3,7 @@
         <div class="program_top">
             <el-button @click="program(0)" type="primary" size='small'>创建简易节目</el-button>
             <el-button @click="program(1)" type="primary" size='small'>创建高级节目</el-button>
+            <el-button @click="primary_delete" type="primary" size='small'>删除节目</el-button>
         </div>
         <div class="program_bottom">
             <el-table
@@ -56,10 +57,9 @@
                 <el-table-column
                 align='center'
                 label="操作"
-                min-width="200">
+                min-width="100">
                     <template slot-scope="scope">
                         <el-button @click="modifyProgram(scope.row)" type="primary" size='small'>修改</el-button>
-                        <el-button @click="primary_delete(scope.row.id)" type="primary" size='small'>删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -131,6 +131,7 @@ export default {
         return {
             serverurl:localStorage.serverurl,
             tableData:[],
+            site:[],
             noticeIndex:1,
             noticeSize:10,
             Total:10,
@@ -147,7 +148,7 @@ export default {
         },
         sizechange(val){this.noticeSize = val;this.ready();},
         currentchange(val){this.noticeIndex = val;this.ready();},
-        TableChange(val){},
+        TableChange(val){this.site = val},
         //请求节目列表
         ready(){
             var that = this
@@ -157,8 +158,6 @@ export default {
                 dataType:'json',
                 url:that.serverurl+'/v1/solin/program/getProgramList/'+that.noticeIndex+'/'+that.noticeSize,
                 data:{
-                //    pageNum:that.noticeIndex,
-                //    pageSize:that.noticeSize,
                    programType:'',
                    nickName:'',
                    projectId:'1',
@@ -175,20 +174,31 @@ export default {
             })
         },
         //删除节目
-        primary_delete(val){
+        primary_delete(){
             var that = this
+            if(that.site.length==0){
+                that.$message({
+                    message: '请选择节目进行删除!',
+                    type: 'error'
+                });
+                return
+            }
+            var array = []
+            for(let i = 0;i<that.site.length;i++){
+                array.push(that.site[i].id)
+            }
             that.$confirm('是否删除所选节目？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
                 $.ajax({
-                    type:'post',
+                    type:'delete',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/program/deleteProgram',
+                    url:that.serverurl+'/v1/solin/program/deleteProgram',
                     data:{
-                        id:val
+                        ids:array.join(',')
                     },
                     success:function(data){
                         if(data.errorCode=='0'){
@@ -236,7 +246,6 @@ export default {
         //点击修改节目进行跳转
         modifyProgram(val){
             var that = this;
-            console.log(val);
             that.width = val.width;
             that.height = val.height;
             that.type = '1';
@@ -247,7 +256,6 @@ export default {
                 $('#myModal2').modal('show')
             }
         },
-
     },
     created(){
         this.ready()
