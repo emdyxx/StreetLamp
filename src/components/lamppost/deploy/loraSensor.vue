@@ -1,30 +1,30 @@
 <template>
-    <div class="sensor">
+    <div class="loraSensor">
         <!-- 气象站部署 -->
-        <div class="sensor_top">
-            <el-button v-if="addSensor" @click="addsensor(0)" type="primary" icon='el-icon-plus' size='small'>添加气象站</el-button>
-            <el-button v-if="editSensor" @click="addsensor(1)" type="primary" icon="el-icon-edit" size='small'>编辑气象站</el-button>
-            <el-button v-if="delSensor" @click="deletesensor" type="primary" icon='el-icon-delete' size='small'>删除气象站</el-button>
-            <el-button v-if="sensorBindProject" @click="sensorBindProjects" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button>
+        <div class="loraSensor_top">
+            <el-button v-if="addLoraSensor" @click="addloraSensor(0)" type="primary" icon='el-icon-plus' size='small'>添加loar传感器</el-button>
+            <el-button v-if="editLoraSensor" @click="addloraSensor(1)" type="primary" icon="el-icon-edit" size='small'>编辑loar传感器</el-button>
+            <el-button v-if="delLoraSensor" @click="deletloraSensor" type="primary" icon='el-icon-delete' size='small'>删除loar传感器</el-button>
+            <el-button v-if="setLoraSensorProject" @click="loraSensorBindProjects" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button>
         </div>
-        <div class="sensor_bottom">
-            <div class="sensor_bottom_top">
+        <div class="loraSensor_bottom">
+            <div class="loraSensor_bottom_top">
                 <div class="search">
-                    <label style="width:100px;">集中器标识:</label>
-                    <input type="text" v-model="concentratorSn" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入集中器标识">
+                    <label style="width:120px;">lora传感器名字:</label>
+                    <input type="text" v-model="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入lora传感器名字">
                 </div>
                 <div class="search">
-                    <label style="width:90px;">名称:</label>
-                    <input type="text" v-model="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入气象站名称">
+                    <label style="width:120px;">lora传感器序列号:</label>
+                    <input type="text" v-model="serialNumber" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入lora传感器序列号">
                 </div>
                 <div class="search">
-                    <label>型号:</label>
-                    <el-select v-model="modelId" size='small' clearable style='width:146px;' placeholder="请选择">
+                    <label style="width:120px;">lora传感器类型:</label>
+                    <el-select v-model="value" size='small' clearable style='width:146px;' placeholder="请选择">
                         <el-option
                         v-for="item in options"
-                        :key="item.id"
-                        :label="item.modelName"
-                        :value="item.id">
+                        :key="item.modelId"
+                        :label="item.nickName"
+                        :value="item.modelId">
                         </el-option>
                     </el-select>
                 </div>
@@ -32,7 +32,7 @@
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
             </div>
-            <div class="sensor_bottom_bottom">
+            <div class="loraSensor_bottom_bottom">
                 <el-table
                     :data="tableData"
                     @row-click="clickRow" 
@@ -52,33 +52,39 @@
                     prop="nickName"
                     align='center'
                     label="昵称"
+                    :formatter="formatRole"
                     min-width="110">
                     </el-table-column>
                     <el-table-column
                     prop="serialNumber"
                     align='center'
-                    label="气象站编号"
+                    :formatter="formatRole"
+                    label="lora传感器序列号"
                     min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    prop="concentratorSn"
-                    align='center'
-                    label="集中器标识"
-                    min-width="120">
                     </el-table-column>
                     <el-table-column
                     prop="modelName"
                     align='center'
-                    label="型号"
+                    :formatter="formatRole"
+                    label="lora传感器型号"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="network"
+                    align='center'
+                    :formatter="formatRole"
+                    label="lora传感器入网方式"
                     min-width="120">
                     </el-table-column>
                     <el-table-column
                     align='center'
                     label="状态"
+                    :formatter="formatRole"
                     min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.online=='0'">离线</span>
                             <span v-if="scope.row.online=='1'">在线</span>
+                            <span v-else>---</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -89,12 +95,6 @@
                     :formatter="formatRole">
                     </el-table-column>
                     <el-table-column
-                    prop="createTime"
-                    align='center'
-                    label="创建时间"
-                    min-width="140">
-                    </el-table-column>
-                    <el-table-column
                     prop="location"
                     label="位置"
                     align='center'
@@ -102,7 +102,7 @@
                     min-width="120">
                     </el-table-column>
                     <el-table-column
-                    prop="mark"
+                    prop="remark"
                     align='center'
                     label="备注"
                     :formatter="formatRole"
@@ -123,56 +123,66 @@
                 </div>
             </div>
         </div>
-        <!-- 添加编辑气象站模态框 -->
-        <div class="modal fade" id="addModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:450px;">
+        <!-- 添加/编辑传感器模态框 -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width:500px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 v-if="addtype=='0'" class="modal-title" id="myModalLabel">添加气象站</h4>
-                        <h4 v-if="addtype=='1'" class="modal-title" id="myModalLabel">编辑气象站</h4>
+                        <h4 v-if="type=='0'" class="modal-title" id="myModalLabel">添加</h4>
+                        <h4 v-if="type=='1'" class="modal-title" id="myModalLabel">编辑</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label><span class="Required">*</span>昵称:</label>
+                        <div class="form_input">
+                            <label><span class="Required">*</span>名称:</label>
                             <input type="text" v-model="data.nickName" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
-                        </div> 
-                        <div class="form-group">
-                            <label><span class="Required">*</span>集中器标识:</label>
-                            <input type="text" v-model="data.concentratorSn" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入集中器标识">
-                        </div> 
-                        <div class="form-group">
+                        </div>
+                        <div class="form_input">
+                            <label><span class="Required">*</span>序列号:</label>
+                            <input type="text" v-model="data.serialNumber" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
+                        </div>
+                        <div class="form_input">
                             <label><span class="Required">*</span>型号:</label>
-                            <el-select v-model="data.modelId" size='small' style='width:196px;' placeholder="请选择">
+                            <el-cascader
+                                :options="options"
+                                v-model="data.modelId"
+                                :props="props"
+                                size='small'
+                                style="width:196px;">
+                            </el-cascader>
+                        </div>
+                        <div class="form_input">
+                            <label><span class="Required">*</span>入网方式:</label>
+                            <el-select v-model="data.networkId" size='small' clearable style='width:196px;' placeholder="请选择">
                                 <el-option
-                                v-for="item in options"
+                                v-for="item in options2"
                                 :key="item.id"
-                                :label="item.modelName"
+                                :label="item.name"
                                 :value="item.id">
                                 </el-option>
                             </el-select>
-                        </div> 
-                        <div class="form-group">
-                            <label><span class="Required">*</span>气象站编号:</label>
-                            <input type="text" v-model="data.serialNumber" id="serialNumber" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入气象站编号">
                         </div>
-                        <div class="form-group">
+                        <div class="form_input">
+                            <label>位置:</label>
+                            <input type="text" v-model="data.location" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入位置">
+                        </div>
+                        <div class="form_input">
                             <label>备注:</label>
                             <el-input
                                 type="textarea"
-                                :rows="1"
-                                style="width:196px;"
-                                placeholder="请输入内容"
-                                v-model="data.mark">
+                                :rows="2"
+                                placeholder="请输入备注"
+                                v-model="data.remark"
+                                style="width:196px;">
                             </el-input>
-                        </div> 
-                        <div class="form-group">
-                            <el-button v-if='relationPole' @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
-                        </div> 
+                        </div>
+                        <div v-if="loraSensorAssociatePole" class="form_input" style="margin-top:10px;">
+                            <el-button @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" @click="addSubmit" class="btn btn-primary">确定</button>
+                        <button type="button" @click="myModalSubmit" class="btn btn-primary">保存</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div>
@@ -260,9 +270,9 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <span style="line-height:35px;">项目:</span>
-                            <el-select size='small' v-model="value5" style="margin-left:20px;" placeholder="请选择">
+                            <el-select size='small' v-model="value3" style="margin-left:20px;" placeholder="请选择">
                                 <el-option
-                                    v-for="item in options5"
+                                    v-for="item in options3"
                                     style="height:30px;"
                                     :key="item.id"
                                     :label="item.projectName"
@@ -282,45 +292,53 @@
 </template>
 <script>
 export default {
-    name: 'user',
+    name: 'lamppost',
     data () {
         return {
-            serverurl:localStorage.serverurl,
-            addSensor:false,
-            editSensor:false,
-            delSensor:false,
-            relationPole:false,
-            sensorBindProject:false,
-            site:[], //列表选中数据列表
-            addtype:'0', //判断是添加还是编辑类型的参数
-            options5:[],
-            value5:'',
-            concentratorSn:'',
-            nickName:'',
-            modelId:'',
+            addLoraSensor:false,
+            editLoraSensor:false,
+            delLoraSensor:false,
+            loraSensorAssociatePole:false,
+            setLoraSensorProject:false,
+            serverurl:localStorage.serverurl, 
             tableData:[],
-            pageSize:10,
+            site:[],
             pageIndex:1,
-            total:10, 
+            pageSize:10,
+            total:10,
+            nickName:'',
+            serialNumber:'',
             options:[],
-            value:'1',
+            value:'',
+            //添加/编辑
+            type:'0',
+            options2:[],
             data:{
                 nickName:'',
-                concentratorSn:'',
-                modelId:'',
-                online:'0',
-                mark:'',
-                serialNumber:''
-            },//添加气象站数据
+                serialNumber:'',
+                modelId:[],
+                networkId:'',
+                location:'',
+                remark:'',
+            },
+            props:{
+                value: 'modelId',
+                label:'text',
+                children: 'children'
+            },
+            //绑定灯杆页面
             tableData2:[],
             site2:[],
             pageSize2:10,
             pageIndex2:1,
             total2:10,
+            //绑定项目
+            options3:[],
+            value3:'',
         }
     },
     mounted(){
-        this.ModelData()
+        this.modal()
     },
     methods:{
         formatRole:function(val, column, cellValue, index){
@@ -336,123 +354,75 @@ export default {
         clickRow2(row){
             this.$refs.multipleTable.toggleRowSelection(row)
         },
-        //获取型号列表
-        ModelData(){
-            var that = this;
-            $.ajax({
-                type:'get',
-                async:true,
-                dataType:'json',
-                url:that.serverurl+'/v1/solin/sensor/model',
-                contentType:'application/json;charset=UTF-8',
-                data:{
-                    modelType:'3'
-                },
-                success:function(data){
-                    if(data.errorCode=='0'){
-                        that.options = data.result.list
-                        if(that.addType=='0'){
-                            that.data.modelId = data.result.list[0].id
-                        }
-                        if(that.addType=='1'){
-                            that.data.modelId = that.site[0].modelId
-                        }
-                    }else{
-                        that.errorCode2(data.errorCode)
-                    }
-                }
-            })
-        },
-        // 添加,编辑气象站
-        addsensor(val){
-            if(sessionStorage.projectId=='0'){
-                this.$message({
-                    message: '此操作请选择具体项目!',
-                    type: 'warning'
-                });
-                return;
-            }
-            // 0为添加,1为编辑
+        //添加,编辑loar传感器 按钮
+        addloraSensor(val){
             if(val=='0'){
-                this.addtype = val;
-                this.ModelData()
+                this.type = '0';
+                this.network();
                 this.data.nickName = ''
-                this.data.concentratorSn = ''
                 this.data.serialNumber = ''
-                this.data.modelId = ''
+                this.data.modelId = []
+                this.data.networkId = ''
                 this.data.location = ''
-                this.data.mark = ''
-                this.value = ''
-                $('#addModal').modal('show')
-                $('#serialNumber').removeAttr('disabled')
+                this.data.remark = ''
+                $('#myModal').modal('show')
             }
             if(val=='1'){
+                this.type = '1';
                 if(this.site.length==0||this.site.length>=2){
                     this.$message({
-                        message: '请选择一个气象站进行编辑!',
+                        message: '请选择传感器进行编辑!',
                         type: 'error'
                     });
-                    return;
+                    retuen;
                 }
-                this.addtype = val;
-                this.ModelData()
+                this.network();
                 this.data.nickName = this.site[0].nickName
-                this.data.concentratorSn = this.site[0].concentratorSn
-                this.data.modelId = this.site[0].modelId
-                this.data.location = this.site[0].location
-                this.data.mark = this.site[0].mark
                 this.data.serialNumber = this.site[0].serialNumber
-                // this.value = ''
-                $('#addModal').modal('show')
-                $('#serialNumber').attr('disabled','disabled')
+                this.data.modelId = []
+                this.data.modelId.push(this.site[0].sensorsType)
+                this.data.modelId.push(this.site[0].modelId)
+                this.data.networkId = this.site[0].networkId
+                this.data.location = this.site[0].location
+                this.data.remark = this.site[0].remark
+                $('#myModal').modal('show')
             }
-            /* 完成拖拽 */
-            $('#addModal').draggable({
-                cursor: "move",
-                handle: '.modal-header'
-            });
-            $('#addModal').css("overflow", "hidden")
         },
-        //添加编辑保存
-        addSubmit(){
+        //添加/编辑保存
+        myModalSubmit(){
             var that = this;
-            var result = /[\u4E00-\u9FA5\uF900-\uFA2D]/;
-            var data = {};
-            var type = ''
-            if(this.data.nickName==''||this.data.concentratorSn==''||this.data.modelId==''||this.data.serialNumber==''){
-                this.$message({
-                    message: '必填字段不能为空!',
+            if(that.data.nickName==''||that.data.serialNumber==''||that.data.modelId.length==0||that.data.networkId==''){
+                that.$message({
+                    message: '必填数据不能为空!',
                     type: 'error'
                 });
-                return;
+                retuen;
             }
-            if(result.test(this.data.concentratorSn)){
-                that.$message({
-                    message: '集中器标识不能有中文',
-                    type: 'error',
-                    showClose: true,
-                });
-                return;
-            }
-            data = this.data
-            data.concentratorSn = data.concentratorSn.toUpperCase()
-            if(this.addtype=='0'){type='post'}
-            if(this.addtype=='1'){data.id=this.site[0].id;type='put'}
+            var data= {}
+            var type = ''
+            if(that.type=='0'){type='post';}
+            if(that.type=='1'){type='put';data.id=that.site[0].id}
+            data.nickName = that.data.nickName
+            data.serialNumber = that.data.serialNumber
+            data.modelId = that.data.modelId[1]
+            data.networkId = that.data.networkId
+            data.location = that.data.location
+            data.remark = that.data.remark
             data.projectId = sessionStorage.projectId
-            if(this.site2.length==0){
-                if(this.addtype=='0'){
+            if(that.site2.length==0){
+                if(that.type=='0'){
                     data.poleId='0'
                 }else{
                     data.poleId=that.site[0].poleId
                 }
             }else{
-                data.poleId = this.site2[0].id
+                data.poleId = that.site2[0].id
             }
             $.ajax({
                 type:type,
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/sensor/env',
+                url:that.serverurl+'/v1/solin/lora/sensor',
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify(data),
                 success:function(data){
@@ -461,7 +431,7 @@ export default {
                             message: '保存成功!',
                             type: 'success'
                         });
-                        $('#addModal').modal('hide')
+                        $('#myModal').modal('hide')
                         that.ready()
                     }else{
                         that.errorCode2(data.errorCode)
@@ -469,34 +439,32 @@ export default {
                 }
             })
         },
-        //删除气象站
-        deletesensor(){
+        //点击删除按钮
+        deletloraSensor(){
             var that = this;
-            if(this.site.length=='0'){
-                this.$message({
-                    message: '请选择气象站进行删除!',
-                    type: 'warning'
-                });
-                return;
-            }
+            if(this.site.length==0||this.site.length>=2){
+                    this.$message({
+                        message: '请选择单个传感器进行删除!',
+                        type: 'error'
+                    });
+                    retuen;
+                }
             var arr = []
             for(var i=0;i<that.site.length;i++){
                 arr.push(that.site[i].id)
             }
-            this.$confirm('是否删除所选气象站？', '提示', {
+            this.$confirm('是否删除所选传感器？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
                 $.ajax({
-                    type:'post',
+                    type:'delete',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/v1/solin/sensor/env/deletes',
+                    url:that.serverurl+'/v1/solin/lora/sensor/'+arr.join(','),
                     contentType:'application/json;charset=UTF-8',
-                    data:JSON.stringify({
-                        envs:arr
-                    }),
+                    data:{},
                     success:function(data){
                         if(data.errorCode=='0'){
                             that.$message({
@@ -516,71 +484,6 @@ export default {
                 });          
             });
         },
-        //绑定项目
-        sensorBindProjects(){
-            var that = this;
-            if(this.site.length=='0'){
-                this.$message({
-                    message: '请选择气象站进行绑定项目!',
-                    type: 'warning'
-                });
-                return;
-            }
-            $('#sensorBindProjectModal').modal('show')
-            this.project()
-        },
-        //请求所有项目接口
-        project(){
-            var that = this;
-            $.ajax({
-                type:'get',
-                async:true,
-                dataType:'json',
-                url:that.serverurl+'/v1/manage/owner/projects/type/1',
-                contentType:'application/json;charset=UTF-8',
-                data:{},
-                success:function(data){
-                    if(data.errorCode=='0'){
-                        that.options5 = data.result.projects
-                        that.value5 = ''
-                    }else{
-                        that.errorCode(data.errorCode)
-                    }
-                },
-            })
-        },
-        //绑定项目提交
-        Submit_sensorBindProject(){
-            var that = this;
-            var arr = [];
-            for(var i=0;i<this.site.length;i++){
-                arr.push(this.site[i].id)
-            }
-            $.ajax({
-                type:'post',
-                async:true,
-                dataType:'json',
-                url:that.serverurl+'/v1/solin/sensor/env/project',
-                contentType:'application/json;charset=UTF-8',
-                data:JSON.stringify({
-                    envs:arr,
-                    projectId:that.value5
-                }),
-                success:function(data){
-                    if(data.errorCode=='0'){
-                        that.$message({
-                            message: '绑定成功!',
-                            type: 'success'
-                        });
-                        that.ready()
-                        $('#sensorBindProjectModal').modal('hide')
-                    }else{
-                        that.errorCode2(data.errorCode)
-                    }
-                },
-            })
-        },
-        //关联灯杆
         //点击关联灯杆
         LampPole_data(){
             var that= this;
@@ -611,7 +514,7 @@ export default {
                     if(data.errorCode=='0'){
                         that.tableData2 = data.result.list
                         that.total2 = data.result.total
-                        if(that.addtype=='1'){
+                        if(that.type=='1'){
                             var arr = []
                             for(let i = 0;i<that.site.length;i++){
                                 for(let j = 0;j<data.result.list.length;j++){
@@ -646,42 +549,139 @@ export default {
             }
             $('#LampPole_data').modal('hide')
         },
-        //获取气象站列表数据
-        ready(){
+        //点击绑定项目
+        loraSensorBindProjects(){
             var that = this;
-            var data = {
-                page:that.pageIndex,
-                size:that.pageSize,
-                poleId:'',
-                projectIds:sessionStorage.projectId,
-                concentratorSn:that.concentratorSn,
-                nickName:that.nickName,
-                modelId:that.modelId
+            if(this.site.length=='0'){
+                this.$message({
+                    message: '请选择传感器进行绑定项目!',
+                    type: 'warning'
+                });
+                return;
             }
+            $('#sensorBindProjectModal').modal('show')
+            this.project()
+        },
+        //请求所有项目接口
+        project(){
+            var that = this;
             $.ajax({
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/sensor/env',
+                url:that.serverurl+'/v1/manage/owner/projects/type/1',
                 contentType:'application/json;charset=UTF-8',
-                data:data,
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.options3 = data.result.projects
+                        that.value3 = ''
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                },
+            })
+        },
+        //绑定项目提交
+        Submit_sensorBindProject(){
+            var that = this;
+            var arr = [];
+            for(var i=0;i<this.site.length;i++){
+                arr.push(this.site[i].id)
+            }
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/lora/device/project',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify({
+                    loraSensors:arr,
+                    projectId:that.value3
+                }),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '绑定成功!',
+                            type: 'success'
+                        });
+                        that.ready()
+                        $('#sensorBindProjectModal').modal('hide')
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                },
+            })
+        },
+        //请求入网方式
+        network(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/lora/sensor/network',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.options2 = data.result.network
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                },
+            })
+        },
+        //请求loar传感器类型/型号
+        modal(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/lora/model',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.options = data.result
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                },
+            })
+        },
+        //请求loar列表数据
+        ready(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/lora/sensor',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    page:that.pageIndex,
+                    size:that.pageSize,
+                    nickName:that.nickName,
+                    serialNumber:that.serialNumber,
+                    modelName:'',
+                    online:'',
+                    projectIds:sessionStorage.projectId,
+                    sensorsType:that.value
+                },
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.tableData = data.result.list
                         that.total = data.result.total
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data.errorCode)
                     }
-                }
+                },
             })
         },
-        search(){this.ready()},
-        // 列表数据选中事件  进行编辑,删除操作
-        SelectionChange(val){
-            this.site = val;
-        },
-        sizechange(val){this.pageSize = val;this.ready()},
+        SelectionChange(val){this.site = val;},
         currentchange(val){this.pageIndex = val;this.ready();},
+        sizechange(val){this.pageSize = val;this.ready()},
+        search(){this.ready();},
         //权限请求
         Jurisdiction(){
             var that = this
@@ -697,20 +697,20 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
-                            if(data.result.operats[i].code=='addEnv'){
-                                that.addSensor = true
+                            if(data.result.operats[i].code=='addLoraSensor'){
+                                that.addLoraSensor = true
                             }
-                            if(data.result.operats[i].code=='editEnv'){
-                                that.editSensor = true
+                            if(data.result.operats[i].code=='editLoraSensor'){
+                                that.editLoraSensor = true
                             }
-                            if(data.result.operats[i].code=='delEnv'){
-                                that.delSensor = true
+                            if(data.result.operats[i].code=='delLoraSensor'){
+                                that.delLoraSensor = true
                             }
-                            if(data.result.operats[i].code=='envAssociatePole'){
-                                that.relationPole = true
+                            if(data.result.operats[i].code=='loraSensorAssociatePole'){
+                                that.loraSensorAssociatePole = true
                             }
-                            if(data.result.operats[i].code=='setEnvProject'){
-                                that.sensorBindProject = true
+                            if(data.result.operats[i].code=='setLoraSensorProject'){
+                                that.setLoraSensorProject = true
                             }
                         }
                     }else{
@@ -721,33 +721,28 @@ export default {
         },
     },
     created(){
-        this.ready();   
         this.Jurisdiction()
+        this.ready()
     },
 }
 </script>
 <style scoped>
 .Required{color: red;font-size: 17px;}
-.sensor{width: 100%;height: 100%;}
-.sensor>div{width: 100%;position: absolute;}
-.sensor_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.sensor_top>button{height:33px;margin:8px 0 0 10px;}
-.sensor_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
-.sensor_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.sensor_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
-.block{text-align: center;}
-
-
-.form-group{display:flex;justify-content: center;}
-.form-group>label{width: 105px;line-height: 34px;text-align: center;}
-.form-group>input{width: 196px;}
-.modal_body_table>div{margin-bottom: 10px;border: 1px solid #E4E4F1;padding: 5px;text-align: center;}
-.table_data{width: 100%;padding: 10px;}
-.table_data>table{width:100%;}
-.table_data>table tr{display: flex;}
-.table_data>table tr>td{width: 25%;text-align: center;line-height: 25px !important;}
-
+.loraSensor{width: 100%;height: 100%;}
+.loraSensor>div{width: 100%;position: absolute;}
+.loraSensor_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
+.loraSensor_top>button{height:33px;margin:8px 0 0 10px;}
+.loraSensor_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
+.loraSensor_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
+.loraSensor_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
 .search{display: flex;}
 .search>label{width: 60px;}
 .search>input{width: 146px;margin-top:7px;height: 34px;}
+.block{text-align: center;}
+
+
+.form_input{display:flex;justify-content: center;}
+.form_input>label{width: 105px;line-height: 34px;text-align: center;}
+.form_input>input{width: 196px;}
 </style>
+

@@ -2,13 +2,13 @@
     <!-- 传感器管理 -->
     <div class="cameras">
         <div class="cameras_top">
-            <el-button v-if="deliverySensor" @click="details" type="primary" icon='el-icon-search' size='small'>获取数据</el-button>
+            <el-button v-if="envControl" @click="details" type="primary" icon='el-icon-search' size='small'>获取数据</el-button>
         </div>
         <div class="cameras_bottom">
             <div class="cameras_bottom_top">
                 <div class="search">
                     <label style="width:100px;">集中器标识:</label>
-                    <input type="text" v-model="concentratorSN" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入集中器标识">
+                    <input type="text" v-model="concentratorSn" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入集中器标识">
                 </div>
                 <div class="search">
                     <label style="width:90px;">气象站名称:</label>
@@ -52,7 +52,7 @@
                     min-width="110">
                     </el-table-column>
                     <el-table-column
-                    prop="concentratorSN"
+                    prop="concentratorSn"
                     align='center'
                     label="集中器标识"
                     min-width="120">
@@ -132,7 +132,7 @@
                     align='center'
                     min-width="120">
                         <template slot-scope="scope">
-                            <el-button @click="historicalData(scope.row.concentratorSN)" type="primary" size='small'>历史数据</el-button>
+                            <el-button @click="historicalData(scope.row.concentratorSn)" type="primary" size='small'>历史数据</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -158,13 +158,13 @@ export default {
     data () {
         return {
             serverurl:localStorage.serverurl,
-            deliverySensor:false,
+            envControl:false,
             tableData:[],
             site:[],
             pageSize:10,
             pageIndex:1,
             total:50,
-            concentratorSN:'',
+            concentratorSn:'',
             nickName:'',
             options:[],
             modelId:'',
@@ -191,14 +191,12 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/model/getModel',
+                url:that.serverurl+'/v1/solin/sensor/model',
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    modelType:'3'
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
-                        that.options = data.result.models
+                        that.options = data.result.list
                     }else{
                         that.errorCode2(data.errorCode)
                     }
@@ -220,14 +218,15 @@ export default {
                 arr.push(this.site[i].id)
             }
             $.ajax({
-                type:'get',
+                type:'post',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/envData/issueQueryData',
+                url:that.serverurl+'/v1/solin/sensor/env/control',
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    ids:arr.join(',')
-                },
+                data:JSON.stringify({
+                    command:'1',
+                    envs:arr
+                }),
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.$message({
@@ -246,7 +245,7 @@ export default {
         //查看历史数据
         historicalData(val){
             console.log(val)
-            sessionStorage.concentratorSN = val
+            sessionStorage.concentratorSn = val
             this.$router.push({'path':'/historicalData'})
         },
         ready(){
@@ -256,15 +255,16 @@ export default {
                 size:that.pageSize,
                 poleId:'',
                 projectId:sessionStorage.projectId,
-                concentratorSN:that.concentratorSN,
+                concentratorSn:that.concentratorSn,
                 nickName:that.nickName,
-                modelId:that.modelId
+                modelId:that.modelId,
+                dataType:1,
             }
             $.ajax({
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/envSensors/getAssociated',
+                url:that.serverurl+'/v1/solin/sensor/env',
                 contentType:'application/json;charset=UTF-8',
                 data:data,
                 success:function(data){
@@ -291,7 +291,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/privilege/getMyOperatMenu',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     menuId:sessionStorage.menuId3
@@ -299,8 +299,8 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
-                            if(data.result.operats[i].code=='deliverySensor'){
-                                that.deliverySensor = true
+                            if(data.result.operats[i].code=='envControl'){
+                                that.envControl = true
                             }
                         }
                     }else{

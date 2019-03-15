@@ -10,7 +10,7 @@ export default {
   created(){
     localStorage.serverurl = 'http://192.168.10.54:8080/SD-IOT-API'
     // localStorage.serverurl = 'http://192.168.70.10/solin-consumer'
-    // localStorage.serverurl = 'http://192.168.10.102/solin-consumer'
+    // localStorage.serverurl = 'http://192.168.10.10:8080/SD-IOT-API'
       
     // $.ajax({
     //   type:'post',
@@ -44,5 +44,12 @@ export default {
   /* -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; */
   color: #2c3e50;
+}
+.el-tabs__content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 30px;
+    bottom: 15px;
 }
 </style>

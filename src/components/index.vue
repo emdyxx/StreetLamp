@@ -61,70 +61,49 @@
     </div>
     <div class="index_center">
         <template v-for="item in menu">
-            <template v-if="item.code=='management'">
+            <template v-if="item.code=='managementService'">
                 <div class=index_center_top_usercentre @click="usermanage(item.id)" :id=item.id :key=item.id>
                     <img src="../assets/user.png" alt="">
                     <span>{{item.menuName}}</span>
                 </div>
-                
             </template>
-            <template v-if="item.code=='intelligentPole'">
+            <template v-if="item.code=='solinDeviceService'">
                 <div class='index_center_top_lampost' @click="lamppost(item.id)" :id=item.id :key=item.id>
                     <img src="../assets/smartpole.png" alt="">
                     <span>{{item.menuName}}</span>
                 </div>  
             </template>
-            <template v-if="item.code=='GISMap'">
+            <template v-if="item.code=='solinMapService'">
                 <div class='index_center_top_coordinate' @click="map(item.id)" :id=item.id :key=item.id>
                     <img src="../assets/coordinate.png" alt="">
                     <span>{{item.menuName}}</span>
                 </div>  
             </template>
-            <template v-if="item.code=='videoManagement'">
+            <template v-if="item.code=='videoService'">
                 <div class='index_center_bottom_video' @click="video(item.id)" :id=item.id :key=item.id>
                     <img src="../assets/video.png" alt="">
                     <span>{{item.menuName}}</span>
                 </div>  
             </template>
-            <template v-if="item.code=='WIFIManagement'">
+            <template v-if="item.code=='wifiService'">
                 <div class='index_center_bottom_wifi' @click="wifi(item.id)" :id=item.id :key=item.id>
                     <img src="../assets/wifi.png" alt="">
                     <span>{{item.menuName}}</span>
                 </div>  
             </template>
-            <template v-if="item.code=='broadcastManagement'">
+            <template v-if="item.code=='broadcastService'">
                 <div class='index_center_bottom_broadcast' @click="wifi(item.id)" :id=item.id :key=item.id>
                     <img src="../assets/broadcast.png" alt="">
                     <span>{{item.menuName}}</span>
                 </div>  
             </template>
+            <template v-if="item.code=='patrolService'">
+                <div class="index_center_bottom_Inspection" @click="Inspection(item.id)" :id=item.id :key=item.id>
+                    <img src="../assets/Inspection.png" alt="">
+                    <span>{{item.menuName}}</span>
+                </div>
+            </template>
         </template>
-        <!-- <div class="index_center_top">
-            <template v-for="item in menu">
-                <template v-if="item.code=='management'">
-                    <div class=index_center_top_usercentre :id=item.id @click="usermanage(item.id)">{{item.menuName}}</div>  
-                </template>
-                <template v-if="item.code=='intelligentPole'">
-                    <div class='index_center_top_lampost' :id=item.id @click="lamppost(item.id)">{{item.menuName}}</div>  
-                </template>
-                <template v-if="item.code=='GISMap'">
-                    <div class='index_center_top_coordinate' :id=item.id @click="map(item.id)">{{item.menuName}}</div>  
-                </template>
-            </template>
-        </div>
-        <div class="index_center_bottom">
-            <template v-for="item in menu">
-                <template v-if="item.code=='videoManagement'">
-                    <div class='index_center_bottom_video' :id=item.id @click="video(item.id)">{{item.menuName}}</div>  
-                </template>
-                <template v-if="item.code=='WIFIManagement'">
-                    <div class='index_center_bottom_wifi' :id=item.id @click="wifi(item.id)">{{item.menuName}}</div>  
-                </template>
-                <template v-if="item.code=='broadcastManagement'">
-                    <div class='index_center_bottom_broadcast' :id=item.id @click="broadcast(item.id)">{{item.menuName}}</div>  
-                </template>
-            </template>
-        </div> -->
     </div>
     <!-- 修改密码模态框 -->
     <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -214,15 +193,15 @@ export default {
                 return;
             }
             var data = {
-                newPassword:that.password2,
-                confirmPassword:that.password3,
-                oldPassword:that.password1
+                newPassword:md5(that.password2),
+                confirmPassword:md5(that.password3),
+                oldPassword:md5(that.password1)
             }
             $.ajax({
                 type:'post',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/user/updateUserPwd',
+                url:that.serverurl+'/v1/manage/owner/password',
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify(data),
                 success:function(data){
@@ -252,7 +231,7 @@ export default {
         lamppost(val){
             sessionStorage.menuId = val
             sessionStorage.headercolorType = '2'
-            sessionStorage.menuId3='10'
+            sessionStorage.menuId3='45'
             this.$router.push({'path':'/lamppost'})
         },
         //gis地图系统
@@ -276,6 +255,11 @@ export default {
             sessionStorage.menuId = val
             this.$router.push({'path':'/broadcast'})
         },
+        //巡检管理
+        Inspection(val){
+            // sessionStorage.menuId = val
+            this.$router.push({'path':'/Inspection'})
+        },
         //请求权限
         Jurisdiction(){
             var that = this;
@@ -283,19 +267,33 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/privilege/getMyMenu',
+                url:that.serverurl+'/v1/manage/menu/3',
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    parentId:'0'
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode==0){
                         that.menu = data.result.menus
+                        $.ajax({
+                            type:'get',
+                            async:true,
+                            dataType:'json',
+                            url:that.serverurl+'/v1/manage/menu/0',
+                            contentType:'application/json;charset=UTF-8',
+                            data:{},
+                            success:function(data){
+                                if(data.errorCode==0){
+                                    that.menu.unshift(data.result.menus[0])
+                                }else{
+                                    that.errorCode(data.errorCode)
+                                }
+                            },
+                        })
                     }else{
                         that.errorCode(data.errorCode)
                     }
                 },
             })
+            
         },
         //请求用户基本信息
         ready(){
@@ -306,7 +304,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/user/getMyInformation',
+                url:that.serverurl+'/v1/manage/owner/information',
                 contentType:'application/json;charset=UTF-8',
                 data:{},
                 success:function(data){
@@ -348,19 +346,35 @@ export default {
 .index_top_right_img>img{width:90px;height: 90px;border-radius: 50%;}
 
 .index_center{position: absolute;top: 25%;left: 25%;width: 140px;height: 125px;}
-.index_center>div{width:140px;height: 125px;background-size:100% 100%;text-align: center;color: white;cursor: pointer;background-repeat: no-repeat;}
+.index_center>div{width:140px;height: 125px;background-size:100% 100%;text-align: center;color: white;cursor: pointer;background-repeat: no-repeat;position: absolute;}
+.index_center>div:hover{width:140px;height: 125px;background-size:100% 100%;text-align: center;color: white;cursor: pointer;background-repeat: no-repeat;position: absolute;}
 .index_center>div>span{position: absolute;bottom:5px;width: 100%;left: 0;}
 .index_center>div>img{width: 100px;height: 100px;}
 .index_center_top_usercentre{background: url('../assets/images/L-1-1.png');}
-.index_center_top_lampost{background: url('../assets/images/L-2-1.png');position: absolute;top: -65px;left: 110px;}
-.index_center_top_coordinate{background: url('../assets/images/L-3-1.png');position: absolute;top: 65px;left: 110px;}
+.index_center_top_usercentre:hover{background: url('../assets/images/L-1-2.png');}
+.index_center_top_lampost{background: url('../assets/images/L-2-1.png');}
+.index_center_top_lampost:hover{background: url('../assets/images/L-2-2.png');}
+.index_center_top_coordinate{background: url('../assets/images/L-3-1.png');}
+.index_center_top_coordinate:hover{background: url('../assets/images/L-3-2.png');}
 .index_center_top_coordinate>img{width: 90px !important;height: 90px !important;margin-top: 5px;}
-.index_center_bottom_video{background: url('../assets/images/L-4-1.png');position: absolute;top: 0;left: 220px;}
+.index_center_bottom_video{background: url('../assets/images/L-4-1.png');}
+.index_center_bottom_video:hover{background: url('../assets/images/L-4-2.png');}
 .index_center_bottom_video>img{width: 75px !important;height: 75px !important;margin-top: 15px;margin-left: 3px;}
-.index_center_bottom_wifi{background: url('../assets/images/L-5-1.png');position: absolute;top: -65px;left: 330px;}
+.index_center_bottom_wifi{background: url('../assets/images/L-5-1.png');}
+.index_center_bottom_wifi:hover{background: url('../assets/images/L-5-2.png');}
 .index_center_bottom_wifi>img{width: 95px !important;height: 95px !important;margin-top: 5px;}
-.index_center_bottom_broadcast{background: url('../assets/images/L-6-1.png');position: absolute;top: 65px;left: 330px;}
+.index_center_bottom_broadcast{background: url('../assets/images/L-6-1.png');}
+.index_center_bottom_broadcast:hover{background: url('../assets/images/L-6-2.png');}
 .index_center_bottom_broadcast>img{width: 77px !important;height: 77px !important;margin-top: 15px;margin-left: 10px;}
+.index_center_bottom_Inspection{background: url('../assets/images/L-7-1.png');}
+.index_center_bottom_Inspection:hover{background: url('../assets/images/L-7-2.png');}
+.index_center_bottom_Inspection>img{width: 77px !important;height: 77px !important;margin-top: 15px;margin-left: 0px;}
+.index_center>div:nth-of-type(2){top: -65px;left: 110px;}
+.index_center>div:nth-of-type(3){top: 65px;left: 110px;}
+.index_center>div:nth-of-type(4){top: 0;left: 220px;}
+.index_center>div:nth-of-type(5){top: -65px;left: 330px;}
+.index_center>div:nth-of-type(6){top: 65px;left: 330px;}
+.index_center>div:nth-of-type(7){top: 0px;left: 440px;}
 /* .index_center{margin: 40px auto;}
 .index_center div{margin-right: 30px;margin-left:30px;cursor: pointer;}
 .index_center div>img{transition: all 1S;-webkit-transition: all 1S;}

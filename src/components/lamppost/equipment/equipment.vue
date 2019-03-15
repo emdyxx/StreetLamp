@@ -21,7 +21,7 @@ export default {
         //初始化左侧树
         setTimeout(function(){
             that.readyLeft()
-        },800)
+        },500)
     },
     methods:{
         //请求左侧树
@@ -54,10 +54,10 @@ export default {
                         var jsonarray = eval('('+jsonstr+')');
                         $.ajax({
                             type:"GET",
-                            url:that.serverurl+'/privilege/getMyMenu',
+                            url:that.serverurl+'/v1/manage/menu/'+sessionStorage.menuId2,
                             dataType:"json",
                             async: false,
-                            data:{parentId:sessionStorage.menuId2},
+                            data:{},
                             success:function(data) {
                                 if(data.errorCode=='0'){
                                     var datas = [{
@@ -70,28 +70,57 @@ export default {
                                     var arr = {}
                                     for(var i=0;i<data.result.menus.length;i++){
                                         arr = {}
-                                        if(data.result.menus[i].code=='lampManage'){
+                                        if(data.result.menus[i].code=='solinLampManage'){
                                             arr.type = '3'
                                         }
-                                        if(data.result.menus[i].code=='screenManage'){
+                                        if(data.result.menus[i].code=='solinScreenManage'){
                                             arr.type = '4'
                                         }
-                                        if(data.result.menus[i].code=='sensorsManage'){
+                                        if(data.result.menus[i].code=='solinEnvManage'){
+                                            arr.type = '5'
+                                        }
+                                        if(data.result.menus[i].code=='solinLoraSensorsManage'){
                                             arr.type = '5'
                                         }
                                         arr.text = data.result.menus[i].menuName
                                         arr.id = data.result.menus[i].id
                                         datas[0].children.push(arr)
                                     }
-                                    jsonarray= datas;
-                                    if(sessionStorage.menuId3=='10'){
+                                    $.ajax({
+                                        type:"GET",
+                                        url:that.serverurl+'/v1/manage/menu/54',
+                                        dataType:"json",
+                                        async: false,
+                                        data:{},
+                                        success:function(data){
+                                            let array = [];
+                                            let data2 = {}
+                                            for(let i=0;i<data.result.menus.length;i++){
+                                                data2 = {}
+                                                data2.text = data.result.menus[i].menuName
+                                                data2.id = data.result.menus[i].id
+                                                array.push(data2)
+                                            }
+                                            for(let j=0;j<datas[0].children.length;j++){
+                                                if(datas[0].children[j].id=='54'){
+                                                    datas[0].children[j].children = array
+                                                }
+                                            }
+                                            jsonarray= datas;
+                                        },
+                                    })
+                                    console.log(datas)
+                                    if(sessionStorage.menuId3=='51'){
                                         that.$router.push({'path':'lampslanterns'})
                                     }
-                                    if(sessionStorage.menuId3=='11'){
+                                    if(sessionStorage.menuId3=='52'){
                                         that.$router.push({'path':'advertisingScreens'})
                                     }
-                                    if(sessionStorage.menuId3=='25'){
+                                    if(sessionStorage.menuId3=='53'){
                                         that.$router.push({'path':'sensors'})
+                                    }
+                                    if(sessionStorage.menuId3=='54'){
+                                        that.$router.push({'path':'loraQuery'})
                                     }
                                 }else{
                                     that.errorCode(data.errorCode)
@@ -107,14 +136,20 @@ export default {
                 if(data.node.id==''||data.node.id==undefined){
                 }else{
                     sessionStorage.menuId3 = data.node.id
-                    if(data.node.id=='10'){
+                    if(data.node.id=='51'){
                         that.$router.push({'path':'lampslanterns'})
                     }
-                    if(data.node.id=='11'){
+                    if(data.node.id=='52'){
                         that.$router.push({'path':'advertisingScreens'})
                     }
-                    if(data.node.id=='25'){
+                    if(data.node.id=='53'){
                         that.$router.push({'path':'sensors'})
+                    }
+                    if(data.node.id=='54'||data.node.id=='64'||data.node.id=='65'||data.node.id=='66'||data.node.id=='67'||data.node.id=='68'||data.node.id=='69'||data.node.id=='70'){
+                        that.$router.push({'path':'loading'})
+                        setTimeout(function(){
+                            that.$router.push({'path':'loraQuery'})
+                        },200)
                     }
                 }
             });

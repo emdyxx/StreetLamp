@@ -19,14 +19,14 @@
             <!-- <template v-if="item.code=='poleOverview'">
               <div @click="headercolor(1,item.id)" :class="headercolorType=='1'?'header_center_color':''">灯杆概览</div>
             </template> -->
-            <template v-if="item.code=='deviceManage'">
-              <div @click="headercolor(2,item.id)" :class="headercolorType=='2'?'header_center_color':''">设备管理</div>
+            <template v-if="item.code=='solinDeviceDeploy'">
+              <div @click="headercolor(2,item.id)" :class="headercolorType=='2'?'header_center_color':''">{{item.menuName}}</div>
             </template>
-            <template v-if="item.code=='deviceDeploy'">
-              <div @click="headercolor(3,item.id)" :class="headercolorType=='3'?'header_center_color':''">设备部署</div>
+            <template v-if="item.code=='solinDeviceControl'">
+              <div @click="headercolor(3,item.id)" :class="headercolorType=='3'?'header_center_color':''">{{item.menuName}}</div>
             </template>
-            <template v-if="item.code=='deviceLog'">
-              <div @click="headercolor(4,item.id)" :class="headercolorType=='4'?'header_center_color':''">设备日志</div>
+            <template v-if="item.code=='solinDeviceLog'">
+              <div @click="headercolor(4,item.id)" :class="headercolorType=='4'?'header_center_color':''">{{item.menuName}}</div>
             </template>
           </template>
         </div>
@@ -70,15 +70,15 @@ export default {
       //   this.$router.push({'path':'/pandect'})
       // }
       if(val=='2'){
-        sessionStorage.menuId3='10'
-        this.$router.push({'path':'/equipment'})
-      }
-      if(val=='3'){
-        sessionStorage.menuId3='14'
+        sessionStorage.menuId3='45'
         this.$router.push({'path':'/deploy'})
       }
+      if(val=='3'){
+        sessionStorage.menuId3='51'
+        this.$router.push({'path':'/equipment'})
+      }
       if(val=='4'){
-        sessionStorage.menuId3='04'
+        sessionStorage.menuId3='56'
         this.$router.push({'path':'/DeviceLog'})
       }
     },
@@ -89,7 +89,7 @@ export default {
         type:'get',
         async:true,
         dataType:'json',
-        url:that.serverurl+'/project/getMyAllProject',
+        url:that.serverurl+'/v1/manage/owner/projects/type/1',
         contentType:'application/json;charset=UTF-8',
         data:{},
         success:function(data){
@@ -114,47 +114,41 @@ export default {
       sessionStorage.projectId = this.value2 
       this.$router.push({'path':'/Refresh'})
       setTimeout(function(){
-        if(sessionStorage.menuId3=='02'){
-            that.$router.push({'path':'/homepage'})
-        }
-        if(sessionStorage.menuId3=='03'){
-            that.$router.push({'path':'/deployhomepage'})
-        }
-        if(sessionStorage.menuId3=='04'){
-            that.$router.push({'path':'/DeviceLog'})
-        }
-        if(sessionStorage.menuId3=='10'){
-            that.$router.push({'path':'/lampslanterns'})
-        }
-        if(sessionStorage.menuId3=='11'){
-            that.$router.push({'path':'/advertisingScreens'})
-        }
-        if(sessionStorage.menuId3=='14'){
+        if(sessionStorage.menuId3=='45'){
             that.$router.push({'path':'/LampPole'})
         }
-        if(sessionStorage.menuId3=='15'){
+        if(sessionStorage.menuId3=='46'){
             that.$router.push({'path':'/Lampsandlanterns'})
         }
-        if(sessionStorage.menuId3=='16'){
+        if(sessionStorage.menuId3=='47'){
             that.$router.push({'path':'/advertisingscreen'})
         }
-        if(sessionStorage.menuId3=='18'){
+        if(sessionStorage.menuId3=='48'){
             that.$router.push({'path':'/sensor'})
         }
-        if(sessionStorage.menuId3=='21'){
+        if(sessionStorage.menuId3=='49'){
+            that.$router.push({'path':'/loraSensor'})
+        }
+        if(sessionStorage.menuId3=='51'){
+            that.$router.push({'path':'/lampslanterns'})
+        }
+        if(sessionStorage.menuId3=='52'){
+            that.$router.push({'path':'/advertisingScreens'})
+        }
+        if(sessionStorage.menuId3=='53'){
+            that.$router.push({'path':'/sensors'})
+        }
+        if(sessionStorage.menuId3=='56'){
             that.$router.push({'path':'/LampPoleJournal'})
         }
-        if(sessionStorage.menuId3=='22'){
+        if(sessionStorage.menuId3=='57'){
             that.$router.push({'path':'/lampJournal'})
         }
-        if(sessionStorage.menuId3=='23'){
+        if(sessionStorage.menuId3=='58'){
             that.$router.push({'path':'/screenJournal'})
         }
-        if(sessionStorage.menuId3=='24'){
+        if(sessionStorage.menuId3=='59'){
             that.$router.push({'path':'/sensorJournal'})
-        }
-        if(sessionStorage.menuId3=='25'){
-            that.$router.push({'path':'sensors'})
         }
       },200)
     },
@@ -165,26 +159,24 @@ export default {
             type:'get',
             async:true,
             dataType:'json',
-            url:that.serverurl+'/privilege/getMyMenu',
+            url:that.serverurl+'/v1/manage/menu/'+sessionStorage.menuId,
             contentType:'application/json;charset=UTF-8',
-            data:{
-                parentId:sessionStorage.menuId
-            },
+            data:{},
             success:function(data){
                 if(data.errorCode==0){
                     that.menu = data.result.menus
                     if(sessionStorage.menuId2==''||sessionStorage.menuId2==undefined||sessionStorage.menuId2==null){
                       sessionStorage.menuId2 = data.result.menus[0].id
-                      if(data.result.menus[0].id=='8'){
+                      if(data.result.menus[0].id=='34'){
                         sessionStorage.headercolorType = '2'
-                        sessionStorage.menuId3 = '10'
-                        that.$router.push({'path':'/equipment'})
-                      }
-                      if(data.result.menus[0].id=='9'){
-                        sessionStorage.headercolorType = '3'
+                        sessionStorage.menuId3 = '45'
                         that.$router.push({'path':'/deploy'})
                       }
-                      if(data.result.menus[0].id=='20'){
+                      if(data.result.menus[0].id=='35'){
+                        sessionStorage.headercolorType = '3'
+                        that.$router.push({'path':'/equipment'})
+                      }
+                      if(data.result.menus[0].id=='36'){
                         sessionStorage.headercolorType = '4'
                         that.$router.push({'path':'/DeviceLog'})
                       }

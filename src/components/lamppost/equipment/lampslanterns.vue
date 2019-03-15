@@ -2,19 +2,17 @@
     <div class="lampslanterns">
         <!-- 灯具 -->
         <div class="lampslanterns_top">
-            <!-- <el-button v-if="turnOnLight" @click="switchOff('1')" type="primary" size='small'>开灯</el-button>
-            <el-button v-if="turnOffLight" @click="switchOff('2')" type="primary" size='small'>关灯</el-button> -->
             <el-dropdown style="margin-left:10px;" @command='operation'>
                 <el-button type="primary" size='small' style="width:85px;">
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown"> 
-                    <el-dropdown-item v-if="turnOnLight" command='1'>开灯</el-dropdown-item>
-                    <el-dropdown-item v-if="turnOffLight" command='2'>关灯</el-dropdown-item>
-                    <el-dropdown-item v-if="refreshStatus" command='3'>刷新状态</el-dropdown-item>
+                    <el-dropdown-item v-if="lampControl" command='1'>开灯</el-dropdown-item>
+                    <el-dropdown-item v-if="lampControl" command='2'>关灯</el-dropdown-item>
+                    <el-dropdown-item v-if="lampControl" command='3'>刷新状态</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>    
-            <el-dropdown v-if="dimming" style="margin-left:10px;" @command='dropdown'>
+            <el-dropdown v-if="lampControl" style="margin-left:10px;" @command='dropdown'>
                 <el-button type="primary" size='small' style="width:85px;">
                     调光<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
@@ -31,10 +29,16 @@
                     <el-dropdown-item command='1'>10%</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <el-button v-if="strategyManagement" @click='switchOff(6)' type="primary" size='small' style="margin-left:10px;">下发策略</el-button>
-            <!-- <el-button v-if="refreshStatus" @click="switchOff('4')" type="primary" size='small' style="margin-left:10px;">刷新状态</el-button> -->
-            <el-button v-if="strategyManagement" @click="switchOff('5')" type="primary" size='small' style="margin-left:10px;">策略管理</el-button>
-            <el-button @click="switchOff('7')" type="primary" size='small' style="margin-left:10px;">清空策略</el-button>
+            <el-dropdown style="margin-left:10px;" @command='switchOff' v-if="viewLampStrategy">
+                <el-button type="primary" size='small' style="width:85px;">
+                    策略<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown"> 
+                    <el-dropdown-item v-if="viewLampStrategy" command='5'>策略管理</el-dropdown-item>
+                    <el-dropdown-item v-if="viewLampStrategy" command='6'>单灯策略</el-dropdown-item>
+                    <el-dropdown-item v-if="viewLampStrategy" command='7'>群组策略</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>   
         </div>
         <div class="lampslanterns_bottom">
             <div class="lampslanterns_bottom_top">
@@ -196,10 +200,11 @@
                     <div class="modal-body">
                         <div class="strategy">
                             <div class="strategy_top">
-                                <el-button v-if="strategyType=='0'" @click='strategy(1)' type="primary" size='small'>添加策略</el-button>
-                                <el-button v-if="strategyType=='0'" @click='strategy(2)' type="primary" size='small'>修改策略</el-button>
-                                <el-button v-if="strategyType=='0'" @click='strategy(3)' type="primary" size='small'>删除策略</el-button>
+                                <el-button v-if="strategyType=='0'&&addLampStrategy==true" @click='strategy(1)' type="primary" size='small'>添加策略</el-button>
+                                <el-button v-if="strategyType=='0'&&editLampStrategy==true" @click='strategy(2)' type="primary" size='small'>修改策略</el-button>
+                                <el-button v-if="strategyType=='0'&&delLampStrategy==true" @click='strategy(3)' type="primary" size='small'>删除策略</el-button>
                                 <el-button v-if="strategyType=='1'" @click='strategy(4)' type="primary" size='small'>下发策略</el-button>
+                                <el-button v-if="strategyType=='1'" @click='strategy(6)' type="primary" size='small'>清空策略</el-button>
                             </div>
                             <div class="strategy_bottom">
                                 <el-table
@@ -358,19 +363,135 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
+        <!-- 群组策略 -->
+        <div class="modal fade" id="GroupStrategy" style="width:650px;border:none;margin: 0 auto;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">群组策略</h4>
+                    </div>
+                    <div class="modal-body">
+                        <el-tabs v-model="GroupStrategyType" type="card" @tab-click="GroupStrategyClick">
+                            <el-tab-pane label="集中器" name="0">
+                                <p>请选中集中器:</p>
+                                <div style="width:100%;height:200px;">
+                                    <el-table
+                                        :data="myModaltableData"
+                                        @row-click="clickRow3" 
+                                        ref="myModalmoviesTable"
+                                        border
+                                        stripe
+                                        size='small'
+                                        slot="empty"
+                                        tooltip-effect="dark"
+                                        @selection-change="myModalChange"
+                                        style="width: 100%;overflow:auto;max-height:158px;margin-bottom:10px;margin-top:10px;">
+                                        <el-table-column
+                                        type="selection"
+                                        align='center'
+                                        width="55">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="nickName"
+                                        align='center'
+                                        label="集中器名字"
+                                        min-width="100">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="concentratorSn"
+                                        align='center'
+                                        label="集中器序列号"
+                                        min-width="100">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="concentratorSn"
+                                        align='center'
+                                        label="当前策略"
+                                        :formatter="formatRole"
+                                        xshow-overflow-tooltip>
+                                        </el-table-column>
+                                    </el-table>
+                                    <div class="block">
+                                        <el-pagination
+                                        background
+                                        @size-change="myModalsizechange"
+                                        @current-change="myModalcurrentchange"
+                                        :current-page="myModalpageIndex"
+                                        :page-sizes="[10, 20, 30, 50]"
+                                        :page-size="myModalpageSize"
+                                        layout="total, sizes, prev, pager, next, jumper"
+                                        :total="myModaltotal">
+                                        </el-pagination>
+                                    </div>
+                                </div>
+                                <p>请选择策略:</p>
+                                <div style="width:100%;height:200px;">
+                                    <el-table
+                                        :data="tableData2"
+                                        @row-click="clickRow4" 
+                                        ref="moviesTable4"
+                                        border
+                                        stripe
+                                        size='small'
+                                        tooltip-effect="dark"
+                                        @selection-change="SelectionChange2"
+                                        style="max-height:158px;overflow:auto;margin-bottom:10px;">
+                                        <el-table-column
+                                        type="selection"
+                                        align='center'
+                                        width="55">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="strategyName"
+                                        align='center'
+                                        label="策略名称"
+                                        width="152">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="expire"
+                                        align='center'
+                                        label="策略时效"
+                                        xshow-overflow-tooltip>
+                                        </el-table-column>
+                                    </el-table>
+                                    <div class="block">
+                                        <el-pagination
+                                        background
+                                        @size-change="sizechange2"
+                                        @current-change="currentchange2"
+                                        :current-page="pageIndex2"
+                                        :page-sizes="[10, 20, 30, 50]"
+                                        :page-size="pageSize2"
+                                        layout="total, sizes, prev, pager, next, jumper"
+                                        :total="total2">
+                                        </el-pagination>
+                                    </div>
+                                </div>
+                                <div style="width:100%;height:auto;text-align:center;margin-top:10px;">
+                                    <el-button @click="GroupStrategySubmit(0)" type="primary" size="small">下发</el-button>
+                                    <el-button @click="GroupStrategySubmit(1)" type="primary" size="small">清空策略</el-button>
+                                </div>
+                            </el-tab-pane>
+                            <el-tab-pane label="分组" name="1">配置管理</el-tab-pane>
+                        </el-tabs>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
     </div>
 </template>
 <script>
 export default {
     name: 'lampslanterns',
     data () {
-        return {
+         return{
             serverurl:localStorage.serverurl,
-            turnOnLight:false,
-            turnOffLight:false,
-            dimming:false,
-            refreshStatus:false,
-            strategyManagement:false,
+            lampControl:false,
+            viewLampStrategy:false,
+            addLampStrategy:false,
+            editLampStrategy:false,
+            delLampStrategy:false,
             nickName:'',
             serialNumber:'',
             options:[{value: '1',label: '在线'},{value: '0',label: '离线'}],
@@ -409,6 +530,13 @@ export default {
             maxbrightness:100,
             timer:'',//时间节点
             strategyType:'',
+            // 群组策略参数
+            GroupStrategyType:"0",
+            myModaltableData:[],
+            myModalSite:[],
+            myModalpageIndex:1,
+            myModalpageSize:10,
+            myModaltotal:10,
         }
     },
     mounted(){
@@ -431,6 +559,12 @@ export default {
         },
         clickRow2(row){
             this.$refs.moviesTable2.toggleRowSelection(row)
+        },
+        clickRow3(row){
+            this.$refs.myModalmoviesTable.toggleRowSelection(row)
+        },
+        clickRow4(row){
+            this.$refs.moviesTable4.toggleRowSelection(row)
         },
         options1Change(){
             if(this.value1=='0'){
@@ -511,7 +645,7 @@ export default {
             var data = {
                 "brightness": val*10,
                 'command':3,
-                "lampIds": lampIds.join(','),
+                "lamps": lampIds,
                 projectId:sessionStorage.projectId
             }
             this.$confirm('确认调节光亮度为'+val*10+'%', '提示', {
@@ -523,7 +657,7 @@ export default {
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/lampControl/controlLamp',
+                    url:that.serverurl+'/v1/solin/lighting/control',
                     contentType:'application/json;charset=UTF-8',
                     data:JSON.stringify(data),
                     success:function(data){
@@ -571,7 +705,7 @@ export default {
                 }
                 var data = {
                     "command": val,
-                    "lampIds": lampIds.join(','),
+                    "lamps": lampIds,
                     projectId:sessionStorage.projectId
                 }
                 this.$confirm('确认进行此操作', '提示', {
@@ -583,7 +717,7 @@ export default {
                         type:'post',
                         async:true,
                         dataType:'json',
-                        url:that.serverurl+'/lampControl/controlLamp',
+                        url:that.serverurl+'/v1/solin/lighting/control',
                         contentType:'application/json;charset=UTF-8',
                         data:JSON.stringify(data),
                         success:function(data){
@@ -625,14 +759,14 @@ export default {
                 }
                 var data = {
                     "command": 4,
-                    "lampIds": lampIds.join(','),
+                    "lamps": lampIds,
                     projectId:sessionStorage.projectId
                 }
                 $.ajax({
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/lampControl/controlLamp',
+                    url:that.serverurl+'/v1/solin/lighting/control',
                     contentType:'application/json;charset=UTF-8',
                     data:JSON.stringify(data),
                     success:function(data){
@@ -651,7 +785,7 @@ export default {
                 })
             }
         },
-        // 策略管理/下发策略/策略清空
+        //点击 策略管理/单灯策略/群组策略
         switchOff(val){
             var that = this
             var lampIds = []
@@ -695,129 +829,157 @@ export default {
                 $('#myModal').css("overflow", "hidden")
             }
             if(val=='7'){
-                if(this.site.length==0){
-                    that.$message({
-                        message: '请选择灯具进行操作!',
+                $('#GroupStrategy').modal('show')
+                this.GroupStrategyClick()
+            }
+        },
+        // 群组策略标签页切换
+        GroupStrategyClick(){
+            var that = this;
+            console.log(that.GroupStrategyType)
+            if(that.GroupStrategyType=='0'){
+                //请求集中器列表信息
+                that.ConcentratorManagement()
+                //请求策略列表信息
+                that.strategyData()
+            }
+        },
+        //群组策略-集中器
+        myModalChange(val){this.myModalSite = val},
+        myModalsizechange(val){this.myModalpageSize = val;},
+        myModalcurrentchange(val){this.myModalpageIndex = val;},
+        //请求集中器列表
+        ConcentratorManagement(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/lighting/concentrator',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    nickName:'',
+                    concentratorSn:'',
+                    page:that.myModalpageIndex,
+                    size:that.myModalpageSize,
+                    projectIds:sessionStorage.projectId,
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                       that.myModaltableData = data.result.list
+                       that.myModaltotal = data.result.total
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
+        //群组策略下发/清空策略
+        GroupStrategySubmit(val){
+            var that = this;
+            if(val=='0'){
+                if(that.myModalSite.length==0||that.myModalSite.length>1){
+                    this.$message({
+                        message:'请选中单个集中器进行下发!',
                         type: 'error'
-                    });
+                    })
+                    return;
+                }
+                if(that.site2.length==0||that.site2.length>1){
+                    this.$message({
+                        message:'请选中单个策略进行下发!',
+                        type: 'error'
+                    })
                     return;
                 }
                 var data = {}
-                var lampId = []
-                for(var i=0;i<that.site.length;i++){
-                    lampId.push(that.site[i].id)
-                }
-                data.lampIds = lampId.join(',')
+                data.command = '1'
+                data.concentratorId = that.myModalSite[0].id
+                data.lampStrategyId = that.site2[0].id
                 $.ajax({
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/lampStrategy/resetLampStrategy',
-                    data:data,
+                    url:that.serverurl+'/v1/solin/lighting/concentrator/strategy',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
                     success:function(data){
                         if(data.errorCode=='0'){
                             that.$message({
-                                message: '策略清空成功',
+                                message: '下发成功!',
                                 type: 'success'
                             });
-                            that.ready()
+                            that.ConcentratorManagement()
                         }else{
                             that.errorCode2(data.errorCode)
                         }
                     }
                 })
             }
-        },
-        // 策略保存
-        addSubmit(){
-            var that = this;
-            var url = ''
-            var data = {
-                strategyName:that.data.strategyName,
-                expire:that.data.expire,
-                strategyList:[],
-            }
-            if(that.data.strategyName==''){
-                this.$message({
-                    message: '必填字段不能为空!',
-                    type: 'error'
-                });
-                return; 
-            }
-            if(that.tableData3.length==0){
-                this.$message({
-                    message: '策略时间节点不能为空!',
-                    type: 'error'
-                });
-                return; 
-            }
-            if(data.expire==''||data.expire==null||data.expire==undefined){
-                data.expire = ''
-            }
-            data.strategyList = that.tableData3
-            data.projectId=sessionStorage.projectId
-            if(this.type3 =='0'){url='/lampStrategy/addLampStrategy'}
-            if(this.type3 =='1'){url='/lampStrategy/updateLampStrategy';data.id=that.site2[0].id;}
-            $.ajax({
-                type:'post',
-                async:true,
-                dataType:'json',
-                url:that.serverurl+url,
-                contentType:'application/json;charset=UTF-8',
-                data:JSON.stringify(data),
-                success:function(data){
-                    if(data.errorCode=='0'){
-                        that.$message({
-                            message: '保存成功!',
-                            type: 'success'
-                        });
-                        $('#myModal2').modal('hide')
-                        that.strategyData()
-                    }else{
-                        that.errorCode2(data.errorCode)
-                    }
+            if(val=='1'){
+                if(that.myModalSite.length==0||that.myModalSite.length>1){
+                    this.$message({
+                        message:'请选中单个集中器进行清空!',
+                        type: 'error'
+                    })
+                    return;
                 }
-            })
+                var data = {}
+                data.command = '2'
+                data.concentratorId = that.myModalSite[0].id
+                this.$confirm('是否恢复感光模式?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    data.lightSense = '1'
+                    $.ajax({
+                        type:'post',
+                        async:true,
+                        dataType:'json',
+                        url:that.serverurl+'/v1/solin/lighting/concentrator/strategy',
+                        contentType:'application/json;charset=UTF-8',
+                        data:JSON.stringify(data),
+                        success:function(data){
+                            if(data.errorCode=='0'){
+                                that.$message({
+                                    message: '策略清空成功',
+                                    type: 'success'
+                                });
+                                that.ConcentratorManagement()
+                            }else{
+                                that.errorCode2(data.errorCode)
+                            }
+                        }
+                    })
+                }).catch(() => {
+                    data.lightSense = '0'
+                    $.ajax({
+                        type:'post',
+                        async:true,
+                        dataType:'json',
+                        url:that.serverurl+'/v1/solin/lighting/concentrator/strategy',
+                        contentType:'application/json;charset=UTF-8',
+                        data:JSON.stringify(data),
+                        success:function(data){
+                            if(data.errorCode=='0'){
+                                that.$message({
+                                    message: '策略清空成功',
+                                    type: 'success'
+                                });
+                                that.ConcentratorManagement()
+                            }else{
+                                that.errorCode2(data.errorCode)
+                            }
+                        }
+                    })    
+                });
+            }
         },
-        // 获取策略列表
-        strategyData(){
-            var that = this;
-            $.ajax({
-                type:'get',
-                async:true,
-                dataType:'json',
-                url:that.serverurl+'/lampStrategy/getLampStrategyList',
-                contentType:'application/json;charset=UTF-8',
-                data:{
-                    page:that.pageIndex2,
-                    rows:that.pageSize2,
-                    strategyName:'',
-                    projectId:sessionStorage.projectId
-                },
-                success:function(data){
-                    if(data.errorCode=='0'){
-                        that.tableData2 = data.result.list
-                        that.total2 = data.result.total
-                    }else{
-                        that.errorCode2(data.errorCode)
-                    }
-                }
-            })
-        },
-        SelectionChange2(val){
-            this.site2=val;
-        },
-        sizechange2(val){
-            this.pageSize2 = val;
-            this.strategyData()
-        },
-        currentchange2(val){
-            this.pageIndex2 = val;
-            this.strategyData()
-        },
-        // 策略管理列表  增加/删除/修改/下发/查看详情
+        // 策略管理列表  增加/删除/修改/查看详情/清空策略
         strategy(val,datas){
             var that = this
+            //增加
             if(val=='1'){
                 $('#myModal2').modal('show')
                 this.datetimeType = false
@@ -834,6 +996,7 @@ export default {
                 });
                 $('#myModal').css("overflow", "hidden")
             }
+            //修改
             if(val=='2'){
                 if(this.site2.length==0||this.site2.length>=2){
                     this.$message({
@@ -869,7 +1032,7 @@ export default {
                     arr.push(this.site2[i].id)
                 }
                 var data = {
-                    ids:arr.join(','),
+                    strategys:arr,
                 }
                 if(this.site2.length==0){
                     that.$message({
@@ -887,9 +1050,9 @@ export default {
                         type:'post',
                         async:true,
                         dataType:'json',
-                        url:that.serverurl+'/lampStrategy/deleteLampStrategy',
-                        // contentType:'application/json;charset=UTF-8',
-                        data:data,
+                        url:that.serverurl+'/v1/solin/lighting/strategy/deletes',
+                        contentType:'application/json;charset=UTF-8',
+                        data:JSON.stringify(data),
                         success:function(data){
                             if(data.errorCode=='0'){
                                 that.$message({
@@ -931,7 +1094,8 @@ export default {
                 for(var i=0;i<that.site.length;i++){
                     arr.push(that.site[i].id)
                 }
-                data.lampIds = arr.join(',')
+                data.command = '1'
+                data.lamps = arr
                 data.lampStrategyId  = that.site2[0].id
                 that.$confirm('是否确认下发?', '提示', {
                     confirmButtonText: '确定',
@@ -942,8 +1106,9 @@ export default {
                         type:'post',
                         async:true,
                         dataType:'json',
-                        url:that.serverurl+'/lampControl/sendLampStrategy',
-                        data:data,
+                        url:that.serverurl+'/v1/solin/lighting/control/strategy',
+                        contentType:'application/json;charset=UTF-8',
+                        data:JSON.stringify(data),
                         success:function(data){
                             if(data.errorCode=='0'){
                                 that.$message({
@@ -974,24 +1139,179 @@ export default {
                 this.data.expire = datas.expire
                 this.tableData3 = JSON.parse(datas.strategy)
             }
+            //清空策略
+            if(val=='6'){
+                if(this.site.length==0){
+                    that.$message({
+                        message: '请选择灯具进行操作!',
+                        type: 'error'
+                    });
+                    return;
+                }
+                var data = {}
+                var lampId = []
+                for(var i=0;i<that.site.length;i++){
+                    lampId.push(that.site[i].id)
+                }
+                data.command = '2'
+                data.lamps = lampId
+                this.$confirm('是否恢复感光模式?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    data.lightSense = '1'
+                    $.ajax({
+                        type:'post',
+                        async:true,
+                        dataType:'json',
+                        url:that.serverurl+'/v1/solin/lighting/control/strategy',
+                        contentType:'application/json;charset=UTF-8',
+                        data:JSON.stringify(data),
+                        success:function(data){
+                            if(data.errorCode=='0'){
+                                that.$message({
+                                    message: '策略清空成功',
+                                    type: 'success'
+                                });
+                                $('#myModal').modal('hide')
+                                that.ready()
+                            }else{
+                                that.errorCode2(data.errorCode)
+                            }
+                        }
+                    })
+                }).catch(() => {
+                    data.lightSense = '0'
+                    $.ajax({
+                        type:'post',
+                        async:true,
+                        dataType:'json',
+                        url:that.serverurl+'/v1/solin/lighting/control/strategy',
+                        contentType:'application/json;charset=UTF-8',
+                        data:JSON.stringify(data),
+                        success:function(data){
+                            if(data.errorCode=='0'){
+                                that.$message({
+                                    message: '策略清空成功',
+                                    type: 'success'
+                                });
+                                $('#myModal').modal('hide')
+                                that.ready()
+                            }else{
+                                that.errorCode2(data.errorCode)
+                            }
+                        }
+                    })    
+                });
+            }
+        },
+        // 策略保存
+        addSubmit(){
+            var that = this;
+            var url = ''
+            var type = ''
+            var data = {
+                strategyName:that.data.strategyName,
+                expire:that.data.expire,
+                strategyList:[],
+            }
+            if(that.data.strategyName==''){
+                this.$message({
+                    message: '必填字段不能为空!',
+                    type: 'error'
+                });
+                return; 
+            }
+            if(that.tableData3.length==0){
+                this.$message({
+                    message: '策略时间节点不能为空!',
+                    type: 'error'
+                });
+                return; 
+            }
+            if(data.expire==''||data.expire==null||data.expire==undefined){
+                data.expire = ''
+            }
+            data.strategyList = that.tableData3
+            data.projectId=sessionStorage.projectId
+            if(this.type3 =='0'){url='/v1/solin/lighting/strategy';type = 'post';}
+            if(this.type3 =='1'){url='/v1/solin/lighting/strategy';type = 'put';data.id=that.site2[0].id;}
+            $.ajax({
+                type:type,
+                async:true,
+                dataType:'json',
+                url:that.serverurl+url,
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '保存成功!',
+                            type: 'success'
+                        });
+                        $('#myModal2').modal('hide')
+                        that.strategyData()
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
+        // 获取策略列表
+        strategyData(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/lighting/strategy',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    page:that.pageIndex2,
+                    size:that.pageSize2,
+                    strategyName:'',
+                    projectIds:sessionStorage.projectId
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tableData2 = data.result.list
+                        that.total2 = data.result.total
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
+        SelectionChange2(val){
+            this.site2=val;
+        },
+        sizechange2(val){
+            this.pageSize2 = val;
+            this.strategyData()
+        },
+        currentchange2(val){
+            this.pageIndex2 = val;
+            this.strategyData()
         },
         // 初始化列表
         ready(){
             var that = this;
             var data = {
                 page:that.pageIndex,
-                rows:that.pageSize,
+                size:that.pageSize,
                 nickName:that.nickName,
                 serialNumber:that.serialNumber,
                 poleId:'',
-                projectId:sessionStorage.projectId,
-                online:that.value
+                projectIds:sessionStorage.projectId,
+                online:that.value,
+                dataType:'1'
             }
             $.ajax({
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/lamp/getLampList',
+                url:that.serverurl+'/v1/solin/lighting/lamp',
                 contentType:'application/json;charset=UTF-8',
                 data:data, 
                 success:function(data){
@@ -1025,28 +1345,26 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/privilege/getMyOperatMenu',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    menuId:sessionStorage.menuId3
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
-                            if(data.result.operats[i].code=='turnOnLight'){
-                                that.turnOnLight = true
+                            if(data.result.operats[i].code=='lampControl'){
+                                that.lampControl = true
                             }
-                            if(data.result.operats[i].code=='turnOffLight'){
-                                that.turnOffLight = true
+                            if(data.result.operats[i].code=='viewLampStrategy'){
+                                that.viewLampStrategy = true
                             }
-                            if(data.result.operats[i].code=='dimming'){
-                                that.dimming = true
+                            if(data.result.operats[i].code=='addLampStrategy'){
+                                that.addLampStrategy = true
                             }
-                            if(data.result.operats[i].code=='refreshStatus'){
-                                that.refreshStatus = true
+                            if(data.result.operats[i].code=='editLampStrategy'){
+                                that.editLampStrategy = true
                             }
-                            if(data.result.operats[i].code=='strategyManagement'){
-                                that.strategyManagement = true
+                            if(data.result.operats[i].code=='delLampStrategy'){
+                                that.delLampStrategy = true
                             }
                         }
                     }else{
@@ -1082,4 +1400,7 @@ export default {
 .search>label{width: 85px;}
 .search>input{width: 146px;margin-top:7px;height: 34px;}
 .search>div{width: 106px;}
+</style>
+<style>
+.el-tabs__content{position: relative;top:0;height: 505px;}
 </style>

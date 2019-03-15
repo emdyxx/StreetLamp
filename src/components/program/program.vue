@@ -1,9 +1,10 @@
 <template>
     <div class="program">
         <div class="program_top">
-            <el-button @click="program(0)" type="primary" size='small'>创建简易节目</el-button>
-            <el-button @click="program(1)" type="primary" size='small'>创建高级节目</el-button>
-            <el-button @click="primary_delete" type="primary" size='small'>删除节目</el-button>
+            <el-button v-if="addProgram" @click="program(0)" type="primary" size='small'>创建简易节目</el-button>
+            <el-button v-if="addProgram" @click="program(1)" type="primary" size='small'>创建高级节目</el-button>
+            <el-button v-if="delProgram" @click="primary_delete" type="primary" size='small'>删除节目</el-button>
+            <el-button @click="Backoff" style="position:absolute;right:20px;top:4px;" type="warning" icon="el-icon-arrow-left" size='small'>返回</el-button>
         </div>
         <div class="program_bottom">
             <el-table
@@ -40,13 +41,13 @@
                 prop="width"
                 align='center'
                 label="宽(像素)"
-                min-width="120">
+                min-width="80">
                 </el-table-column>
                 <el-table-column
                 prop="height"
                 align='center'
                 label="高(像素)"
-                min-width="120">
+                min-width="80">
                 </el-table-column>
                 <el-table-column
                 prop="createTime"
@@ -57,9 +58,10 @@
                 <el-table-column
                 align='center'
                 label="操作"
-                min-width="100">
+                min-width="180">
                     <template slot-scope="scope">
-                        <el-button @click="modifyProgram(scope.row)" type="primary" size='small'>修改</el-button>
+                        <el-button v-if="editProgram" @click="modifyProgram(scope.row)" type="primary" size='mini'>修改</el-button>
+                        <el-button @click="Quick(scope.row)" type="primary" size='mini'>设为快捷任务</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -129,6 +131,9 @@ export default {
     name: 'program',
     data () {
         return {
+            addProgram:false,
+            editProgram:false,
+            delProgram:false,
             serverurl:localStorage.serverurl,
             tableData:[],
             site:[],
@@ -156,12 +161,13 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/program/getProgramList/'+that.noticeIndex+'/'+that.noticeSize,
+                url:that.serverurl+'/v1/solin/screen/program',
                 data:{
-                   programType:'',
-                   nickName:'',
-                   projectId:'1',
-                //    projectId:sessionStorage.projectId
+                    page:that.noticeIndex,
+                    size:that.noticeSize,
+                    programType:'',
+                    nickName:'',
+                    projectIds:sessionStorage.projectId
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -184,22 +190,23 @@ export default {
                 return
             }
             var array = []
+            var data = {}
             for(let i = 0;i<that.site.length;i++){
                 array.push(that.site[i].id)
             }
+            data.programs = array
             that.$confirm('是否删除所选节目？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
                 $.ajax({
-                    type:'delete',
+                    type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/v1/solin/program/deleteProgram',
-                    data:{
-                        ids:array.join(',')
-                    },
+                    url:that.serverurl+'/v1/solin/screen/program/deletes',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
                     success:function(data){
                         if(data.errorCode=='0'){
                             that.$message({
@@ -256,6 +263,65 @@ export default {
                 $('#myModal2').modal('show')
             }
         },
+        //设为快捷节目
+        Quick(val){
+            var that = this;
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/screen/task/shortcut',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify({
+                    programId:val.id,
+                    projectId:sessionStorage.projectId
+                }),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '删除成功!',
+                            type: 'success'
+                        });
+                        that.ready()
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
+        //返回
+        Backoff(){
+            this.$router.push({'path':'/advertisingScreens'})
+        },
+        //权限请求
+        Jurisdiction(){
+            var that = this
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
+                contentType:'application/json;charset=UTF-8',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='addProgram'){
+                                that.addProgram = true
+                            }
+                            if(data.result.operats[i].code=='editProgram'){
+                                that.editProgram = true
+                            }
+                            if(data.result.operats[i].code=='delProgram'){
+                                that.delProgram = true
+                            }
+                        }
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                }
+            })
+        },
     },
     created(){
         this.ready()
@@ -265,6 +331,6 @@ export default {
 <style scoped>
 .block{text-align: center;}
 .program{width: 100%;height: 100%;padding: 5px;}
-.program_top{width: 100%;height:46px;line-height:38px;padding-left:15px;border: 1px solid #cccccc;border-bottom: none;}
+.program_top{position: relative;width: 100%;height:46px;line-height:38px;padding-left:15px;border: 1px solid #cccccc;border-bottom: none;}
 .program_bottom{position: absolute;top:46px;bottom:5px;left:5px;right:5px;border: 1px solid #cccccc;padding:5px;}
 </style>

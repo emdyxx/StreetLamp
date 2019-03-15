@@ -1,4 +1,5 @@
 <template>
+    <!-- 高级节目 -->
     <div class="programSenior">
         <div class="programSenior_left">
             <div class="programSenior_left_top">
@@ -354,15 +355,14 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/media/getMediaList/'+that.mediaIndex+'/'+that.mediaSize,
+                url:that.serverurl+'/v1/solin/screen/media',
                 data:{
-                //    page:that.mediaIndex,
-                //    rows:that.mediaSize,
+                   page:that.mediaIndex,
+                   size:that.mediaSize,
                    audit:'1',
                    mediaType:'0',
                    nickName:'',
-                   projectId:'1'
-                //    projectId:sessionStorage.projectId
+                   projectIds:sessionStorage.projectId
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -400,15 +400,14 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/media/getMediaList/'+that.mediaIndex2+'/'+that.mediaSize2,
+                url:that.serverurl+'/v1/solin/screen/media',
                 data:{
-                //    page:that.mediaIndex2,
-                //    rows:that.mediaSize2,
+                   page:that.mediaIndex2,
+                   size:that.mediaSize2,
                    audit:'1',
                    mediaType:'1',
                    nickName:'',
-                   projectId:'1'
-                //    projectId:sessionStorage.projectId
+                   projectIds:sessionStorage.projectId
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -594,7 +593,7 @@ export default {
         },
         //右侧点击时间轴红线移动
         right_click(e){
-            var left = String(e.clientX-450+this.scrollLeft)
+            var left = String(e.clientX-450-210+this.scrollLeft)
             var array = left.split('')
             if(array[array.length-1]<5){
                 array[array.length-1] = 0
@@ -811,7 +810,7 @@ export default {
             var array = []
             for(var i=0;i<that.timeData.length;i++){
                 for(var j=0;j<that.timeData[i].site.length;j++){
-                    that.timeData[i].site[j].layer = i
+                    that.timeData[i].site[j].layer = i+1
                     that.timeData[i].site[j].sort = j
                     if(sessionStorage.programtype=='0'){
                         that.timeData[i].site[j].mediaId = that.timeData[i].site[j].id
@@ -824,10 +823,10 @@ export default {
                 }
             }
             if(sessionStorage.programtype=='0'){
-                url = '/v1/solin/program/addProgram';
+                url = '/v1/solin/screen/program';
                 type = 'post'
             }else{
-                url = '/v1/solin/program/updateProgram';
+                url = '/v1/solin/screen/program';
                 type = 'put'
                 data.id = sessionStorage.programId 
             }
@@ -868,7 +867,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/program/getProgramDetails/'+sessionStorage.programId,
+                url:that.serverurl+'/v1/solin/screen/program/information/'+sessionStorage.programId,
                 data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -886,12 +885,12 @@ export default {
                            length =  data.result.list[0].layer
                         }
                         that.timeData=[]
-                        for(let i=0;i<length+1;i++){
+                        for(let i=0;i<length;i++){
                             that.timeData.push({site:[]})
                         }
-                        for(let i = 0;i<length+1;i++){
+                        for(let i = 0;i<length;i++){
                             for(let j = 0;j<data.result.list.length;j++){
-                                if(data.result.list[j].layer==i){
+                                if(data.result.list[j].layer==i+1){
                                     if(data.result.list[j].type=='2'){
                                         data.result.list[j].mediaType = '2'
                                         data.result.list[j].nickName = '单行文本'
@@ -905,6 +904,7 @@ export default {
                                 }
                             }
                         }
+                        console.log(that.timeData)
                         setTimeout(() => {
                             $('.resizable').resizable({ 
                                 handles: 'e',
@@ -972,7 +972,7 @@ export default {
 .programSenior_left_bottom{position: absolute;top: 53px;width:100%;}
 .a_style{text-decoration: none;display: inline-block;width:100%;}
 .programSimple_li{padding-bottom: 10px;position: relative;}
-.programSimple_li>span{position: absolute;width:100px;background:#5bc0de;height:32px;color: white;line-height: 32px;text-align: center;border-top-right-radius:4px;border-bottom-right-radius:4px;cursor: pointer;}
+.programSimple_li>span{position: absolute;width:100px;background:#5bc0de;height:32px;color: white;line-height: 32px;text-align: center;border-top-right-radius:4px;border-bottom-right-radius:4px;cursor: pointer;overflow: hidden;}
 .programSenior_center_top{position: absolute;top: 10px;left: 250px;right:440px;height: 250px;}
 .heading_top{width: 100%;height: 50px;background: #d9edf7;border: 1px solid #bce8f1;border-top-left-radius: 4px;border-top-right-radius: 4px;color: #31708f;font-size: 14px;font-weight: 600;line-height: 45px;padding-left: 15px;}
 .heading_bottom{position: absolute;top: 50px;bottom:0;width:100%;border: 1px solid #bce8f1;border-top: none;}

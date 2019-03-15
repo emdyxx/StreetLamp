@@ -247,7 +247,9 @@ export default {
         }
     },
     mounted(){
-        
+        setTimeout(function(){
+            console.log($('.el-tabs__content'))
+        },200)
     },
     methods:{
         clickRow(row){
@@ -273,17 +275,17 @@ export default {
                 size:this.pageSize,
             }
             if(this.value3==null||this.value3==''||this.value3==undefined||this.value3.length==0){
-
+                
             }else{
                 data.beginTime=that.value3[0]
                 data.endTime=that.value3[1]
             }
             if(this.activeName=='0'){
-                url='/privilege/getLoginLogs'
+                url='/v1/manage/logs/login'
                 data.username = this.userName
             }
             if(this.activeName=='1'){
-                url='/privilege/getOperatLogs'
+                url='/v1/manage/logs/operat'
                 data.operatType=that.value,
                 data.operatModule=that.value2
             }
@@ -319,11 +321,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/privilege/getMyOperatMenu',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId2,
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    menuId:sessionStorage.menuId2
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
@@ -353,10 +353,10 @@ export default {
 .journal_top{height: 46px;border-bottom: none !important;display: flex;align-items: center;}
 .journal_top>div{margin-left: 15px;}
 .journal_top>button{height:33px;margin-left: 15px;}
-.journal_bottom{top: 56px;left:5px;right: 5px;bottom: 5px;padding: 5px;overflow: auto;position: absolute;}
+.journal_bottom{top: 56px;left:5px;right: 5px;bottom: 5px;position: absolute;}
 
 .search{display: flex;margin-left:10px;}
-.search>span{line-height: 30px;line-height: 45px;}
+.search>span{line-height: 45px;}
 .search>input{height: 32px !important;width: 110px;margin-top: 6px;height: 33px;padding: 0;}
 .search>div{height: 30px;width: 110px;}
 .block{text-align: center;}

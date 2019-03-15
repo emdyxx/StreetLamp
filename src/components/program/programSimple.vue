@@ -1,4 +1,5 @@
 <template>
+    <!-- 简易节目 -->
     <div class="programSimple">
         <div class="programSimple_left">
             <div class="top_style">
@@ -24,7 +25,7 @@
                                         </p>
                                         <p>
                                             <img :src=serverurl+item.mediaUrl alt="">
-                                        </p>
+                                        </p>    
                                         <p>
                                             <span>{{item.nickName}}</span>
                                             <span>{{item.mediaSizeKb}}</span>
@@ -33,7 +34,7 @@
                                 </ul>
                                 <el-pagination
                                     background
-                                    @current-change="currentchange"
+                                    @current-change="currentchange" 
                                     :current-page="mediaIndex"
                                     :pager-count="5"
                                     :page-size='mediaSize'
@@ -54,7 +55,7 @@
                         </div>
                         <div id="collapseTwo" class="panel-collapse collapse">
                             <div class="panel-body" style="max-height:750px;overflow:auto;">
-                                <ul style="list-style:none;">
+                                <ul style="list-style:none;padding-left: 0;">
                                     <li v-for="item in mediatableData2" :key=item.id :id=item.id class="programSimple_li">
                                         <p style="line-height: 150px;">
                                             <el-button @click="addmedia(item)" type="primary" icon="el-icon-plus" size='small'></el-button>
@@ -171,7 +172,6 @@ export default {
             checked:false,
             checkKey:[],
             previewData:'',
-            
         }
     },
     mounted(){},
@@ -183,15 +183,14 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/media/getMediaList/'+that.mediaIndex+'/'+that.mediaSize,
+                url:that.serverurl+'/v1/solin/screen/media',
                 data:{
-                //    page:that.mediaIndex,
-                //    rows:that.mediaSize,
+                   page:that.mediaIndex,
+                   size:that.mediaSize,
                    audit:'1',
                    mediaType:'0',
                    nickName:'',
-                   projectId:'1'
-                //    projectId:sessionStorage.projectId
+                   projectIds:sessionStorage.projectId
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -206,15 +205,14 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/media/getMediaList/'+that.mediaIndex2+'/'+that.mediaSize2,
+                url:that.serverurl+'/v1/solin/screen/media',
                 data:{
-                //    page:that.mediaIndex2,
-                //    rows:that.mediaSize2,
+                   page:that.mediaIndex2,
+                   size:that.mediaSize2,
                    audit:'1',
                    mediaType:'1',
                    nickName:'',
-                   projectId:'1'
-                //    projectId:sessionStorage.projectId
+                   projectId:sessionStorage.projectId
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -304,7 +302,7 @@ export default {
         //点击下载媒体
         Download(val){
             var that = this
-            window.open(that.serverurl+"/v1/solin/file/download?fileName="+that.serverurl+val)
+            window.open(that.serverurl+"/v1/solin/file/download?fileUrl="+that.serverurl+val)
         },
         //点击保存简易节目
         mediaSave(){
@@ -326,7 +324,7 @@ export default {
                 that.mediadata[i].exitEffect = 'None'
                 that.mediadata[i].exitEffectTimeSpan =  0
                 that.mediadata[i].height = 0
-                that.mediadata[i].layer = 0
+                that.mediadata[i].layer = 1
                 that.mediadata[i].marginLeft = 0
                 that.mediadata[i].programId = 0
                 that.mediadata[i].repeatPlay = true
@@ -347,18 +345,17 @@ export default {
                 }
             }
             if(sessionStorage.programtype=='0'){
-                url = '/v1/solin/program/addProgram'; 
+                url = '/v1/solin/screen/program'; 
                 type = 'post'
             }else{
-                url = '/v1/solin/program/updateProgram'
+                url = '/v1/solin/screen/program'
                 type = 'put'
                 data.id = sessionStorage.programId
             }
             data.width = sessionStorage.width;
             data.height = sessionStorage.height;
             data.nickName = that.programName;
-            // data.projectId = sessionStorage.projectId
-            data.projectId = '1';
+            data.projectId = sessionStorage.projectId
             data.programType = '0';
             data.programDetailsDtos = that.mediadata
             $.ajax({
@@ -388,7 +385,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/program/getProgramDetails/'+sessionStorage.programId,
+                url:that.serverurl+'/v1/solin/screen/program/information/'+sessionStorage.programId,
                 data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -422,8 +419,8 @@ export default {
 .a_style{text-decoration: none;display: inline-block;width:100%;}
 .programSimple_li{display: flex;border-top: 1px solid #cccccc;}
 .programSimple_li>p:nth-of-type(2){width:100px;height: 150px;margin-left: 20px;}
-.programSimple_li>p>img{width: 100%;height: 100%;}
-.programSimple_li>p:nth-of-type(3){margin-left: 20px;}
+.programSimple_li>p:nth-of-type(2)>img{width: 100%;height: 100%;}
+.programSimple_li>p:nth-of-type(3){margin-left: 20px;width: 120px;overflow: hidden;}
 .programSimple_li>p:nth-of-type(3)>span{display: block;height: 25px;line-height: 25px;font-size: 16px;padding-top: 15px;}
 .programSimple_center>div:nth-of-type(2){border: 1px solid #337ab7;height: 108px;border-bottom: none;padding: 15px 30px;}
 .programSimple_center>div:nth-of-type(3){width:100%;border: 1px solid #337ab7;position: absolute;top:151px;bottom: 0;border-top:2px solid #ddd;overflow: auto;}

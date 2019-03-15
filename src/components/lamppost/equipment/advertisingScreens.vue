@@ -2,19 +2,23 @@
     <!--广告屏 -->
     <div class="advertisingScreens">
         <div class="advertisingScreens_top">
-            <el-dropdown v-if="operation" trigger='click' @command="handleCommand">
+            <el-dropdown trigger='click' @command="handleCommand">
                 <el-button type="primary" size='small' style="width:125px;">
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="0">下发节目</el-dropdown-item>
-                    <el-dropdown-item command="1">开启屏幕</el-dropdown-item>
-                    <el-dropdown-item command="2">关闭屏幕</el-dropdown-item>
+                    <el-dropdown-item command="0">下发任务</el-dropdown-item>
+                    <el-dropdown-item v-if="operation" command="1">屏幕开关</el-dropdown-item>
+                    <el-dropdown-item v-if="operation" command="2">屏幕调光</el-dropdown-item>
+                    <el-dropdown-item v-if="operation" command="3">屏幕音量</el-dropdown-item>
+                    <el-dropdown-item v-if="operation" command="4">屏幕截图</el-dropdown-item>
+                    <el-dropdown-item v-if="operation" command="5">屏幕重启</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <el-button v-if="programManagement" type="primary" size='small' @click="notice" style="width:125px;margin-left:25px;">节目管理</el-button>
-            <el-button v-if="mediaLibrarys" type="primary" size='small' @click="mediaLibrary" style="width:125px;margin-left:25px;">媒体库</el-button>
-            <!-- <el-button type="primary" size='small' @click="readymeadia" style="width:125px;margin-left:25px;">初始化配置</el-button> -->
+            <el-button v-if="viewProgram" type="primary" size='small' @click="notice" style="width:125px;margin-left:25px;">节目管理</el-button>
+            <el-button v-if="viewMedia" type="primary" size='small' @click="mediaLibrary" style="width:125px;margin-left:25px;">媒体库</el-button>
+            <el-button v-if="viewTask" @click="taskManagement" type="primary" size='small' style="width:125px;margin-left:25px;">任务管理</el-button>
+            <el-button @click="update" type="primary" size='small' style="width:125px;margin-left:25px;">在线更新</el-button>
         </div>
         <div class="advertisingScreens_bottom">
             <div class="advertisingScreens_bottom_top">
@@ -94,14 +98,6 @@
                     min-width="110">
                     </el-table-column>
                     <el-table-column
-                    align='center'
-                    label="操作"
-                    min-width="130">
-                        <template slot-scope="scope">
-                            <el-button type="primary" size='mini' @click="status(scope.row)">节目下发进度</el-button>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
                     prop="remark"
                     label="备注"
                     align='center'
@@ -151,8 +147,8 @@
                                 :value="item.value">
                                 </el-option>
                             </el-select>
-                            <el-button @click="upload" type="primary" size='small' style="margin-left:30px;">上传</el-button>
-                            <el-button @click="mediaDelete" type="primary" size='small'>删除</el-button>
+                            <el-button v-if="addMedia" @click="upload" type="primary" size='small' style="margin-left:30px;">上传</el-button>
+                            <el-button v-if="delMedia" @click="mediaDelete" type="primary" size='small'>删除</el-button>
                         </div>
                         <div class="mediaLibrary_bottom">
                             <el-table
@@ -175,16 +171,20 @@
                                 align='center'
                                 label="文件别名"
                                 min-width="200">
-                                    <template slot-scope="scope">
+                                    <template slot-scope="scope" v-if="editMedia==true">
                                         <span v-if="!scope.row.isFocus">{{scope.row.nickName}}</span>
                                         <span v-if="!scope.row.isFocus" @click="handleEdit(scope.row)"><i class="el-icon-edit" style="font-size:18px;color:#409EFF;"></i></span>
                                         <span v-if="scope.row.isFocus==true" style="display: inline-block;">
                                             <input type="text" v-model="inputColumn" @blur='handleSave(scope.row)' style='width:110px;' class="form-control" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入文件别名">
                                         </span>
                                     </template>
+                                    <template slot-scope="scope" v-if="editMedia==false">
+                                        <span>{{scope.row.nickName}}</span>
+                                        
+                                    </template>
                                 </el-table-column>
                                 <el-table-column
-                                prop="mediaSizeKb"
+                                prop="mediaSize"
                                 align='center'
                                 label="文件大小"
                                 min-width="80">
@@ -201,12 +201,6 @@
                                 label="上传者"
                                 min-width="80">
                                 </el-table-column>
-                                <!-- <el-table-column
-                                prop="duration"
-                                align='center'
-                                label="审核者"
-                                width="80">
-                                </el-table-column> -->
                                 <el-table-column
                                 label="操作"
                                 align='center'
@@ -229,233 +223,6 @@
                                 </el-pagination>
                             </div>
                         </div>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div>
-        </div><!-- /.modal -->
-        <!-- 节目管理模态框 -->
-        <div class="modal fade" id="noticeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:800px;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">节目管理</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="notice_top">
-                           <el-button type="primary" @click="program(0)" size='small' style="width:100px;margin-left:10px;">创建节目</el-button>
-                           <el-button type="primary" @click="program(1)" size='small' style="width:100px;margin-left:10px;">编辑节目</el-button>
-                           <el-button type="primary" @click="program(2)" size='small' style="width:100px;margin-left:10px;">删除节目</el-button>
-                        </div>
-                        <div class="notice_bottom">
-                            <el-table
-                                :data="noticetableData"
-                                @row-click="clickRow3" 
-                                ref="moviesTable3" 
-                                border
-                                stripe
-                                size='small'
-                                tooltip-effect="dark"
-                                height='250'
-                                style="width: 100%;overflow:auto;max-height:80%;margin-bottom:10px;"
-                                @selection-change='noticeTableChange'>
-                                <el-table-column
-                                type="selection"
-                                align='center'
-                                width="55">
-                                </el-table-column>
-                                <el-table-column
-                                prop="nickName"
-                                align='center'
-                                label="名称"
-                                width="150">
-                                </el-table-column>
-                                <el-table-column
-                                align='center'
-                                label="类型"
-                                width="80">
-                                    <template slot-scope="scope">
-                                        <span v-if="scope.row.programType=='0'">简易节目</span>
-                                        <span v-if="scope.row.programType=='1'">高级节目</span>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                prop="width"
-                                align='center'
-                                label="宽(像素)"
-                                width="80">
-                                </el-table-column>
-                                <el-table-column
-                                prop="height"
-                                align='center'
-                                label="高(像素)"
-                                width="80">
-                                </el-table-column>
-                                <el-table-column
-                                prop="createTime"
-                                align='center'
-                                label="创建时间"
-                                width="322">
-                                </el-table-column>
-                            </el-table>
-                            <div class="block">
-                                <el-pagination
-                                background
-                                @size-change="sizechange2"
-                                @current-change="currentchange2"
-                                :current-page="noticeIndex"
-                                :page-sizes="[10, 20, 30, 50]"
-                                :page-size="noticeSize"
-                                layout="total, sizes, prev, pager, next, jumper"
-                                :total="noticeTotal">
-                                </el-pagination>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- <div class="modal-footer"> -->
-                        <!-- <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary">确定</button> -->
-                    <!-- </div> -->
-                </div><!-- /.modal-content -->
-            </div>
-        </div><!-- /.modal -->
-        <!-- 创建编辑节目 -->
-        <div class="modal fade" id="addprogram" style="width:1070px;"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:695px;overflow:auto;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="addprogramModalLabel">创建节目</h4>
-                    </div>
-                    <div class="modal-body" style="overflow:auto;">
-                        <div class="setPercentage" v-if="programDate.setProgramType==true">
-                            <span><i>*</i>节目名称:</span>
-                            <el-input v-model="programDate.programName" size='small' style="width:146px" placeholder="请输入节目名称"></el-input>
-                            <span style="margin-left:30px;"><i>*</i>类型:</span>
-                            <el-select v-model="programDate.programValue" size='small' style="width:146px" placeholder="请选择">
-                                <el-option
-                                    v-for="item in programType"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                            <br>
-                            <span><i>*</i>宽(像素):</span>
-                            <el-input v-model="programDate.programWidth" size='small' style="width:146px" placeholder="请输入宽"></el-input>
-                            <span style="margin-left:5px;"><i>*</i>高(像素):</span>
-                            <el-input v-model="programDate.programHeight" size='small' style="width:146px" placeholder="请输入高"></el-input>
-                        </div>
-                        <div class="el-upload__tip" v-if="programDate.setProgramType==true" style="text-align: center;">请谨慎设置节目宽高,须与屏幕宽高保持一致</div>
-                        <div class="setProgram" v-if="programDate.setProgramType==false">
-                            <div class="setProgram_left">
-                                <div class="setProgram_div_top">
-                                    <el-select v-model="setProgramValue" @change="setProgramChange" clearable size='small' style="width:80px;margin:2px 0 0 5px;">
-                                        <el-option
-                                        v-for="item in setProgramOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                        </el-option>
-                                    </el-select>
-                                    <span style="margin-left:50px;">媒体库</span>
-                                    <el-button @click="rightMedia" type="primary" size='small'>移入<i class="el-icon-arrow-right el-icon--right"></i></el-button>
-                                </div>
-                                <div class="setProgram_div_bottom">
-                                    <el-table
-                                        :data="mediartableData"
-                                        @row-click="clickRow4" 
-                                        ref="moviesTable4" 
-                                        border
-                                        stripe
-                                        size='small'
-                                        tooltip-effect="dark"
-                                        height='350'
-                                        style="width: 100%;overflow:auto;max-height:85%;margin-bottom:10px;"
-                                        @selection-change="leftMediaChange">
-                                        <el-table-column
-                                        type="selection"
-                                        align='center'
-                                        width="55">
-                                        </el-table-column>
-                                        <el-table-column
-                                        prop="nickName"
-                                        align='center'
-                                        label="文件名"
-                                        width="150">
-                                        </el-table-column>
-                                        <el-table-column
-                                        prop="mediaSizeKb"
-                                        label="文件大小"
-                                        align='center'
-                                        show-overflow-tooltip>
-                                        </el-table-column>
-                                    </el-table>
-                                    <div class="block" style="overflow:auto;">
-                                        <el-pagination
-                                        @size-change="leftMediaSizechange"
-                                        @current-change="leftMediaCurrentchange"
-                                        background
-                                        :current-page="mediaIndex"
-                                        :page-sizes="[10,30, 50]"
-                                        :page-size="mediaSize"
-                                        layout="total, sizes, prev, pager, next, jumper"
-                                        :total="mediaTotal">
-                                        </el-pagination>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="setProgram_center">
-                                <div class="setProgram_div_top">
-                                    <el-button type="primary" @click="fluctuation(0)" size='small' style="margin:4px 0 0 8px;">上移</el-button>
-                                    <el-button type="primary" @click="fluctuation(1)" size='small' style="margin:4px 0 0 8px;">下移</el-button>
-                                    <el-button type="primary" @click="deleteMedia" size='small' style="margin:4px 0 0 8px;">删除</el-button>
-                                    <el-button type="primary" @click="preview" size='small' style="margin:4px 0 0 15px;">预览</el-button>
-                                </div>
-                                <div class="setProgram_div_bottom">
-                                    <el-table
-                                        :data="filesSelected"
-                                        @row-click="clickRow5" 
-                                        ref="moviesTable5" 
-                                        border
-                                        stripe
-                                        size='small'
-                                        tooltip-effect="dark"
-                                        height='370'
-                                        style="width: 100%;overflow:auto;max-height:85%;margin-bottom:5px;"
-                                        @selection-change="centerMediaChange">
-                                        <el-table-column
-                                        type="selection"
-                                        align='center'
-                                        width="55">
-                                        </el-table-column>
-                                        <el-table-column
-                                        align='center'
-                                        label="播放时长"
-                                        min-width="80">
-                                            <template slot-scope="scope">
-                                                <el-input v-model=scope.row.duration  placeholder="请输入内容" size='mini'></el-input>
-                                            </template>
-                                        </el-table-column>
-                                        <el-table-column
-                                        prop="nickName"
-                                        label="文件名"
-                                        align='center'
-                                        min-width="120">
-                                        </el-table-column>
-                                    </el-table>
-                                    <div>
-                                        <el-checkbox v-model="programDate.checked">是否使用滚动文字</el-checkbox>
-                                        <input v-model="programDate.text" type="text" class="form-control" id="fullName" placeholder="请输入滚动文字">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer" style="text-align:center;">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" v-if="programDate.setProgramType==true" @click="nextStep" class="btn btn-primary">下一步</button>
-                        <button type="button" v-if="programDate.setProgramType==false" @click="mediaSave" class="btn btn-primary">保存</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div>
@@ -485,130 +252,1014 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
-        <!-- 节目设置模态框 -->
-        <div class="modal fade" id="programSetting" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:700px;">
+        <!-- 下发任务 -->
+        <div class="modal fade" id="taskMyModal0" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">节目设置</h4>
+                        <h4 class="modal-title" id="myModalLabel">下发任务</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="programSetting">
-                            <div class="programSetting_top">
-                                <el-button @click="sendMedia" type="primary" size='small'>发送节目</el-button>
-                            </div>
-                            <div class="programSetting_bottom">
-                                <el-table
-                                    :data="programSettingData"
-                                    @row-click="clickRow6" 
-                                    ref="moviesTable6"
-                                    border
-                                    stripe
-                                    size='small'
-                                    tooltip-effect="dark"
-                                    height='250'
-                                    style="width: 100%;overflow:auto;max-height:80%;margin-bottom:10px;"
-                                    @selection-change="programSettingChange">
-                                    <el-table-column
-                                    type="selection"                                                                                                                                                                                               
-                                    align='center'
-                                    width="55">
-                                    </el-table-column>
-                                    <el-table-column
-                                    prop="nickName"
-                                    align='center'
-                                    label="节目名称"
-                                    width="195">
-                                    </el-table-column>
-                                    <el-table-column
-                                    align='center'
-                                    label="类型"
-                                    width="80">
-                                        <template slot-scope="scope">
-                                            <span v-if="scope.row.programType=='0'">简易节目</span>
-                                            <span v-if="scope.row.programType=='1'">高级节目</span>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column
-                                    prop="width"
-                                    align='center'
-                                    label="宽度"
-                                    width="80">
-                                    </el-table-column>
-                                    <el-table-column
-                                    prop="height"
-                                    align='center'
-                                    label="高度"
-                                    width="80">
-                                    </el-table-column>
-                                    <el-table-column
-                                    label="操作"
-                                    align='center'
-                                    width="176">
-                                        <template slot-scope="scope">
-                                            <el-button @click="previewS(scope.row)" type="primary" size='mini'>预览</el-button>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-                                <div class="block">
-                                    <el-pagination
-                                    background
-                                    :current-page="programSettingIndex"
-                                    :page-sizes="[10, 20, 30, 50]"
-                                    :page-size="programSettingSize"
-                                    layout="total, sizes, prev, pager, next, jumper"
-                                    :total="programSettingTotal">
-                                    </el-pagination>
-                                </div>
-                            </div>
+                        <el-table
+                            :data="tasktableData" 
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            style="width: 100%;max-height:80%;margin-bottom:10px;overflow:auto;margin-top:10px;"
+                            @selection-change="tasktableChange">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="nickName"
+                            align='center'
+                            label="名称"
+                            min-width="80">
+                            </el-table-column>
+                            <el-table-column
+                            prop="createTime"
+                            label="创建时间"
+                            align='center'
+                            :formatter="formatRole"
+                            show-overflow-tooltip>
+                            </el-table-column>
+                        </el-table>
+                        <div class="block">
+                            <el-pagination
+                            background
+                            @size-change="tasksizechange"
+                            @current-change="taskcurrentchange"
+                            :current-page="taskpageIndex"
+                            :page-sizes="[10, 20, 30, 50]"
+                            :page-size="taskpageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="tasktotal">
+                            </el-pagination>
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button @click="LowerHair" type="button" class="btn btn-primary">下发</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
-        <!-- 创建节目-点击预览 -->
-        <div class="modal fade" id="myModal_preview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <!-- 屏幕开关 -->
+        <div class="modal fade" id="switchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <div class="modal-content previews_div_content">
-                    <div class="modal-body previews_div_body">
-                        <div id="previews_div" style='position:relative;border: 1px solid red;overflow: hidden;'>
-                               
-                        </div>
-                    </div>
-                    <div class="modal-footer" style="text-align: center;padding:5px;">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div>
-        </div><!-- /.modal -->
-        <!-- 节目设置-预览模态框 -->
-        <div class="modal fade" id="programSetting_previewS" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog previewS_width" style="width:309px;">
                 <div class="modal-content">
-                    <div class="modal-body previewS_height  previews_div_body2" style="height:409px;overflow: hidden;padding:0;marggin:0;">
-                        <div id="previews_div2" style="position:relative;margin: 0 auto;">
-                            
-                        </div>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">屏幕开关</h4>
                     </div>
-                    <div class="modal-footer" style="text-align: center;padding:5px;"> 
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <div class="modal-body">
+                        <el-tabs v-model="switchType" type="card" @tab-click="switchClick">
+                            <el-tab-pane label="手动" name="0">
+                                <el-button @click="switchs(0)" type="primary" size='small'>开启屏幕</el-button>
+                                <el-button @click="switchs(1)" type="primary" size='small'>关闭屏幕</el-button>
+                            </el-tab-pane>
+                            <el-tab-pane label="定时" name="1">
+                                <el-button @click="switchOperation(0)" type="primary" size='small'>添加</el-button>
+                                <el-button @click="switchOperation(1)" type="primary" size='small'>编辑</el-button>
+                                <el-button @click="switchOperation(2)" type="primary" size='small'>删除</el-button>
+                                <el-button @click="switchOperation(3)" type="primary" size='small'>发送</el-button>
+                                <div v-if="addType=='0'||addType=='1'" style="width:100%;height:auto;margin-top:10px">
+                                    <div>
+                                        <span>定时名称:</span>
+                                        <el-input v-model="switchData.name" placeholder="请输入定时名称称" size='small' style="width:156px;"></el-input>
+                                    </div>
+                                    <div style="margin-top:10px;">
+                                        <el-radio-group v-model="switchData.radio0">
+                                            <el-radio :label="0">永久</el-radio>
+                                            <el-radio :label="1">指定日期</el-radio>
+                                        </el-radio-group>
+                                        <div v-if="switchData.radio0=='1'">
+                                            <el-date-picker
+                                                v-model="switchData.value1"
+                                                type="date"
+                                                size='small'
+                                                value-format='yyyy-MM-dd'
+                                                placeholder="开始日期"
+                                                style="width:126px;margin-left:10px;">
+                                            </el-date-picker>
+                                            <el-date-picker
+                                                v-model="switchData.value2"
+                                                type="date"
+                                                size='small'
+                                                value-format='yyyy-MM-dd'
+                                                placeholder="结束日期"
+                                                style="width:126px;margin-left:10px;">
+                                            </el-date-picker>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top:10px;">
+                                        <el-radio-group v-model="switchData.radio1">
+                                            <el-radio :label="0">全天</el-radio>
+                                            <el-radio :label="1">指定时间</el-radio>
+                                        </el-radio-group>
+                                        <div v-if="switchData.radio1=='1'">
+                                            <el-time-picker
+                                                v-model="switchData.value3"
+                                                value-format='hh:mm'
+                                                size='small'
+                                                placeholder="开始时间"
+                                                style="width:126px;margin-left:10px;">
+                                            </el-time-picker>
+                                            <el-time-picker
+                                                v-model="switchData.value4"
+                                                value-format='hh:mm'
+                                                size='small'
+                                                placeholder="结束时间"
+                                                style="width:126px;margin-left:10px;">
+                                            </el-time-picker>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top:10px;">
+                                        <el-radio-group v-model="switchData.radio2">
+                                            <el-radio :label="0">无指定</el-radio>
+                                            <el-radio :label="1">指定星期</el-radio>
+                                        </el-radio-group>
+                                        <div v-if="switchData.radio2=='1'">
+                                            <el-checkbox-group v-model="switchData.checkList">
+                                                <el-checkbox :label="1">周一</el-checkbox>
+                                                <el-checkbox :label="2">周二</el-checkbox>
+                                                <el-checkbox :label="3">周三</el-checkbox>
+                                                <el-checkbox :label="4">周四</el-checkbox>
+                                                <el-checkbox :label="5">周五</el-checkbox>
+                                                <el-checkbox :label="6">周六</el-checkbox>
+                                                <el-checkbox :label="7">周日</el-checkbox>
+                                            </el-checkbox-group>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top:10px;">
+                                        <el-button @click="switchSubmit" type="primary" size='small'>保存</el-button>
+                                        <el-button @click="switchOperation(4)" type="primary" size='small'>关闭</el-button>
+                                    </div>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    <el-table
+                                        :data="switchdata"
+                                        border
+                                        stripe
+                                        size='small'
+                                        tooltip-effect="dark"
+                                        style="width: 100%;max-height:80%;margin-bottom:10px;overflow:auto;"
+                                        @selection-change="switchtableChange">
+                                        <el-table-column
+                                        type="selection"
+                                        align='center'
+                                        width="55">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="nickName"
+                                        align='center'
+                                        label="定时名称"
+                                        min-width="80">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="startDate"
+                                        align='center'
+                                        label="开始日期"
+                                        min-width="85">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="endDate"
+                                        align='center'
+                                        label="结束日期"
+                                        min-width="85">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="startTime"
+                                        align='center'
+                                        label="开始时间"
+                                        min-width="80">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="endTime"
+                                        align='center'
+                                        label="结束时间"
+                                        min-width="80">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="filterValue"
+                                        align='center'
+                                        label="星期"
+                                        show-overflow-tooltip>
+                                        </el-table-column>
+                                    </el-table>
+                                </div>
+                            </el-tab-pane>
+                            <el-tab-pane label="查询" name="2">
+                                <template v-for="item in searchData">
+                                    <div :key="item.key">
+                                        <span>屏幕序列号:{{item.screenSerialNumber}}</span>
+                                        <span style="margin-left:20px;">时间:{{item.timestamp}}</span>     
+                                    </div>
+                                    <div :key="item.key">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>日期范围</th>
+                                                    <th>时间范围</th>
+                                                    <th>指定星期</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="item2 in item.schedules" :key="item2.key">
+                                                    <td>{{item2.startDate}}--{{item2.endDate}}</td>
+                                                    <td>{{item2.startTime}}--{{item2.endTime}}</td>
+                                                    <td>{{item2.filterValue}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </template>
+                            </el-tab-pane>
+                        </el-tabs>
                     </div>
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
-        <el-dialog
-        title="节目下发进度"
-        :visible.sync="centerDialogVisible"
-        :close-on-click-modal='false'
-        :close-on-press-escape='false'
-        width="50"
-        center>
-        <span>
-            <el-progress :percentage=percentage status="success"></el-progress>
-            <span style="position: absolute;right: 10px;top: 76px;">{{percentage}}%</span>
-        </span>
-        </el-dialog>
+        <!-- 屏幕调光 -->
+        <div class="modal fade" id="DimmingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">屏幕调光</h4>
+                    </div>
+                    <div class="modal-body">
+                        <el-tabs v-model="DimmingType" type="card" @tab-click="DimmingClick">
+                            <el-tab-pane label="手动" name="0">
+                                <el-input-number v-model="brightness" :min="1" :max="64" size='small' label="屏幕亮度"></el-input-number>
+                                <el-button @click="DimmingSubmit" type="primary" size='small'>发送</el-button>
+                                <p>提示:1（最暗）~ 64（最亮）</p>
+                            </el-tab-pane>
+                            <el-tab-pane label="定时" name="1">
+                                <el-button @click="DimmingOperation(0)" type="primary" size='small'>添加</el-button>
+                                <el-button @click="DimmingOperation(1)" type="primary" size='small'>编辑</el-button>
+                                <el-button @click="DimmingOperation(2)" type="primary" size='small'>删除</el-button>
+                                <el-button @click="DimmingOperation(3)" type="primary" size='small'>发送</el-button>
+                                <div v-if="addType=='0'||addType=='1'" style="width:100%;height:auto;margin-top:10px">
+                                    <div>
+                                        <span>定时名称:</span>
+                                        <el-input v-model="DimmingDatas.DimmingName" placeholder="请输入定时名称" size='small' style="width:156px;"></el-input>
+                                        <span style="margin-left:20px;">默认亮度:</span>
+                                        <el-input-number v-model="DimmingDatas.defaultBrightness" :min="1" :max="64" size='small' label="默认亮度"></el-input-number>
+                                    </div>
+                                    <div style="margin-top:10px;">
+                                        <el-radio-group v-model="DimmingDatas.radio0">
+                                            <el-radio :label="0">永久</el-radio>
+                                            <el-radio :label="1">指定日期</el-radio>
+                                        </el-radio-group>
+                                        <div v-if="DimmingDatas.radio0=='1'">
+                                            <el-date-picker
+                                                v-model="DimmingDatas.value1"
+                                                type="date"
+                                                size='small'
+                                                value-format='yyyy-MM-dd'
+                                                placeholder="开始日期"
+                                                style="width:126px;margin-left:10px;">
+                                            </el-date-picker>
+                                            <el-date-picker
+                                                v-model="DimmingDatas.value2"
+                                                type="date"
+                                                size='small'
+                                                value-format='yyyy-MM-dd'
+                                                placeholder="结束日期"
+                                                style="width:126px;margin-left:10px;">
+                                            </el-date-picker>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top:10px;">
+                                        <el-radio-group v-model="DimmingDatas.radio1">
+                                            <el-radio :label="0">全天</el-radio>
+                                            <el-radio :label="1">指定时间</el-radio>
+                                        </el-radio-group>
+                                        <div v-if="DimmingDatas.radio1=='1'">
+                                            <el-time-picker
+                                                v-model="DimmingDatas.value3"
+                                                value-format='hh:mm'
+                                                size='small'
+                                                placeholder="开始时间"
+                                                style="width:126px;margin-left:10px;">
+                                            </el-time-picker>
+                                            <el-time-picker
+                                                v-model="DimmingDatas.value4"
+                                                value-format='hh:mm'
+                                                size='small'
+                                                placeholder="结束时间"
+                                                style="width:126px;margin-left:10px;">
+                                            </el-time-picker>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top:10px;">
+                                        <el-radio-group v-model="DimmingDatas.radio2">
+                                            <el-radio :label="0">无指定</el-radio>
+                                            <el-radio :label="1">指定星期</el-radio>
+                                        </el-radio-group>
+                                        <div v-if="DimmingDatas.radio2=='1'" style="margin-left:10px;">
+                                            <el-checkbox-group v-model="DimmingDatas.checkList">
+                                                <el-checkbox :label="1">周一</el-checkbox>
+                                                <el-checkbox :label="2">周二</el-checkbox>
+                                                <el-checkbox :label="3">周三</el-checkbox>
+                                                <el-checkbox :label="4">周四</el-checkbox>
+                                                <el-checkbox :label="5">周五</el-checkbox>
+                                                <el-checkbox :label="6">周六</el-checkbox>
+                                                <el-checkbox :label="7">周日</el-checkbox>
+                                            </el-checkbox-group>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span style="margin-left:20px;">屏幕亮度:</span>
+                                        <el-input-number v-model="DimmingDatas.brightness2" :min="1" :max="64" size='small' label="屏幕亮度"></el-input-number>
+                                    </div>
+                                    <div style="margin-top:10px;">
+                                        <el-button @click="DimmingSubmit2" type="primary" size='small'>保存</el-button>
+                                        <el-button @click="DimmingOperation(4)" type="primary" size='small'>关闭</el-button>
+                                    </div>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    <el-table
+                                        :data="Dimmingdata"
+                                        border
+                                        stripe
+                                        size='small'
+                                        tooltip-effect="dark"
+                                        style="width: 100%;max-height:80%;margin-bottom:10px;overflow:auto;"
+                                        @selection-change="DimmingtableChange">
+                                        <el-table-column
+                                        type="selection"
+                                        align='center'
+                                        width="55">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="nickName"
+                                        align='center'
+                                        label="定时名称"
+                                        min-width="80">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="startDate"
+                                        align='center'
+                                        label="开始日期"
+                                        min-width="85">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="endDate"
+                                        align='center'
+                                        label="结束日期"
+                                        min-width="85">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="startTime"
+                                        align='center'
+                                        label="开始时间"
+                                        min-width="80">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="endTime"
+                                        align='center'
+                                        label="结束时间"
+                                        min-width="80">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="filterValue"
+                                        align='center'
+                                        label="星期"
+                                        min-width="80">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="brightness"
+                                        align='center'
+                                        label="亮度"
+                                        show-overflow-tooltip>
+                                        </el-table-column>
+                                    </el-table>
+                                </div>
+                            </el-tab-pane>
+                            <el-tab-pane label="查询" name="2">
+                                <template v-for="item in searchData">
+                                    <div :key="item.key">
+                                        <span>屏幕序列号:{{item.screenSerialNumber}}</span>
+                                        <span style="margin-left:20px;">时间:{{item.timestamp}}</span>     
+                                    </div>
+                                    <div :key="item.key">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>日期范围</th>
+                                                    <th>时间范围</th>
+                                                    <th>指定星期</th>
+                                                    <th>亮度</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="item2 in item.schedules" :key="item2.key">
+                                                    <td>{{item2.startDate}}--{{item2.endDate}}</td>
+                                                    <td>{{item2.startTime}}--{{item2.endTime}}</td>
+                                                    <td>{{item2.filterValue}}</td>
+                                                    <td>{{item2.brightness}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </template>
+                            </el-tab-pane>
+                        </el-tabs>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- 屏幕音量 -->
+        <div class="modal fade" id="volumeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">屏幕音量</h4>
+                    </div>
+                    <div class="modal-body">
+                        <el-tabs v-model="volumeType" type="card" @tab-click="volumeClick">
+                            <el-tab-pane label="手动" name="0">
+                                <el-input-number v-model="volume" :min="0" :max="15" size='small' label="屏幕音量"></el-input-number>
+                                <el-button @click="volumeSubmit" type="primary" size='small'>发送</el-button>
+                                <p>提示:1（最暗）~ 64（最亮）</p>
+                            </el-tab-pane>
+                            <el-tab-pane label="定时" name="1">
+                                <el-button @click="volumeOperation(0)" type="primary" size='small'>添加</el-button>
+                                <el-button @click="volumeOperation(1)" type="primary" size='small'>编辑</el-button>
+                                <el-button @click="volumeOperation(2)" type="primary" size='small'>删除</el-button>
+                                <el-button @click="volumeOperation(3)" type="primary" size='small'>发送</el-button>
+                                <div v-if="addType=='0'||addType=='1'" style="width:100%;height:auto;margin-top:10px">
+                                    <div>
+                                        <span>定时名称:</span>
+                                        <el-input v-model="volumeDatas.volumeName" placeholder="请输入定时名称" size='small' style="width:156px;"></el-input>
+                                        <span style="margin-left:20px;">默认音量:</span>
+                                        <el-input-number v-model="volumeDatas.defaultVolume" :min="0" :max="15" size='small' label="默认音量"></el-input-number>
+                                    </div>
+                                    <div style="margin-top:10px;">
+                                        <el-radio-group v-model="volumeDatas.radio0">
+                                            <el-radio :label="0">永久</el-radio>
+                                            <el-radio :label="1">指定日期</el-radio>
+                                        </el-radio-group>
+                                        <div v-if="volumeDatas.radio0=='1'">
+                                            <el-date-picker
+                                                v-model="volumeDatas.value1"
+                                                type="date"
+                                                size='small'
+                                                value-format='yyyy-MM-dd'
+                                                placeholder="开始日期"
+                                                style="width:126px;margin-left:10px;">
+                                            </el-date-picker>
+                                            <el-date-picker
+                                                v-model="volumeDatas.value2"
+                                                type="date"
+                                                size='small'
+                                                value-format='yyyy-MM-dd'
+                                                placeholder="结束日期"
+                                                style="width:126px;margin-left:10px;">
+                                            </el-date-picker>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top:10px;">
+                                        <el-radio-group v-model="volumeDatas.radio1">
+                                            <el-radio :label="0">全天</el-radio>
+                                            <el-radio :label="1">指定时间</el-radio>
+                                        </el-radio-group>
+                                        <div v-if="volumeDatas.radio1=='1'">
+                                            <el-time-picker
+                                                v-model="volumeDatas.value3"
+                                                value-format='hh:mm'
+                                                size='small'
+                                                placeholder="开始时间"
+                                                style="width:126px;margin-left:10px;">
+                                            </el-time-picker>
+                                            <el-time-picker
+                                                v-model="volumeDatas.value4"
+                                                value-format='hh:mm'
+                                                size='small'
+                                                placeholder="结束时间"
+                                                style="width:126px;margin-left:10px;">
+                                            </el-time-picker>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top:10px;">
+                                        <el-radio-group v-model="volumeDatas.radio2">
+                                            <el-radio :label="0">无指定</el-radio>
+                                            <el-radio :label="1">指定星期</el-radio>
+                                        </el-radio-group>
+                                        <div v-if="volumeDatas.radio2=='1'" style="margin-left:10px;">
+                                            <el-checkbox-group v-model="volumeDatas.checkList">
+                                                <el-checkbox :label="1">周一</el-checkbox>
+                                                <el-checkbox :label="2">周二</el-checkbox>
+                                                <el-checkbox :label="3">周三</el-checkbox>
+                                                <el-checkbox :label="4">周四</el-checkbox>
+                                                <el-checkbox :label="5">周五</el-checkbox>
+                                                <el-checkbox :label="6">周六</el-checkbox>
+                                                <el-checkbox :label="7">周日</el-checkbox>
+                                            </el-checkbox-group>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span style="margin-left:20px;">屏幕音量:</span>
+                                        <el-input-number v-model="volumeDatas.volume" :min="0" :max="15" size='small' label="屏幕音量"></el-input-number>
+                                    </div>
+                                    <div style="margin-top:10px;">
+                                        <el-button @click="volumeSubmit2" type="primary" size='small'>保存</el-button>
+                                        <el-button @click="volumeOperation(4)" type="primary" size='small'>关闭</el-button>
+                                    </div>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    <el-table
+                                        :data="volumedata"
+                                        border
+                                        stripe
+                                        size='small'
+                                        tooltip-effect="dark"
+                                        style="width: 100%;max-height:80%;margin-bottom:10px;overflow:auto;"
+                                        @selection-change="volumetableChange">
+                                        <el-table-column
+                                        type="selection"
+                                        align='center'
+                                        width="55">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="nickName"
+                                        align='center'
+                                        label="定时名称"
+                                        min-width="80">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="startDate"
+                                        align='center'
+                                        label="开始日期"
+                                        min-width="85">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="endDate"
+                                        align='center'
+                                        label="结束日期"
+                                        min-width="85">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="startTime"
+                                        align='center'
+                                        label="开始时间"
+                                        min-width="80">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="endTime"
+                                        align='center'
+                                        label="结束时间"
+                                        min-width="80">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="filterValue"
+                                        align='center'
+                                        label="星期"
+                                        min-width="80">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="volume"
+                                        align='center'
+                                        label="音量"
+                                        show-overflow-tooltip>
+                                        </el-table-column>
+                                    </el-table>
+                                </div>
+                            </el-tab-pane>
+                            <el-tab-pane label="查询" name="2">
+                                <template v-for="item in searchData">
+                                    <div :key="item.key">
+                                        <span>屏幕序列号:{{item.screenSerialNumber}}</span>
+                                        <span style="margin-left:20px;">时间:{{item.timestamp}}</span>     
+                                    </div>
+                                    <div :key="item.key">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>日期范围</th>
+                                                    <th>时间范围</th>
+                                                    <th>指定星期</th>
+                                                    <th>音量</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="item2 in item.schedules" :key="item2.key">
+                                                    <td>{{item2.startDate}}--{{item2.endDate}}</td>
+                                                    <td>{{item2.startTime}}--{{item2.endTime}}</td>
+                                                    <td>{{item2.filterValue}}</td>
+                                                    <td>{{item2.volume}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </template>
+                            </el-tab-pane>
+                        </el-tabs>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- 屏幕截图 -->
+        <div class="modal fade" id="screenshotMyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">屏幕截图</h4>
+                    </div>
+                    <div class="modal-body" v-loading="loading"
+                    element-loading-text="正在获取截屏信息"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(0, 0, 0, 0.8)" style="min-height:80px;">
+                        <template v-for="item in screenshotData">
+                            <div :key="item.key">
+                                <span>屏幕序列号:{{item.screenSerialNumber}}</span>
+                                <span style="margin-left:20px;">时间:{{item.timestamp}}</span>     
+                            </div>
+                            <div :key="item.key">
+                                <img :src=item.screenshotMsg style="width:100%;" alt="">
+                            </div>
+                        </template>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- 屏幕重启 -->
+        <div class="modal fade" id="restartMyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">屏幕重启</h4>
+                    </div>
+                    <div class="modal-body">
+                        <el-tabs v-model="restartType" type="card" @tab-click="restartClick">
+                            <el-tab-pane label="手动" name="0">
+                                <el-button @click="restart(0)" size='small' type="primary">重启</el-button>
+                            </el-tab-pane>
+                            <el-tab-pane label="定时" name="1">
+                                <el-button @click="restartOperation(0)" type="primary" size='small'>添加</el-button>
+                                <el-button @click="restartOperation(1)" type="primary" size='small'>编辑</el-button>
+                                <el-button @click="restartOperation(2)" type="primary" size='small'>删除</el-button>
+                                <el-button @click="restartOperation(3)" type="primary" size='small'>发送</el-button>
+                                <div v-if="addType=='0'||addType=='1'" style="width:100%;height:auto;margin-top:10px">
+                                    <div>
+                                        <span>定时名称:</span>
+                                        <el-input v-model="restartName" placeholder="请输入定时名称" size='small' style="width:156px;"></el-input>
+                                        <span style="margin-left:20px;">重启时间:</span>
+                                        <el-time-picker
+                                            v-model="rebootTime"
+                                            value-format='hh:mm'
+                                            size='small'
+                                            placeholder="重启时间"
+                                            style="width:126px;margin-left:10px;">
+                                        </el-time-picker>
+                                    </div>
+                                    <div style="margin-top:10px;">
+                                        <el-button @click="restartSubmit" type="primary" size='small'>保存</el-button>
+                                        <el-button @click="restartOperation(4)" type="primary" size='small'>关闭</el-button>
+                                    </div>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    <el-table
+                                        :data="restartdata"
+                                        border
+                                        stripe
+                                        size='small'
+                                        tooltip-effect="dark"
+                                        style="width: 100%;max-height:80%;margin-bottom:10px;overflow:auto;"
+                                        @selection-change="restarttableChange">
+                                        <el-table-column
+                                        type="selection"
+                                        align='center'
+                                        width="55">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="nickName"
+                                        align='center'
+                                        label="定时名称"
+                                        min-width="80">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="rebootTime"
+                                        align='center'
+                                        label="定时时间"
+                                        show-overflow-tooltip>
+                                        </el-table-column>
+                                    </el-table>
+                                </div>
+                            </el-tab-pane>
+                            <el-tab-pane label="查询" name="2">
+                                <template v-for="item in searchData">
+                                    <div :key="item.key">
+                                        <span>屏幕序列号:{{item.screenSerialNumber}}</span>
+                                        <span style="margin-left:20px;">时间:{{item.timestamp}}</span>     
+                                    </div>
+                                    <div :key="item.key">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>时间范围</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="item2 in item.schedules" :key="item2.key">
+                                                    <td>{{item2.timer}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </template>
+                            </el-tab-pane>
+                        </el-tabs>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- 任务管理列表 -->
+        <div class="modal fade" id="taskMyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">任务管理</h4>
+                    </div>
+                    <div class="modal-body">
+                        <el-button v-if="addTask" @click="taskoperation(0)" type="primary" size="small">添加</el-button>
+                        <el-button v-if="editTask" @click="taskoperation(1)" type="primary" size="small">编辑</el-button>
+                        <el-button v-if="delTask" @click="taskoperation(2)" type="primary" size="small">删除</el-button>
+                        <el-table
+                            :data="tasktableData" 
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            style="width: 100%;max-height:80%;margin-bottom:10px;overflow:auto;margin-top:10px;"
+                            @selection-change="tasktableChange">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="nickName"
+                            align='center'
+                            label="名称"
+                            min-width="80">
+                            </el-table-column>
+                            <el-table-column
+                            prop="createTime"
+                            label="创建时间"
+                            align='center'
+                            :formatter="formatRole"
+                            show-overflow-tooltip>
+                            </el-table-column>
+                        </el-table>
+                        <div class="block">
+                            <el-pagination
+                            background
+                            @size-change="tasksizechange"
+                            @current-change="taskcurrentchange"
+                            :current-page="taskpageIndex"
+                            :page-sizes="[10, 20, 30, 50]"
+                            :page-size="taskpageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="tasktotal">
+                            </el-pagination>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- 添加/编辑 任务 -->
+        <div class="modal fade" id="taskMyModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 v-if="addType=='0'" class="modal-title" id="myModalLabel">添加</h4>
+                        <h4 v-if="addType=='1'" class="modal-title" id="myModalLabel">编辑</h4>
+                    </div>
+                    <div class="modal-body">
+                        <el-button @click="programOperation(0)" size='small' type="primary">添加节目</el-button>
+                        <el-button @click="programOperation(1)" size='small' type="primary">编辑节目</el-button>
+                        <el-button @click="programOperation(2)" size='small' type="primary">删除节目</el-button>
+                        <div style="margin-top:10px;">
+                            <span>任务名称:</span>
+                            <el-input v-model="tasknickName" placeholder="请输入任务名称" size='small' style="width:156px;"></el-input>
+                            <el-tooltip class="item" effect="dark" content="上移(排序)" placement="top-start">
+                                <el-button @click="move(0)" icon="el-icon-caret-top" size='mini' type="primary"></el-button>
+                            </el-tooltip>
+                            <el-tooltip class="item" effect="dark" content="下移(排序)" placement="top-start">
+                                <el-button @click="move(1)" icon="el-icon-caret-bottom" size='mini' type="primary"></el-button>
+                            </el-tooltip>
+                        </div>
+                        <el-table
+                            :data="taskDetailsData" 
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            style="width: 100%;max-height:80%;margin-bottom:10px;overflow:auto;margin-top:10px;"
+                            @selection-change="taskDetailsChange">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="programName"
+                            align='center'
+                            label="名称"
+                            min-width="80">
+                            </el-table-column>
+                            <el-table-column
+                            prop="repeatTimes"
+                            align='center'
+                            label="播放次数"
+                            min-width="70">
+                            </el-table-column>
+                            <el-table-column
+                            align='center'
+                            label="播放日期"
+                            min-width="80">
+                                <template slot-scope="scope">
+                                    <span>{{scope.row.taskSchedule.startDate}}-{{scope.row.taskSchedule.endDate}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                            prop="nickName"
+                            align='center'
+                            label="播放时间"
+                            min-width="80">
+                                <template slot-scope="scope">
+                                    <span>{{scope.row.taskSchedule.startTime}}-{{scope.row.taskSchedule.endTime}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                            prop="createTime"
+                            label="播放星期"
+                            align='center'
+                            :formatter="formatRole"
+                            show-overflow-tooltip>
+                                <template slot-scope="scope">
+                                    <span>{{scope.row.taskSchedule.filterValue}}</span>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <div style="margin-top:10px;">
+                            <el-button @click="addtask" size='small' type="primary">保存</el-button>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- 添加 编辑节目模态框 -->
+        <div class="modal fade" id="taskMyModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 v-if="addType2=='0'" class="modal-title" id="myModalLabel">添加</h4>
+                        <h4 v-if="addType2=='1'" class="modal-title" id="myModalLabel">编辑</h4>
+                    </div>
+                    <div class="modal-body">
+                        <el-table
+                            :data="programtableData" 
+                            ref="multipleTable"
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            style="width: 100%;max-height:80%;margin-bottom:10px;overflow:auto;margin-top:10px;"
+                            @selection-change="programtableChange">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="nickName"
+                            align='center'
+                            label="名称"
+                            min-width="80">
+                            </el-table-column>
+                            <el-table-column
+                            prop="createTime"
+                            label="创建时间"
+                            align='center'
+                            :formatter="formatRole"
+                            show-overflow-tooltip>
+                            </el-table-column>
+                        </el-table>
+                        <div class="block">
+                            <el-pagination
+                            background
+                            @size-change="programsizechange"
+                            @current-change="programcurrentchange"
+                            :current-page="programpageIndex"
+                            :page-sizes="[10, 20, 30, 50]"
+                            :page-size="programpageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="programtotal">
+                            </el-pagination>
+                        </div>
+                        <div style="margin-top:10px;">
+                            <el-radio-group v-model="taskSchedule.radio0">
+                                <el-radio :label="0">永久</el-radio>
+                                <el-radio :label="1">指定日期</el-radio>
+                            </el-radio-group>
+                            <div v-if="taskSchedule.radio0=='1'">
+                                <el-date-picker
+                                    v-model="taskSchedule.value1"
+                                    type="date"
+                                    size='small'
+                                    value-format='yyyy-MM-dd'
+                                    placeholder="开始日期"
+                                    style="width:126px;margin-left:10px;">
+                                </el-date-picker>
+                                <el-date-picker
+                                    v-model="taskSchedule.value2"
+                                    type="date"
+                                    size='small'
+                                    value-format='yyyy-MM-dd'
+                                    placeholder="结束日期"
+                                    style="width:126px;margin-left:10px;">
+                                </el-date-picker>
+                            </div>
+                        </div>
+                        <div style="margin-top:10px;">
+                            <el-radio-group v-model="taskSchedule.radio1">
+                                <el-radio :label="0">全天</el-radio>
+                                <el-radio :label="1">指定时间</el-radio>
+                            </el-radio-group>
+                            <div v-if="taskSchedule.radio1=='1'">
+                                <el-time-picker
+                                    v-model="taskSchedule.value3"
+                                    value-format='hh:mm'
+                                    size='small'
+                                    placeholder="开始时间"
+                                    style="width:126px;margin-left:10px;">
+                                </el-time-picker>
+                                <el-time-picker
+                                    v-model="taskSchedule.value4"
+                                    value-format='hh:mm'
+                                    size='small'
+                                    placeholder="结束时间"
+                                    style="width:126px;margin-left:10px;">
+                                </el-time-picker>
+                            </div>
+                        </div>
+                        <div style="margin-top:10px;">
+                            <el-radio-group v-model="taskSchedule.radio2">
+                                <el-radio :label="0">无指定</el-radio>
+                                <el-radio :label="1">指定星期</el-radio>
+                            </el-radio-group>
+                            <div v-if="taskSchedule.radio2=='1'" style="margin-left:10px;">
+                                <el-checkbox-group v-model="taskSchedule.checkList">
+                                    <el-checkbox :label="1">周一</el-checkbox>
+                                    <el-checkbox :label="2">周二</el-checkbox>
+                                    <el-checkbox :label="3">周三</el-checkbox>
+                                    <el-checkbox :label="4">周四</el-checkbox>
+                                    <el-checkbox :label="5">周五</el-checkbox>
+                                    <el-checkbox :label="6">周六</el-checkbox>
+                                    <el-checkbox :label="7">周日</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                        <div style="margin-top:10px;">
+                            <span>播放次数:</span>
+                            <el-input v-model="taskSchedule.repeatTimes" placeholder="请输入播放次数" size='small' style="width:156px;"></el-input>
+                            <el-button @click="addprogram" size='small' type="primary">添加</el-button>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- 在线更新 -->
+        <div class="modal fade" id="updateMyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">在线更新</h4>
+                    </div>
+                    <div class="modal-body">
+                        <span>请选择升级包:</span>
+                        <input style="display: inline-block;" type="file" ref="update">
+                        <div class="el-upload__tip" style="font-size: 14px;">只能上传APK文件</div>
+                        <el-button @click="updateSubmit" type="primary" size='small'>更新</el-button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
     </div>
 </template>
 <script>
@@ -619,8 +1270,15 @@ export default {
             inputColumn:'',
             serverurl:localStorage.serverurl,
             operation:false,
-            programManagement:false,
-            mediaLibrarys:false,
+            viewProgram:false,
+            viewMedia:false,
+            addMedia:false,
+            editMedia:false,
+            delMedia:false,
+            viewTask:false,
+            addTask:false,
+            editTask:false,
+            delTask:false,
             // 屏幕
             tableData:[],
             tableSite1:[],                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
@@ -628,8 +1286,6 @@ export default {
             pageIndex:1,
             total:10,
             site:[],
-            centerDialogVisible:false,
-            percentage:0,
             serialNumber:'',
             options:[
                 {
@@ -675,56 +1331,96 @@ export default {
             mediaTotal:50,
             mediaSite:[],
             filesuploadLoading:false,
-            //节目管理
-            noticetableData:[],
-            noticeSize:10,
-            noticeIndex:1,
-            noticeTotal:10,
-            noticeSite:[],
-            programType:[
-                {
-                    value:0,
-                    label:'简易节目'
-                },
-                // {
-                //     value:1,
-                //     label:'高级节目',
-                //     disabled:true
-                // },
-            ],
-            programDate:{
-                setProgramType:true,
-                programName:'', //节目名称
-                programValue:0, //节目类型
-                programWidth:'', //节目宽度
-                programHeight:'', //节目高度
-                checked:false, //是否使用滚动文字
-                text:'',//滚动文字内容
-            },// 创建节目数据
-            leftMediaSize:[],
-            centerMediaSize:[],
-            filesSelected:[], //已选中节目列表
-            submitMeadioType:'',
-            //节目设置
-            programSettingData:[],
-            programSettingSite:[],
-            programSettingIndex:1,
-            programSettingSize:10,
-            programSettingTotal:10,
-            input:'',
-            checked1:'',
-            setProgramOptions:[
-                {
-                    value:0,
-                    label:'图片'
-                },
-                {
-                    value:1,
-                    label:'视频'
-                }
-            ],
-            setProgramValue:'',
-            timer2:null,
+            //屏幕开关
+            switchdata:[],
+            switchsite:[],
+            switchType:'0',//手动/定时/查询
+            addType:'2',//添加模块开启/关闭
+            switchData:{
+                name:'',
+                radio0:0,
+                radio1:0,
+                radio2:0,
+                value1:'',
+                value2:'',
+                value3:'',
+                value4:'',
+                checkList:[],
+            },
+            searchData:[],
+            //屏幕调光
+            Dimmingdata:[],
+            Dimmingsite:[],
+            DimmingType:'0',//手动/定时/查询
+            brightness:1,//手动-屏幕亮度
+            DimmingDatas:{
+                DimmingName:'',
+                defaultBrightness:5,
+                radio0:0,
+                radio1:0,
+                radio2:0,
+                value1:'',
+                value2:'',
+                value3:'',
+                value4:'',
+                checkList:[],
+                brightness2:1,
+            },
+            //屏幕音量
+            volumedata:[],
+            volumesite:[],
+            volumeType:'0',//手动/定时/查询
+            volume:1,
+            volumeDatas:{
+                volumeName:'',
+                defaultVolume:'',
+                radio0:0,
+                radio1:0,
+                radio2:0,
+                value1:'',
+                value2:'',
+                value3:'',
+                value4:'',
+                checkList:[],
+                volume:1
+            },
+            //屏幕截图
+            loading:false,
+            screenshotData:[],
+            // 定时重启
+            restartdata:[],
+            restartsite:[],
+            restartType:'0',
+            restartName:'',
+            rebootTime:'',
+            //任务管理
+            tasktableData:[],//任务列表
+            tasktableSite:[],//选中数据
+            taskpageIndex:1,
+            taskpageSize:10,
+            tasktotal:10,
+            //任务中 节目列表
+            tasknickName:'',
+            taskDetailsData:[],
+            taskDetailsSite:[],
+            //节目模态框
+            addType2:'0',
+            programtableData:[],
+            programtablesite:[],
+            programpageIndex:1,
+            programpageSize:10,
+            programtotal:10,
+            taskSchedule:{
+                repeatTimes:'',
+                radio0:0,
+                radio1:0,
+                radio2:0,
+                value1:'',
+                value2:'',
+                value3:'',
+                value4:'',
+                checkList:[]
+            }
         }
     },
     mounted(){
@@ -744,18 +1440,8 @@ export default {
         clickRow2(row){
             this.$refs.mediartableData.toggleRowSelection(row)
         },
-        clickRow3(row){
-            this.$refs.moviesTable3.toggleRowSelection(row)
-        },
-        clickRow4(row){
-            this.$refs.moviesTable4.toggleRowSelection(row)
-        },
-        clickRow5(row){
-            this.$refs.moviesTable5.toggleRowSelection(row)
-        },
-        clickRow6(row){
-            this.$refs.moviesTable6.toggleRowSelection(row)
-        },
+        //表格change事件
+        tableChange1(val){this.tableSite1 = val},
         //操作按钮点击事件
         handleCommand(val){
             var that = this
@@ -766,7 +1452,7 @@ export default {
                 });
                 return;
             }
-            if(val=='0'){//下发节目
+            if(val=='0'){//下发任务
                 if(sessionStorage.projectId=='0'){
                     this.$message({
                         message: '此操作请选择具体项目!',
@@ -774,45 +1460,231 @@ export default {
                     });
                     return;
                 }
-                var arr = []
-                for(var i=0;i<this.tableSite1.length;i++){
-                    arr.push(this.tableSite1[i].height/this.tableSite1[i].width)
+                $('#taskMyModal0').modal('show')
+                that.taskready()
+            }
+            //屏幕开关
+            if(val=='1'){
+                $('#switchModal').modal('show')
+                that.switchType = '0'
+                that.addType='2'
+            }
+            //屏幕调光
+            if(val=='2'){
+                $('#DimmingModal').modal('show')
+                that.DimmingType='0'
+                that.addType='2'
+            }
+            //屏幕音量
+            if(val=='3'){
+                $('#volumeModal').modal('show')
+                that.volumeType='0'
+                that.addType='2'
+            }
+            //屏幕截图
+            if(val=='4'){
+                $('#screenshotMyModal').modal('show')
+                that.loading = true
+                var data = {}
+                data.screens = []
+                for(var i=0;i<that.tableSite1.length;i++){
+                    data.screens.push(that.tableSite1[i].id)
                 }
-                for(var j=0;j<arr.length;j++){
-                    if(arr[0]==arr[j]){
-
-                    }else{
-                        that.$message({
-                            message: '所选屏幕宽高比例不一致,不能进行此操作!',
-                            type: 'error'
-                        });
-                        return;
-                    }
-                }
-                $('#programSetting').modal('show')
+                data.command = '6'
                 $.ajax({
-                    type:'get',
+                    type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/program/getProgramList',
-                    data:{
-                        page:that.noticeIndex,
-                        rows:that.noticeSize,
-                        programType:0,
-                        nickName:'',
-                        projectId:sessionStorage.projectId
-                    },
+                    url:that.serverurl+'/v1/solin/screen/control',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
                     success:function(data){
                         if(data.errorCode=='0'){
-                            that.programSettingData = data.result.list
-                            that.programSettingTotal = data.result.total
+                            
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data.errorCode)
                         }
                     }
                 })
+                setTimeout(function(){
+                    $.ajax({
+                        type:'post',
+                        async:true,
+                        dataType:'json',
+                        url:that.serverurl+'/v1/solin/screen/device/screenshot',
+                        contentType:'application/json;charset=UTF-8',
+                        data:JSON.stringify({
+                            screens:data.screens
+                        }),
+                        success:function(data){
+                            if(data.errorCode=='0'){
+                                for(var i=0;i<data.result.length;i++){
+                                    data.result[i].screenshotMsg='data:image/jpeg;base64,'+data.result[i].screenshotMsg
+                                }
+                                that.screenshotData = data.result
+                                that.loading = false
+                            }else{
+                                that.errorCode(data.errorCode)
+                            }
+                        }
+                    })
+                },2500)
+            }
+            //屏幕重启
+            if(val=='5'){
+                $('#restartMyModal').modal('show')
+                that.restartType = '0'
+                that.addType='2'
+            }
+        },
+        //下发任务
+        LowerHair(){
+            var that = this;
+            if(that.tasktableSite.length==0||that.tasktableSite.length>=2){
+                that.$message({
+                    message: '请选择单个任务进行下发!',
+                    type: 'error'
+                });
+                return;
+            }
+            var array = []
+            for(var i = 0;i<that.tableSite1.length;i++){
+                array.push(that.tableSite1[i].id)
+            }
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/screen/control/task',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify({
+                    screens:array,
+                    taskId:that.tasktableSite[0].id
+                }),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '发送成功!',
+                            type: 'success'
+                        });
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
+        //请求屏幕定时信息列表 0开关/调光/音量
+        screenData(val){
+            var that = this;
+            var data = {}
+            data.nickName = ''
+            data.projectIds = sessionStorage.projectId
+            data.page = '1'
+            data.size = '50'
+            if(val=='0'){
+                data.type = '2'
             }
             if(val=='1'){
+                data.type = '3'
+            }
+            if(val=='2'){
+                data.type = '4'
+            }
+            if(val=='3'){
+                data.type = '5'
+            }
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/screen/schedule',
+                data:data,
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        if(val=='0'){
+                            that.switchdata = data.result.list
+                        }
+                        if(val=='1'){
+                            that.Dimmingdata = data.result.list
+                        }
+                        if(val=='2'){
+                            that.volumedata = data.result.list
+                        }
+                        if(val=='3'){
+                            that.restartdata = data.result.list
+                        }
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                }
+            })
+        },
+        // 获取标签页屏幕定时信息
+        screenData2(val){
+            var that = this
+            var data = {}
+            data.screens = []
+            for(var i=0;i<that.tableSite1.length;i++){
+                data.screens.push(that.tableSite1[i].id)
+            }
+            //屏幕开关
+            if(val=='1'){
+                data.command = '1'
+            }
+            if(val=='2'){
+                data.command = '2'
+            }
+            if(val=='3'){
+                data.command = '3'
+            }
+            if(val=='4'){
+                data.command='4'
+            }
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/screen/control/schedule/information',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                }
+            })
+            setTimeout(function(){
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/screen/device/schedule',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.searchData = data.result
+                        }else{
+                            that.errorCode(data.errorCode)
+                        }
+                    }
+                })
+            },3500)
+        },
+        //开关标签页事件  手动开关/定时开关/查询
+        switchClick(){
+            //定时信息页面
+            if(this.switchType=='1'){this.screenData(0)}
+            //查询当前屏幕定时信息
+            if(this.switchType=='2'){this.screenData2(1) }
+        },
+        //屏幕开启关闭
+        switchs(val){
+            var that = this;
+            if(val=='0'){
+                //开启屏幕
                 var arr = []
                 for(var i=0;i<that.tableSite1.length;i++){
                     arr.push(that.tableSite1[i].id)
@@ -821,11 +1693,13 @@ export default {
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/screen/setScreenOpen',
-                    data:{
-                       screenIds:arr.join(','),
-                       controlType:true
-                    },
+                    url:that.serverurl+'/v1/solin/screen/control',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify({
+                       screens:arr,
+                       brightness:'1',
+                       command:'1'
+                    }),
                     success:function(data){
                         if(data.errorCode=='0'){
                             that.$message({
@@ -840,30 +1714,9 @@ export default {
                         }
                     }
                 }) 
-                // $.ajax({
-                //     type:'post',
-                //     async:true,
-                //     dataType:'json',
-                //     url:that.serverurl+'/screen/openScreen',
-                //     data:{
-                //        screenIds:arr.join(',')
-                //     },
-                //     success:function(data){
-                //         if(data.errorCode=='0'){
-                //             that.$message({
-                //                 message: '屏幕开启成功!',
-                //                 type: 'success'
-                //             });
-                //             setTimeout(function(){
-                //                 that.ready()
-                //             },3000)
-                //         }else{
-                //             that.errorCode2(data.errorCode)
-                //         }
-                //     }
-                // }) 
             }
-            if(val=='2'){
+            if(val=='1'){
+                //关闭屏幕
                 var arr = []
                 for(var i=0;i<that.tableSite1.length;i++){
                     arr.push(that.tableSite1[i].id)
@@ -872,11 +1725,13 @@ export default {
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/screen/setScreenOpen',
-                    data:{
-                       screenIds:arr.join(','),
-                       controlType:false,
-                    },
+                    url:that.serverurl+'/v1/solin/screen/control',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify({
+                       screens:arr,
+                       brightness:'1',
+                       command:'2'
+                    }),
                     success:function(data){
                         if(data.errorCode=='0'){
                             that.$message({
@@ -891,261 +1746,824 @@ export default {
                         }
                     }
                 }) 
-                // $.ajax({
-                //     type:'post',
-                //     async:true,
-                //     dataType:'json',
-                //     url:that.serverurl+'/screen/shutScreen',
-                //     data:{
-                //        screenIds:arr.join(',')
-                //     },
-                //     success:function(data){
-                //         if(data.errorCode=='0'){
-                //             that.$message({
-                //                 message: '屏幕关闭成功!',
-                //                 type: 'success'
-                //             });
-                //             setTimeout(function(){
-                //                 that.ready()
-                //             },3000)
-                //         }else{
-                //             that.errorCode2(data.errorCode)
-                //         }
-                //     }
-                // }) 
             }
         },
-        //节目设置表格选择事件
-        programSettingChange(val){
-            this.programSettingSite = val
+        //开关定时信息页面 添加/编辑/删除/发送/关闭
+        switchOperation(val){
+            var that = this;
+            if(val=='0'){
+                that.addType='0'
+            }
+            if(val=='1'){
+                if(that.switchsite.length==0||that.switchsite.length>1){
+                    that.$message({
+                        message: '请选择单条定时信息编辑!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+                that.addType='1'
+                that.switchData.name=that.switchsite[0].nickName
+                that.switchData.radio0=that.switchsite[0].dateType
+                that.switchData.radio1=that.switchsite[0].timeType
+                that.switchData.radio2=that.switchsite[0].filterType
+                that.switchData.value1=that.switchsite[0].startDate
+                that.switchData.value2=that.switchsite[0].endDate
+                that.switchData.value3=that.switchsite[0].startTime
+                that.switchData.value4=that.switchsite[0].endTime
+                that.switchData.checkList=that.switchsite[0].filterValue.split(',')
+                for(var i=0;i<that.switchData.checkList.length;i++){
+                    that.switchData.checkList[i] = Number(that.switchData.checkList[i])
+                }
+                console.log(that.switchData)
+            }
+            if(val=='2'){
+                if(that.switchsite.length==0){
+                    that.$message({
+                        message: '请选择定时信息删除!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+                var arr = []
+                for(var i=0;i<that.switchsite.length;i++){
+                    arr.push(that.switchsite[i].id)
+                }
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/screen/schedule/deletes',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify({
+                        schedules:arr
+                    }),
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '删除成功',
+                                type:'success',
+                                showClose: true,
+                            });
+                            that.screenData(0)
+                        }else{
+                            that.errorCode(data.errorCode)
+                        }
+                    }
+                })
+            }
+            if(val=='3'){
+                if(that.switchsite.length==0){
+                    that.$message({
+                        message: '请选择定时信息发送!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+                var data = {}
+                data.command='8'
+                data.schedules=[]
+                data.screens=[]
+                for(var i ='0';i<that.switchsite.length;i++){
+                    data.schedules.push(that.switchsite[i].id)
+                }
+                for(var j=0;j<that.tableSite1.length;j++){
+                    data.screens.push(that.tableSite1[j].id)
+                }
+                $.ajax({  
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/screen/control/schedule',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '发送成功',
+                                type:'success',
+                                showClose: true,
+                            });
+                        }else{
+                            that.errorCode(data.errorCode)
+                        }
+                    }
+                })
+            }
+            if(val=='4'){that.addType='2'}
         },
-        //发送节目
-        sendMedia(){
-            var that = this
-            var arr = [];
-            if(that.programSettingSite.length=='0'||that.programSettingSite.length>1){
+        //屏幕开关定时信息列表changge事件
+        switchtableChange(val){this.switchsite = val;},
+        //保存定时开关信息   添加/编辑
+        switchSubmit(){
+            var that = this;
+            if(that.switchData.name==''){
                 that.$message({
-                    message: '请选择一个节目进行下发!',
-                    type: 'error'
+                    message: '定时名称不能为空!',
+                    type:'error',
+                    showClose: true,
                 });
                 return;
             }
-            var Proportion = that.programSettingSite[0].height/that.programSettingSite[0].width
-            var Proportion2 = this.tableSite1[0].height/this.tableSite1[0].width
-            if(Proportion==Proportion2){
-
-            }else{
-                that.$message({
-                    message: '所选节目宽高比例与屏幕宽高比例不一致,不能下发!',
-                    type: 'error'
-                });
-                return;
+            if(that.switchData.radio0=='1'){
+                if(that.switchData.value1==''||that.switchData.value2==''){
+                    that.$message({
+                        message: '开始结束日期不能为空!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
             }
-            for(var i = 0;i<this.tableSite1.length;i++){
-                arr.push(this.tableSite1[i].id)
+            if(that.switchData.radio1=='1'){
+                if(that.switchData.value3==''||that.switchData.value4==''){
+                    that.$message({
+                        message: '开始结束时间不能为空!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
             }
-            var data = {
-                "programId": that.programSettingSite[0].id,
+            if(that.switchData.radio2=='1'){
+                if(that.switchData.checkList.length==0){
+                    that.$message({
+                        message: '星期不能为空!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
             }
-            data.screenIds = arr.join(',')
+            var data = {}
+            var type = ''
+            if(that.addType == '0'){type='post'}
+            if(that.addType == '1'){type='put';data.id = that.switchsite[0].id}
+            data.type = '2'
+            data.nickName = that.switchData.name
+            data.dateType = that.switchData.radio0
+            data.timeType = that.switchData.radio1
+            data.filterType = that.switchData.radio2
+            data.startDate = that.switchData.value1
+            data.endDate = that.switchData.value2
+            data.startTime = that.switchData.value3
+            data.endTime = that.switchData.value4
+            data.filterValue = that.switchData.checkList.join(',')
+            data.projectId = sessionStorage.projectId
             $.ajax({
-                type:'post',
+                type:type,
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/screen/setProgramUpload',
+                url:that.serverurl+'/v1/solin/screen/schedule',
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify(data),
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.$message({
-                            message: '节目正在下发种请稍后!',
+                            message: '保存成功',
+                            type:'success',
+                            showClose: true,
+                        });
+                        that.screenData(0)
+                        that.addType = '2'
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                }
+            })
+        },
+        //调光标签页事件   手动调光/定时调光/查询
+        DimmingClick(){
+            if(this.DimmingType=='1'){this.screenData(1)}
+            if(this.DimmingType=='2'){this.screenData2(2)}
+        },
+        //屏幕亮度手动页面  --  发送按钮
+        DimmingSubmit(){
+            var that = this;
+            if(that.brightness==''){
+                this.$message({
+                    message: '请输入屏幕亮度!',
+                    type: 'error'
+                });
+                return;
+            }
+            var data = {}
+            data.command = '3'
+            data.brightness = that.brightness
+            data.screens = []
+            for(var i = 0;i<that.tableSite1.length;i++){
+                data.screens.push(that.tableSite1[i].id)
+            }
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/screen/control',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '发送成功!',
                             type: 'success'
                         });
-                        setTimeout(function(){
-                            $('#programSetting').modal('hide')
-                            that.ready()
-                        },2000)
                     }else{
                         that.errorCode2(data.errorCode)
                     }
                 }
             })
         },
-        //节目设置预览
-        previewS(val){
+        //调光定时信息页面 添加/编辑/删除/发送/关闭
+        DimmingOperation(val){
             var that = this;
-            var val2 = val.width/val.height
+            if(val=='0'){that.addType='0'}
+            if(val=='1'){
+                if(that.Dimmingsite.length==0||that.Dimmingsite.length>1){
+                    that.$message({
+                        message: '请选择单条定时信息编辑!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+                that.addType='1'
+                that.DimmingDatas.DimmingName=that.Dimmingsite[0].nickName
+                that.DimmingDatas.defaultBrightness=that.Dimmingsite[0].defaultBrightness
+                that.DimmingDatas.radio0 = that.Dimmingsite[0].dateType 
+                that.DimmingDatas.radio1 = that.Dimmingsite[0].timeType 
+                that.DimmingDatas.radio2 = that.Dimmingsite[0].filterType 
+                that.DimmingDatas.value1 = that.Dimmingsite[0].startDate
+                that.DimmingDatas.value2 = that.Dimmingsite[0].endDate
+                that.DimmingDatas.value3 = that.Dimmingsite[0].startTime
+                that.DimmingDatas.value4 = that.Dimmingsite[0].endTime
+                that.DimmingDatas.checkList=that.Dimmingsite[0].filterValue.split(',')
+                for(var i=0;i<that.DimmingDatas.checkList.length;i++){
+                    that.DimmingDatas.checkList[i] = Number(that.DimmingDatas.checkList[i])
+                }
+                that.brightness2=Number(that.Dimmingsite[0].brightness)
+            }
+            if(val=='2'){
+                //删除
+                if(that.Dimmingsite.length==0){
+                    that.$message({
+                        message: '请选择定时信息删除!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+                var arr = []
+                for(var i=0;i<that.Dimmingsite.length;i++){
+                    arr.push(that.Dimmingsite[i].id)
+                }
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/screen/schedule/deletes',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify({
+                        schedules:arr
+                    }),
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '删除成功',
+                                type:'success',
+                                showClose: true,
+                            });
+                            that.screenData(1)
+                        }else{
+                            that.errorCode(data.errorCode)
+                        }
+                    }
+                })
+            }
+            if(val=='3'){
+                //发送
+                if(that.Dimmingsite.length==0){
+                    that.$message({
+                        message: '请选择定时信息发送!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+                var data = {}
+                data.command='9'
+                data.schedules=[]
+                data.screens=[]
+                for(var i ='0';i<that.Dimmingsite.length;i++){
+                    data.schedules.push(that.Dimmingsite[i].id)
+                }
+                for(var j=0;j<that.tableSite1.length;j++){
+                    data.screens.push(that.tableSite1[j].id)
+                }
+                $.ajax({  
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/screen/control/schedule',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '发送成功',
+                                type:'success',
+                                showClose: true,
+                            });
+                        }else{
+                            that.errorCode(data.errorCode)
+                        }
+                    }
+                })
+            }
+            if(val=='4'){that.addType='2'}
+        },
+        //屏幕亮度定时信息列表changge事件
+        DimmingtableChange(val){this.Dimmingsite = val;},
+        //调光定时信息页面 添加/编辑 保存
+        DimmingSubmit2(){
+            var that = this;
+            if(that.DimmingDatas.volumeName==''){
+                that.$message({
+                    message: '定时名称不能为空!',
+                    type:'error',
+                    showClose: true,
+                });
+                return;
+            }
+            if(that.DimmingDatas.radio0==1){
+                if(that.DimmingDatas.value1==''||that.DimmingDatas.value2==''){
+                    that.$message({
+                        message: '开始结束日期不能为空!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+            }
+            if(that.DimmingDatas.radio1==1){
+                if(that.DimmingDatas.value3==''||that.DimmingDatas.value4==''){
+                    that.$message({
+                        message: '开始结束时间不能为空!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+            }
+            if(that.DimmingDatas.radio2==1){
+                if(that.DimmingDatas.checkList.length==0){
+                    that.$message({
+                        message: '星期不能为空!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+            }
+            var data = {}
+            var type = ''
+            if(that.addType == '0'){type='post'}
+            if(that.addType == '1'){type='put';data.id = that.Dimmingsite[0].id}
+            data.type = '3'
+            data.nickName = that.DimmingDatas.volumeName
+            data.defaultBrightness = that.DimmingDatas.defaultBrightness
+            data.dateType = that.DimmingDatas.radio0
+            data.timeType = that.DimmingDatas.radio1
+            data.filterType = that.DimmingDatas.radio2
+            data.startDate = that.DimmingDatas.value1
+            data.endDate = that.DimmingDatas.value2
+            data.startTime = that.DimmingDatas.value3
+            data.endTime = that.DimmingDatas.value4
+            data.filterValue = that.DimmingDatas.checkList.join(',')
+            data.brightness = that.DimmingDatas.brightness2
+            data.projectId = sessionStorage.projectId
             $.ajax({
-                type:'get',
+                type:type,
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/program/getProgramDetailsList',
-                data:{
-                    programId:val.id
-                },
+                url:that.serverurl+'/v1/solin/screen/schedule',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
                 success:function(data){
                     if(data.errorCode=='0'){
-                        that.filesSelected = data.result.list
-                        if(data.result.isAddText=='0'){
-                            that.programDate.checked = false
-                            that.programDate.text = ''
-                        }
-                        if(data.result.isAddText=='1'){
-                            that.programDate.checked = true
-                            that.programDate.text = data.result.textContent
-                        }
-                        $('#programSetting_previewS').modal('show')
-                        clearInterval(animationMedia)
-                        var width='';
-                        var height='';
-                        if(val2>1){
-                            // 宽大于高 横屏
-                            width=299;
-                            height = 299/val2
-                        }else{
-                            // 竖屏
-                            height=398;
-                            width=398*val2
-                        }
-                        var ss = 0;
-                        var htmls = ''
-                        var length = that.filesSelected.length
-                        var i = 0;
-                        // previews
-                        $('#previews_div2').css('width',width)
-                        $('#previews_div2').css('height',height)
-                        $('.previewS_width').css('width',width)
-                        $('.previewS_height').css('height',height+32)
-                        if(that.filesSelected.length<2){
-                            if(that.filesSelected[0].type=='0'){ //0为图片
-                                htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><img style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[0].mediaUrl+"'></div>"
-                            }else{
-                                htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><video style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[0].mediaUrl+"' autoplay></video></div>"
-                            }
-                            $('#previews_div2').append(htmls)
-                        }else{
-                            for(var s=0;s<that.filesSelected.length;s++){
-                                htmls=''
-                                if(that.filesSelected[s].type=='0'){
-                                    htmls = "<div id='previews_div_div' style='width:100%;height:100%;position:absolute;'><img style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[s].mediaUrl+"'></div>"
-                                }else{
-                                    htmls = "<div id='previews_div_div' style='width:100%;height:100%;position:absolute;'><video id='video' style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[s].mediaUrl+"' loop></video></div>"
-                                }
-                                $('#previews_div2').append(htmls)
-                            }
-                            var media = $('#previews_div2');
-                            for(var t=0;t<that.filesSelected.length;t++){
-                                $('#previews_div2>div').eq(t).css('left',width * t +"px" )
-                                // media[0].childNodes[t].style.left = width * t +"px"    
-                            }
-                            if(that.filesSelected[0].type=='1'){
-                                media[0].childNodes[0].childNodes[0].play()
-                            }
-                            var animationMedia = setInterval(() => {
-                                ss++
-                                if(ss==that.filesSelected[i].duration||ss>that.filesSelected[i].duration){
-                                    ss = 0;
-                                    for(var t =0;t<that.filesSelected.length;t++){
-                                        var widths = $('#previews_div2>div').eq(t).css('left')
-                                        widths = widths.split('px')
-                                        $('#previews_div2>div').eq(t).css('left',widths[0]-width+"px" )
-                                        // media[0].childNodes[t].style.left = media[0].childNodes[t].offsetLeft-width+'px'
-                                    }
-                                    if(that.filesSelected[i].type=='1'){
-                                        media[0].childNodes[i].childNodes[0].pause();
-                                        media[0].childNodes[i].childNodes[0].currentTime=0;
-                                    }
-                                    i++
-                                    if(i==length){
-                                        i=0
-                                        for(var t=0;t<that.filesSelected.length;t++){
-                                            $('#previews_div2>div').eq(t).css('left',width * t +"px" )
-                                            // media[0].childNodes[t].style.left = width * t +"px"    
-                                        }
-                                    }
-                                    if(that.filesSelected[i].type=='1'){
-                                        media[0].childNodes[i].childNodes[0].play()
-                                    }
-                                }
-                            }, 1000);
-                        }
-                        if(that.programDate.checked==true){
-                            var html = "<div id='RollTexts_a' style='position:relative;background:black;color:white;font-size:16px;text-align:center;height:30px;line-height:30px;overflow:hidden;white-space:nowrap;'></div>"
-                            var div = "<div id='RollTexts' style='position:absolute;left:0;'>"+that.programDate.text+"</div>"
-                            $('.previews_div_body2').append(html)
-                            $('#RollTexts_a').append(div)
-                            setTimeout(function(){
-                                var rollWord = {
-                                    container:document.getElementById("RollTexts"),
-                                    content:document.getElementById("RollTexts"),
-                                    _containerWidth:1,
-                                    _contentWidth:1,
-                                    _speed:1,
-                                    setSpeed:function(opt){
-                                        var This = this;
-                                        This._speed = opt;
-                                    },
-                                    setContainerWidth:function(){
-                                        var This = this;
-                                        This._containerWidth = This.container.offsetWidth;
-                                    },
-                                    setContentWidth:function(){
-                                        var This = this;
-                                        This._contentWidth = This.content.offsetWidth;
-                                        console.log(This.content.offsetWidth)
-                                    },
-                                    roll:function(){
-                                        var This = this;
-                                        This.content.style.left = 95 + "px";
-                                        that.timer2 = setInterval(function(){This.move()},20);
-                                        This.container.onmouseover = function(){
-                                            clearInterval(that.timer2);
-                                        };
-                                        This.container.onmouseout = function(){
-                                            that.timer2 = setInterval(function(){This.move()},20);
-                                        };
-                                    },
-                                    move:function(){
-                                        var This = this;
-                                        if(parseInt(This.content.style.left)+This._contentWidth > 0)
-                                        {
-                                            This.content.style.left = parseInt(This.content.style.left)-This._speed + "px";
-                                        }
-                                        else
-                                        {
-                                            This.content.style.left = 95 + "px";
-                                        }                 
-                                    },
-                                    init:function(opt){
-                                        var This = this;
-                                        var speed = opt.speed || 1;
-                                        This.setSpeed(speed);
-                                        This.setContainerWidth();
-                                        This.setContentWidth();
-                                        This.roll();
-                                    }
-                                }
-                                rollWord.init({speed:1});  //数值越小，滚动速度越慢。
-                            },500)
-                        }
+                        that.$message({
+                            message: '保存成功',
+                            type:'success',
+                            showClose: true,
+                        });
+                        that.screenData(1)
+                        that.addType = '2'
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                }
+            })
+        },
+        //屏幕音量标签页事件 手动/定时/查询
+        volumeClick(){
+            if(this.volumeType=='1'){this.screenData(2)}
+            if(this.volumeType=='2'){this.screenData2(3)}
+        },
+        //屏幕音量定时信息列表changge事件
+        volumetableChange(val){this.volumesite = val;},
+        //屏幕音量手动页面   --发送按钮
+        volumeSubmit(){
+            var that = this;
+            if(that.volume==''){
+                this.$message({
+                    message: '请输入屏幕音量!',
+                    type: 'error'
+                });
+                return;
+            }
+            var data = {}
+            data.command = '4'
+            data.volume = that.volume
+            data.screens = []
+            for(var i = 0;i<that.tableSite1.length;i++){
+                data.screens.push(that.tableSite1[i].id)
+            }
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/screen/control',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '发送成功!',
+                            type: 'success'
+                        });
                     }else{
                         that.errorCode2(data.errorCode)
                     }
-
-                    $('#programSetting_previewS').on('hide.bs.modal', function () {
-                        clearInterval(animationMedia)
-                        clearInterval(that.timer2)
-                        $("#RollTexts_a").remove();
-                        $('#previews_div2').html('')
-                    })
                 }
-            })     
+            })
         },
-        //表格change事件
-        tableChange1(val){
-            this.tableSite1 = val
+        //音量定时信息页面 添加/编辑/删除/发送/关闭
+        volumeOperation(val){
+            var that= this;
+            if(val=='0'){that.addType='0'}
+            if(val=='1'){
+                if(that.volumesite.length==0||that.volumesite.length>1){
+                    that.$message({
+                        message: '请选择单条定时信息编辑!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+                that.addType='1'
+                that.volumeDatas.volumeName=that.volumesite[0].nickName
+                that.volumeDatas.defaultVolume=that.volumesite[0].defaultVolume
+                that.volumeDatas.radio0 = that.volumesite[0].dateType 
+                that.volumeDatas.radio1 = that.volumesite[0].timeType 
+                that.volumeDatas.radio2 = that.volumesite[0].filterType 
+                that.volumeDatas.value1 = that.volumesite[0].startDate
+                that.volumeDatas.value2 = that.volumesite[0].endDate
+                that.volumeDatas.value3 = that.volumesite[0].startTime
+                that.volumeDatas.value4 = that.volumesite[0].endTime
+                that.volumeDatas.checkList=that.volumesite[0].filterValue.split(',')
+                for(var i=0;i<that.volumeDatas.checkList.length;i++){
+                    that.volumeDatas.checkList[i] = Number(that.volumeDatas.checkList[i])
+                }
+                that.volumeDatas.volume=that.volumesite[0].volume
+            }
+            if(val=='2'){
+                //删除
+                if(that.volumesite.length==0){
+                    that.$message({
+                        message: '请选择定时信息删除!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+                var arr = []
+                for(var i=0;i<that.volumesite.length;i++){
+                    arr.push(that.volumesite[i].id)
+                }
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/screen/schedule/deletes',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify({
+                        schedules:arr
+                    }),
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '删除成功',
+                                type:'success',
+                                showClose: true,
+                            });
+                            that.screenData(2)
+                        }else{
+                            that.errorCode(data.errorCode)
+                        }
+                    }
+                })
+            }
+            if(val=='3'){
+                //发送
+                if(that.volumesite.length==0){
+                    that.$message({
+                        message: '请选择定时信息发送!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+                var data = {}
+                data.command='10'
+                data.schedules=[]
+                data.screens=[]
+                for(var i ='0';i<that.volumesite.length;i++){
+                    data.schedules.push(that.volumesite[i].id)
+                }
+                for(var j=0;j<that.tableSite1.length;j++){
+                    data.screens.push(that.tableSite1[j].id)
+                }
+                $.ajax({  
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/screen/control/schedule',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '发送成功',
+                                type:'success',
+                                showClose: true,
+                            });
+                        }else{
+                            that.errorCode(data.errorCode)
+                        }
+                    }
+                })
+            }
+            if(val=='4'){that.addType='2'}
         },
-        // 节目管理
+        //音量定时信息页面 添加/编辑 保存
+        volumeSubmit2(){
+            var that = this;
+            if(that.volumeDatas.volumeName==''){
+                that.$message({
+                    message: '定时名称不能为空!',
+                    type:'error',
+                    showClose: true,
+                });
+                return;
+            }
+            if(that.volumeDatas.radio0==1){
+                if(that.volumeDatas.value1==''||that.volumeDatas.value2==''){
+                    that.$message({
+                        message: '开始结束日期不能为空!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+            }
+            if(that.volumeDatas.radio1==1){
+                if(that.volumeDatas.value3==''||that.volumeDatas.value4==''){
+                    that.$message({
+                        message: '开始结束时间不能为空!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+            }
+            if(that.volumeDatas.radio2==1){
+                if(that.volumeDatas.checkList.length==0){
+                    that.$message({
+                        message: '星期不能为空!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+            }
+            var data = {}
+            var type = ''
+            if(that.addType == '0'){type='post'}
+            if(that.addType == '1'){type='put';data.id = that.volumesite[0].id}
+            data.type = '4'
+            data.nickName = that.volumeDatas.volumeName
+            data.defaultVolume = that.volumeDatas.defaultVolume
+            data.dateType = that.volumeDatas.radio0
+            data.timeType = that.volumeDatas.radio1
+            data.filterType = that.volumeDatas.radio2
+            data.startDate = that.volumeDatas.value1
+            data.endDate = that.volumeDatas.value2
+            data.startTime = that.volumeDatas.value3
+            data.endTime = that.volumeDatas.value4
+            data.filterValue = that.volumeDatas.checkList.join(',')
+            data.volume = that.volumeDatas.volume
+            data.projectId = sessionStorage.projectId
+            $.ajax({
+                type:type,
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/screen/schedule',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '保存成功',
+                            type:'success',
+                            showClose: true,
+                        });
+                        that.screenData(2)
+                        that.addType = '2'
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                }
+            })
+        },
+        //屏幕重启标签页事件   手动/定时/查询
+        restartClick(){
+            if(this.restartType=='1'){this.screenData(3)}
+            if(this.restartType=='2'){this.screenData2(4)}
+        },
+        //屏幕手动重启
+        restart(){
+            var that = this
+            var data = {}
+            data.command = '7'
+            data.screens = []
+            for(var i = 0;i<that.tableSite1.length;i++){
+                data.screens.push(that.tableSite1[i].id)
+            }
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/screen/control',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '发送成功!',
+                            type: 'success'
+                        });
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
+        restarttableChange(val){this.restartsite=val;},
+        //重启定时页面   添加/编辑/删除/发送/关闭
+        restartOperation(val){
+            var that = this
+            if(val=='0'){that.addType='0'}
+            if(val=='1'){
+                that.addType='1'
+                if(that.restartsite.length==0||that.restartsite.length>1){
+                    this.$message({
+                        message: '请选择单条定时信息编辑!',
+                        type: 'error'
+                    });
+                    return;
+                }
+                that.restartName = that.restartsite[0].nickName
+                that.rebootTime = that.restartsite[0].rebootTime
+            }
+            if(val=='2'){
+                //删除
+                if(that.restartsite.length==0){
+                    this.$message({
+                        message: '请选择定时信息删除!',
+                        type: 'error'
+                    });
+                    return;
+                }
+                var arr = []
+                for(var i=0;i<that.restartsite.length;i++){
+                    arr.push(that.restartsite[i].id)
+                }
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/screen/schedule/deletes',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify({
+                        schedules:arr
+                    }),
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '删除成功',
+                                type:'success',
+                                showClose: true,
+                            });
+                            that.screenData(3)
+                        }else{
+                            that.errorCode(data.errorCode)
+                        }
+                    }
+                })
+            }
+            if(val=='3'){
+                //发送
+                if(that.restartsite.length==0||that.restartsite.length>1){
+                    this.$message({
+                        message: '请选择单条定时信息发送!',
+                        type: 'error'
+                    });
+                    return;
+                }
+                var data = {}
+                data.command='11'
+                data.schedules=[]
+                data.screens=[]
+                for(var i ='0';i<that.restartsite.length;i++){
+                    data.schedules.push(that.restartsite[i].id)
+                }
+                for(var j=0;j<that.tableSite1.length;j++){
+                    data.screens.push(that.tableSite1[j].id)
+                }
+                $.ajax({  
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/screen/control/schedule',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '发送成功',
+                                type:'success',
+                                showClose: true,
+                            });
+                        }else{
+                            that.errorCode(data.errorCode)
+                        }
+                    }
+                })
+            }
+            if(val=='4'){that.addType='2'}
+        },
+        //重启定时信息保存
+        restartSubmit(){
+            var that = this
+            if(that.restartName==''||that.rebootTime==''){
+                that.$message({
+                    message: '定时重启信息不能为空!',
+                    type: 'error'
+                });
+                return;
+            }
+            var data = {}
+            var type = ''
+            if(that.addType=='0'){type='post'}
+            if(that.addType=='1'){type='put';data.id=that.restartsite[0].id;}
+            data.nickName = that.restartName
+            data.rebootTime = that.rebootTime
+            data.projectId = sessionStorage.projectId
+            $.ajax({
+                type:type,
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/screen/schedule/reboot',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '保存成功',
+                            type:'success',
+                            showClose: true,
+                        });
+                        that.screenData(3)
+                        that.addType = '2'
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                }
+            })
+        },
+        // 点击节目管理
         notice(){
             if(sessionStorage.projectId=='0'){
                 this.$message({
@@ -1154,579 +2572,8 @@ export default {
                 });
                 return;
             }
-            $('#noticeModal').modal('show')
-            this.noticeready()
-            /* 完成拖拽 */
-            $('#noticeModal').draggable({
-                cursor: "move",
-                handle: '.modal-header'
-            });
-            $('#noticeModal').css("overflow", "hidden")
-        },
-        // 节目列表获取
-        noticeready(){
-            var that = this
-            $.ajax({
-                type:'get',
-                async:true,
-                dataType:'json',
-                url:that.serverurl+'/program/getProgramList',
-                data:{
-                   page:that.noticeIndex,
-                   rows:that.noticeSize,
-                   programType:'',
-                   nickName:'',
-                   projectId:sessionStorage.projectId
-                },
-                success:function(data){
-                    if(data.errorCode=='0'){
-                        that.noticetableData = data.result.list
-                        that.noticeTotal = data.result.total
-                    }else{
-                        that.errorCode2(data.errorCode)
-                    }
-                }
-            })
-        },
-        sizechange2(val){this.noticeSize = val;this.noticeready();},
-        currentchange2(val){this.noticeIndex = val;this.noticeready();},
-        //选择节目列表数据
-        noticeTableChange(val){
-            this.noticeSite = val
-        },
-        //创建编辑删除节目
-        program(val){
-            var that = this;
-            if(val=='0'){
-                //添加
-                $('#addprogram').modal('show')
-                $('#addprogramModalLabel').text('创建节目')
-                that.submitMeadioType = '0'
-                this.programDate.setProgramType = true
-                that.programDate.programName = ''
-                that.programDate.programWidth = ''
-                that.programDate.programHeight = ''
-                that.filesSelected = [];
-            }
-            if(val=='1'){
-                //修改
-                if(that.noticeSite.length=='0'||that.noticeSite.length>1){
-                    that.$message({
-                        message: '请选择一个节目进行编辑',
-                        type:'error',
-                        showClose: true,
-                    });
-                    return;
-                }
-                $('#addprogram').modal('show')
-                $('#addprogramModalLabel').text('编辑节目')
-                that.submitMeadioType = '1'
-                that.programDate.programName = that.noticeSite[0].nickName
-                that.programDate.programWidth = that.noticeSite[0].width
-                that.programDate.programHeight = that.noticeSite[0].height
-                this.programDate.setProgramType = true
-                that.programDate.checked = false
-                that.programDate.text = ''
-            }
-            if(val=='2'){
-                //删除
-                if(that.noticeSite.length=='0'||that.noticeSite.length>1){
-                    that.$message({
-                        message: '请选择一个节目进行删除',
-                        type:'error',
-                        showClose: true,
-                    });
-                    return;
-                }
-                that.$confirm('是否删除所选节目？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    $.ajax({
-                        type:'post',
-                        async:true,
-                        dataType:'json',
-                        url:that.serverurl+'/program/deleteProgram',
-                        data:{
-                            id:that.noticeSite[0].id
-                        },
-                        success:function(data){
-                            if(data.errorCode=='0'){
-                                that.$message({
-                                    message: '删除成功!',
-                                    type: 'success'
-                                });
-                                that.noticeready()
-                            }else{
-                                that.errorCode2(data.errorCode)
-                            }
-                        }
-                    })
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });          
-                });
-            }
-            /* 完成拖拽 */
-            $('#addprogram').draggable({
-                cursor: "move",
-                handle: '.modal-header'
-            });
-            $('#addprogram').css("overflow", "hidden")
-        },
-        //创建编辑节目下一步
-        nextStep(){
-            var that = this
-            if(this.programDate.programName==''||this.programDate.programWidth==''||this.programDate.programHeight==''){
-                this.$message.error('必填字段不能为空');
-                return;
-            } 
-            this.animationMediaType = 0
-            this.filesSelected = []
-            this.programDate.setProgramType = false
-            this.mediaready()
-            this.previewType = 0
-            that.programDate.checked = false
-            that.programDate.text = ''
-            if(that.submitMeadioType=='1'){
-                $.ajax({
-                    type:'get',
-                    async:true,
-                    dataType:'json',
-                    url:that.serverurl+'/program/getProgramDetailsList',
-                    data:{
-                        programId:that.noticeSite[0].id,
-                        projectId:sessionStorage.projectId
-                    },
-                    success:function(data){
-                        if(data.errorCode=='0'){
-                            that.filesSelected = data.result.list
-                            console.log(data.result.isAddText)
-                            if(data.result.isAddText=='0'){
-                                that.programDate.checked = false
-                                that.programDate.text = ''
-                            }
-                            if(data.result.isAddText=='1'){
-                                that.programDate.checked = true
-                                that.programDate.text = data.result.textContent
-                            }
-                        }else{
-                            that.errorCode2(data.errorCode)
-                        }
-                    }
-                })
-            }
-        },
-        //
-        setProgramChange(){
-            var that = this
-            $.ajax({
-                type:'get',
-                async:true,
-                dataType:'json',
-                url:that.serverurl+'/media/getMediaList',
-                data:{
-                   page:that.mediaIndex,
-                   rows:that.mediaSize,
-                   audit:that.stateValue,
-                   type:that.setProgramValue,
-                   nickName:'',
-                   projectId:sessionStorage.projectId
-                },
-                success:function(data){
-                    if(data.errorCode=='0'){
-                        that.mediartableData = data.result.list
-                        that.mediaTotal = data.result.total
-                    }else{
-                        that.errorCode2(data.errorCode)
-                    }
-                }
-            })
-        },
-        //左侧选中媒体文件change事件
-        leftMediaChange(val){
-            this.leftMediaSize = val
-        },
-        //左侧分页
-        leftMediaSizechange(val){
-            this.mediaSize = val
-            this.setProgramChange()
-        },
-        leftMediaCurrentchange(val){
-            this.mediaIndex = val
-            this.setProgramChange()
-        },
-        //中间选中媒体文件change事件
-        centerMediaChange(val){
-            this.centerMediaSize = val
-        },
-        //向右侧移入媒体文件
-        rightMedia(){
-            var type = 0;
-            if(this.leftMediaSize.length==0){
-                this.$message({
-                    message: '请选择媒体文件进行移入操作',
-                    type:'error',
-                    showClose: true,
-                });
-                return;
-            }
-            if(this.filesSelected.length>=10){
-                this.$message({
-                    message: '最多添加10个媒体文件!',
-                    type:'error',
-                    showClose: true,
-                });
-                return;
-            }
-            for(var i = 0;i<this.filesSelected.length;i++){
-                if(this.filesSelected[i].type=='1'){
-                    type = type+1
-                }
-            }
-            for(var s=0;s<this.leftMediaSize.length;s++){
-                if(this.leftMediaSize[s].type=='1'){
-                    type = type+1
-                }
-            }
-            if(type>4){
-                this.$message({
-                    message: '已选取媒体文件最多存在四个媒体视频文件',
-                    type:'error',
-                    showClose: true,
-                });
-                return;
-            }
-            for(var i = 0;i<this.leftMediaSize.length;i++){
-                for(var s = 0;s<this.filesSelected.length;s++){
-                    if(this.leftMediaSize[i].id==this.filesSelected[s].mediaId){
-                        this.$message({
-                            message: '媒体文件重复!',
-                            type:'error',
-                            showClose: true,
-                        });
-                        return;
-                    }
-                }
-            }
-            for(var i = 0;i<this.leftMediaSize.length;i++){
-                this.filesSelected.push(this.leftMediaSize[i])
-                this.filesSelected[this.filesSelected.length-1].mediaId = this.leftMediaSize[i].id
-            }
-        },
-        //移动改变数据位置
-        fluctuation(val){
-            var vals = '';
-            if(this.centerMediaSize.length==0||this.centerMediaSize.length>1){
-                this.$message({
-                    message: '请选择媒体文件进行改变位置操作',
-                    type:'error',
-                    showClose: true,
-                });
-                return;
-            }
-            for(var i = 0;i<this.filesSelected.length;i++){
-                if(this.centerMediaSize[0].mediaId==this.filesSelected[i].mediaId){
-                    vals = i;
-                }
-            }
-            if(vals==0){
-                if(val=='0'){
-                    return;
-                }
-            }
-            var tem1 = this.filesSelected[vals]
-            var tem2 = this.filesSelected[vals+1]
-            var tem3 = this.filesSelected[vals-1]
-            this.filesSelected.splice(vals,1)
-            if(val=='0'){
-                this.filesSelected.splice(vals-1,0,tem1)
-            }
-            if(val=='1'){
-                this.filesSelected.splice(vals+1,0,tem1)
-            }
-        },
-        //删除已选择文件
-        deleteMedia(){
-            var vals = '';
-            if(this.centerMediaSize.length==0){
-                this.$message({
-                    message: '请选择媒体文件进行删除!',
-                    type:'error',
-                    showClose: true,
-                });
-                return;
-            }
-            for(var i=0;i<this.centerMediaSize.length;i++){
-                for(var j=0;j<this.filesSelected.length;j++){
-                    if(this.centerMediaSize[i].mediaId==this.filesSelected[j].mediaId){
-                        this.filesSelected.splice(j,1)
-                    }
-                }
-            }
-        },
-        //点击预览生成html
-        preview(vals){
-            var that = this
-            if(this.filesSelected.length==0){
-                this.$message({
-                    message: '请选择媒体文件!',
-                    type:'error',
-                    showClose: true,
-                });
-                return;
-            }
-            if(that.programDate.checked==true){
-                if(that.programDate.text==''){
-                    this.$message({
-                        message: '请输入滚动文字!',
-                        type:'error',
-                        showClose: true,
-                    });
-                    return;
-                }
-            }
-            $('#myModal_preview').modal('show')
-            var htmls = '';
-            var width='';
-            var height='';
-            var val = this.programDate.programWidth/this.programDate.programHeight
-            if(val>1){
-                // 宽大于高 横屏
-                width=299;
-                height = 299/val
-            }else{
-                // 竖屏
-                height=398;
-                width=398*val
-            }
-            var length = this.filesSelected.length
-            // previews
-            $('#previews_div').css('width',width)
-            $('#previews_div').css('height',height)
-            $('.previews_div_body').css('width',width+32)
-            $('.previews_div_content').css('width',width+32)
-            if(this.filesSelected.length<2){
-                if(this.filesSelected[0].type=='0'){ //0为图片
-                    htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><img style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[0].mediaUrl+"'></div>"
-                }else{
-                    htmls = "<div id='previews_div_div' style='width:100%;height:100%;'><video style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[0].mediaUrl+"' autoplay></video></div>"
-                }
-                $('#previews_div').append(htmls)
-            }else{
-                var media = $('#previews_div');
-                    for(var s=0;s<this.filesSelected.length;s++){
-                        htmls=''
-                        if(this.filesSelected[s].type=='0'){
-                            htmls = "<div id='previews_div_div' style='width:100%;height:100%;position:absolute;'><img style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[s].mediaUrl+"'></div>"
-                        }else{
-                            htmls = "<div id='previews_div_div' style='width:100%;height:100%;position:absolute;'><video id='video' style='width:100%;height:100%;' src='"+that.serverurl+that.filesSelected[s].mediaUrl+"' loop></video></div>"
-                        }
-                        $('#previews_div').append(htmls)
-                    }
-                    if(this.filesSelected[0].type=='1'){
-                        media[0].childNodes[0].childNodes[0].play()
-                    }
-                for(var t=0;t<this.filesSelected.length;t++){
-                    $('#previews_div>div').eq(t).css('left',width * t +"px" )
-                    // media[0].childNodes[t].style.left = width * t +"px"    
-                }
-                var ss = 0;
-                var i = 0;
-                var animationMedia = window.setInterval(() => {
-                    ss++
-                    if(ss==this.filesSelected[i].duration||ss>this.filesSelected[i].duration){
-                        ss = 0;
-                        for(var t =0;t<this.filesSelected.length;t++){
-                            var widths = $('#previews_div>div').eq(t).css('left')
-                            widths = widths.split('px')
-                            $('#previews_div>div').eq(t).css('left',widths[0]-width+"px" )
-                            // media[0].childNodes[t].style.left = media[0].childNodes[t].offsetLeft-width+'px'
-                        }
-                        if(this.filesSelected[i].type=='1'){
-                            media[0].childNodes[i].childNodes[0].pause();
-                            media[0].childNodes[i].childNodes[0].currentTime=0;
-                        }
-                        i++
-                        if(i==length){
-                            i=0
-                            for(var t=0;t<this.filesSelected.length;t++){
-                                $('#previews_div>div').eq(t).css('left',width * t +"px" )
-                                // media[0].childNodes[t].style.left = width * t +"px"    
-                            }
-                        }
-                        if(this.filesSelected[i].type=='1'){
-                            media[0].childNodes[i].childNodes[0].play()
-                        }
-                    }
-                }, 1000);
-            }
-            if(that.programDate.checked==true){
-                // var html = "<div id='RollText' style='background:black;color:white;font-size:14px;text-align:center;line-height:30px;overflow:hidden;white-space:nowrap;'>"+that.programDate.text+"</div>"
-                // $('.previews_div_body').append(html)
-                // $('#RollText').css('width',width)
-                // $('#RollText').css('height','30px')
-                // var obj = document.getElementById("RollText");
-                // var timer = setInterval(function(){
-                //      var tmp=(obj.scrollLeft)++;
-                //     if(obj.scrollLeft==tmp){
-                //         obj.innerHTML += obj.innerHTML;
-                //     }
-                //     if(obj.scrollLeft>=obj.firstChild.offsetWidth){
-                //         obj.scrollLeft=0;
-                //     }
-                // },50)
-                var html = "<div id='RollTexts_a' style='position:relative;background:black;color:white;font-size:16px;text-align:center;height:30px;line-height:30px;overflow:hidden;white-space:nowrap;'></div>"
-                var div = "<div id='RollTexts' style='position:absolute;left:0;'>"+that.programDate.text+"</div>"
-                $('.previews_div_body').append(html)
-                $('#RollTexts_a').append(div)
-                setTimeout(function(){
-                    var rollWord = {
-                        container:document.getElementById("RollTexts"),
-                        content:document.getElementById("RollTexts"),
-                        _containerWidth:1,
-                        _contentWidth:1,
-                        _speed:1,
-                        setSpeed:function(opt){
-                            var This = this;
-                            This._speed = opt;
-                        },
-                        setContainerWidth:function(){
-                            var This = this;
-                            This._containerWidth = This.container.offsetWidth;
-                        },
-                        setContentWidth:function(){
-                            var This = this;
-                            This._contentWidth = This.content.offsetWidth;
-                            console.log(This.content.offsetWidth)
-                        },
-                        roll:function(){
-                            var This = this;
-                            This.content.style.left = 95 + "px";
-                            that.timer2 = setInterval(function(){This.move()},20);
-                            This.container.onmouseover = function(){
-                                clearInterval(that.timer2);
-                            };
-                            This.container.onmouseout = function(){
-                                that.timer2 = setInterval(function(){This.move()},20);
-                            };
-                        },
-                        move:function(){
-                            var This = this;
-                            if(parseInt(This.content.style.left)+This._contentWidth > 0)
-                            {
-                                This.content.style.left = parseInt(This.content.style.left)-This._speed + "px";
-                            }
-                            else
-                            {
-                                This.content.style.left = 95 + "px";
-                            }                 
-                        },
-                        init:function(opt){
-                            var This = this;
-                            var speed = opt.speed || 1;
-                            This.setSpeed(speed);
-                            This.setContainerWidth();
-                            This.setContentWidth();
-                            This.roll();
-                        }
-                    }
-                    rollWord.init({speed:1});  //数值越小，滚动速度越慢。
-                },500)
-                
-            }
-            $('#myModal_preview').on('hide.bs.modal', function () {
-                clearInterval(animationMedia)
-                clearInterval(that.timer2)
-                $("#RollTexts_a").remove();
-                $('#previews_div').html('')
-            })
-        },
-        //节目管理保存
-        mediaSave(){
-            var that = this;
-            var url = '';
-            var data = {};
-            var array = []; //已选中节目的名称,以及播放时间
-            var programDetails = [];
-            data.nickName = that.programDate.programName
-            data.programType = that.programDate.programValue
-            data.width = that.programDate.programWidth
-            data.height = that.programDate.programHeight
-            for(var i=0;i<that.filesSelected.length;i++){
-                var object = {}
-                var object2 = {}
-                object.nickName = that.filesSelected[i].nickName 
-                object.duration = that.filesSelected[i].duration
-                object.type = that.filesSelected[i].type
-                if(that.filesSelected[i].duration==''||that.filesSelected[i].duration==undefined){
-                    object2.duration = 10
-                }else{
-                    object2.duration = that.filesSelected[i].duration
-                }
-                object2.sort = i
-                object.sort = i
-                if(that.submitMeadioType=='0'){
-                    object.mediaId = that.filesSelected[i].id
-                    object2.mediaId = that.filesSelected[i].id
-                }
-                if(that.submitMeadioType=='1'){
-                    object.mediaId = that.filesSelected[i].mediaId
-                    object2.mediaId = that.filesSelected[i].mediaId
-                }
-                object.mediaName = that.filesSelected[i].mediaName
-                object.mediaUrl = that.filesSelected[i].mediaUrl
-                array.push(object)
-                programDetails.push(object2)
-            }
-            if(that.programDate.checked==false){
-                data.isAddText = 0
-            }else{
-                data.isAddText = 1
-                data.textContent = that.programDate.text
-            }
-            data.programDetails = programDetails
-            if(that.submitMeadioType=='0'){
-                url = '/program/addProgram'
-            }
-            if(that.submitMeadioType=='1'){
-                url = '/program/updateProgram'
-                data.id = this.noticeSite[0].id
-            }
-            data.projectId=sessionStorage.projectId
-            $.ajax({
-                type:'post',
-                async:true,
-                dataType:'json',
-                url:that.serverurl+url,
-                contentType:'application/json;charset=UTF-8',
-                data:JSON.stringify(data),
-                success:function(data){
-                    if(data.errorCode=='0'){
-                        if(that.submitMeadioType=='0'){
-                            that.$message({
-                                message: '节目添加成功;',
-                                type:'success',
-                                showClose: true,
-                            });
-                        }
-                        if(that.submitMeadioType=='1'){
-                            that.$message({
-                                message: '节目修改成功;',
-                                type:'success',
-                                showClose: true,
-                            });
-                        }
-                        $('#addprogram').modal('hide')
-                        that.noticeready()
-                    }else{
-                        that.errorCode2(data.errorCode)
-                    }
-                }
-            })
+            //跳转节目管理新页面
+            this.$router.push({'path':'/program'})
         },
         //媒体库
         mediaLibrary(){
@@ -1756,12 +2603,12 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/media/getMediaList',
+                url:that.serverurl+'/v1/solin/screen/media',
                 data:{
                    page:that.mediaIndex,
-                   rows:that.mediaSize,
+                   size:that.mediaSize,
                    audit:that.stateValue,
-                   type:that.typeValue,
+                   mediaType:that.typeValue,
                    nickName:'',
                    projectId:sessionStorage.projectId
                 },
@@ -1794,16 +2641,16 @@ export default {
                 return;  
             }
             $.ajax({
-                type:'post',
+                type:'put',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/media/editMediaName',
-                // contentType:'application/json;charset=UTF-8',
-                data:{
-                    mediaId:val.id,
+                url:that.serverurl+'/v1/solin/screen/media',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify({
+                    id:val.id,
                     projectId:sessionStorage.projectId,
                     nickName:that.inputColumn
-                },
+                }),
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.$message({
@@ -1854,10 +2701,11 @@ export default {
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/media/deleteMoreMedia',
-                    data:{
-                        ids:ids.join(',')
-                    },
+                    url:that.serverurl+'/v1/solin/screen/media/deletes',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify({
+                        medias:ids
+                    }),
                     success:function(data){
                         if(data.errorCode=='0'){
                             that.$message({
@@ -1889,7 +2737,7 @@ export default {
             });
             $('#filesupload').css("overflow", "hidden")
         },
-        //上传文件change时间
+        //上传文件change事件
         uploadChange(){
             $('#nickName').val(this.$refs.upload.files[0].name)
         },
@@ -1903,7 +2751,6 @@ export default {
             formdate.append("file", this.$refs.upload.files[0]);
             formdate.append('nickName',$('#nickName').val())
             formdate.append('creatorId',1)
-            console.log(value)
             if(value[0]=='video'){
                 type='1'
                 if(value[1]=='mp4'||value[1]=='mkv'||value[1]=='MP4'||value[1]=='MKV'){
@@ -1911,7 +2758,7 @@ export default {
                 }else{
                     that.$message({
                         message: '不支持的文件格式!',
-                        type:'success',
+                        type:'error',
                         showClose: true,
                     });
                     return;
@@ -1926,11 +2773,11 @@ export default {
                 });
                 return;
             }
-            formdate.append('type ',type)
+            formdate.append('mediaType ',type)
             formdate.append('projectId ',sessionStorage.projectId)
             that.filesuploadLoading = true
             $.ajax({
-                url:that.serverurl+'/media/addMedia',
+                url:that.serverurl+'/v1/solin/screen/media',
                 type: 'POST',
                 cache: false,
                 data: formdate,
@@ -1960,7 +2807,411 @@ export default {
         download(val){
             var that = this;
             var url = val.mediaUrl
-            window.open(that.serverurl+"/file/download?fileName="+that.serverurl+url)
+            window.open(that.serverurl+"/v1/solin/file/download?fileUrl="+that.serverurl+url)
+        },
+
+        //任务管理
+        taskManagement(){
+            $('#taskMyModal').modal('show');
+            this.taskready();
+        },
+        //请求任务列表数据
+        taskready(){
+            var that = this
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/screen/task',
+                data:{
+                   page:that.pageIndex,
+                   size:that.pageSize,
+                   nickName:'',
+                   projectIds:sessionStorage.projectId
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tasktableData = data.result.list
+                        that.tasktotal = data.result.total
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
+        //列表选中数据
+        tasktableChange(val){this.tasktableSite = val;},
+        taskcurrentchange(val){this.taskpageIndex = val;this.taskready();},
+        tasksizechange(val){this.taskpageSize = val;this.taskready();},
+        //点击添加/编辑/删除任务按钮
+        taskoperation(val){
+            var that = this;
+            if(val=='0'){
+                $('#taskMyModal2').modal('show')
+                this.addType='0'
+            }
+            if(val=='1'){
+                if(this.tasktableSite.length==0||this.tasktableSite.length>=2){
+                    this.$message({
+                        message: '请选择单个任务进行编辑!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+                $.ajax({
+                    type:'get',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/screen/task/information/'+this.tasktableSite[0].id,
+                    data:{},
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.tasknickName =  that.tasktableSite[0].nickName
+                            that.taskDetailsData = data.result.list
+                        }else{
+                            that.errorCode2(data.errorCode)
+                        }
+                    }
+                })
+                $('#taskMyModal2').modal('show')
+                this.addType='1'
+
+            }
+            if(val=='2'){
+                if(this.tasktableSite.length==0){
+                    this.$message({
+                        message: '请选择任务进行删除!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+                var data = {}
+                data.taskIds = [];
+                for(var i=0;i<that.tasktableSite.length;i++){
+                    data.taskIds.push(that.tasktableSite[i].id)
+                }
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/screen/task/deletes',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '删除成功',
+                                type:'success',
+                                showClose: true,
+                            });
+                            that.taskready()
+                        }else{
+                            that.errorCode2(data.errorCode)
+                        }
+                    }
+                })
+            }
+        },
+        //点击添加 编辑 删除节目按钮
+        programOperation(val){
+            var that = this;
+            if(val=='0'){
+                this.addType2='0'
+                $('#taskMyModal3').modal('show')
+                this.program()
+                that.taskSchedule.radio0 = 0
+                that.taskSchedule.radio1 = 0
+                that.taskSchedule.radio2 = 0
+                that.taskSchedule.value1 = ''
+                that.taskSchedule.value2 = ''
+                that.taskSchedule.value3 = ''
+                that.taskSchedule.value4 = ''
+                that.taskSchedule.checkList = []
+                that.taskSchedule.repeatTimes = ''
+            }
+            if(val=='1'){
+                if(this.taskDetailsSite.length==0||this.taskDetailsSite.length>=2){
+                    this.$message({
+                        message: '请选择单个节目进行编辑!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+                this.addType2='1'
+                $('#taskMyModal3').modal('show')
+                this.program()
+                that.taskSchedule.radio0 = that.taskDetailsSite[0].taskSchedule.dateType 
+                that.taskSchedule.radio1 = that.taskDetailsSite[0].taskSchedule.timeType 
+                that.taskSchedule.radio2 = that.taskDetailsSite[0].taskSchedule.filterType 
+                that.taskSchedule.value1 = that.taskDetailsSite[0].taskSchedule.startDate 
+                that.taskSchedule.value2 = that.taskDetailsSite[0].taskSchedule.endDate 
+                that.taskSchedule.value3 = that.taskDetailsSite[0].taskSchedule.startTime 
+                that.taskSchedule.value4 = that.taskDetailsSite[0].taskSchedule.endTime 
+                that.taskSchedule.checkList = that.taskDetailsSite[0].taskSchedule.filterValue.split(',')
+                for(var i=0;i<that.taskSchedule.checkList.length;i++){
+                    that.taskSchedule.checkList[i] = Number(that.taskSchedule.checkList[i])
+                }
+                that.taskSchedule.repeatTimes = that.taskDetailsSite[0].repeatTimes 
+            }
+            if(val=='2'){}
+        },
+        taskDetailsChange(val){this.taskDetailsSite = val},
+        //上下移动
+        move(val){
+            if(this.taskDetailsSite.length==0||this.taskDetailsSite.length>=2){
+                this.$message({
+                    message: '请选择单个节目进行移动!',
+                    type:'error',
+                    showClose: true,
+                });
+                return;
+            }
+            var length = this.taskDetailsData.length - 1 
+            var s = ''
+            for(var i=0;i<this.taskDetailsData.length;i++){
+                if(this.taskDetailsSite[0].programId==this.taskDetailsData[i].programId){
+                    s=i
+                }
+            }
+            var data = this.taskDetailsSite[0]
+            //上移
+            if(val=='0'){
+                if(s==0){
+                    return;
+                }
+                this.taskDetailsData.splice(s,1)
+                this.taskDetailsData.splice(s-1,0,data)
+            }
+            //下移
+            if(val=='1'){
+                if(s==length){
+                    return;
+                }
+                this.taskDetailsData.splice(s,1)
+                this.taskDetailsData.splice(s+1,0,data)
+            }
+        },
+        //请求节目列表
+        program(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/screen/program',
+                data:{
+                    page:that.programpageIndex,
+                    size:that.programpageSize,
+                    programType:'',
+                    nickName:'',
+                    projectIds:sessionStorage.projectId
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.programtableData = data.result.list
+                        that.programtotal = data.result.total
+                        var array = []
+                        if(that.addType2=='1'){
+                            for(var i = 0;i<that.programtableData.length;i++){
+                                if(that.taskDetailsSite[0].programId==that.programtableData[i].id){
+                                    array.push(that.programtableData[i])
+                                    
+                                }
+                            }
+                        }
+                        setTimeout(function(){
+                            array.forEach(row => {
+                                that.$refs.multipleTable.toggleRowSelection(row);
+                            });
+                        },500)
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
+        //节目列表事件
+        programtableChange(val){this.programtablesite = val;},
+        programcurrentchange(val){this.programpageIndex = val;this.program();},
+        programsizechange(val){this.programpageSize = val;this.program();},
+        //添加节目
+        addprogram(){
+            var that = this;
+            if(that.programtablesite.length==0||that.programtablesite.length>=2){
+                this.$message({
+                    message: '请选择单个节目!',
+                    type:'error',
+                    showClose: true,
+                });
+                return;
+            }
+            if(that.taskSchedule.radio0==1){
+                if(that.taskSchedule.value1==''||that.taskSchedule.value2==''){
+                    that.$message({
+                        message: '开始结束日期不能为空!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+            }
+            if(that.taskSchedule.radio1==1){
+                if(that.taskSchedule.value3==''||that.taskSchedule.value4==''){
+                    that.$message({
+                        message: '开始结束时间不能为空!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+            }
+            if(that.taskSchedule.radio2==1){
+                if(that.taskSchedule.checkList.length==0){
+                    that.$message({
+                        message: '星期不能为空!',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+            }
+            if(that.taskSchedule.repeatTimes==''){
+                that.$message({
+                    message: '播放次数不能为空!',
+                    type:'error',
+                    showClose: true,
+                });
+                return;
+            }
+            var data = {}
+            data.taskSchedule ={}
+            data.programName = that.programtablesite[0].nickName
+            data.priority = ''
+            data.programId = that.programtablesite[0].id
+            data.repeatTimes = that.taskSchedule.repeatTimes
+            data.taskSchedule.dateType = that.taskSchedule.radio0
+            data.taskSchedule.timeType = that.taskSchedule.radio1
+            data.taskSchedule.filterType = that.taskSchedule.radio2
+            data.taskSchedule.startDate = that.taskSchedule.value1
+            data.taskSchedule.endDate = that.taskSchedule.value2
+            data.taskSchedule.startTime = that.taskSchedule.value3
+            data.taskSchedule.endTime = that.taskSchedule.value4
+            data.taskSchedule.filterValue = that.taskSchedule.checkList.join(',')
+            if(that.addType2=='0'){
+                that.taskDetailsData.push(data)
+            }
+            if(that.addType2=='1'){
+                for(var i =0;i<that.taskDetailsData.length;i++){
+                    if(that.taskDetailsSite[0].programId==that.taskDetailsData[i].programId){
+                        that.taskDetailsData.splice(i,1,data)
+                    }
+                }
+            }
+            $('#taskMyModal3').modal('hide')
+        },
+        //保存任务
+        addtask(){
+            var that = this
+            if(that.tasknickName==''){
+                this.$message({
+                    message: '节目名称不能为空!',
+                    type:'error',
+                    showClose: true,
+                });
+                return;
+            }
+            if(that.taskDetailsData.length==0){
+                this.$message({
+                    message: '请设置节目!',
+                    type:'error',
+                    showClose: true,
+                });
+                return;
+            }
+            for(var i=0;i<that.taskDetailsData.length;i++){
+                that.taskDetailsData[i].priority = i+1
+            }
+            var data = {}
+            var type = ''
+            if(that.addType=='0'){
+                type = 'post'
+            }
+            if(that.addType=='1'){
+                type = 'put'
+                data.id = that.tasktableSite[0].id
+            }
+            data.nickName = that.tasknickName
+            data.projectId = sessionStorage.projectId
+            data.taskDetails = that.taskDetailsData
+            $.ajax({
+                type:type,
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/screen/task',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '保存成功!',
+                            type:'success',
+                            showClose: true,
+                        });
+                        $('#taskMyModal2').modal('hide')
+                        that.taskready()
+                    }else{
+                        that.errorCode2(data.errorCode)
+                    }
+                }
+            })
+        },
+
+        //点击在线更新按钮
+        update(){
+            if(this.tableSite1.length==0){
+                this.$message({
+                    message: '请选择屏幕进行在线升级!',
+                    type:'error',
+                    showClose: true,
+                });
+                return;
+            }
+            $('#updateMyModal').modal('show')
+        },
+        //更新
+        updateSubmit(){
+            var that = this;
+            var arr = []
+            for(var i=0;i<that.tableSite1.length;i++){
+                arr.push(that.tableSite1[i].id)
+            }
+            var formdate = new FormData();
+            formdate.append("file", this.$refs.update.files[0]);
+            formdate.append("screens", arr.join(','));
+            $.ajax({
+                url:that.serverurl+'/v1/solin/screen/control/app/upgrade',
+                type: 'POST',
+                cache: false,
+                data: formdate,
+                dataType:'json',
+                processData: false,
+                contentType: false,
+            }).done(function(res){
+                if(res.errorCode=='0'){
+                    that.$message({
+                        message: '任务正在更新中,请稍后...',
+                        type:'success',
+                        showClose: true,
+                    });
+                }else{
+                    that.errorCode2(res.errorCode)
+                }
+            }).error(function(res){
+                
+            })
         },
         //获取广告屏列表
         ready(){
@@ -1969,14 +3220,14 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/screen/getScreenList',
+                url:that.serverurl+'/v1/solin/screen/device',
                 data:{
                    page:that.pageIndex,
-                   rows:that.pageSize,
+                   size:that.pageSize,
                    status:that.value,
                    serialNumber:that.serialNumber,
                    poleId:'',
-                   projectId:sessionStorage.projectId
+                   projectIds:sessionStorage.projectId
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -1993,85 +3244,6 @@ export default {
         search(){
             this.ready()
         },
-        //获取节目下发进度
-        status(val){
-            var that = this
-            this.centerDialogVisible = true
-            that.percentage = 0
-            var s = 0
-            var clearstatus = setInterval(function(){
-                if(s==0){
-                    s++
-                    $.ajax({
-                        type:'get',
-                        async:true,
-                        dataType:'json',
-                        url:that.serverurl+'/screen/getDownLoadProgress',
-                        contentType:'application/json;charset=UTF-8',
-                        data:{
-                            // programId:that.programSettingSite[0].id,
-                            serialNumber:val.serialNumber,
-                            // projectId:sessionStorage.projectId
-                        },
-                        success:function(data){
-                            if(data.errorCode=='0'){
-                                s=0
-                                if(Number(data.result.num)*100==100||Number(data.result.num)*100>100){
-                                    that.ready()
-                                    clearInterval(clearstatus)
-                                }
-                                that.percentage = Number(data.result.num*100).toFixed(1)
-                            }else{
-                                s=0
-                                clearInterval(clearstatus)
-                                that.centerDialogVisible = false
-                                that.errorCode2(data.errorCode)
-                                that.ready()
-                            }
-                        }
-                    })
-                }
-            },2000)
-            $('#myModal_preview').on('hide.bs.modal', function () {
-                clearInterval(clearstatus) 
-            })
-        },
-        //初始化配置js
-        readymeadia(){
-            var that = this;
-            if(this.tableSite1.length==0||this.tableSite1.length>2){
-                that.$message({
-                    message: '请选择单个屏幕进行初始化!',
-                    type:'error',
-                    showClose: true,
-                });
-                return;
-            }
-            var data = {
-                programId:this.tableSite1[0].id,
-                serialNumber:this.tableSite1[0].serialNumber,
-                projectId:sessionStorage.projectId
-            }
-            $.ajax({
-                type:'get',
-                async:true,
-                dataType:'json',
-                url:that.serverurl+'/screen/downloadJsToSD',
-                contentType:'application/json;charset=UTF-8',
-                data:data,
-                success:function(data){
-                    if(data.errorCode=='0'){
-                        that.$message({
-                            message: '初始化配置中,请稍后!',
-                            type:'success',
-                            showClose: true,
-                        });
-                    }else{
-                        that.errorCode2(data.errorCode)
-                    }
-                } 
-            })
-        },
         //权限请求
         Jurisdiction(){
             var that = this
@@ -2079,22 +3251,41 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/privilege/getMyOperatMenu',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    menuId:sessionStorage.menuId3
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
-                            if(data.result.operats[i].code=='operation'){
+                            if(data.result.operats[i].code=='screenControl'){
                                 that.operation = true
                             }
-                            if(data.result.operats[i].code=='programManagement'){
-                                that.programManagement = true
+                            if(data.result.operats[i].code=='viewProgram'){
+                                that.viewProgram = true
                             }
-                            if(data.result.operats[i].code=='mediaLibrary'){
-                                that.mediaLibrarys = true
+                            if(data.result.operats[i].code=='viewMedia'){
+                                that.viewMedia = true
+                            }
+                            if(data.result.operats[i].code=='addMedia'){
+                                that.addMedia = true
+                            }
+                            if(data.result.operats[i].code=='editMedia'){
+                                that.editMedia = true
+                            }
+                            if(data.result.operats[i].code=='delMedia'){
+                                that.delMedia = true
+                            }
+                            if(data.result.operats[i].code=='viewTask'){
+                                that.viewTask = true
+                            }
+                            if(data.result.operats[i].code=='addTask'){
+                                that.addTask = true
+                            }
+                            if(data.result.operats[i].code=='editTask'){
+                                that.editTask = true
+                            }
+                            if(data.result.operats[i].code=='delTask'){
+                                that.delTask = true
                             }
                         }
                     }else{
@@ -2146,4 +3337,7 @@ export default {
 .search{display: flex;}
 .search>label{width: 85px;}
 .search>input{width: 146px;margin-top:7px;height: 34px;}
+</style>
+<style>
+.el-tabs__content{position: relative;top:0;height: auto !important;}
 </style>

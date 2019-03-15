@@ -395,7 +395,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/user/getMyProject',
+                url:that.serverurl+'/v1/manage/owner/projects',
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     // page:that.pageIndex2,
@@ -421,11 +421,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/user/getUserNeedUpdate',
+                url:that.serverurl+'/v1/manage/getUserNeedUpdate/userId/'+that.site[0].id,
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    userId:that.site[0].id
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.detailsData = data.result
@@ -449,7 +447,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/org/getMyOrgTree',
+                url:that.serverurl+'/v1/manage/owner/orgs/tree',
                 contentType:'application/json;charset=UTF-8',
                 data:{},
                 success:function(data){
@@ -466,7 +464,7 @@ export default {
             var that = this;
             $.ajax({
                 type: "GET",
-                url:that.serverurl+'/privilege/getAllPrivilege',
+                url:that.serverurl+'/v1/manage/owner/privilege',
                 dataType:"json",
                 async: false,
                 data:{},
@@ -482,20 +480,27 @@ export default {
         //权限类型改变
         radioChange(){
             var that = this;
-            var arr = []
+            var arr = ''
+            if(this.radio1==false&&this.radio2==false){
+                that.$refs.tree.setCheckedKeys([])
+                return;
+            }
             if(this.radio1==true){
-                arr.push('0')
+                arr='1'
             }
             if(this.radio2==true){
-                arr.push('1')
+                arr='2'
+            }
+            if(this.radio1==true&&this.radio2==true){
+                arr='3'
             }
             $.ajax({
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/privilege/getSpecialPrivilege',
+                url:that.serverurl+'/v1/manage/owner/privilege/'+arr,
                 contentType:'application/json;charset=UTF-8',
-                data:{operatType:arr.join(',')},
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.$refs.tree.setCheckedKeys(data.result.operatorIds);
@@ -587,6 +592,7 @@ export default {
             var that = this;
             var url = '';
             var projectIds = [];
+            var type = ''
             var formdate = new FormData();
             //中文验证
             var result = /[\u4E00-\u9FA5\uF900-\uFA2D]/;
@@ -607,7 +613,8 @@ export default {
                 arrar2.push(array[i].id)
             }
             if(this.type=='0'){
-                url='/user/addUser';
+                url='/v1/manage/users';
+                type = 'post'
                 if(this.data.username==''||this.data.userPwd==''){
                     this.$message({
                         message: '必填字段不能为空!',
@@ -633,8 +640,9 @@ export default {
                 }
             }
             if(this.type=='1'){
-                url='/user/updateUser';
-                formdate.append("id", that.site[0].id)
+                url='/v1/manage/users/'+that.site[0].id;
+                type = 'put'
+                // formdate.append("id", that.site[0].id)
                 formdate.append("icon",that.icon )
             }
             if(this.data.fullName==''||this.data.mobile==''){
@@ -668,7 +676,7 @@ export default {
                 return;
             }
             formdate.append("username", this.data.username)
-            formdate.append("userPwd", this.data.userPwd)
+            formdate.append("userPwd", md5(this.data.userPwd))
             formdate.append("fullName", this.data.fullName)
             formdate.append("mobile", this.data.mobile)
             formdate.append("email", this.data.email)
@@ -681,7 +689,7 @@ export default {
             formdate.append("operationIds",arrar2.join(','))
             $.ajax({
                 url:that.serverurl+url,
-                type:'POST',
+                type:type,
                 cache:false,
                 data:formdate,
                 dataType:'json',
@@ -706,13 +714,11 @@ export default {
         resetPasswords(val){
             var that = this;
             $.ajax({
-                type:'post',
+                type:'put',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/user/resetUserPwd',
-                data:{
-                    id:val
-                },
+                url:that.serverurl+'/v1/manage/users/'+val+'/password',
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.$message({
@@ -743,12 +749,11 @@ export default {
             }).then(() => {
                 // 这里进行删除请求
                 $.ajax({
-                    type:'post',
+                    type:'delete',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/user/deleteUser',
-                    // contentType:'application/json;charset=UTF-8',
-                    data:{id:that.site[0].id},
+                    url:that.serverurl+'/v1/manage/users/'+that.site[0].id,
+                    data:{},
                     success:function(data){
                         if(data.errorCode=='0'){
                             $('#jstree').jstree(true).refresh();
@@ -800,7 +805,7 @@ export default {
                         var jsonarray = eval('('+jsonstr+')');
                         $.ajax({
                             type:"GET",
-                            url:that.serverurl+'/org/getMyOrgTree',
+                            url:that.serverurl+'/v1/manage/owner/orgs/tree',
                             dataType:"json",
                             async: false,
                             success:function(data) {
@@ -846,10 +851,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/user/getCurrentOrgUser',
+                url:that.serverurl+'/v1/manage/orgs/'+that.sizeType.id+'/users/tree',
                 contentType:'application/json;charset=UTF-8',
                 data:{
-                    orgId:that.sizeType.id,
                     page:that.pageIndex,
                     size:that.pageSize,
                     username:that.username,
@@ -882,22 +886,17 @@ export default {
                 status='0'
                 message='是否启用该用户？'
             }
-            var data = {
-                id:id,
-                status:status
-            }
             this.$confirm(message, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
                 $.ajax({
-                    type:'post',
+                    type:'put',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/user/updateUserStatus',
-                    // contentType:'application/json;charset=UTF-8',
-                    data:data,
+                    url:that.serverurl+'/v1/manage/users/'+id+'/status/'+status,
+                    data:{},
                     success:function(data){
                         if(data.errorCode=='0'){
                             that.readyRight();
@@ -924,11 +923,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/privilege/getMyOperatMenu',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId2,
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    menuId:sessionStorage.menuId2
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
@@ -956,8 +953,11 @@ export default {
         },
     },
     created(){
-        sessionStorage.menuId2 = 3
-        this.Jurisdiction()
+        var that = this
+        setTimeout(function(){
+            that.Jurisdiction()
+        },500)
+       
     },
 }
 </script>
@@ -970,7 +970,7 @@ export default {
 .usermanage{width:100%;height:100%;}
 .usermanage>div{width: 100%;border: 1px solid #E4E4F1;position: absolute;}
 .usermanage_top{height: 46px;border-bottom: none !important;display: flex;}
-.usermanage_top>button{height:33px;margin:8px 0 0 10px;}
+.usermanage_top>button{height:33px;margin:6px 0 0 10px;}
 .usermanage_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;}
 .usermanage_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
 .usermanage_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}

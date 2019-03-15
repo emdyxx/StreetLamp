@@ -40,7 +40,7 @@ export default {
                         var jsonarray = eval('('+jsonstr+')');
                         $.ajax({
                             type:"GET",
-                            url:that.serverurl+'/privilege/getMyMenu',
+                            url:that.serverurl+'/v1/manage/menu/'+sessionStorage.menuId2,
                             dataType:"json",
                             async: false,
                             data:{parentId:sessionStorage.menuId2},
@@ -56,16 +56,16 @@ export default {
                                         datas.push(arr)
                                     }
                                     jsonarray= datas;
-                                    if(sessionStorage.menuId3=='21'){
+                                    if(sessionStorage.menuId3=='56'){
                                         that.$router.push({'path':'/LampPoleJournal'})
                                     }
-                                    if(sessionStorage.menuId3=='22'){
+                                    if(sessionStorage.menuId3=='57'){
                                         that.$router.push({'path':'/lampJournal'})
                                     }
-                                    if(sessionStorage.menuId3=='23'){
+                                    if(sessionStorage.menuId3=='58'){
                                         that.$router.push({'path':'/screenJournal'})
                                     }
-                                    if(sessionStorage.menuId3=='24'){
+                                    if(sessionStorage.menuId3=='59'){
                                         that.$router.push({'path':'/sensorJournal'})
                                     }
                                 }else{
@@ -81,16 +81,16 @@ export default {
                 if(data.node.id==''||data.node.id==undefined){
                 }else{
                     sessionStorage.menuId3 = data.node.id
-                    if(data.node.id=='21'){
+                    if(data.node.id=='56'){
                         that.$router.push({'path':'/LampPoleJournal'})
                     }
-                    if(data.node.id=='22'){
+                    if(data.node.id=='57'){
                         that.$router.push({'path':'/lampJournal'})
                     }
-                    if(data.node.id=='23'){
+                    if(data.node.id=='58'){
                         that.$router.push({'path':'/screenJournal'})
                     }
-                    if(data.node.id=='24'){
+                    if(data.node.id=='59'){
                         that.$router.push({'path':'/sensorJournal'})
                     }
                 }

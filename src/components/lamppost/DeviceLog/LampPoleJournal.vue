@@ -34,7 +34,7 @@
                     width="55">
                     </el-table-column>
                     <el-table-column
-                    prop="username"
+                    prop="nickName"
                     align='center'
                     label="操作用户"
                     min-width="100">
@@ -56,15 +56,6 @@
                     align='center'
                     label="灯杆编号"
                     min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="操作状态"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.operatStatus=='0'">成功</span>
-                            <span v-if="scope.row.operatStatus=='1'">失败</span>
-                        </template>
                     </el-table-column>
                     <el-table-column
                     prop="createTime"
@@ -133,14 +124,14 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/poleOperatLog/getPoleOperatLogList',
+                url:that.serverurl+'/v1/solin/lighting/pole/log/operation',
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     operatType:that.value,
                     serialNumber:that.serialNumber,
                     page:that.pageIndex,
-                    rows:that.pageSize,
-                    projectId:sessionStorage.projectId
+                    size:that.pageSize,
+                    projectIds:sessionStorage.projectId
                 },
                 success:function(data){
                     if(data.errorCode=='0'){

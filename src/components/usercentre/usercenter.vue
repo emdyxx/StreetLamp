@@ -8,17 +8,17 @@
         </div>
         <div class="header-center">
           <template v-for="item in menu">
-            <template v-if="item.code=='userManage'">
-              <div @click="headercolor(1,item.id)" :class="headercolorType=='1'?'header-center-color':''">用户</div>
+            <template v-if="item.code=='managementUser'">
+              <div @click="headercolor(1,item.id)" :key="item.id" :class="headercolorType=='1'?'header-center-color':''">用户</div>
             </template>
-            <template v-if="item.code=='orgManage'">
-              <div @click="headercolor(2,item.id)" :class="headercolorType=='2'?'header-center-color':''">机构</div>
+            <template v-if="item.code=='managementOrg'">
+              <div @click="headercolor(2,item.id)" :key="item.id" :class="headercolorType=='2'?'header-center-color':''">机构</div>
             </template>
-            <template v-if="item.code=='projectManage'">
-              <div @click="headercolor(3,item.id)" :class="headercolorType=='3'?'header-center-color':''">项目</div>
+            <template v-if="item.code=='managementProject'">
+              <div @click="headercolor(3,item.id)" :key="item.id" :class="headercolorType=='3'?'header-center-color':''">项目</div>
             </template>
             <template v-if="item.code=='managementLog'">
-              <div @click="headercolor(4,item.id)" :class="headercolorType=='4'?'header-center-color':''">日志</div>
+              <div @click="headercolor(4,item.id)" :key="item.id" :class="headercolorType=='4'?'header-center-color':''">日志</div>
             </template>
           </template>
         </div>
@@ -75,28 +75,27 @@ export default {
             type:'get',
             async:true,
             dataType:'json',
-            url:that.serverurl+'/privilege/getMyMenu',
+            url:that.serverurl+'/v1/manage/menu/'+sessionStorage.menuId,
             contentType:'application/json;charset=UTF-8',
-            data:{
-                parentId:sessionStorage.menuId
-            },
+            data:{},
             success:function(data){
                 if(data.errorCode==0){
                     that.menu = data.result.menus
+                    console.log(data.result.menus[0].id)
                     sessionStorage.menuId2 = data.result.menus[0].id
-                    if(data.result.menus[0].id=='3'){
+                    if(data.result.menus[0].id=='4'){
                       sessionStorage.headercolorType = '1'
                       that.$router.push({'path':'/user'})
                     }
-                    if(data.result.menus[0].id=='4'){
+                    if(data.result.menus[0].id=='5'){
                       sessionStorage.headercolorType = '2'
                       that.$router.push({'path':'/organization'})
                     }
-                    if(data.result.menus[0].id=='5'){
+                    if(data.result.menus[0].id=='6'){
                       sessionStorage.headercolorType = '3'
                       that.$router.push({'path':'/article'})
                     }
-                    if(data.result.menus[0].id=='6'){
+                    if(data.result.menus[0].id=='7'){
                       sessionStorage.headercolorType = '4'
                       that.$router.push({'path':'/journal'})
                     }

@@ -4,7 +4,7 @@
         <div class="sensorJournal_top">
             <div class="search">
                 <span>序列号:</span>
-                <input type="text" v-model="concentratorSN" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
+                <input type="text" v-model="concentratorSn" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
             </div>
             <div class="search">
                 <span>操作类型:</span>
@@ -69,7 +69,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                prop="concentratorSN"
+                prop="concentratorSn"
                 align='center'
                 label="序列号"
                 min-width="120">
@@ -108,7 +108,7 @@ export default {
     data () {
         return {
             serverurl:localStorage.serverurl,
-            concentratorSN:'',
+            concentratorSn:'',
             options:[{
                     value: '0',
                     label: '添加'
@@ -149,15 +149,15 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/envSensors/getSensorsLog',
+                url:that.serverurl+'/v1/solin/sensor/env/log/operation',
                 contentType:'application/json;charset=UTF-8',
                 data:{
-                    concentratorSN:that.concentratorSN,
+                    concentratorSn:that.concentratorSn,
                     operatType:that.value,
                     operatStatus:that.value1,
                     page:that.pageIndex,
                     size:that.pageSize,
-                    projectId:sessionStorage.projectId
+                    projectIds:sessionStorage.projectId
                 },
                 success:function(data){
                     if(data.errorCode=='0'){

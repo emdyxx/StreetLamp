@@ -19,7 +19,7 @@
                 <div class='header_center_color'>wifi设备管理</div>
             </div>
             <div class="header_right">
-            <i @click="backtrack" class="iconfont icon-guanbi"></i>
+                <i @click="backtrack" class="iconfont icon-guanbi"></i>
             </div>
         </header>
         <div class="bottom">

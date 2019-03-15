@@ -35,7 +35,7 @@
                         width="55">
                         </el-table-column>
                         <el-table-column
-                        prop="username"
+                        prop="createUser"
                         align='center'
                         label="操作用户"
                         min-width="100">
@@ -134,7 +134,7 @@
                         width="55">
                         </el-table-column>
                         <el-table-column
-                        prop="username"
+                        prop="createUser"
                         align='center'
                         label="操作用户"
                         min-width="100">
@@ -417,22 +417,22 @@ export default {
             var that = this;
             var data = {
                 page:that.pageIndex,
-                rows:that.pageSize
+                size:that.pageSize
             };
             var url = '';
-            data.projectId = sessionStorage.projectId
+            data.projectIds = sessionStorage.projectId
             if(this.activeName=='0'){
-                url='/lampOperatLogControl/getLampOperatLogList'
+                url='/v1/solin/lighting/lamp/log/operation'
                 data.operatModule = this.value2
                 data.serialNumber = this.serialNumber
             }
             if(this.activeName=='1'){
-                url='/lampControlLogControl/getLampControlLogList'
+                url='/v1/solin/lighting/lamp/log/control'
                 data.controlType = that.value5
                 data.controlStatus = that.value6
             }
             if(this.activeName=='2'){
-                url='/lampAlarmLogControl/getLampAlarmLogList'
+                url='/v1/solin/lighting/lamp/log/alarm'
                 data.alarmType = this.value3
                 data.alarmLevel = this.value4
                 data.serialNumber = this.serialNumber
@@ -481,11 +481,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/privilege/getMyOperatMenu',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    menuId:sessionStorage.menuId3
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){

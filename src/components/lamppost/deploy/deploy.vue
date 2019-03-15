@@ -20,7 +20,9 @@ export default {
     mounted(){
         var that = this
         //初始化左侧树
-        this.readyLeft()
+        setTimeout(function(){
+            that.readyLeft()
+        },500)
     },
     methods:{
         //请求左侧树
@@ -53,10 +55,10 @@ export default {
                         var jsonarray = eval('('+jsonstr+')');
                         $.ajax({
                             type:"GET",
-                            url:that.serverurl+'/privilege/getMyMenu',
+                            url:that.serverurl+'/v1/manage/menu/'+sessionStorage.menuId2,
                             dataType:"json",
                             async: false,
-                            data:{parentId:sessionStorage.menuId2},
+                            data:{},
                             success:function(data) {
                                 var datas = [{
                                     text:'智慧灯杆',
@@ -69,16 +71,19 @@ export default {
                                     var arr = {}
                                     for(var i=0;i<data.result.menus.length;i++){
                                         arr = {}
-                                        if(data.result.menus[i].code=='poleDeploy'){
+                                        if(data.result.menus[i].code=='solinPoleDeploy'){
                                             arr.type = '2'
                                         }
-                                        if(data.result.menus[i].code=='lampDeploy'){
+                                        if(data.result.menus[i].code=='solinLampDeploy'){
                                             arr.type = '3'
                                         }
-                                        if(data.result.menus[i].code=='screenDeploy'){
+                                        if(data.result.menus[i].code=='solinScreenDeploy'){
                                             arr.type = '4'
                                         }
-                                        if(data.result.menus[i].code=='sensorsDeploy'){
+                                        if(data.result.menus[i].code=='solinEnvDeploy'){
+                                            arr.type = '5'
+                                        }
+                                        if(data.result.menus[i].code=='solinLoraSensorsDeploy'){
                                             arr.type = '5'
                                         }
                                         arr.text = data.result.menus[i].menuName
@@ -86,17 +91,20 @@ export default {
                                         datas[0].children.push(arr)
                                     }
                                     jsonarray= datas;
-                                    if(sessionStorage.menuId3=='14'){
+                                    if(sessionStorage.menuId3=='45'){
                                         that.$router.push({'path':'/LampPole'})
                                     }
-                                    if(sessionStorage.menuId3=='15'){
+                                    if(sessionStorage.menuId3=='46'){
                                         that.$router.push({'path':'/Lampsandlanterns'})
                                     }
-                                    if(sessionStorage.menuId3=='16'){
+                                    if(sessionStorage.menuId3=='47'){
                                         that.$router.push({'path':'/advertisingscreen'})
                                     }
-                                    if(sessionStorage.menuId3=='18'){
+                                    if(sessionStorage.menuId3=='48'){
                                         that.$router.push({'path':'/sensor'})
+                                    }
+                                    if(sessionStorage.menuId3=='49'){ //loar
+                                        that.$router.push({'path':'/loraSensor'})
                                     }
                                 }else{
                                     that.errorCode(data.errorCode)
@@ -111,17 +119,20 @@ export default {
                 if(data.node.id==''||data.node.id==undefined){
                 }else{
                     sessionStorage.menuId3 = data.node.id
-                    if(data.node.id=='14'){
+                    if(data.node.id=='45'){
                         that.$router.push({'path':'/LampPole'})
                     }
-                    if(data.node.id=='15'){
+                    if(data.node.id=='46'){
                         that.$router.push({'path':'/Lampsandlanterns'})
                     }
-                    if(data.node.id=='16'){
+                    if(data.node.id=='47'){
                         that.$router.push({'path':'/advertisingscreen'})
                     }
-                    if(data.node.id=='18'){
+                    if(data.node.id=='48'){
                         that.$router.push({'path':'/sensor'})
+                    }
+                    if(data.node.id=='49'){//loar
+                        that.$router.push({'path':'/loraSensor'})
                     }
                 }
             });

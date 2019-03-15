@@ -284,7 +284,7 @@
                             width="120">
                             </el-table-column>
                             <el-table-column
-                            prop="concentratorSN"
+                            prop="concentratorSn"
                             align='center'
                             label="控制器ID"
                             :formatter="formatRole"
@@ -347,7 +347,7 @@
                             width="140">
                             </el-table-column>
                             <el-table-column
-                            prop="concentratorSN"
+                            prop="concentratorSn"
                             align='center'
                             label="控制器ID"
                             :formatter="formatRole"
@@ -852,7 +852,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/project/getSonArea',
+                url:that.serverurl+'/v1/manage/areas/subset/0',
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     parentId:0,
@@ -895,7 +895,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/project/getSonArea',
+                url:that.serverurl+'/v1/manage/areas/subset/'+that.value1,
                 contentType:'application/json;charset=UTF-8',
                 data:data,
                 success:function(data){
@@ -933,7 +933,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/project/getSonArea',
+                url:that.serverurl+'/v1/manage/areas/subset/'+that.value2,
                 contentType:'application/json;charset=UTF-8',
                 data:data,
                 success:function(data){
@@ -1016,17 +1016,22 @@ export default {
             }
             var data = {};
             var url = '';
-
+            var type = ''
             var coord = [this.LampPoleData.longitude,this.LampPoleData.latitude];
             var lampIds = []
             if(this.addtype=='0'){
-                url='/pole/addPole';
+                url='/v1/solin/lighting/pole';
+                type = 'post'
                 for(var i=0;i<this.site3.length;i++){
                     lampIds.push(this.site3[i].id)
                 }
                 data.lampIds = lampIds.join(',')
             }
-            if(this.addtype=='1'){url='/pole/updatePole';data.id=this.site[0].id;};
+            if(this.addtype=='1'){
+                url='/v1/solin/lighting/pole';
+                type = 'put'
+                data.id=this.site[0].id;
+            };
             data.nickName = this.LampPoleData.nickName;
             data.poleType = this.value;
             if(this.LampPoleData.longitude=='0'||this.LampPoleData.latitude==''){
@@ -1040,7 +1045,7 @@ export default {
             data.serialNumber = this.LampPoleData.serialNumber;
             data.projectId = sessionStorage.projectId
             $.ajax({
-                type:'post',
+                type:type,
                 async:true,
                 dataType:'json',
                 url:that.serverurl+url,
@@ -1088,10 +1093,11 @@ export default {
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/pole/deletePole',
-                    data:{
-                        ids:arr.join(',')
-                    },
+                    url:that.serverurl+'/v1/solin/lighting/pole/deletes',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify({
+                        poles:arr
+                    }),
                     success:function(data){
                         if(data.errorCode=='0'){
                             that.$message({
@@ -1131,7 +1137,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/project/getMyAllProject',
+                url:that.serverurl+'/v1/manage/owner/projects/type/1',
                 contentType:'application/json;charset=UTF-8',
                 data:{},
                 success:function(data){
@@ -1155,11 +1161,12 @@ export default {
                 type:'post',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/pole/poleBindProject',
-                data:{
-                    poleIds:arr.join(','),
+                url:that.serverurl+'/v1/solin/lighting/pole/project',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify({
+                    poles:arr,
                     projectId:that.value5
-                },
+                }),
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.$message({
@@ -1201,11 +1208,11 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/lamp/getLampList',
+                url:that.serverurl+'/v1/solin/lighting/lamp',
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     page:1,
-                    rows:10,
+                    size:50,
                     nickName:'',
                     serialNumber:'',
                     areaId:'',
@@ -1216,7 +1223,6 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.tableData2 = data.result.list
-                        that.total2 = data.result.total
                     }else{
                         that.errorCode2(data.errorCode)
                     }
@@ -1248,15 +1254,17 @@ export default {
                 for(var i=0;i<this.site2.length;i++){
                     arr.push(this.site2[i].id)
                 }
-                data.lampIds = arr.join(',')
+                data.poleId = this.poleId;
+                data.lamps = arr
+                data.command = '2'
                 $.ajax({
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/lamp/lampUnbindPole',
-                    data:data, 
+                    url:that.serverurl+'/v1/solin/lighting/lamp/pole',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
                     success:function(data){
-                        console.log(data.errorCode)
                         if(data.errorCode=='0'){
                             that.$message({
                                 message: '解除绑定成功!',
@@ -1283,11 +1291,11 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/lamp/getLampList',
+                url:that.serverurl+'/v1/solin/lighting/lamp',
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     page:that.pageIndex3,
-                    rows:that.pageSize3,
+                    size:that.pageSize3,
                     nickName:'',
                     serialNumber:'',
                     areaId:'',
@@ -1339,13 +1347,15 @@ export default {
                     arr.push(that.site3[i].id)
                 }
                 data.poleId = this.poleId;
-                data.lampIds = arr.join(',')
+                data.lamps = arr
+                data.command = '1'
                 $.ajax({
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/lamp/lampBindPole',
-                    data:data, 
+                    url:that.serverurl+'/v1/solin/lighting/lamp/pole',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
                     success:function(data){
                         if(data.errorCode=='0'){
                             that.$message({
@@ -1389,10 +1399,10 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/screen/getScreenList',
+                url:that.serverurl+'/v1/solin/screen/device',
                 data:{
                     page:1,
-                    rows:10,
+                    size:10,
                     status:'',
                     serialNumber:'',
                     poleId:this.poleId,
@@ -1408,7 +1418,7 @@ export default {
             })
         },
         SelectionChange4(val){this.site4=val;},
-        //点击关联广告屏
+        //点击关联广告屏/解除关联广告屏
         relevancelanterntwo(val){
             var that = this;
             if(val=='0'){
@@ -1429,13 +1439,16 @@ export default {
                 for(var i = 0;i<that.site4.length;i++){
                     arr.push(that.site4[i].id)
                 }
-                data.screenIds  = arr.join(',')
+                data.poleId = this.poleId;
+                data.screens  = arr
+                data.command = '2'
                 $.ajax({
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/screen/screenUnbindPole',
-                    data:data, 
+                    url:that.serverurl+'/v1/solin/screen/device/pole',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
                     success:function(data){
                         if(data.errorCode=='0'){
                             that.$message({
@@ -1463,14 +1476,14 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/screen/getScreenList',
+                url:that.serverurl+'/v1/solin/screen/device',
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     page:this.pageIndex5,
-                    rows:this.pageSize5,
+                    size:this.pageSize5,
                     status:'',
                     serialNumber:'',
-                    poleId:0,
+                    poleId:'0',
                     projectId:sessionStorage.projectId
                 }, 
                 success:function(data){
@@ -1495,13 +1508,15 @@ export default {
                 arr.push(that.site5[i].id)
             }
             data.poleId = this.poleId;
-            data.screenIds  = arr.join(',')
+            data.screens  = arr
+            data.command = '1'
             $.ajax({
                 type:'post',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/screen/screenBindPole',
-                data:data, 
+                url:that.serverurl+'/v1/solin/screen/device/pole',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.$message({
@@ -1516,6 +1531,7 @@ export default {
                 }
             })
         },
+
         //关联气象站
         sensor(val){
             if(sessionStorage.projectId=='0'){
@@ -1682,7 +1698,7 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.options4 = data.result.models
-                            that.lampData.modelId = data.result.models[0].id
+                        that.lampData.modelId = data.result.models[0].id
                     }else{
                         that.errorCode2(data.errorCode)
                     }
@@ -1736,7 +1752,7 @@ export default {
                 type:'post',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/lamp/addLamp',
+                url:that.serverurl+'/v1/solin/lighting/lamp',
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify(data),
                 success:function(data){
@@ -1773,18 +1789,18 @@ export default {
             }
             var data = {
                 page:that.pageIndex,
-                rows:that.pageSize,
+                size:that.pageSize,
                 nickName:that.nickName,
                 poleType:that.value_search,
                 serialNumber:that.serialNumber,
                 areaId:areaId,
-                projectId:sessionStorage.projectId
+                projectIds:sessionStorage.projectId
             }
             $.ajax({
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/pole/getPoleList',
+                url:that.serverurl+'/v1/solin/lighting/pole',
                 contentType:'application/json;charset=UTF-8',
                 data:data, 
                 success:function(data){
@@ -1809,11 +1825,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/privilege/getMyOperatMenu',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    menuId:sessionStorage.menuId3
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
@@ -1827,19 +1841,19 @@ export default {
                                 that.delPole = true
                             }
 
-                            if(data.result.operats[i].code=='relationLamp'){
+                            if(data.result.operats[i].code=='poleAssociateLamp'){
                                 that.relationLamp = true
                             }
-                            if(data.result.operats[i].code=='relationScreen'){
+                            if(data.result.operats[i].code=='poleAssociateScreen'){
                                 that.relationScreen = true
                             }
-                            if(data.result.operats[i].code=='relationSensor'){
+                            if(data.result.operats[i].code=='poleAssociateEnv'){
                                 that.relationSensor = true
                             }
-                            if(data.result.operats[i].code=='addLamp'){
+                            if(data.result.operats[i].code=='addPoleLamp'){
                                 that.addLamp = true
                             }
-                            if(data.result.operats[i].code=='poleBindProject'){
+                            if(data.result.operats[i].code=='setPoleProject'){
                                 that.poleBindProject = true
                             }
                         }
@@ -1851,6 +1865,7 @@ export default {
         },
     },
     created(){
+        
         this.ready()
         this.Jurisdiction()
     },

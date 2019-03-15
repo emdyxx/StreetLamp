@@ -32,6 +32,16 @@
     background-image: url(img/Journal.png) !important;
 }
 
+.jstree_Inspection1{background-image: url(img/login.png) !important;background-size: 100% 100%;}
+.jstree_Inspection2{background-image: url(img/jktj.png) !important;background-size: 100% 100%;}
+.jstree_Inspection3{background-image: url(img/type.png) !important;background-size: 100% 100%;}
+.jstree_Inspection4{background-image: url(img/point.png) !important;background-size: 100% 100%;}
+.jstree_Inspection5{background-image: url(img/route.png) !important;background-size: 100% 100%;}
+.jstree_Inspection6{background-image: url(img/plan.png) !important;background-size: 100% 100%;}
+.jstree_Inspection7{background-image: url(img/check.png) !important;background-size: 100% 100%;}
+.jstree_Inspection8{background-image: url(img/user.png) !important;background-size: 100% 100%;}
+
+
 .jstree-node,
 .jstree-children,
 .jstree-container-ul {

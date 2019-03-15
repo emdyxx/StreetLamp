@@ -42,7 +42,7 @@
                         min-width="55">
                         </el-table-column>
                         <el-table-column
-                        prop="username"
+                        prop="createUser"
                         align='center'
                         label="操作用户"
                         min-width="100">
@@ -61,6 +61,8 @@
                                 <span v-if="scope.row.operatModule=='0'">屏幕</span>
                                 <span v-if="scope.row.operatModule=='1'">节目</span>
                                 <span v-if="scope.row.operatModule=='2'">媒体</span>
+                                <span v-if="scope.row.operatModule=='3'">任务</span>
+                                <span v-if="scope.row.operatModule=='4'">定时信息</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -73,15 +75,6 @@
                                 <span v-if="scope.row.operatType=='2'">删除</span>
                                 <span v-if="scope.row.operatType=='3'">启用/禁用</span>
                                 <span v-if="scope.row.operatType=='4'">审核</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="操做状态"
-                        min-width="80">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.operatStatus=='0'">成功</span>
-                                <span v-if="scope.row.operatStatus=='1'">失败</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -114,7 +107,7 @@
             <el-tab-pane label="控制日志" v-if="viewScreenControlLog" name='1' style="height: 100%;position:relative;">
                 <div class="screenJournal_top">
                     <div class="search">
-                        <span>设备序列号:</span>
+                        <span>屏幕序列号(:</span>
                         <input type="text" v-model="serialNumber" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入单灯序列号">
                     </div>
                     <div class="search">
@@ -155,7 +148,7 @@
                         width="55">
                         </el-table-column>
                         <el-table-column
-                        prop="username"
+                        prop="createUser"
                         align='center'
                         label="操作用户"
                         min-width="100">
@@ -172,6 +165,14 @@
                         min-width="80">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.controlType=='0'">下发节目</span>
+                                <span v-if="scope.row.controlType=='1'">开</span>
+                                <span v-if="scope.row.controlType=='2'">关</span>
+                                <span v-if="scope.row.controlType=='3'">设置亮度</span>
+                                <span v-if="scope.row.controlType=='4'">设置音量</span>
+                                <span v-if="scope.row.controlType=='5'">查询状态</span>
+                                <span v-if="scope.row.controlType=='6'">截图</span>
+                                <span v-if="scope.row.controlType=='7'">定时开关</span>
+                                <span v-if="scope.row.controlType=='8'">重启</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -248,10 +249,43 @@ export default {
                 }
             ],
             value1:'',
-            options2:[{
+            options2:[
+                {
                 value: '0',
-                label: '下发'
-                }
+                label: '下发节目'
+                },
+                {
+                value: '1',
+                label: '开'
+                },
+                {
+                value: '2',
+                label: '关'
+                },
+                {
+                value: '3',
+                label: '设置亮度'
+                },
+                {
+                value: '4',
+                label: '设置音量'
+                },
+                {
+                value: '5',
+                label: '查询状态'
+                },
+                {
+                value: '6',
+                label: '截图'
+                },
+                {
+                value: '7',
+                label: '定时开关'
+                },
+                {
+                value: '8',
+                label: '重启'
+                },
             ],
             value2:'',
             options3:[{
@@ -263,7 +297,15 @@ export default {
                 },{
                 value: '2',
                 label: '媒体'
-                }
+                },
+                {
+                value: '3',
+                label: '任务'
+                },
+                {
+                value: '4',
+                label: '定时信息'
+                },
             ],
             value3:'',
         }
@@ -281,18 +323,18 @@ export default {
             var that = this;
             var url = ''
             var data = {
-                page:that.pageIndex,
-                rows:that.pageSize,
-                projectId:sessionStorage.projectId,
+                projectIds:sessionStorage.projectId,
                 serialNumber:this.serialNumber,
+                page:that.pageIndex,
+                size:that.pageSize
             }
             if(this.activeName=='0'){
-                url='/screenOperatLog/getScreenOperatLogList'
+                url='/v1/solin/screen/log/operation'
                 data.operatType = this.value
                 data.operatModule = this.value3
             }
             if(this.activeName=='1'){
-                url='/screenControlLog/getScreenControlLogList'
+                url='/v1/solin/screen/log/control'
                 data.controlStatus = this.value1
                 data.controlType = this.value2
             }
@@ -325,7 +367,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/privilege/getMyOperatMenu',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     menuId:sessionStorage.menuId3

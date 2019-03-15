@@ -84,6 +84,12 @@
                             </template>
                         </el-table-column>
                         <el-table-column
+                        prop="sceneName"
+                        align='center'
+                        label="场景"
+                        min-width="80">
+                        </el-table-column>
+                        <el-table-column
                         prop="remark"
                         align='center'
                         label="备注"
@@ -175,6 +181,17 @@
                             </el-select>
                         </div> 
                         <div class="form-group">
+                            <label>场景:</label>
+                            <el-select v-model="value4" size='small' style="width: 196px;" placeholder="请选择">
+                                <el-option
+                                v-for="item in options4"
+                                :key="item.id"
+                                :label="item.sceneName"
+                                :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </div> 
+                        <div class="form-group">
                             <label>地图类型:</label>
                             <el-select v-model="value5" @change="mapChange" size='small' style="width: 196px;" placeholder="请选择">
                                 <el-option
@@ -251,6 +268,8 @@ export default {
             value2:'',
             options3: [],
             value3:'',
+            options4:[],
+            value4:'',
             detailsData:[],//项目详情
             options5:[
                 {
@@ -301,11 +320,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/project/getSonArea',
+                url:that.serverurl+'/v1/manage/areas/subset/0',
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    parentId:0
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.options1 = data.result.areas
@@ -331,11 +348,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/project/getSonArea',
+                url:that.serverurl+'/v1/manage/areas/subset/'+that.value1,
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    parentId:that.value1
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.options2 = data.result.areas
@@ -361,11 +376,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/project/getSonArea',
+                url:that.serverurl+'/v1/manage/areas/subset/'+that.value2,
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    parentId:that.value2
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.options3 = data.result.areas
@@ -380,6 +393,25 @@ export default {
                 }
             })
         },
+        //获取场景信息
+        scene(val){
+            var that = this
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/manage/scene',
+                contentType:'application/json;charset=UTF-8',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.options4 = data.result.scenes
+                    }else{
+                        that.errorCode(data.errorCode)
+                    }
+                }
+            })
+        },
         //获取归属机构树
         OrgTree(val){
             var that = this
@@ -387,7 +419,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/org/getMyOrgTree',
+                url:that.serverurl+'/v1/manage/owner/orgs/tree',
                 contentType:'application/json;charset=UTF-8',
                 data:{},
                 success:function(data){
@@ -414,6 +446,7 @@ export default {
             if(val=='0'){
                 this.province(val)
                 this.OrgTree(1)
+                this.scene(0)
                 that.projectName = ''
                 that.principal = ''
                 that.mark = ''
@@ -435,6 +468,7 @@ export default {
                 }
                 this.OrgTree(1)
                 this.details()
+                this.scene(1)
                 if(that.value5=='0'){
                     var file = document.getElementById('img1');
                     file.value = '';
@@ -451,16 +485,13 @@ export default {
         //获取项目详情
         details(){
             var that = this;
-            // detailsData
             $.ajax({
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/project/getUpdateNeedProject',
+                url:that.serverurl+'/v1/manage/projects/'+that.site[0].id,
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    id:that.site[0].id
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.detailsData = data.result;
@@ -468,6 +499,7 @@ export default {
                         that.projectName = that.detailsData.projectName
                         that.principal = that.detailsData.pricipal
                         that.mark = that.site[0].remark
+                        that.value4 = that.detailsData.scene
                         that.value5 = String(that.detailsData.locationType)
                         that.imgurl = that.detailsData.planUrl
                         if(that.detailsData.planUrl==''){}else{
@@ -511,6 +543,7 @@ export default {
             var that = this;
             var url = '';
             var data = {}
+            var type = ''
             var formdate = new FormData();
             if(that.projectName==''||that.principal==''){
                 that.$message({
@@ -520,7 +553,8 @@ export default {
                 return;
             }
             if(this.type=='0'){
-                url='/project/addProject'
+                url='/v1/manage/projects'
+                type = 'post'
                 if(this.value5=='0'){
                     if(this.$refs.img1.files[0]==''||this.$refs.img1.files[0]==undefined){
                         that.$message({
@@ -533,8 +567,8 @@ export default {
                 }
             }
             if(this.type=='1'){
-                url='/project/updateProjectInformation'
-                formdate.append("id",that.site[0].id)
+                url='/v1/manage/projects/'+that.site[0].id
+                type = 'put'
                 if(this.value5=='0'){
                     if(that.imageUrl1==''||that.imageUrl1==undefined){
                         that.$message({
@@ -552,10 +586,11 @@ export default {
             formdate.append("areaId",that.value3)
             formdate.append("orgId",that.value[that.value.length-1])
             formdate.append("remark",that.mark)
+            formdate.append("scene",that.value4)
             formdate.append("locationType",that.value5)
             $.ajax({
                 url:that.serverurl+url,
-                type:'POST',
+                type:type,
                 cache:false,
                 data:formdate,
                 dataType:'json',
@@ -596,11 +631,11 @@ export default {
                 type: 'warning'
             }).then(() => {
                 $.ajax({
-                    type:'post',
+                    type:'delete',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/project/deleteProject',
-                    data:{id:that.site[0].id},
+                    url:that.serverurl+'/v1/manage/projects/'+that.site[0].id,
+                    data:{},
                     success:function(data){
                         if(data.errorCode=='0'){
                             $('#jstree').jstree(true).refresh();
@@ -641,7 +676,7 @@ export default {
                         var jsonarray = eval('('+jsonstr+')');
                         $.ajax({
                             type:"GET",
-                            url:that.serverurl+'/project/getMyAllArea',
+                            url:that.serverurl+'/v1/manage/owner/areas/projects/tree',
                             dataType:"json",
                             async: false,
                             success:function(data) {
@@ -682,10 +717,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/project/getMyProvinceCityProject',
+                url:that.serverurl+'/v1/manage/owner/projects/areas/'+that.sizeType.id,
                 contentType:'application/json;charset=UTF-8',
                 data:{
-                    areaId:that.sizeType.id,
                     page:that.pageIndex,
                     size:that.pageSize,
                     projectName:that.projectName2,
@@ -715,11 +749,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/privilege/getMyOperatMenu',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId2,
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    menuId:sessionStorage.menuId2
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){

@@ -33,7 +33,7 @@
                         width="55">
                         </el-table-column>
                         <el-table-column
-                        prop="concentratorSN"
+                        prop="concentratorSn"
                         align='center'
                         label="集中器标识"
                         min-width="120">
@@ -180,15 +180,15 @@ export default {
             var url = ''
             var data = {}
             data.projectId = sessionStorage.projectId
-            url='/envData/getEnvDatasByTime'
-            data.concentratorSN = sessionStorage.concentratorSN
+            url='/v1/solin/sensor/env/log/data'
+            data.concentratorSn = sessionStorage.concentratorSn 
             if(this.activeName=='0'){
                 data.page = this.pageIndex
                 data.size = this.pageSize
                 if(this.value==null||this.value==''||this.value==undefined||this.value.length==0){
                     
                 }else{
-                    data.beginTime=that.value[0]
+                    data.startTime=that.value[0]
                     data.endTime=that.value[1]
                 }
                 $.ajax({
@@ -213,7 +213,7 @@ export default {
             if(this.activeName=='1'){
                 if(this.value1==null||this.value1==''||this.value1==undefined||this.value1.length==0){   
                 }else{
-                    data.beginTime=that.value1[0]
+                    data.startTime=that.value1[0]
                     data.endTime=that.value1[1]
                 }
                 $.ajax({

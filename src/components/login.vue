@@ -55,7 +55,6 @@ export default {
       }
       var user = $('#user').val()
       var password = md5($('#password').val())
-      // var password = $('#password').val()
       if(user==''||password==''){
         that.$message({
             message: '账号密码不能为空!',
@@ -73,15 +72,14 @@ export default {
         async:true,
         dataType:'json',
         url:that.serverurl+'/v1/manage/token',
-        // url:that.serverurl+'/user/login',
         contentType:'application/json;charset=UTF-8',
         data:JSON.stringify(data),
         success:function(data){
           that.loading = false
           if(data.errorCode=='0'){
             sessionStorage.token = data.result.token
-            that.$router.push({'path':'/program'})
-            // that.$router.push({'path':'/index'})
+            // that.$router.push({'path':'/program'})
+            that.$router.push({'path':'/index'})
           }else{
             that.errorCode(data.errorCode)
           }

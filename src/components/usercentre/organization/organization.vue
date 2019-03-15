@@ -386,10 +386,10 @@ export default {
                 });
                 return;
             }
-            $('#AppointModal').modal('hide')
             //获取当前选中管理员详细信息
             that.details2(this.AppointSite[0].id)
             that.detailsData.adminId = this.AppointSite[0].id
+            $('#AppointModal').modal('hide')
         },
         //点击管理员栏目
         handleClick(){
@@ -404,15 +404,12 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/org/getOrgInformation',
+                url:that.serverurl+'/v1/manage/orgs/'+that.site[0].id,
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    id:that.site[0].id
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.detailsData = data.result
-                        // that.details2(data.result.adminId)
                     }else{
                         that.errorCode(data.errorCode)
                     }
@@ -426,11 +423,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/user/getUserNeedUpdate',
+                url:that.serverurl+'/v1/manage/getUserNeedUpdate/userId/'+val,
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    userId:val
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.detailsData2 = data.result
@@ -490,7 +485,6 @@ export default {
                     return;
                 }
                 that.treetwo();
-                this.OrgTree(1);
                 this.details();
                 $('#addorganizations').modal('show')
                 $('#myTab a:first').tab('show')
@@ -527,10 +521,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/user/findCurrentOrgOrdinaryUser',
+                url:that.serverurl+'/v1/manage/users/orgs/'+that.site[0].id,
                 contentType:'application/json;charset=UTF-8',
                 data:{
-                    orgId:that.site[0].id,
                     page:that.AppointpageIndex,
                     size:that.AppointpageSize, 
                 },
@@ -603,11 +596,7 @@ export default {
             var url = ''
             var data = {};
             if(val=='0'){
-                url='/org/getMyOrgTree'
-            }
-            if(val=='1'){
-                url='/org/getMyOrgTreeNocheckselef'
-                data.orgId = that.site[0].id
+                url='/v1/manage/owner/orgs/tree'
             }
             $.ajax({
                 type:'get',
@@ -625,11 +614,6 @@ export default {
                                 that.data.optionsValue=[data.result[0].id]   //所属机构
                             },200)
                         }
-                        if(val=='1'){
-                            setTimeout(function(){
-                                that.data.optionsValue=that.detailsData.parentIds   //所属机构
-                            },200)
-                        }
                     }else{
                         that.errorCode(data.errorCode)
                     }
@@ -641,7 +625,7 @@ export default {
             var that = this;
             $.ajax({
                 type: "GET",
-                url:that.serverurl+'/privilege/getAllPrivilege',
+                url:that.serverurl+'/v1/manage/owner/privilege',
                 dataType:"json",
                 async: false,
                 data:{},
@@ -657,20 +641,27 @@ export default {
         //权限类型改变
         radioChange(){
             var that = this;
-            var arr = []
+            var arr = ''
+            if(this.radio1==false&&this.radio2==false){
+                that.$refs.tree.setCheckedKeys([])
+                return;
+            }
             if(this.radio1==true){
-                arr.push('0')
+                arr='1'
             }
             if(this.radio2==true){
-                arr.push('1')
+                arr='2'
+            }
+            if(this.radio1==true&&this.radio2==true){
+                arr='3'
             }
             $.ajax({
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/privilege/getSpecialPrivilege',
+                url:that.serverurl+'/v1/manage/owner/privilege/'+arr,
                 contentType:'application/json;charset=UTF-8',
-                data:{operatType:arr.join(',')},
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.$refs.tree.setCheckedKeys(data.result.operatorIds);
@@ -685,6 +676,7 @@ export default {
             var that=this;
             var formdate = new FormData();
             var url = ''
+            var type = ''
             //手机号码验证
             var phone = /^((0[0-9]{1,3}-\d{5,8})|(1[3584]\d{9}))$/;
             //中文验证
@@ -705,7 +697,8 @@ export default {
                 return false;
             }
             if(this.type=='0'){
-                url = '/org/configureOrgPrivilege'
+                url = '/v1/manage/orgs'
+                type = 'post'
                 if(this.data.userName==''||this.data.userPwd==''||this.data.fullName==''||this.data.userMobile==''){
                     this.$message({
                         message: '必填字段不能为空!',
@@ -731,8 +724,9 @@ export default {
                 }
             }
             if(this.type=='1'){
-                url = '/org/updateOrgInformation'
-                formdate.append("id", this.site[0].id)
+                url = '/v1/manage/orgs/'+this.site[0].id
+                type = 'put'
+                // formdate.append("id", this.site[0].id)
                 formdate.append("backdrop", that.icon)
                 formdate.append("icon", that.icon1)
                 if(this.AppointSite.length>=1){
@@ -765,7 +759,7 @@ export default {
             }
             formdate.append("iconFile", this.$refs.img2.files[0])
             formdate.append("userName", this.data.userName)
-            formdate.append("userPwd", this.data.userPwd)
+            formdate.append("userPwd", md5(this.data.userPwd))
             formdate.append("fullName", this.data.fullName)
             formdate.append("userMobile", this.data.userMobile)
             formdate.append("userEmail", this.data.userEmail)
@@ -773,7 +767,7 @@ export default {
             formdate.append("operationIds", arrar2.join(','))
             $.ajax({
                 url: that.serverurl+url,
-                type: 'POST',
+                type: type,
                 cache: false,
                 data: formdate,
                 dataType:'json',
@@ -812,12 +806,11 @@ export default {
             }).then(() => {
                 // 这里进行删除请求
                 $.ajax({
-                    type:'post',
+                    type:'delete',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/org/deleteOrg',
-                    // contentType:'application/json;charset=UTF-8',
-                    data:{id:that.site[0].id},
+                    url:that.serverurl+'/v1/manage/orgs/'+that.site[0].id,
+                    data:{},
                     success:function(data){
                         if(data.errorCode=='0'){
                             $('#jstree').jstree(true).refresh();
@@ -869,7 +862,7 @@ export default {
                         var jsonarray = eval('('+jsonstr+')');
                         $.ajax({
                             type:"GET",
-                            url:that.serverurl+'/org/getMyOrgTree',
+                            url:that.serverurl+'/v1/manage/owner/orgs/tree',
                             dataType:"json",
                             async: false,
                             success:function(data) {
@@ -914,10 +907,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/org/getCurrentOrgTree',
+                url:that.serverurl+'/v1/manage/orgs/'+that.sizeType.id+'/all-orgs',
                 contentType:'application/json;charset=UTF-8',
                 data:{
-                    orgId:that.sizeType.id,
                     page:that.pageIndex,
                     size:that.pageSize,
                     orgName:that.orgName,
@@ -945,11 +937,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/privilege/getMyOperatMenu',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId2,
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    menuId:sessionStorage.menuId2
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){

@@ -146,31 +146,11 @@
                             <input type="text" v-model='form.height' class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入高度">
                         </div>
                         <div class="form-group">
-                            <label>安装模式:</label>
-                            <el-select size='small' v-model="value2" @change="Pattern" style='width:126px;' placeholder="请选择">
-                                <el-option
-                                v-for="item in options2"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
                             <label><span class="Required">*</span>控制卡标识:</label>
                             <input type="text" v-model="form.serialNumber" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入屏幕标识">
-                        </div> 
-                        <div class="form-group">
-                            <label>播放位置:</label>
-                            <el-select size='small' v-model="value3" style='width:126px;' placeholder="请选择">
-                                <el-option
-                                v-for="item in options3"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
                             <label><span class="Required">*</span>控制卡宽度:</label>
                             <input type="text" v-model="form.controlCardWidth" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入控制卡宽">
-                        </div>
+                        </div> 
                         <div class="form-group">
                             <label><span class="Required">*</span>控制卡高度:</label>
                             <input type="text" v-model="form.controlCardHeight" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入控制卡高">
@@ -330,10 +310,6 @@ export default {
             ],
             value4:'',
             options:[],
-            options2:[{value:'1',label:'横屏'},{value:'2',label:'竖屏'}],
-            value2:'2',
-            options3:[{value:'1',label:'左上'},{value:'2',label:'右上'},{value:'3',label:'左下'},{value:'4',label:'右下'}],                
-            value3:'1',
             value:'',
             form:{
                 nickName:'',
@@ -381,16 +357,16 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/model/getModel',
+                url:that.serverurl+'/v1/solin/screen/model',
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     modelType:'2'
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
-                        that.options = data.result.models
+                        that.options = data.result.mapList
                         if(that.addType=='0'){
-                            that.form.modelId = data.result.models[0].id
+                            that.form.modelId = data.result.mapList[0].id
                         }
                         if(that.addType=='1'){
                             that.form.modelId = that.site[0].modelId
@@ -423,7 +399,7 @@ export default {
                 return;
             }
             var that = this
-            // 0为添加 1为删除
+            // 0为添加 1为编辑
             if(val=='0'){
                 this.addType = val
                 this.ModelData()
@@ -456,8 +432,6 @@ export default {
                     that.form.remark = that.site[0].remark
                     that.form.controlCardWidth = that.site[0].controlCardWidth
                     that.form.controlCardHeight = that.site[0].controlCardHeight
-                    that.value2 = String(that.site[0].placement)
-                    that.value3 = String(that.site[0].position)
                 },400)
                 
                 $('#addModal').modal('show')
@@ -472,6 +446,7 @@ export default {
         //删除广告屏
         deleteadvertisingscreen(){
             var that = this
+            var arr = [this.site[0].id]
             if(this.site.length==0||this.site.length>=2){
                 this.$message({
                     message: '请选择单个屏幕进行删除!',
@@ -488,10 +463,11 @@ export default {
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/screen/deleteScreen',
-                    data:{
-                        id:that.site[0].id
-                    },
+                    url:that.serverurl+'/v1/solin/screen/device/deletes',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify({
+                        screens:arr
+                    }),
                     success:function(data){
                         if(data.errorCode=='0'){
                             that.$message({
@@ -531,7 +507,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/project/getMyAllProject',
+                url:that.serverurl+'/v1/manage/owner/projects/type/1',
                 contentType:'application/json;charset=UTF-8',
                 data:{},
                 success:function(data){
@@ -555,11 +531,12 @@ export default {
                 type:'post',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/screen/screenBindProject',
-                data:{
-                    screenIds:arr.join(','),
+                url:that.serverurl+'/v1/solin/screen/device/project',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify({
+                    screens:arr,
                     projectId:that.value5
-                },
+                }),
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.$message({
@@ -586,29 +563,29 @@ export default {
             var that = this;
             var data = {
                 page:that.pageIndex2,
-                rows:that.pageSize2,
+                size:that.pageSize2,
                 nickName:'',
                 serialNumber:'',
                 poleType:'',
                 areaId:'',
-                projectId:sessionStorage.projectId
+                projectIds:sessionStorage.projectId
             }
             $.ajax({
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/pole/getPoleList',
+                url:that.serverurl+'/v1/solin/lighting/pole',
                 contentType:'application/json;charset=UTF-8',
                 data:data, 
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.tableData2 = data.result.list
                         that.total2 = data.result.total
-                        if(that.addType=='0'){
+                        if(that.addType=='1'){
                             var arr = []
-                            for(let i = 0;i<that.site2.length;i++){
+                            for(let i = 0;i<that.site.length;i++){
                                 for(let j = 0;j<data.result.list.length;j++){
-                                    if(that.site2[i].id==data.result.list[j].id){
+                                    if(that.site[i].poleId==data.result.list[j].id){
                                         arr.push(data.result.list[j])
                                     }
                                 }
@@ -630,7 +607,7 @@ export default {
         currentchange2(val){this.pageIndex2 = val;this.LampPoleData();},
         //关联确认
         Relation(){
-            if(this.site2.length>=2){
+            if(this.site2.length>=2||this.site2.length==0){
                 this.$message({
                     message: '只能关联一个灯杆!',
                     type: 'warning'
@@ -646,15 +623,15 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/screen/getScreenList',
-                // contentType:'application/json;charset=UTF-8',
+                url:that.serverurl+'/v1/solin/screen/device',
+                contentType:'application/json;charset=UTF-8',
                 data:{
                    page:that.pageIndex,
-                   rows:that.pageSize,
+                   size:that.pageSize,
                    serialNumber:that.serialNumber,
                    status:that.value4,
                    poleId:'',
-                   projectId:sessionStorage.projectId
+                   projectIds:sessionStorage.projectId
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -676,6 +653,7 @@ export default {
             var that = this
             var url = ''
             var data = that.form
+            var type = ''
             if(that.form.nickName==''||that.form.width==''||that.form.height==''){
                 that.$message({
                     message: '必填字段不能为空!',
@@ -691,16 +669,16 @@ export default {
                 return;
             }
             if(this.addType=='0'){
-                url = '/screen/addScreen'
+                url = '/v1/solin/screen/device'
+                type = 'post'
             }
             if(this.addType=='1'){
                 data.id = that.site[0].id
                 data.status = that.site[0].status
-                url = '/screen/updateScreen' 
+                url = '/v1/solin/screen/device' 
+                type = 'put'
             }
             data.projectId=sessionStorage.projectId
-            data.placement = that.value2
-            data.position = that.value3
             if(this.site2.length==''){
                 if(this.addType=='0'){
                     data.poleId='0'
@@ -711,7 +689,7 @@ export default {
                 data.poleId = this.site2[0].id
             }
             $.ajax({
-                type:'post',
+                type:type,
                 async:true,
                 dataType:'json',
                 url:that.serverurl+url,
@@ -748,27 +726,25 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/privilege/getMyOperatMenu',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    menuId:sessionStorage.menuId3
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
-                            if(data.result.operats[i].code=='addScreenDeployment'){
+                            if(data.result.operats[i].code=='addScreen'){
                                 that.addScreenDeployment = true
                             }
-                            if(data.result.operats[i].code=='editScreenDeployment'){
+                            if(data.result.operats[i].code=='editScreen'){
                                 that.editScreenDeployment = true
                             }
-                            if(data.result.operats[i].code=='delScreenDeployment'){
+                            if(data.result.operats[i].code=='delScreen'){
                                 that.delScreenDeployment = true
                             }
-                            if(data.result.operats[i].code=='relationPole'){
+                            if(data.result.operats[i].code=='screenAssociatePole'){
                                 that.relationPole = true
                             }
-                            if(data.result.operats[i].code=='screenBindProject'){
+                            if(data.result.operats[i].code=='setScreenProject'){
                                 that.screenBindProject = true
                             }
                         }

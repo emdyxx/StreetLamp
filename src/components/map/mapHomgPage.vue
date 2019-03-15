@@ -295,18 +295,18 @@ export default {
                     value: '0',
                     label: '灯杆'
                 }, 
-                {
-                    value: '1',
-                    label: '灯具'
-                },
-                {
-                    value: '2',
-                    label: '广告屏'
-                },
-                {
-                    value: '3',
-                    label: '气象站'
-                }
+                // {
+                //     value: '1',
+                //     label: '灯具'
+                // },
+                // {
+                //     value: '2',
+                //     label: '广告屏'
+                // },
+                // {
+                //     value: '3',
+                //     label: '气象站'
+                // }
             ],
             value1:'0',
             options2:[
@@ -480,7 +480,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/project/getMyAllProject',
+                url:that.serverurl+'/v1/manage/owner/projects/type/2',
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     type:'1'
@@ -678,14 +678,10 @@ export default {
             var url = ''
             var data = {}
             data.projectId = that.value 
-            if(that.value1=='0'){url='/pole/getPoleListByProjectId';}//灯杆
+            if(that.value1=='0'){url='/v1/solin/lighting/pole';}//灯杆
             if(that.value1=='1'){
                 url='/lamp/getLampListByProjectId';
-                // if(that.value2=='1'){
-                    data.lampStatus = that.value2
-                // }else{
-                //     data.lampStatus = ''
-                // }
+                data.lampStatus = that.value2
             }//灯具
             if(that.value1=='2'){url='/screen/getScreenListByProjectId';}//广告屏
             if(that.value1=='3'){url='/envSensors/getSensorsByProjectId';}//气象站
@@ -1103,11 +1099,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/privilege/getMyOperatMenu',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId,
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    menuId:sessionStorage.menuId
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){

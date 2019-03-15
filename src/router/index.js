@@ -27,10 +27,14 @@ import LampPole from '@/components/lamppost/deploy/LampPole'
 import Lampsandlanterns from '@/components/lamppost/deploy/Lampsandlanterns'
 import advertisingscreen from '@/components/lamppost/deploy/advertisingscreen'
 import sensor from '@/components/lamppost/deploy/sensor'
+import loraSensor from '@/components/lamppost/deploy/loraSensor'
+
 import chargingPiles from '@/components/lamppost/equipment/chargingPiles'
 import advertisingScreens from '@/components/lamppost/equipment/advertisingScreens'
 import sensors from '@/components/lamppost/equipment/sensors'
 import historicalData from '@/components/lamppost/equipment/historicalData'
+import loraQuery from '@/components/lamppost/equipment/loraQuery'
+import loading from '@/components/lamppost/equipment/loading'
 
 
 import pandect from '@/components/lamppost/pandect/pandect'
@@ -54,8 +58,14 @@ import program from '@/components/program/program' //节目管理页面
 import programSimple from '@/components/program/programSimple' //简易节目页面
 import programSenior from '@/components/program/programSenior' //高级节目页面
 
-
-
+import Inspection from '@/components/Inspection/Inspection' //巡检管理页面
+import UserSettings from '@/components/Inspection/UserSettings' //用户设置
+import QueryStatistics from '@/components/Inspection/QueryStatistics' //查询统计
+import InspectionItems from '@/components/Inspection/InspectionItems' //检查项目
+import InspectionSite from '@/components/Inspection/InspectionSite' //巡检地点
+import InspectionRoute from '@/components/Inspection/InspectionRoute' //巡检路线
+import PatrolPlan from '@/components/Inspection/PatrolPlan' //巡检计划
+import Record from '@/components/Inspection/Record' //巡检记录
 //  
 Vue.use(Router)
 Vue.use(ElementUI);
@@ -1446,25 +1456,10 @@ export default new Router({
       component: login
     },
     {
-      path: '/program',
-      name: 'program',
-      component: program,
+      path: '/index',
+      name: 'index',
+      component: index
     },
-    {
-      path: '/programSimple',
-      name: 'programSimple',
-      component: programSimple
-    },
-    {
-      path: '/programSenior',
-      name: 'programSenior',
-      component: programSenior
-    },
-    // {
-    //   path: '/index',
-    //   name: 'index',
-    //   component: index
-    // },
     {
       path: '/lamppost',
       name: 'lamppost',
@@ -1472,43 +1467,21 @@ export default new Router({
       children:[
         {
           path: '/',
-          name: 'equipment',
-          component: equipment,
-          children:[
-            {
-              path: '/',
-              name: 'lampslanterns',
-              component: lampslanterns,
-            },
-          ]
+          name: 'deploy',
+          component: deploy,
+          // children:[
+          //   {
+          //     path: '/',
+          //     name: 'LampPole',
+          //     component: LampPole,
+          //   },
+          // ]
         },
         {
           path: '/Refresh',
           name: 'Refresh',
           component: Refresh
         },
-        // {
-        //   path: '/pandect',
-        //   name: 'pandect',
-        //   component: pandect,
-        //   children:[
-        //     {
-        //       path: '/',
-        //       name: 'pandectone',
-        //       component: pandectone,
-        //     },
-        //     {
-        //       path: '/pandectone',
-        //       name: 'pandectone',
-        //       component: pandectone,
-        //     },
-        //     {
-        //       path: '/pandecttwo',
-        //       name: 'pandecttwo',
-        //       component: pandecttwo
-        //     },
-        //   ]
-        // },
         {
           path: '/equipment',
           name: 'equipment',
@@ -1519,11 +1492,21 @@ export default new Router({
               name: 'lampslanterns',
               component: lampslanterns,
             },
-            // {
-            //   path: '/homepage',
-            //   name: 'homepage',
-            //   component: homepage,
-            // },
+            {
+              path: '/program',
+              name: 'program',
+              component: program,
+            },
+            {
+              path: '/programSimple',
+              name: 'programSimple',
+              component: programSimple
+            },
+            {
+              path: '/programSenior',
+              name: 'programSenior',
+              component: programSenior
+            },
             {
               path: '/lampslanterns',
               name: 'lampslanterns',
@@ -1548,7 +1531,17 @@ export default new Router({
               path: '/historicalData',
               name: 'historicalData',
               component: historicalData,
-            }
+            },
+            {
+              path: '/loraQuery',
+              name: 'loraQuery',
+              component: loraQuery,
+            },
+            {
+              path: '/loading',
+              name: 'loading',
+              component: loading,
+            },
           ]
         },
         {
@@ -1590,7 +1583,12 @@ export default new Router({
               path: '/sensor',
               name: 'sensor',
               component: sensor,
-            }
+            },
+            {
+              path: '/loraSensor',
+              name: 'loraSensor',
+              component: loraSensor,
+            },
           ]
         },
         {
@@ -1684,5 +1682,52 @@ export default new Router({
       name: 'broadcast',
       component: broadcast,
     },
+    {
+      path: '/Inspection',
+      name: 'Inspection',
+      component: Inspection,
+      children:[
+        {
+          path: '/',
+          name: 'UserSettings',
+          component: UserSettings,
+        },
+        {
+          path: '/UserSettings',
+          name: 'UserSettings',
+          component: UserSettings,
+        },
+        {
+          path: '/QueryStatistics',
+          name: 'QueryStatistics',
+          component: QueryStatistics,
+        },
+        {
+          path: '/InspectionItems',
+          name: 'InspectionItems',
+          component: InspectionItems,
+        },
+        {
+          path: '/InspectionSite',
+          name: 'InspectionSite',
+          component: InspectionSite,
+        },
+        {
+          path: '/InspectionRoute',
+          name: 'InspectionRoute',
+          component: InspectionRoute,
+        },
+        {
+          path: '/PatrolPlan',
+          name: 'PatrolPlan',
+          component: PatrolPlan,
+        },
+        {
+          path: '/Record',
+          name: 'Record',
+          component: Record,
+        },
+      ]
+    }
   ]
 })
