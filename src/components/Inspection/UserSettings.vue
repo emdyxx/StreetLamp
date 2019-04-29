@@ -2,26 +2,26 @@
     <!-- 用户设置 -->
     <div class="UserSettings">
         <div class="UserSettings_top">
-            <el-button @click="operationUserSettings(0)" type="primary" icon='el-icon-plus' size='small'>添加用户</el-button>
-            <el-button @click="operationUserSettings(1)" type="primary" icon="el-icon-edit" size='small'>编辑用户</el-button>
-            <el-button @click="operationUserSettings(2)" type="primary" icon='el-icon-delete' size='small'>删除用户</el-button>
+            <el-button @click="operationUserSettings(0)" v-if="addPatrolInspector" type="primary" icon='el-icon-plus' size='small'>添加用户</el-button>
+            <el-button @click="operationUserSettings(1)" v-if="editPatrolInspector" type="primary" icon="el-icon-edit" size='small'>编辑用户</el-button>
+            <el-button @click="operationUserSettings(2)" v-if="delPatrolInspector" type="primary" icon='el-icon-delete' size='small'>删除用户</el-button>
         </div>
         <div class="UserSettings_bottom">
             <div class="UserSettings_bottom_top">
                 <div class="search">
-                    <label>用户名:</label>
-                    <input type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
+                    <label>巡检员姓名:</label>
+                    <input v-model="inspectorName" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
                 </div>
                 <div class="search">
-                    <label>姓名:</label>
-                    <input type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入姓名">
+                    <label>巡检员编号:</label>
+                    <input v-model="inspectorNumber" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入姓名">
                 </div>
                 <div class="search">
-                    <label>电话:</label>
-                    <input type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
+                    <label>手机号:</label>
+                    <input v-model="mobile" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
                 </div>
                 <div style="margin-left:15px;">
-                    <el-button type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
             </div>
             <div class="UserSettings_bottom_bottom">
@@ -41,65 +41,38 @@
                     width="55">
                     </el-table-column>
                     <el-table-column
-                    prop="username"
+                    prop="inspectorName"
                     align='center'
-                    label="用户姓名"
+                    label="姓名"
                     min-width="120">
                     </el-table-column>
                     <el-table-column
-                    prop="fullName"
-                    align='center'
-                    label="用户序号"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="userType"
+                    prop="sex"
                     align='center'
                     label="性别"
                     min-width="80">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.userType=='0'">男</span>
-                            <span v-if="scope.row.userType=='1'">女</span>
+                            <span v-if="scope.row.sex=='0'">男</span>
+                            <span v-if="scope.row.sex=='1'">女</span>
                         </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="inspectorNumber"
+                    align='center'
+                    label="编号"
+                    min-width="80">
                     </el-table-column>
                     <el-table-column
                     prop="mobile"
                     align='center'
                     label="手机号码"
+                    :formatter="formatRole"
                     min-width="150">
                     </el-table-column>
                     <el-table-column
-                    align='center'
-                    label="所属部门"
-                    min-width="120">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.org.orgName}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="注册状态"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.status=='0'">启用</span>
-                            <span v-if="scope.row.status=='1'">禁用</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
                     prop="createTime"
-                    align='center'
-                    label="登入次数"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="createTime"
-                    align='center'
-                    label="最后登入日期"
-                    min-width="180">
-                    </el-table-column>
-                    <el-table-column
-                    prop="createTime"
-                    label="最后登入地址"
+                    label="创建时间"
+                    :formatter="formatRole"
                     align='center'
                     min-width="180"
                     show-overflow-tooltip>
@@ -130,44 +103,43 @@
                     </div>
                     <div class="modal-body" style='min-height:200px;max-height:590px;overflow:auto;'>
                         <div class="form-group">
-                            <label><span class="Required">*</span>手机号码:</label>
-                            <input type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入手机号码">
+                            <label><span class="Required">*</span>手机号(账号):</label>
+                            <input v-model="data.mobile" type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入手机号码">
                         </div>
                         <div class="form-group">
                             <label><span class="Required">*</span>密码:</label>
-                            <input type="password" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入用户序号">
+                            <input v-model="data.loginPwd" type="password" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入密码">
                         </div>
                         <div class="form-group">
                             <label><span class="Required">*</span>确认密码:</label>
-                            <input type="password" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入用户序号">
+                            <input v-model="data.loginPwd2" type="password" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入确认密码">
                         </div>
                         <div class="form-group">
-                            <label><span class="Required">*</span>用户姓名:</label>
-                            <input type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入用户姓名">
+                            <label><span class="Required">*</span>巡检员姓名:</label>
+                            <input v-model="data.inspectorName" type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入巡检员姓名">
                         </div>
                         <div class="form-group">
-                            <label><span class="Required">*</span>性别:</label>
-                            <el-radio-group v-model="radio">
+                            <label><span class="Required">*</span>巡检员编号:</label>
+                            <input v-model="data.inspectorNumber" type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入巡检员编号">
+                        </div>
+                        <div class="form-group">
+                            <label>性别:</label>
+                            <el-radio-group v-model="data.sex">
                                 <el-radio :label="0">男</el-radio>
                                 <el-radio :label="1">女</el-radio>
                             </el-radio-group>
                         </div>
-                        <!-- <div class="form-group">
-                            <label><span class="Required">*</span>所属部门:</label>
-                            <div>
-                                <el-cascader
-                                    :options="options"
-                                    v-model="optionsValue"
-                                    :props='optionspros'
-                                    size='small'
-                                    change-on-select>
-                                </el-cascader>
-                            </div>
-                        </div> -->
+                        <div class="form-group">
+                            <label>类别:</label>
+                            <el-radio-group v-model="data.inspectorType">
+                                <el-radio :label="1">普通巡检员</el-radio>
+                                <el-radio :label="2">管理员</el-radio>
+                            </el-radio-group>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary">确定</button>
+                        <button @click="Submit" type="button" class="btn btn-primary">确定</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div>
@@ -179,32 +151,45 @@ export default {
     name: 'UserSettings',
     data () {
         return {
+            addPatrolInspector:false,
+            editPatrolInspector:false,
+            delPatrolInspector:false,
+            serverurl:localStorage.serverurl,
             tableData:[],
             site:[],
             pageIndex:1,
             pageSize:10,
             total:10,
+            inspectorName:'',
+            inspectorNumber:'',
+            mobile:'',
             type:'0',
-            radio:0,
-            // options:[],//所属机构
-            // optionsValue:[],
-            // optionspros:{
-            //     value: 'id',
-            //     label:'text',
-            //     children: 'children'
-            // },
+            //添加编辑参数
+            data:{
+                mobile:'',
+                loginPwd:'',
+                loginPwd2:'',
+                inspectorName:'',
+                inspectorNumber:'',
+                sex:0,
+                inspectorType:1,
+            },
         }
     },
     mounted(){
         
     },
     methods:{
+        formatRole:function(val, column, cellValue, index){
+            if(cellValue == null||cellValue == undefined||cellValue == ''){
+                return '----'
+            }else{
+                return cellValue
+            }
+        },
         clickRow(row){
             this.$refs.moviesTable.toggleRowSelection(row)
         },   
-        SelectionChange(val){this.site = val;},
-        sizechange(val){this.pageSize=val;this.readyRight();},
-        currentchange(val){this.pageIndex=val;this.readyRight();},
         //添加,编辑,删除用户
         operationUserSettings(val){
             // 0 添加,1 编辑,2 删除
@@ -212,6 +197,13 @@ export default {
             if(val=='0'){
                 that.type = '0'
                 $('#addUserSettings').modal('show')
+                that.data.mobile = ''
+                that.data.loginPwd = ''
+                that.data.loginPwd2 = ''
+                that.data.inspectorName = ''
+                that.data.inspectorNumber = ''
+                that.data.sex = 0
+                that.data.inspectorType = 1
             }
             if(val=='1'){
                 that.type = '1'
@@ -222,6 +214,13 @@ export default {
                     });
                     return;
                 }
+                that.data.mobile = that.site[0].mobile
+                that.data.loginPwd = that.site[0].loginPwd
+                that.data.loginPwd2 = that.site[0].loginPwd
+                that.data.inspectorName = that.site[0].inspectorName
+                that.data.inspectorNumber = that.site[0].inspectorNumber
+                that.data.sex = Number(that.site[0].sex)
+                that.data.inspectorType = Number(that.site[0].inspectorType)
                 $('#addUserSettings').modal('show')
             }
             if(val=='2'){
@@ -232,11 +231,152 @@ export default {
                     });
                     return;
                 }
+                var arr = []
+                for(var i=0;i<that.site.length;i++){
+                    arr.push(that.site[i].id)
+                }
+                that.$confirm('是否删除所选巡检员？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    $.ajax({
+                        type:'post',
+                        async:true,
+                        dataType:'json',
+                        url:that.serverurl+'/v1/solin/patrol/inspector/deletes',
+                        contentType:'application/json;charset=UTF-8',
+                        data:JSON.stringify({
+                            inspectors:arr
+                        }),
+                        success:function(data){
+                            if(data.errorCode=='0'){
+                                that.$message({
+                                    message: '删除成功!',
+                                    type: 'success'
+                                });
+                                that.ready()
+                            }else{
+                                that.errorCode(data)
+                            }
+                        }
+                    })
+                }).catch(() => {
+                    that.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });          
+                });
             }
+        },
+        //添加,编辑保存
+        Submit(){
+            var that = this;
+            if(that.data.loginPwd!=that.data.loginPwd2){
+                that.$message({
+                    message: '两次密码不一致!',
+                    type: 'error'
+                });
+                return;
+            }
+            var type = ''
+            var data = {}
+            if(that.type=='0'){type='post';}
+            if(that.type=='1'){type='put';data.id = that.site[0].id;}
+            data.mobile = that.data.mobile;
+            data.loginPwd = md5(that.data.loginPwd);
+            data.inspectorName = that.data.inspectorName;
+            data.inspectorNumber = that.data.inspectorNumber;
+            data.sex = that.data.sex;
+            data.inspectorType = that.data.inspectorType
+            data.projectId = sessionStorage.projectId;
+            $.ajax({
+                type:type,
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/patrol/inspector',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '保存成功!',
+                            type: 'success'
+                        });
+                        that.ready()
+                        $('#addUserSettings').modal('hide')
+                    }else{
+                        that.errorCode3(data.errorCode)
+                    }
+                },
+            })
+        },
+        //请求列表数据
+        ready(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/patrol/inspector',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    page:that.pageIndex,
+                    size:that.pageSize,
+                    inspectorName:that.inspectorName,
+                    inspectorNumber:that.inspectorNumber,
+                    mobile:that.mobile,
+                    projectIds:sessionStorage.projectId,
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tableData = data.result.list
+                        that.total = data.result.total
+                    }else{
+                        that.errorCode3(data.errorCode)
+                    }
+                },
+            })
+        },
+        search(){this.ready()},
+        SelectionChange(val){this.site = val;},
+        sizechange(val){this.pageSize=val;this.readyRight();},
+        currentchange(val){this.pageIndex=val;this.readyRight();},
+        //权限请求
+        Jurisdiction(){
+            var that = this
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    // menuId:sessionStorage.menuId3
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='addPatrolInspector'){
+                                that.addPatrolInspector = true
+                            }
+                            if(data.result.operats[i].code=='editPatrolInspector'){
+                                that.editPatrolInspector = true
+                            }
+                            if(data.result.operats[i].code=='delPatrolInspector'){
+                                that.delPatrolInspector = true
+                            }
+                        }
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
         },
     },
     created(){
-        
+        this.Jurisdiction()
+        this.ready()
     },
 }
 </script>
@@ -250,7 +390,7 @@ export default {
 .UserSettings_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
 .UserSettings_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
 .search{display: flex;}
-.search>label{width: 60px;}
+.search>label{width: 80px;}
 .search>input{width: 146px;margin-top:7px;height: 34px;}
 .Required{color: red;font-size: 17px;}
 .form-group{display:flex;justify-content: center;}

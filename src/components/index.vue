@@ -212,7 +212,7 @@ export default {
                         });
                         $('#myModal2').modal('hide')
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -257,7 +257,8 @@ export default {
         },
         //巡检管理
         Inspection(val){
-            // sessionStorage.menuId = val
+            sessionStorage.menuId = val
+            sessionStorage.menuId3 = '38'
             this.$router.push({'path':'/Inspection'})
         },
         //请求权限
@@ -284,12 +285,12 @@ export default {
                                 if(data.errorCode==0){
                                     that.menu.unshift(data.result.menus[0])
                                 }else{
-                                    that.errorCode(data.errorCode)
+                                    that.errorCode(data)
                                 }
                             },
                         })
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -320,7 +321,7 @@ export default {
                             "background-repeat":"no-repeat",
                         })
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })

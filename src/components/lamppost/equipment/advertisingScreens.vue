@@ -171,16 +171,12 @@
                                 align='center'
                                 label="文件别名"
                                 min-width="200">
-                                    <template slot-scope="scope" v-if="editMedia==true">
-                                        <span v-if="!scope.row.isFocus">{{scope.row.nickName}}</span>
-                                        <span v-if="!scope.row.isFocus" @click="handleEdit(scope.row)"><i class="el-icon-edit" style="font-size:18px;color:#409EFF;"></i></span>
+                                    <template slot-scope="scope">
+                                        <span>{{scope.row.nickName}}</span>
+                                        <span v-if="editMedia=true" @click="handleEdit(scope.row)"><i class="el-icon-edit" style="font-size:18px;color:#409EFF;"></i></span>
                                         <span v-if="scope.row.isFocus==true" style="display: inline-block;">
                                             <input type="text" v-model="inputColumn" @blur='handleSave(scope.row)' style='width:110px;' class="form-control" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入文件别名">
                                         </span>
-                                    </template>
-                                    <template slot-scope="scope" v-if="editMedia==false">
-                                        <span>{{scope.row.nickName}}</span>
-                                        
                                     </template>
                                 </el-table-column>
                                 <el-table-column
@@ -1502,7 +1498,7 @@ export default {
                         if(data.errorCode=='0'){
                             
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -1524,7 +1520,7 @@ export default {
                                 that.screenshotData = data.result
                                 that.loading = false
                             }else{
-                                that.errorCode(data.errorCode)
+                                that.errorCode(data)
                             }
                         }
                     })
@@ -1568,7 +1564,7 @@ export default {
                             type: 'success'
                         });
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1614,7 +1610,7 @@ export default {
                             that.restartdata = data.result.list
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1651,7 +1647,7 @@ export default {
                     if(data.errorCode=='0'){
                         
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1667,7 +1663,7 @@ export default {
                         if(data.errorCode=='0'){
                             that.searchData = data.result
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -1710,7 +1706,7 @@ export default {
                                 that.ready()
                             },3000)
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 }) 
@@ -1742,7 +1738,7 @@ export default {
                                 that.ready()
                             },3000)
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 }) 
@@ -1809,7 +1805,7 @@ export default {
                             });
                             that.screenData(0)
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -1848,7 +1844,7 @@ export default {
                                 showClose: true,
                             });
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -1930,7 +1926,7 @@ export default {
                         that.screenData(0)
                         that.addType = '2'
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1971,7 +1967,7 @@ export default {
                             type: 'success'
                         });
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -2037,7 +2033,7 @@ export default {
                             });
                             that.screenData(1)
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -2077,7 +2073,7 @@ export default {
                                 showClose: true,
                             });
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -2161,7 +2157,7 @@ export default {
                         that.screenData(1)
                         that.addType = '2'
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -2204,7 +2200,7 @@ export default {
                             type: 'success'
                         });
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -2270,7 +2266,7 @@ export default {
                             });
                             that.screenData(2)
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -2310,7 +2306,7 @@ export default {
                                 showClose: true,
                             });
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -2392,7 +2388,7 @@ export default {
                         that.screenData(2)
                         that.addType = '2'
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -2425,7 +2421,7 @@ export default {
                             type: 'success'
                         });
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -2478,7 +2474,7 @@ export default {
                             });
                             that.screenData(3)
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -2517,7 +2513,7 @@ export default {
                                 showClose: true,
                             });
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -2558,7 +2554,7 @@ export default {
                         that.screenData(3)
                         that.addType = '2'
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -2610,14 +2606,14 @@ export default {
                    audit:that.stateValue,
                    mediaType:that.typeValue,
                    nickName:'',
-                   projectId:sessionStorage.projectId
+                   projectIds:sessionStorage.projectId
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.mediartableData = data.result.list
                         that.mediaTotal = data.result.total
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -2659,7 +2655,7 @@ export default {
                         });
                         that.mediaready()
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -2715,7 +2711,7 @@ export default {
                             });
                             that.mediaready()
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -2807,7 +2803,7 @@ export default {
         download(val){
             var that = this;
             var url = val.mediaUrl
-            window.open(that.serverurl+"/v1/solin/file/download?fileUrl="+that.serverurl+url)
+            window.open(that.serverurl+"/v1/solin/file/download?fileUrl="+url)
         },
 
         //任务管理
@@ -2834,7 +2830,7 @@ export default {
                         that.tasktableData = data.result.list
                         that.tasktotal = data.result.total
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -2870,7 +2866,7 @@ export default {
                             that.tasknickName =  that.tasktableSite[0].nickName
                             that.taskDetailsData = data.result.list
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -2908,7 +2904,7 @@ export default {
                             });
                             that.taskready()
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -3028,7 +3024,7 @@ export default {
                             });
                         },500)
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -3163,7 +3159,7 @@ export default {
                         $('#taskMyModal2').modal('hide')
                         that.taskready()
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -3234,7 +3230,7 @@ export default {
                         that.tableData = data.result.list
                         that.total = data.result.total
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -3289,7 +3285,7 @@ export default {
                             }
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -3339,5 +3335,5 @@ export default {
 .search>input{width: 146px;margin-top:7px;height: 34px;}
 </style>
 <style>
-.el-tabs__content{position: relative;top:0;height: auto !important;}
+/* .el-tabs__content{position: relative !important;top:0 !important;height: auto !important;} */
 </style>

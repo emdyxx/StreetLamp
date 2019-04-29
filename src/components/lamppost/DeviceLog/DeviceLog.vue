@@ -68,8 +68,11 @@ export default {
                                     if(sessionStorage.menuId3=='59'){
                                         that.$router.push({'path':'/sensorJournal'})
                                     }
+                                    if(sessionStorage.menuId3=='60'){
+                                        that.$router.push({'path':'/loraJournal'})
+                                    }
                                 }else{
-                                    that.errorCode(data.errorCode)
+                                    that.errorCode(data)
                                 }
                             }
                         });
@@ -92,6 +95,9 @@ export default {
                     }
                     if(data.node.id=='59'){
                         that.$router.push({'path':'/sensorJournal'})
+                    }
+                    if(data.node.id=='60'){
+                        that.$router.push({'path':'/loraJournal'})
                     }
                 }
             });

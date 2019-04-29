@@ -454,7 +454,7 @@ export default {
                         }
                         that.total = Number(data.result.total)
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -498,7 +498,7 @@ export default {
                             }
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })

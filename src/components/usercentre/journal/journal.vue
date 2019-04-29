@@ -301,7 +301,7 @@ export default {
                         that.tableData = data.result.list;
                         that.total = data.result.total;
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -335,7 +335,7 @@ export default {
                             }
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -360,4 +360,13 @@ export default {
 .search>input{height: 32px !important;width: 110px;margin-top: 6px;height: 33px;padding: 0;}
 .search>div{height: 30px;width: 110px;}
 .block{text-align: center;}
+</style>
+<style>
+/* .el-tabs__content {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: 30px !important;
+    bottom: 15px !important;
+} */
 </style>

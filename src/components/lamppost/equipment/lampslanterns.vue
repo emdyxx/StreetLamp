@@ -371,9 +371,9 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="myModalLabel">群组策略</h4>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" style="height: 580px;">
                         <el-tabs v-model="GroupStrategyType" type="card" @tab-click="GroupStrategyClick">
-                            <el-tab-pane label="集中器" name="0">
+                            <el-tab-pane label="集中器" name="0" style='padding:25px 10px 0 10px;'>
                                 <p>请选中集中器:</p>
                                 <div style="width:100%;height:200px;">
                                     <el-table
@@ -405,7 +405,7 @@
                                         min-width="100">
                                         </el-table-column>
                                         <el-table-column
-                                        prop="concentratorSn"
+                                        prop="strategyName"
                                         align='center'
                                         label="当前策略"
                                         :formatter="formatRole"
@@ -473,7 +473,7 @@
                                     <el-button @click="GroupStrategySubmit(1)" type="primary" size="small">清空策略</el-button>
                                 </div>
                             </el-tab-pane>
-                            <el-tab-pane label="分组" name="1">配置管理</el-tab-pane>
+                            <el-tab-pane label="分组" name="1" style='padding:25px 10px 0 10px;'>配置管理</el-tab-pane>
                         </el-tabs>
                     </div>
                 </div><!-- /.modal-content -->
@@ -670,7 +670,7 @@ export default {
                                 that.ready()
                             },5000)
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -738,7 +738,7 @@ export default {
                                     that.ready()
                                 },5000)
                             }else{
-                                that.errorCode2(data.errorCode)
+                                that.errorCode(data)
                             }
                         }
                     })
@@ -779,7 +779,7 @@ export default {
                                 that.ready()
                             },5000)
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -869,7 +869,7 @@ export default {
                        that.myModaltableData = data.result.list
                        that.myModaltotal = data.result.total
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -911,7 +911,7 @@ export default {
                             });
                             that.ConcentratorManagement()
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -948,7 +948,7 @@ export default {
                                 });
                                 that.ConcentratorManagement()
                             }else{
-                                that.errorCode2(data.errorCode)
+                                that.errorCode(data)
                             }
                         }
                     })
@@ -969,7 +969,7 @@ export default {
                                 });
                                 that.ConcentratorManagement()
                             }else{
-                                that.errorCode2(data.errorCode)
+                                that.errorCode(data)
                             }
                         }
                     })    
@@ -1061,7 +1061,7 @@ export default {
                                 });
                                 that.strategyData()
                             }else{
-                                that.errorCode2(data.errorCode)
+                                that.errorCode(data)
                             }
                         }
                     })
@@ -1118,7 +1118,7 @@ export default {
                                 $('#myModal').modal('hide')
                                 that.ready()
                             }else{
-                                that.errorCode2(data.errorCode)
+                                that.errorCode(data)
                             }
                         }
                     })
@@ -1177,7 +1177,7 @@ export default {
                                 $('#myModal').modal('hide')
                                 that.ready()
                             }else{
-                                that.errorCode2(data.errorCode)
+                                that.errorCode(data)
                             }
                         }
                     })
@@ -1199,7 +1199,7 @@ export default {
                                 $('#myModal').modal('hide')
                                 that.ready()
                             }else{
-                                that.errorCode2(data.errorCode)
+                                that.errorCode(data)
                             }
                         }
                     })    
@@ -1253,7 +1253,7 @@ export default {
                         $('#myModal2').modal('hide')
                         that.strategyData()
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1278,7 +1278,7 @@ export default {
                         that.tableData2 = data.result.list
                         that.total2 = data.result.total
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1319,7 +1319,7 @@ export default {
                         that.tableData = data.result.list
                         that.total = data.result.total
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1368,7 +1368,7 @@ export default {
                             }
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1402,5 +1402,5 @@ export default {
 .search>div{width: 106px;}
 </style>
 <style>
-.el-tabs__content{position: relative;top:0;height: 505px;}
+/* .el-tabs__content{position: relative;top:0;height: 505px;} */
 </style>

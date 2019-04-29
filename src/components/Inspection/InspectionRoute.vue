@@ -2,26 +2,18 @@
     <!-- 巡检路线 -->
     <div class="InspectionRoute">
         <div class="InspectionRoute_top">
-            <el-button @click="InspectionRoute(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button @click="InspectionRoute(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button @click="InspectionRoute(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <el-button v-if="addPatrolRoute" @click="InspectionRoute(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="editPatrolRoute" @click="InspectionRoute(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="delPatrolRoute" @click="InspectionRoute(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
         </div>
         <div class="InspectionRoute_bottom">
             <div class="UserSettings_bottom_top">
                 <div class="search">
-                    <label>用户名:</label>
-                    <input type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
-                </div>
-                <div class="search">
-                    <label>姓名:</label>
-                    <input type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入姓名">
-                </div>
-                <div class="search">
-                    <label>电话:</label>
-                    <input type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
+                    <label>路线名称:</label>
+                    <input v-model="routeName" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入路线名称">
                 </div>
                 <div style="margin-left:15px;">
-                    <el-button type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
             </div>
             <div class="UserSettings_bottom_bottom">
@@ -41,19 +33,19 @@
                     width="55">
                     </el-table-column>
                     <el-table-column
-                    prop="username"
+                    prop="routeName"
                     align='center'
-                    label="路线编号"
+                    label="路线名称"
                     min-width="120">
                     </el-table-column>
                     <el-table-column
-                    prop="fullName"
+                    prop="createTime"
                     align='center'
-                    label="路线名称"
+                    label="创建时间"
                     min-width="80">
                     </el-table-column>
                     <el-table-column
-                    prop="createTime"
+                    prop="remark"
                     label="备注说明"
                     align='center'
                     min-width="180"
@@ -76,26 +68,107 @@
         </div>
         <!-- 添加  编辑用户  模态框 -->
         <div class="modal fade" id="addInspectionRoute" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:400px;">
+            <div class="modal-dialog" style="width:690px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 v-if="type=='0'" class="modal-title" id="myModalLabel">添加</h4>
-                        <h4 v-if="type=='1'" class="modal-title" id="myModalLabel">编辑</h4>
+                        <h4 v-if="type=='0'" class="modal-title" id="myModalLabel">添加巡检路线</h4>
+                        <h4 v-if="type=='1'" class="modal-title" id="myModalLabel">编辑巡检路线</h4>
                     </div>
                     <div class="modal-body" style='min-height:200px;max-height:590px;overflow:auto;'>
                         <div class="form-group">
                             <label><span class="Required">*</span>路线名称:</label>
-                            <input type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入手机号码">
+                            <input v-model="data.routeName" type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入手机号码">
                         </div>
                         <div class="form-group">
-                            <label><span class="Required">*</span>备注说明:</label>
-                            <input type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入用户姓名">
+                            <label>备注说明:</label>
+                            <input v-model="data.remark" type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入用户姓名">
+                        </div>
+                        <div class="spot">
+                            <div>
+                                <div class="el-upload__tip">
+                                    已关联巡检点:
+                                    <el-button @click='leftDelete' type="primary" size="mini">移除</el-button>  
+                                </div>
+                                <div style="width:100%;">
+                                    <el-table
+                                        :data="tableData3"
+                                        border
+                                        stripe
+                                        size='small'
+                                        tooltip-effect="dark"
+                                        @selection-change="SelectionChange3"
+                                        style="width: 100%;max-height:250px;;overflow:auto;">
+                                        <el-table-column
+                                        type="selection"
+                                        align='center'
+                                        width="55">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="siteName"
+                                        align='center'
+                                        label="点名称"
+                                        min-width="50">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="siteNumber"
+                                        align='center'
+                                        label="点编号"
+                                        show-overflow-tooltip>
+                                        </el-table-column>
+                                    </el-table>
+                                </div>
+                            </div>
+                            <div>
+                                <el-button @click='moveIn' type="primary" icon="el-icon-d-arrow-left" size="mini"></el-button>
+                            </div>
+                            <div>
+                                <div class="el-upload__tip">未关联巡检点:</div>
+                                <div style="width:100%;">
+                                    <el-table
+                                        :data="tableData2"
+                                        border
+                                        stripe
+                                        size='small'
+                                        tooltip-effect="dark"
+                                        @selection-change="SelectionChange2"
+                                        style="width: 100%;max-height:250px;;overflow:auto;">
+                                        <el-table-column
+                                        type="selection"
+                                        align='center'
+                                        width="55">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="siteName"
+                                        align='center'
+                                        label="点名称"
+                                        min-width="50">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="siteNumber"
+                                        align='center'
+                                        label="点编号"
+                                        show-overflow-tooltip>
+                                        </el-table-column>
+                                    </el-table>
+                                </div>
+                                <div class="block">
+                                    <el-pagination
+                                        small
+                                        background
+                                        @current-change="currentchange2"
+                                        :current-page="pageIndex2"
+                                        :page-size="pageSize2"
+                                        layout="prev, pager, next"
+                                        :total="total2">
+                                    </el-pagination>
+                                </div> 
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary">确定</button>
+                        <button @click="submitRoute" type="button" class="btn btn-primary">确定</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div>
@@ -107,12 +180,29 @@ export default {
     name: 'InspectionRoute',
     data () {
         return {
+            addPatrolRoute:false,
+            editPatrolRoute:false,
+            delPatrolRoute:false,
+            serverurl:localStorage.serverurl,
+            routeName:'',
             tableData:[],
             site:[],
             pageIndex:1,
             pageSize:10,
             total:10,
             type:'0',
+            //巡检点数据
+            tableData2:[],
+            site2:[],
+            pageIndex2:1,
+            pageSize2:10,
+            total2:10,
+            tableData3:[],
+            site3:[],
+            data:{
+                routeName:'',
+                remark:'',
+            },
         }
     },
     mounted(){
@@ -131,32 +221,272 @@ export default {
             var that = this;
             if(val=='0'){
                 that.type = '0'
+                that.spotData()
+                that.data.routeName = ''
+                that.data.remark = ''
+                that.tableData3 = []
+                that.site3 = []
                 $('#addInspectionRoute').modal('show')
             }
             if(val=='1'){
                 that.type = '1'
                 if(that.site.length==0||that.site.length>1){
                     that.$message({
-                        message: '请选择单个用户进行编辑!',
+                        message: '请选择单个路线进行编辑!',
                         type: 'error'
                     });
                     return;
                 }
+                that.site2 = []
+                that.site3 = []
+                that.data.routeName = that.site[0].routeName
+                that.data.remark = that.site[0].remark
+                that.RouteData()
+                that.spotData()
                 $('#addInspectionRoute').modal('show')
             }
             if(val=='2'){
                 if(that.site.length==0){
                     that.$message({
-                        message: '请选择用户进行删除!',
+                        message: '请选择路线进行删除!',
                         type: 'error'
                     });
                     return;
                 }
+                that.$confirm('是否删除所选巡检路线？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    $.ajax({
+                        type:'post',
+                        async:true,
+                        dataType:'json',
+                        url:that.serverurl+'/v1/solin/patrol/route/deletes',
+                        contentType:'application/json;charset=UTF-8',
+                        data:JSON.stringify({
+                            routes:arr
+                        }),
+                        success:function(data){
+                            if(data.errorCode=='0'){
+                                that.$message({
+                                    message: '删除成功!',
+                                    type: 'success'
+                                });
+                                that.ready()
+                            }else{
+                                that.errorCode(data)
+                            }
+                        }
+                    })
+                }).catch(() => {
+                    that.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });          
+                });
             }
+        },
+        //添加,编辑保存
+        submitRoute(){
+            var that = this;
+            if(this.data.routeName==''){
+                this.$message({
+                    message: '路线名称不能为空!',
+                    type: 'error'
+                });
+                return;
+            }
+            if(this.tableData3.length==0){
+                this.$message({
+                    message: '请选取巡检点!',
+                    type: 'error'
+                });
+                return;
+            }
+            var data = {}
+            var type = ''
+            if(this.type=='0'){type='post';}
+            if(this.type=='1'){type='put';data.id = this.site[0].id;}
+            data.routeName = this.data.routeName
+            data.remark = this.data.remark
+            data.projectId = sessionStorage.projectId
+            data.siteIds = []
+            for(var i=0;i<this.tableData3.length;i++){
+                data.siteIds.push(this.tableData3[i].id)
+            }
+            $.ajax({
+                type:type,
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/patrol/route',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '保存成功!',
+                            type: 'success'
+                        });
+                        that.ready()
+                        $('#addInspectionRoute').modal('hide')
+                    }else{
+                        that.errorCode3(data.errorCode)
+                    }
+                },
+            })
+        },
+        //获取巡检点详细信息
+        RouteData(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/patrol/route/information/'+that.site[0].id,
+                contentType:'application/json;charset=UTF-8',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        if(that.type=='1'){
+                            that.tableData3 = data.result.patrolSiteList
+                        }
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
+        //请求巡检点
+        spotData(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/patrol/site',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    page:that.pageIndex2,
+                    size:that.pageSize2,
+                    siteName:'',
+                    siteStatus:'',
+                    siteNumber:'',
+                    projectIds:sessionStorage.projectId
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tableData2 = data.result.list
+                        that.total2 = data.result.total
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
+        SelectionChange2(val){this.site2 = val;},
+        currentchange2(val){this.pageIndex2=val;this.spotData();},
+        search2(){this.ready()},
+        SelectionChange3(val){this.site3 = val;},
+        //左侧移除已关联数据
+        leftDelete(){
+            if(this.site3.length==0||this.tableData3.length==0){return;}
+            var type = true
+            for(var i=0;i<this.tableData3.length;i++){
+                type = false
+                for(var j=0;j<this.site3.length;j++){
+                    if(this.tableData3[i].id==this.site3[j].id){
+                        type = true
+                    }
+                }
+                if(type==true){
+                    this.tableData3.splice(i,1)
+                    i--
+                }
+            }
+        },
+        //像左移动
+        moveIn(){
+            if(this.site2.length==0){return;}
+            if(this.tableData3.length==0){
+                this.tableData3 = this.site2
+            }else{
+                var type = false
+                for(var i=0;i<this.site2.length;i++){
+                    type = true
+                    for(var j=0;j<this.tableData3.length;j++){
+                        if(this.site2[i].id==this.tableData3[j].id){
+                            type = false
+                        }
+                    }
+                    if(type==true){
+                        this.tableData3.push(this.site2[i])
+                    }
+                }
+            }
+        },
+        //请求巡检线路列表
+        ready(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/patrol/route',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    page:that.pageIndex,
+                    size:that.pageSize,
+                    routeName:that.routeName,
+                    projectIds:sessionStorage.projectId
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tableData = data.result.list
+                        that.total = data.result.total
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
+        SelectionChange(val){this.site = val;},
+        sizechange(val){this.pageSize=val;this.readyRight();},
+        currentchange(val){this.pageIndex=val;this.readyRight();},
+        search(){this.ready()},
+        //权限请求
+        Jurisdiction(){
+            var that = this
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
+                contentType:'application/json;charset=UTF-8',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='addPatrolRoute'){
+                                that.addPatrolRoute = true
+                            }
+                            if(data.result.operats[i].code=='editPatrolRoute'){
+                                that.editPatrolRoute = true
+                            }
+                            if(data.result.operats[i].code=='delPatrolRoute'){
+                                that.delPatrolRoute = true
+                            }
+                        }
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
         },
     },
     created(){
-        
+        this.Jurisdiction()
+        this.ready()
     },
 }
 </script>
@@ -177,4 +507,9 @@ export default {
 .form-group>label{width: 95px;line-height: 34px;text-align: center;}
 .form-group>input{width: 156px;}
 .form-group>div{width: 156px;display: flex;justify-content: center;align-items: center;}
+
+.spot{display: flex;width: 100%;}
+.spot>div:nth-of-type(1){width: 46%;}
+.spot>div:nth-of-type(2){width: 8%;display: flex;align-items: center;justify-content: center;}
+.spot>div:nth-of-type(3){width: 46%;}
 </style>

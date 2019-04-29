@@ -94,6 +94,7 @@ export default {
         data:{},
         success:function(data){
           if(data.errorCode=='0'){
+            that.Jurisdiction()
             that.options2 = data.result.projects
             if(sessionStorage.projectId==''||sessionStorage.projectId==undefined||sessionStorage.projectId==null){
               that.value2 = that.options2[0].id
@@ -101,10 +102,9 @@ export default {
             }else{
               that.value2 = Number(sessionStorage.projectId)
             }
-            that.Jurisdiction()
           }else{
             that.Jurisdiction()
-            that.errorCode(data.errorCode)
+            that.errorCode(data)
           }
         },
       })
@@ -129,6 +129,9 @@ export default {
         if(sessionStorage.menuId3=='49'){
             that.$router.push({'path':'/loraSensor'})
         }
+        if(sessionStorage.menuId3=='50'){
+            that.$router.push({'path':'/solinRelayDeploy'})
+        }
         if(sessionStorage.menuId3=='51'){
             that.$router.push({'path':'/lampslanterns'})
         }
@@ -137,6 +140,9 @@ export default {
         }
         if(sessionStorage.menuId3=='53'){
             that.$router.push({'path':'/sensors'})
+        }
+        if(sessionStorage.menuId3=='55'){
+            that.$router.push({'path':'Relay'})
         }
         if(sessionStorage.menuId3=='56'){
             that.$router.push({'path':'/LampPoleJournal'})
@@ -149,6 +155,12 @@ export default {
         }
         if(sessionStorage.menuId3=='59'){
             that.$router.push({'path':'/sensorJournal'})
+        }
+        if(sessionStorage.menuId3=='54'||sessionStorage.menuId3=='64'||sessionStorage.menuId3=='65'||sessionStorage.menuId3=='66'||sessionStorage.menuId3=='67'||sessionStorage.menuId3=='68'||sessionStorage.menuId3=='69'||sessionStorage.menuId3=='70'){
+            that.$router.push({'path':'loading'})
+            setTimeout(function(){
+                that.$router.push({'path':'loraQuery'})
+            },200)
         }
       },200)
     },
@@ -182,7 +194,7 @@ export default {
                       }
                     }
                 }else{
-                    that.errorCode(data.errorCode)
+                    that.errorCode(data)
                 }
             },
         })

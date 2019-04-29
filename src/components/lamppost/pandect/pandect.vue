@@ -62,7 +62,7 @@ export default {
                                 if(data.errorCode=='0'){
                                     callback.call(this, data.result);
                                 }else{
-                                    that.errorCode2(data.errorCode)
+                                    that.errorCode(data)
                                 }
                             }
                         })
@@ -104,7 +104,7 @@ export default {
                                 });
                                 inst.open_node(selectedNode);
                             }else{
-                                that.errorCode2(data.errorCode)
+                                that.errorCode(data)
                             }
                         }
                     })
@@ -154,7 +154,7 @@ export default {
                         });
                         inst.open_node(selectedNode);
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })

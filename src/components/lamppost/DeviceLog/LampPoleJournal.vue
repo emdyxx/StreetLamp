@@ -138,7 +138,7 @@ export default {
                         that.tableData = data.result.list;
                         that.total = data.result.total;
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })

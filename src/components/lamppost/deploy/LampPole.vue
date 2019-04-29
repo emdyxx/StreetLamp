@@ -855,7 +855,7 @@ export default {
                 url:that.serverurl+'/v1/manage/areas/subset/0',
                 contentType:'application/json;charset=UTF-8',
                 data:{
-                    parentId:0,
+                    // parentId:0,
                     id:1
                 },
                 success:function(data){
@@ -864,15 +864,18 @@ export default {
                         if(val=='3'){
                             // that.value1_search = data.result.areas[0].id
                         }else{
+                            console.log(val)
                             if(val=='1'){
-                                that.value1 = Number(that.site[0].provinceId)
+                                if(that.site[0].provinceId==''||that.site[0].provinceId==null||that.site[0].provinceId==undefined){}else{
+                                    that.value1 = Number(that.site[0].provinceId)
+                                }
                             }else{
                                 that.value1 = data.result.areas[0].id
                             }
                             that.city(val)
                         }
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -905,14 +908,16 @@ export default {
                             // that.value2_search = data.result.areas[0].id
                         }else{
                             if(val=='1'){
-                                that.value2 = Number(that.site[0].cityId)
+                                if(that.site[0].cityId==''||that.site[0].cityId==null||that.site[0].cityId==undefined){}else{
+                                    that.value2 = Number(that.site[0].cityId)
+                                }
                             }else{
                                 that.value2 = data.result.areas[0].id
                             }  
                             that.area(val)
                         }
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -943,13 +948,15 @@ export default {
                             // that.value3_search = data.result.areas[0].id
                         }else{
                             if(val=='1'){
-                                that.value3 = Number(that.site[0].areaId)
+                                if(that.site[0].areaId==''||that.site[0].areaId==null||that.site[0].areaId==undefined){}else{
+                                    that.value3 = Number(that.site[0].areaId)
+                                }
                             }else{
                                 that.value3 = data.result.areas[0].id 
                             }
                         }
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -992,9 +999,13 @@ export default {
                 this.value = this.site[0].poleType
                 this.LampPoleData.location = this.site[0].location
                 this.LampPoleData.remark = this.site[0].remark
-                var arr = this.site[0].coord.split(','); 
-                this.LampPoleData.longitude = arr[0]
-                this.LampPoleData.latitude = arr[1]
+                console.log(this.site[0].coord)
+                if(this.site[0].coord==''||this.site[0].coord==null||this.site[0].coord==undefined){
+                }else{
+                    var arr = this.site[0].coord.split(','); 
+                    this.LampPoleData.longitude = arr[0]
+                    this.LampPoleData.latitude = arr[1]
+                }
                 this.LampPoleData.serialNumber = this.site[0].serialNumber
             }
             /* 完成拖拽 */
@@ -1060,7 +1071,7 @@ export default {
                         $('#addModal').modal('hide')
                         that.ready()
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1106,7 +1117,7 @@ export default {
                             });
                             that.ready()
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -1145,7 +1156,7 @@ export default {
                         that.options5 = data.result.projects
                         that.value5 = ''
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -1176,7 +1187,7 @@ export default {
                         that.ready()
                         $('#poleBindProjectModal').modal('hide')
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -1224,7 +1235,7 @@ export default {
                     if(data.errorCode=='0'){
                         that.tableData2 = data.result.list
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1272,7 +1283,7 @@ export default {
                             });
                             that.LampData1(that.poleId)
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -1300,7 +1311,7 @@ export default {
                     serialNumber:'',
                     areaId:'',
                     poleId:'0',
-                    projectId:sessionStorage.projectId,
+                    projectIds:sessionStorage.projectId,
                     online:'',
                 }, 
                 success:function(data){
@@ -1323,7 +1334,7 @@ export default {
                             },200)
                         }
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1366,7 +1377,7 @@ export default {
                             $('#LampPole_data').modal('hide')
                             that.LampData1(that.poleId)
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -1412,7 +1423,7 @@ export default {
                     if(data.errorCode=='0'){
                         that.tableData4 = data.result.list
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1457,7 +1468,7 @@ export default {
                             });
                             that.relevancelanternsData(that.poleId)
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -1491,7 +1502,7 @@ export default {
                         that.tableData5 = data.result.list
                         that.total5 = data.result.total
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1526,7 +1537,7 @@ export default {
                         $('#relevanceadvertisingtwo').modal('hide')
                         that.relevancelanternsData(that.poleId)
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1564,7 +1575,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/envSensors/getAssociated',
+                url:that.serverurl+'/v1/solin/sensor/env',
                 contentType:'application/json;charset=UTF-8',
                 data:data,
                 success:function(data){
@@ -1572,7 +1583,7 @@ export default {
                         that.tableData6 = data.result.list
                         that.total6 = data.result.total
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1598,14 +1609,15 @@ export default {
                 for(var i = 0;i<that.site6.length;i++){
                     arr.push(that.site6[i].id)
                 }
-                data.ids  = arr.join(',')
+                data.envs  = arr.join(',')
                 data.poleId = 0;
                 data.projectId = sessionStorage.projectId
+                data.command = '2'
                 $.ajax({
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/envSensors/bindPole',
+                    url:that.serverurl+'/v1/solin/sensor/env/pole',
                     data:data, 
                     success:function(data){
                         if(data.errorCode=='0'){
@@ -1615,7 +1627,7 @@ export default {
                             });
                             that.sensorData()
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -1627,14 +1639,14 @@ export default {
             var data = {
                 page:1,
                 size:10,
-                poleId:0,
-                projectId:sessionStorage.projectId
+                poleId:'0',
+                projectIds:sessionStorage.projectId
             }
             $.ajax({
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/envSensors/getAssociated',
+                url:that.serverurl+'/v1/solin/sensor/env',
                 contentType:'application/json;charset=UTF-8',
                 data:data,
                 success:function(data){
@@ -1642,7 +1654,7 @@ export default {
                         that.tableData7 = data.result.list
                         that.total7 = data.result.total
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1659,13 +1671,14 @@ export default {
                 arr.push(that.site7[i].id)
             }
             data.poleId = this.poleId;
-            data.ids = arr.join(',')
+            data.envs = arr.join(',')
             data.projectId = sessionStorage.projectId
+            data.command = '1'
             $.ajax({
                 type:'post',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/envSensors/bindPole',
+                url:that.serverurl+'/v1/solin/sensor/env/pole',
                 data:data, 
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -1676,7 +1689,7 @@ export default {
                         $('#sensorModalTwo').modal('hide')
                         that.sensorData()
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1700,7 +1713,7 @@ export default {
                         that.options4 = data.result.models
                         that.lampData.modelId = data.result.models[0].id
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1763,7 +1776,7 @@ export default {
                         });
                         $('#addlamp').modal('hide')
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1808,7 +1821,7 @@ export default {
                         that.tableData = data.result.list
                         that.total = data.result.total
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1858,14 +1871,13 @@ export default {
                             }
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
         },
     },
     created(){
-        
         this.ready()
         this.Jurisdiction()
     },

@@ -333,7 +333,7 @@ export default {
                         }
                         that.city(val)
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -361,7 +361,7 @@ export default {
                         }
                         that.area(val)
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -388,7 +388,7 @@ export default {
                             that.value3 = that.detailsData.thirdAreaId
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -407,7 +407,7 @@ export default {
                     if(data.errorCode=='0'){
                         that.options4 = data.result.scenes
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -434,7 +434,7 @@ export default {
                             }
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -508,7 +508,7 @@ export default {
                         that.mapChange()
                         that.province(that.type)
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -607,7 +607,7 @@ export default {
                     $('#addarticles').modal('hide')
                     $('#jstree').jstree('select_node',that.sizeType.id);
                 }else{
-                    that.errorCode(data.errorCode)
+                    that.errorCode(data)
                 }
             })
         },
@@ -644,7 +644,7 @@ export default {
                                 message: '删除成功!'
                             });
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -731,7 +731,7 @@ export default {
                         that.tableData = data.result.projects
                         that.total = data.result.total
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -766,7 +766,7 @@ export default {
                             }
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })

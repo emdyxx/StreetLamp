@@ -8,10 +8,11 @@
 export default {
   name: 'App',
   created(){
+    // localStorage.serverurl = 'http://192.168.10.54:8080/SD-IOT-API'
+    // localStorage.serverurl = 'http://192.168.10.46:8080/SD-IOT-API'
     localStorage.serverurl = 'http://192.168.10.54:8080/SD-IOT-API'
-    // localStorage.serverurl = 'http://192.168.70.10/solin-consumer'
-    // localStorage.serverurl = 'http://192.168.10.10:8080/SD-IOT-API'
-      
+    // localStorage.serverurl = 'http://192.168.70.10:8071/SD-IOT-API'
+
     // $.ajax({
     //   type:'post',
     //   async:true,
@@ -46,10 +47,14 @@ export default {
   color: #2c3e50;
 }
 .el-tabs__content {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 30px;
-    bottom: 15px;
+  height: 90%;
+  /* position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 30px !important;
+  bottom: 15px !important; */
+}
+.el-upload__input {
+    display: none !important;
 }
 </style>

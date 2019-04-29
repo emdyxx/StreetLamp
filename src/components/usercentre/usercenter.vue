@@ -100,15 +100,16 @@ export default {
                       that.$router.push({'path':'/journal'})
                     }
                 }else{
-                    that.errorCode(data.errorCode)
+                    that.errorCode(data)
                 }
             },
         })
     },
   },
   created(){
+    var that = this
     this.headercolorType = sessionStorage.headercolorType
-    this.Jurisdiction()
+    that.Jurisdiction()
   },
 }
 </script>

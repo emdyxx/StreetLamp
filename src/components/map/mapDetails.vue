@@ -37,16 +37,16 @@
                             <div :id="'lampDtoList'+key" class="panel-collapse collapse in" style="color: #cac2c2;background: none;">
                                 <div class="panel-body" style="border-top: 1px solid black;padding:15px 15px 0 15px;">
                                     <div class="brightness">
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
+                                        <span :class="brightness>=1 ? 'brightness_span_color2':'brightness_span_color1'"></span>
+                                        <span :class="brightness>=2 ? 'brightness_span_color2':'brightness_span_color1'"></span>
+                                        <span :class="brightness>=3 ? 'brightness_span_color2':'brightness_span_color1'"></span>
+                                        <span :class="brightness>=4 ? 'brightness_span_color2':'brightness_span_color1'"></span>
+                                        <span :class="brightness>=5 ? 'brightness_span_color2':'brightness_span_color1'"></span>
+                                        <span :class="brightness>=6 ? 'brightness_span_color2':'brightness_span_color1'"></span>
+                                        <span :class="brightness>=7 ? 'brightness_span_color2':'brightness_span_color1'"></span>
+                                        <span :class="brightness>=8 ? 'brightness_span_color2':'brightness_span_color1'"></span>
+                                        <span :class="brightness>=9 ? 'brightness_span_color2':'brightness_span_color1'"></span>
+                                        <span :class="brightness>=10 ? 'brightness_span_color2':'brightness_span_color1'"></span>
                                     </div>
                                     <div style="text-align:center;">亮度:{{item.brightness}}%</div>
                                     <div style="margin-top:10px;">
@@ -188,7 +188,7 @@ export default {
             screenType:false,
             sensorsType:false,
             lighting:false,//灯光
-            brightness:'5',//灯光亮度
+            brightness:0,//灯光亮度
             programId:'',
             winddirection:'',
             windspeed:'',
@@ -292,7 +292,7 @@ export default {
                         }
                         that.readytwo(type)
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -319,12 +319,6 @@ export default {
                     ctx.lineTo(36, 15); 
                     ctx.strokeStyle = "#00ffff";
                     ctx.stroke(); //绘制路径。
-                    for(var i=0;i<10;i++){
-                        $('.brightness>span').eq(i).css('background','#5f605b')
-                    }
-                    for(var i=0;i<brightness_s;i++){
-                        $('.brightness>span').eq(i).css('background','#ffff00')
-                    }
                     setTimeout(function(){
                         for(var i=0;i<that.tableData3.length;i++){
                             if(that.tableData3[i].lampStatus=='1'){
@@ -1116,12 +1110,6 @@ export default {
                     ctx.lineTo(36, 15); 
                     ctx.strokeStyle = "#00ffff";
                     ctx.stroke(); //绘制路径。
-                    for(var i=0;i<10;i++){
-                        $('.brightness>span').eq(i).css('background','#5f605b')
-                    }
-                    for(var i=0;i<brightness_s;i++){
-                        $('.brightness>span').eq(i).css('background','#ffff00')
-                    }
                     setTimeout(function(){
                         for(var i=0;i<that.tableData3.length;i++){
                             if(that.tableData3[i].lampStatus=='1'){
@@ -1977,7 +1965,9 @@ export default {
 .panel-default,.panel-default>div:nth-of-type(2){border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;}
  
 .brightness{text-align: center;}
-.brightness>span{display: inline-block;width: 35px;height: 40px;background: #5f605b;margin-left: 5px;}
+.brightness>span{display: inline-block;width: 35px;height: 40px;margin-left: 5px;}
+.brightness_span_color1{background: #5f605b;}
+.brightness_span_color2{background: #ffff00;}
 .online{position: absolute;height: 42px;right: 15px;display: inline-block;top:7px;}
 .online>img{height: 60%;}
 .Environmental{display: flex;justify-content: center;}

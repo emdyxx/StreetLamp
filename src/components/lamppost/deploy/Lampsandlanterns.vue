@@ -7,7 +7,6 @@
             <el-button v-if="delLanternsDeployment" @click="deletechargingpile" type="primary" icon='el-icon-delete' size='small'>删除灯具</el-button>
             <el-button v-if="lampBindProject" @click="lampBindProjects" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button>
             <el-button @click="Powerfailuretime" type="primary" icon='el-icon-time' size='small'>断电时间</el-button>
-            <el-button @click="ConcentratorManagement" type="primary" icon='el-icon-time' size='small'>集中器管理</el-button>
         </div>
         <div class="chargingpile_bottom">
             <div class="chargingpile_bottom_top">
@@ -131,13 +130,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label><span class="Required">*</span>灯控器标识:</label>
-                            <input type="text" v-model="data.serialNumber" class="form-control" id="serialNumber" placeholder="请输入终端ID">
-                            <label><span class="Required">*</span>集中器标识:</label>
-                            <input type="text" v-model="data.concentratorSn" class="form-control" id="concentratorSN" placeholder="请输入控制器ID">
-                        </div> 
-                        <div class="form-group">
-                            <label><span class="Required">*</span>昵称:</label>
-                            <input type="text" v-model="data.nickName" class="form-control" id="nickName" placeholder="请输入单灯名称">
+                            <input type="text" v-model="data.serialNumber" class="form-control" id="serialNumber" placeholder="请输入灯控器标识">
                             <label>型号:</label>
                             <el-select v-model="data.modelId" size='small' style='width:126px;' placeholder="请选择">
                                 <el-option
@@ -147,6 +140,13 @@
                                 :value="item.id">
                                 </el-option>
                             </el-select>
+                        </div> 
+                        <div class="form-group">
+                            <label><span class="Required">*</span>昵称:</label>
+                            <input type="text" v-model="data.nickName" class="form-control" id="nickName" placeholder="请输入昵称">
+                            <label>集中器标识:</label>
+                            <input type="text" v-model="data.concentratorSn" disabled class="form-control" id="concentratorSN" placeholder="集中器标识">
+                            <i @click="concentratorClikc" class="el-icon-date" style='font-size: 22px;margin-top: 5px;cursor: pointer;position: absolute;right: 5px;'></i>
                         </div> 
                         <div class="form-group">
                             <label><span class="Required">*</span>灯具编号:</label>
@@ -319,7 +319,7 @@
                             <el-table-column
                             prop="nickName"
                             align='center'
-                            label="灯杆名称"
+                            label="灯具名称"
                             width="150">
                             </el-table-column>
                             <el-table-column
@@ -377,7 +377,7 @@
                             <el-table-column
                             prop="nickName"
                             align='center'
-                            label="灯杆名称"
+                            label="灯具名称"
                             width="150">
                             </el-table-column>
                             <el-table-column
@@ -413,18 +413,15 @@
                 </div>
             </div>
         </div>
-        <!-- 集中器管理列表 -->
+        <!-- 集中器列表 -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:500px;">
+            <div class="modal-dialog" style="width:570px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">集中器管理</h4>
+                        <h4 class="modal-title" id="myModalLabel">集中器</h4>
                     </div>
                     <div class="modal-body">
-                        <el-button @click="myModalOperation(0)" type="primary" size="small">添加</el-button>
-                        <el-button @click="myModalOperation(1)" type="primary" size="small">修改</el-button>
-                        <el-button @click="myModalOperation(2)" type="primary" size="small">删除</el-button>
                         <el-table
                             :data="myModaltableData"
                             @row-click="clickRow3" 
@@ -451,6 +448,12 @@
                             prop="concentratorSn"
                             align='center'
                             label="集中器序列号"
+                            min-width="100">
+                            </el-table-column>
+                            <el-table-column
+                            prop="createTime"
+                            align='center'
+                            label="创建时间"
                             :formatter="formatRole"
                             xshow-overflow-tooltip>
                             </el-table-column>
@@ -466,28 +469,6 @@
                             layout="total, sizes, prev, pager, next, jumper"
                             :total="myModaltotal">
                             </el-pagination>
-                        </div>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div>
-        </div><!-- /.modal -->
-        <!-- 集中器添加修改模态框 -->
-        <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:350px;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 v-if="myModal=='0'" class="modal-title" id="myModalLabel">添加</h4>
-                        <h4 v-if="myModal=='1'" class="modal-title" id="myModalLabel">修改</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label style="width:105px"><span class="Required">*</span>集中器名字:</label>
-                            <input style="width:155px" type="text" v-model="myModaldata.nickName" class="form-control" id="serialNumber" placeholder="请输入集中器名字">
-                        </div>
-                        <div v-if="myModal=='0'" class="form-group">
-                            <label style="width:105px"><span class="Required">*</span>集中器序列号:</label>
-                            <input style="width:155px" type="text" v-model="myModaldata.concentratorSn" class="form-control" id="concentratorSN" placeholder="请输入集中器序列号">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -549,17 +530,12 @@ export default {
             Time_pageIndex2:1,
             Time_pageSize2:10,
             Time_total2:30,
-            //集中器参数
+            //集中器列表
             myModaltableData:[],
             myModalSite:[],
             myModalpageIndex:1,
             myModalpageSize:10,
             myModaltotal:10,
-            myModal:'0',
-            myModaldata:{
-                nickName:'',
-                concentratorSn:''
-            }
         }
     },
     mounted(){
@@ -582,8 +558,12 @@ export default {
         clickRow3(row){
             this.$refs.myModalmoviesTable.toggleRowSelection(row)
         },
-        //点击集中器管理
-        ConcentratorManagement(){
+        //集中器
+        concentratorClikc(){
+            this.concentrator()
+            $('#myModal').modal('show')
+        },
+        concentrator(){
             var that = this;
             $('#myModal').modal('show')
             $.ajax({
@@ -603,136 +583,38 @@ export default {
                     if(data.errorCode=='0'){
                        that.myModaltableData = data.result.list
                        that.myModaltotal = data.result.total
+                       if(that.addType=='1'){
+                           var arr = []
+                           for(var i = 0;i<data.result.list.length;i++){
+                               if(that.site[0].concentratorSn==data.result.list[i].concentratorSn){
+                                   arr.push(data.result.list[i])
+                               }
+                           }
+                           setTimeout(function(){
+                                arr.forEach(row => {
+                                    that.$refs.myModalmoviesTable.toggleRowSelection(row);
+                                });
+                            },200)
+                       }
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
         },
         myModalChange(val){this.myModalSite = val},
-        myModalsizechange(val){this.myModalpageSize = val;},
-        myModalcurrentchange(val){this.myModalpageIndex = val;},
-        //集中器管理添加,修改,删除
-        myModalOperation(val){
-            var that = this;
-            if(val=='0'){
-                that.myModal = '0'
-                $('#myModal2').modal('show')
-                that.myModaldata.nickName = ''
-                that.myModaldata.concentratorSn = ''
-            }
-            if(val=='1'){
-                if(that.myModalSite.length==0||that.myModalSite.length>1){
-                    that.$message({
-                        message: '请选择单条数据修改!',
-                        type: 'error'
-                    });
-                    return;
-                }
-                that.myModal = '1'
-                $('#myModal2').modal('show')
-                that.myModaldata.nickName = that.myModalSite[0].nickName
-                that.myModaldata.concentratorSn = that.myModalSite[0].concentratorSn
-            }
-            if(val=='2'){
-                if(that.myModalSite.length==0){
-                    that.$message({
-                        message: '请选择数据进行删除!',
-                        type: 'error'
-                    });
-                    return;
-                }
-                var arr = []
-                for(var i = 0;i<that.myModalSite.length;i++){
-                    arr.push(that.myModalSite[i].id)
-                }
-                this.$confirm('是否删除所选灯具？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    $.ajax({
-                        type:'post',
-                        async:true,
-                        dataType:'json',
-                        url:that.serverurl+'/v1/solin/lighting/concentrator/deletes',
-                        contentType:'application/json;charset=UTF-8',
-                        data:JSON.stringify({
-                            concentrators:arr
-                        }),
-                        success:function(data){
-                            if(data.errorCode=='0'){
-                                that.$message({
-                                    message: '删除成功!',
-                                    type: 'success'
-                                });
-                                that.ConcentratorManagement()
-                            }else{
-                                that.errorCode2(data.errorCode)
-                            }
-                        }
-                    })
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });          
-                });
-                
-            }
-        },
-        //集中器管理添加,修改保存
+        myModalsizechange(val){this.myModalpageSize = val;this.concentrator();},
+        myModalcurrentchange(val){this.myModalpageIndex = val;this.concentrator();},
         myModalsave(){
-            var that = this
-            var type = ''
-            var url = ''
-            var data = {}
-            if(that.myModal == '0'){
-                if(that.myModaldata.nickName==''||that.myModaldata.concentratorSn==''){
-                    that.$message({
-                        message: '必填数据不能为空!',
-                        type: 'error'
-                    });
-                    return;
-                }
-                url = '/v1/solin/lighting/concentrator';
-                type = 'post'
-                data.concentratorSn = that.myModaldata.concentratorSn
+            if(this.myModalSite.length==0||this.myModalSite.length>=2){
+                this.$message({
+                    message: '只能关联一个集中器!',
+                    type: 'error'
+                });
+                return;
             }
-            if(that.myModal == '1'){
-                if(that.myModaldata.nickName==''){
-                    that.$message({
-                        message: '必填数据不能为空!',
-                        type: 'error'
-                    });
-                    return;
-                }
-                url = '/v1/solin/lighting/concentrator';
-                type = 'put'
-                data.id = that.myModalSite[0].id
-            }
-            data.nickName = that.myModaldata.nickName
-            data.projectId = sessionStorage.projectId
-            $.ajax({
-                type:type,
-                async:true,
-                dataType:'json',
-                url:that.serverurl+url,
-                contentType:'application/json;charset=UTF-8',
-                data:JSON.stringify(data),
-                success:function(data){
-                    if(data.errorCode=='0'){
-                       that.$message({
-                            message: '保存成功!',
-                            type: 'success'
-                        });
-                        $('#myModal2').modal('hide')
-                        that.ConcentratorManagement()
-                    }else{
-                        that.errorCode2(data.errorCode)
-                    }
-                }
-            })
+            $('#myModal').modal('hide')
+            this.data.concentratorSn = this.myModalSite[0].concentratorSn
         },
         //请求断电时间信息
         dataTime(){
@@ -743,10 +625,10 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/lighting/outage',
+                url:that.serverurl+'/v1/solin/lighting/outage/'+sessionStorage.projectId,
                 contentType:'application/json;charset=UTF-8',
                 data:{
-                    projectIds:sessionStorage.projectId
+                    projectId:sessionStorage.projectId
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -760,7 +642,7 @@ export default {
                             that.PowerfailureDa1()
                         }
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -787,7 +669,7 @@ export default {
                         that.Time_total2 = data.result.total
                         that.PowerfailuretimeData2 = data.result.list
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -814,7 +696,7 @@ export default {
                         that.Time_total = data.result.total
                         that.PowerfailuretimeData1 = data.result.list
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -839,9 +721,21 @@ export default {
                     return;
                 }
                 var data = {
-                    startTime:$('.startTime').val(),
-                    endTime:$('.endTime').val(),
+                    startTime:'',
+                    endTime:'',
                     projectId:sessionStorage.projectId
+                }
+                var startTime = $('.startTime').val().split(':')
+                var endTime = $('.endTime').val().split(':')
+                if(startTime[0].length==1){
+                    data.startTime = '0'+startTime[0]+':'+startTime[1]
+                }else{
+                    data.startTime = $('.startTime').val()
+                }
+                if(endTime[0].length==1){
+                    data.endTime = '0'+endTime[0]+':'+endTime[1]
+                }else{
+                    data.endTime = $('.endTime').val()
                 }
                 var type = ''
                 if(that.PowerfailuretimeDatas==''||that.PowerfailuretimeDatas==null||that.PowerfailuretimeDatas==undefined){
@@ -867,12 +761,13 @@ export default {
                             });
                             that.dataTime()
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
             }
             if(val=='1'){
+                console.log(that.PowerfailuretimeDatas)
                 $.ajax({
                     type:'delete',
                     async:true,
@@ -888,7 +783,7 @@ export default {
                             });
                             that.dataTime()
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -934,7 +829,7 @@ export default {
                             $('#Powerfailuretime2').modal('hide')
                             that.PowerfailureDa1()
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -975,7 +870,7 @@ export default {
                         $('#Powerfailuretime2').modal('hide')
                         that.PowerfailureDa1()
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -997,7 +892,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/lighting/model/1',
+                url:that.serverurl+'/v1/solin/lighting/model',
                 contentType:'application/json;charset=UTF-8',
                 data:{},
                 success:function(data){
@@ -1011,7 +906,7 @@ export default {
                         }
                         
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1037,6 +932,7 @@ export default {
                 that.data.concentratorSN = ''
                 that.data.nickName = ''
                 that.data.mark = ''
+                that.myModalSite = []
             }
             if(val=='1'){
                 if(this.site.length==0||this.site.length>=2){
@@ -1104,7 +1000,7 @@ export default {
                             },200)
                         }
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1128,7 +1024,7 @@ export default {
             var that = this;
             var result = /[\u4E00-\u9FA5\uF900-\uFA2D]/;
             var url = ''
-            if(this.data.serialNumber==''||this.data.concentratorSn==''||this.data.nickName==''||this.data.lampNumber==''){
+            if(this.data.serialNumber==''||this.data.nickName==''||this.data.lampNumber==''){
                 that.$message({
                     message: '必填字段不能为空!',
                     type: 'error'
@@ -1143,26 +1039,18 @@ export default {
                 });
                 return;
             }
-            if(result.test(this.data.concentratorSN)){
-                that.$message({
-                    message: '控制器ID不能有中文',
-                    type: 'error',
-                    showClose: true,
-                });
-                return;
-            }
             var datas = that.data
             var type = ''
             if(this.addType=='0'){
                 url='/v1/solin/lighting/lamp'
                 type = 'post'
+                datas.projectId=sessionStorage.projectId
             }
             if(this.addType=='1'){
                 url='/v1/solin/lighting/lamp';
                 datas.id=this.site[0].id
                 type = 'put'
             }
-            datas.projectId=sessionStorage.projectId
             if(this.site2.length==''){
                 if(this.addType=='0'){
                     datas.poleId='0'
@@ -1189,7 +1077,7 @@ export default {
                         $('#addModal').modal('hide')
                         that.ready()
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1228,7 +1116,7 @@ export default {
                             });
                             that.ready()
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -1278,7 +1166,7 @@ export default {
                         that.ready()
                         $('#lampBindProjectModal').modal('hide')
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -1298,7 +1186,7 @@ export default {
                         that.options5 = data.result.projects
                         that.value5 = ''
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -1327,7 +1215,7 @@ export default {
                         that.tableData = data.result.list
                         that.total = data.result.total
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1374,7 +1262,7 @@ export default {
                             }
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })

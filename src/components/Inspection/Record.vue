@@ -1,87 +1,215 @@
 <template>
     <div class="Record">
         <div class="Record_top">
-            <el-button @click="Record(0)" type="primary" icon='el-icon-plus' size='small'>查看明细</el-button>
-            <el-button @click="Record(1)" type="primary" icon="el-icon-edit" size='small'>删除记录</el-button>
+            <el-select v-model="value" @change="Recordchange" style="margin:6px 0 0 10px;" size="small" placeholder="请选择">
+                <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+                </el-option>
+            </el-select>
         </div>
         <div class="Record_bottom">
             <div class="Record_bottom_top">
+                <template v-if="value=='1'">
+                    <div class="search">
+                        <label>巡检员姓名:</label>
+                        <input v-model="inspectorName" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入巡检员姓名">
+                    </div>
+                </template>
                 <div class="search">
-                    <label>用户名:</label>
-                    <input type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
+                    <label>开始日期:</label>
+                    <el-date-picker
+                        size="small"
+                        align="right"
+                        type="date"
+                        value-format='yyyy-MM-dd'
+                        v-model="startTime"
+                        placeholder="选择日期">
+                    </el-date-picker>
                 </div>
                 <div class="search">
-                    <label>姓名:</label>
-                    <input type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入姓名">
-                </div>
-                <div class="search">
-                    <label>电话:</label>
-                    <input type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
+                    <label>结束日期:</label>
+                    <el-date-picker
+                        size="small"
+                        align="right"
+                        type="date"
+                        value-format='yyyy-MM-dd'
+                        v-model="endTime"
+                        placeholder="选择日期">
+                    </el-date-picker>
                 </div>
                 <div style="margin-left:15px;">
-                    <el-button type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
             </div>
             <div class="Record_bottom_bottom">
-                <el-table
-                    :data="tableData"
-                    @row-click="clickRow" 
-                    ref="moviesTable"
-                    border
-                    stripe
-                    size='small'
-                    tooltip-effect="dark"
-                    @selection-change="SelectionChange"
-                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                    <el-table-column
-                    type="selection"
-                    align='center'
-                    width="55">
-                    </el-table-column>
-                    <el-table-column
-                    prop="username"
-                    align='center'
-                    label="点名称"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="fullName"
-                    align='center'
-                    label="点编号"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="userType"
-                    align='center'
-                    label="巡检人员"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.userType=='0'">男</span>
-                            <span v-if="scope.row.userType=='1'">女</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="mobile"
-                    align='center'
-                    label="巡检时间"
-                    min-width="150">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="上报时间"
-                    min-width="120">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.org.orgName}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="createTime"
-                    label="执行情况"
-                    align='center'
-                    min-width="180"
-                    show-overflow-tooltip>
-                    </el-table-column>
-                </el-table>
+                <template v-if="value=='0'">
+                    <el-table
+                        :data="tableData"
+                        @row-click="clickRow" 
+                        ref="moviesTable"
+                        border
+                        stripe
+                        size='small'
+                        tooltip-effect="dark"
+                        @selection-change="SelectionChange"
+                        style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                        <el-table-column
+                        type="selection"
+                        align='center'
+                        width="55">
+                        </el-table-column>
+                        <el-table-column
+                        prop="patrolPlanName"
+                        align='center'
+                        label="计划名称"
+                        min-width="80">
+                        </el-table-column>
+                        <el-table-column
+                        prop="userType"
+                        align='center'
+                        label="巡检人员"
+                        min-width="80">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.userType=='0'">男</span>
+                                <span v-if="scope.row.userType=='1'">女</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                        prop="mobile"
+                        align='center'
+                        label="巡检时间"
+                        min-width="150">
+                        </el-table-column>
+                        <el-table-column
+                        align='center'
+                        label="上报时间"
+                        min-width="120">
+                            <template slot-scope="scope">
+                                <span></span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                        prop="createTime"
+                        label="执行情况"
+                        align='center'
+                        min-width="180"
+                        show-overflow-tooltip>
+                        </el-table-column>
+                    </el-table>
+                </template>
+                <template v-if="value=='1'">
+                    <el-table
+                        :data="tableData"
+                        @row-click="clickRow" 
+                        ref="moviesTable"
+                        border
+                        stripe
+                        size='small'
+                        tooltip-effect="dark"
+                        @selection-change="SelectionChange"
+                        style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                        <el-table-column
+                        type="selection"
+                        align='center'
+                        width="55">
+                        </el-table-column>
+                        <el-table-column
+                        prop="patrolPlanName"
+                        align='center'
+                        label="计划名称"
+                        min-width="80">
+                        </el-table-column>
+                        <el-table-column
+                        prop="userType"
+                        align='center'
+                        label="巡检人员"
+                        min-width="80">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.userType=='0'">男</span>
+                                <span v-if="scope.row.userType=='1'">女</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                        prop="mobile"
+                        align='center'
+                        label="巡检时间"
+                        min-width="150">
+                        </el-table-column>
+                        <el-table-column
+                        align='center'
+                        label="上报时间"
+                        min-width="120">
+                            <template slot-scope="scope">
+                                <span></span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                        prop="createTime"
+                        label="执行情况"
+                        align='center'
+                        min-width="180"
+                        show-overflow-tooltip>
+                        </el-table-column>
+                    </el-table> 
+                </template>
+                <template v-if="value=='2'">
+                    <el-table
+                        :data="tableData"
+                        @row-click="clickRow" 
+                        ref="moviesTable"
+                        border
+                        stripe
+                        size='small'
+                        tooltip-effect="dark"
+                        @selection-change="SelectionChange"
+                        style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                        <el-table-column
+                        type="selection"
+                        align='center'
+                        width="55">
+                        </el-table-column>
+                        <el-table-column
+                        prop="patrolPlanName"
+                        align='center'
+                        label="计划名称"
+                        min-width="80">
+                        </el-table-column>
+                        <el-table-column
+                        prop="userType"
+                        align='center'
+                        label="巡检人员"
+                        min-width="80">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.userType=='0'">男</span>
+                                <span v-if="scope.row.userType=='1'">女</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                        prop="mobile"
+                        align='center'
+                        label="巡检时间"
+                        min-width="150">
+                        </el-table-column>
+                        <el-table-column
+                        align='center'
+                        label="上报时间"
+                        min-width="120">
+                            <template slot-scope="scope">
+                                <span></span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                        prop="createTime"
+                        label="执行情况"
+                        align='center'
+                        min-width="180"
+                        show-overflow-tooltip>
+                        </el-table-column>
+                    </el-table>
+                </template>
                 <div class="block">
                     <el-pagination
                     background
@@ -189,11 +317,30 @@ export default {
     name: 'UserSettings',
     data () {
         return {
+            serverurl:localStorage.serverurl,
+            options:[
+                {
+                    value: '0',
+                    label: '巡检计划统计'
+                }, 
+                {
+                    value: '1',
+                    label: '巡检员统计'
+                }, 
+                {
+                    value: '2',
+                    label: '巡检点统计'
+                }
+            ],
+            value:'0',
             tableData:[],
             site:[],
             pageIndex:1,
             pageSize:10,
             total:10,
+            inspectorName:'',
+            startTime:'',
+            endTime:'',
         }
     },
     mounted(){
@@ -202,37 +349,60 @@ export default {
     methods:{
         clickRow(row){
             this.$refs.moviesTable.toggleRowSelection(row)
-        },   
-        SelectionChange(val){this.site = val;},
-        sizechange(val){this.pageSize=val;this.readyRight();},
-        currentchange(val){this.pageIndex=val;this.readyRight();},
-        //添加,编辑,删除用户
-        Record(val){
-            // 0 添加,1 编辑,2 删除
-            var that = this;
-            if(val=='0'){
-                // if(that.site.length==0||that.site.length>1){
-                //     that.$message({
-                //         message: '请选择单个用户进行查看!',
-                //         type: 'error'
-                //     });
-                //     return;
-                // }
-                $('#Record').modal('show')
-            }
-            if(val=='1'){
-                if(that.site.length==0){
-                    that.$message({
-                        message: '请选择用户进行删除!',
-                        type: 'error'
-                    });
-                    return;
-                }
-            }
         },
+        Recordchange(val){
+            this.pageIndex = 1;
+            this.pageSize = 10;
+            this.inspectorName = ''
+            this.startTime = ''
+            this.endTime = ''
+            this.ready()
+        },   
+        //
+        ready(){
+            var that = this;
+            var url = '';
+            var data = {
+                page:that.pageIndex,
+                size:that.pageSize,
+                startTime:that.startTime,
+                startTime:that.endTime,
+                projectIds:sessionStorage.projectId,
+            }
+            if(that.value=='0'){
+                url='/v1/solin/patrol/statistics/execute';
+            }
+            if(that.value=='1'){
+                data.inspectorName = that.inspectorName
+                url='/v1/solin/patrol/statistics/execute/inspector';
+            }
+            if(that.value=='2'){
+                url='/v1/solin/patrol/statistics/execute/site';
+            }
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+url,
+                contentType:'application/json;charset=UTF-8',
+                data:data,
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tableData = data.result.list
+                        that.total = data.result.total
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
+        SelectionChange(val){this.site = val;},
+        sizechange(val){this.pageSize=val;this.ready();},
+        currentchange(val){this.pageIndex=val;this.ready();},
+        search(){this.ready();},
     },
     created(){
-        
+        this.ready()
     },
 }
 </script>
@@ -246,8 +416,9 @@ export default {
 .Record_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
 .Record_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
 .search{display: flex;}
-.search>label{width: 60px;}
+.search>label{width: 80px;}
 .search>input{width: 146px;margin-top:7px;height: 34px;}
+.search>div{width: 146px;}
 .Record_table tr>td:nth-of-type(1),.Record_table tr>td:nth-of-type(3){width:80px;}
 
 </style>

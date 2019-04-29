@@ -10,8 +10,8 @@
         <div class="loraSensor_bottom">
             <div class="loraSensor_bottom_top">
                 <div class="search">
-                    <label style="width:120px;">lora传感器名字:</label>
-                    <input type="text" v-model="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入lora传感器名字">
+                    <label style="width:120px;">lora传感器名称:</label>
+                    <input type="text" v-model="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入lora传感器名称">
                 </div>
                 <div class="search">
                     <label style="width:120px;">lora传感器序列号:</label>
@@ -23,7 +23,7 @@
                         <el-option
                         v-for="item in options"
                         :key="item.modelId"
-                        :label="item.nickName"
+                        :label="item.text"
                         :value="item.modelId">
                         </el-option>
                     </el-select>
@@ -79,12 +79,10 @@
                     <el-table-column
                     align='center'
                     label="状态"
-                    :formatter="formatRole"
                     min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.online=='0'">离线</span>
                             <span v-if="scope.row.online=='1'">在线</span>
-                            <span v-else>---</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -135,11 +133,11 @@
                     <div class="modal-body">
                         <div class="form_input">
                             <label><span class="Required">*</span>名称:</label>
-                            <input type="text" v-model="data.nickName" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
+                            <input type="text" v-model.lazy="data.nickName" maxlength="40" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                         </div>
                         <div class="form_input">
                             <label><span class="Required">*</span>序列号:</label>
-                            <input type="text" v-model="data.serialNumber" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
+                            <input type="text" v-model.lazy="data.serialNumber" :disabled='type=="1"' maxlength="16" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
                         </div>
                         <div class="form_input">
                             <label><span class="Required">*</span>型号:</label>
@@ -147,13 +145,25 @@
                                 :options="options"
                                 v-model="data.modelId"
                                 :props="props"
+                                :disabled='type=="1"'
                                 size='small'
                                 style="width:196px;">
                             </el-cascader>
                         </div>
                         <div class="form_input">
+                            <label><span class="Required">*</span>服务配置:</label>
+                            <el-select v-model="data.serviceProfileId" size='small' clearable style='width:196px;' placeholder="请选择">
+                                <el-option
+                                v-for="item in options3"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="form_input">
                             <label><span class="Required">*</span>入网方式:</label>
-                            <el-select v-model="data.networkId" size='small' clearable style='width:196px;' placeholder="请选择">
+                            <el-select v-model="data.networkId" @change="networkIdChange" size='small' clearable style='width:196px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options2"
                                 :key="item.id"
@@ -162,9 +172,29 @@
                                 </el-option>
                             </el-select>
                         </div>
+                        <template v-if="networkIdChangeData.name=='Device-profiles-abp'">
+                            <div class="form_input">
+                                <label><span class="Required">*</span>设备地址:</label>
+                                <input type="text" v-model.lazy="data.devAddr" maxlength="8" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入设备地址">
+                            </div>
+                            <div class="form_input">
+                                <label><span class="Required">*</span>网络秘钥:</label>
+                                <input type="text" v-model.lazy="data.nwksKey" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入网络秘钥">
+                            </div>
+                            <div class="form_input">
+                                <label><span class="Required">*</span>应用秘钥:</label>
+                                <input type="text" v-model.lazy="data.appsKey" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入应用秘钥">
+                            </div>
+                        </template>
+                        <template v-if="networkIdChangeData.name=='Device-profiles-otaa'">
+                            <div class="form_input">
+                                <label><span class="Required">*</span>应用秘钥:</label>
+                                <input type="text" v-model.lazy="data.applicationKey" maxlength="32" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入应用秘钥">
+                            </div>
+                        </template>
                         <div class="form_input">
                             <label>位置:</label>
-                            <input type="text" v-model="data.location" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入位置">
+                            <input type="text" v-model.lazy="data.location" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入位置">
                         </div>
                         <div class="form_input">
                             <label>备注:</label>
@@ -313,11 +343,18 @@ export default {
             //添加/编辑
             type:'0',
             options2:[],
+            networkIdChangeData:{},
+            options3:[],
             data:{
                 nickName:'',
                 serialNumber:'',
                 modelId:[],
+                serviceProfileId:'',
                 networkId:'',
+                devAddr:'',
+                nwksKey:'',
+                appsKey:'',
+                applicationKey:'',
                 location:'',
                 remark:'',
             },
@@ -358,45 +395,76 @@ export default {
         addloraSensor(val){
             if(val=='0'){
                 this.type = '0';
+                this.serviceProfile();
                 this.network();
                 this.data.nickName = ''
                 this.data.serialNumber = ''
                 this.data.modelId = []
+                this.data.serviceProfileId = ''
                 this.data.networkId = ''
+                this.data.devAddr = ''
+                this.data.nwksKey = ''
+                this.data.appsKey = ''
+                this.data.applicationKey = ''
                 this.data.location = ''
                 this.data.remark = ''
                 $('#myModal').modal('show')
             }
             if(val=='1'){
-                this.type = '1';
                 if(this.site.length==0||this.site.length>=2){
                     this.$message({
-                        message: '请选择传感器进行编辑!',
+                        message: '请选择单个传感器进行编辑!',
                         type: 'error'
                     });
-                    retuen;
+                    return
                 }
+                this.type = '1';
+                this.serviceProfile();
                 this.network();
                 this.data.nickName = this.site[0].nickName
                 this.data.serialNumber = this.site[0].serialNumber
                 this.data.modelId = []
                 this.data.modelId.push(this.site[0].sensorsType)
                 this.data.modelId.push(this.site[0].modelId)
+                this.data.serviceProfileId = this.site[0].serviceProfileId
                 this.data.networkId = this.site[0].networkId
+                this.data.devAddr = this.site[0].devAddr
+                this.data.nwksKey = this.site[0].nwksKey
+                this.data.appsKey = this.site[0].appsKey
+                this.data.applicationKey = this.site[0].applicationKey
                 this.data.location = this.site[0].location
                 this.data.remark = this.site[0].remark
+                
                 $('#myModal').modal('show')
             }
         },
         //添加/编辑保存
         myModalSubmit(){
             var that = this;
-            if(that.data.nickName==''||that.data.serialNumber==''||that.data.modelId.length==0||that.data.networkId==''){
+            if(that.data.nickName==''||that.data.serialNumber==''||that.data.modelId.length==0||that.data.networkId==''||that.data.serviceProfileId==''){
                 that.$message({
                     message: '必填数据不能为空!',
                     type: 'error'
                 });
                 retuen;
+            }
+            if(that.networkIdChangeData.name=='Device-profiles-abp'){
+                if(that.data.devAddr==''||that.data.nwksKey==''||that.data.appsKey==''){
+                    that.$message({
+                        message: '必填数据不能为空!',
+                        type: 'error'
+                    });
+                    retuen;
+                }
+            }
+            if(that.networkIdChangeData.name=='Device-profiles-otaa'){
+                if(that.data.applicationKey==''){
+                    that.$message({
+                        message: '必填数据不能为空!',
+                        type: 'error'
+                    });
+                    retuen;
+                }
             }
             var data= {}
             var type = ''
@@ -405,7 +473,12 @@ export default {
             data.nickName = that.data.nickName
             data.serialNumber = that.data.serialNumber
             data.modelId = that.data.modelId[1]
+            data.serviceProfileId = that.data.serviceProfileId
             data.networkId = that.data.networkId
+            data.devAddr = that.data.devAddr
+            data.nwksKey = that.data.nwksKey
+            data.appsKey = that.data.appsKey
+            data.applicationKey = that.data.applicationKey
             data.location = that.data.location
             data.remark = that.data.remark
             data.projectId = sessionStorage.projectId
@@ -434,7 +507,7 @@ export default {
                         $('#myModal').modal('hide')
                         that.ready()
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -473,7 +546,7 @@ export default {
                             });
                             that.ready()
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -530,7 +603,7 @@ export default {
                             },200)
                         }
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -577,7 +650,7 @@ export default {
                         that.options3 = data.result.projects
                         that.value3 = ''
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -608,7 +681,25 @@ export default {
                         that.ready()
                         $('#sensorBindProjectModal').modal('hide')
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
+                    }
+                },
+            })
+        },
+        //请求服务配置方式
+        serviceProfile(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/lora/sensor/service',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.options3 = data.result.serviceProfile
+                    }else{
+                        that.errorCode(data)
                     }
                 },
             })
@@ -625,11 +716,25 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.options2 = data.result.network
+                        setTimeout(function(){
+                            if(that.type=='1'){
+                                that.networkIdChange(that.site[0].networkId)
+                            }
+                        },50)
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
+        },
+        //入网方式change
+        networkIdChange(val){
+            this.networkIdChangeData = {} 
+            for(var i = 0;i<this.options2.length;i++){
+                if(val==this.options2[i].id){
+                    this.networkIdChangeData = this.options2[i]
+                }
+            }
         },
         //请求loar传感器类型/型号
         modal(){
@@ -644,7 +749,7 @@ export default {
                     if(data.errorCode=='0'){
                         that.options = data.result
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -673,7 +778,7 @@ export default {
                         that.tableData = data.result.list
                         that.total = data.result.total
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -714,7 +819,7 @@ export default {
                             }
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })

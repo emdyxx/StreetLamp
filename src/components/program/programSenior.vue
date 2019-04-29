@@ -392,7 +392,7 @@ export default {
                             that.mediatableData[i].display = '0'
                         }
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -437,7 +437,7 @@ export default {
                             that.mediatableData2[i].display = '0'
                         }
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -855,7 +855,7 @@ export default {
                             that.$router.push({'path':'/program'})
                         }
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -944,7 +944,7 @@ export default {
                             });
                         }, 20); 
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })

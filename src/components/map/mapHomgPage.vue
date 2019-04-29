@@ -280,8 +280,8 @@ export default {
             time:null,
             serverurl:localStorage.serverurl,
             imgserverurl:'',
-            addPoleIcon:false,
-            deletePoleIcon:false,
+            setPoleLocation:false,
+            removePoleLocation:false,
             options:[],//项目
             value:'',
             locationType:'',//地图类型
@@ -518,7 +518,7 @@ export default {
                         that.ready()
                         that.Statistics()
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -962,7 +962,7 @@ export default {
                             console.log(that.data)
                         }
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -993,7 +993,7 @@ export default {
                             });
                             that.ready();
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -1036,7 +1036,7 @@ export default {
                         that.tableData = data.result.list
                         that.total = data.result.total
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1085,7 +1085,7 @@ export default {
                         that.ready();
                         $('#myModal').modal('hide')
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -1105,15 +1105,15 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
-                            if(data.result.operats[i].code=='addPoleIcon'){
-                                that.addPoleIcon = true
+                            if(data.result.operats[i].code=='setPoleLocation'){
+                                that.setPoleLocation = true
                             }
-                            if(data.result.operats[i].code=='deletePoleIcon'){
-                                that.deletePoleIcon = true
+                            if(data.result.operats[i].code=='removePoleLocation'){
+                                that.removePoleLocation = true
                             }
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })

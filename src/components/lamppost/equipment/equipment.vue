@@ -21,7 +21,7 @@ export default {
         //初始化左侧树
         setTimeout(function(){
             that.readyLeft()
-        },500)
+        },200)
     },
     methods:{
         //请求左侧树
@@ -109,7 +109,6 @@ export default {
                                             jsonarray= datas;
                                         },
                                     })
-                                    console.log(datas)
                                     if(sessionStorage.menuId3=='51'){
                                         that.$router.push({'path':'lampslanterns'})
                                     }
@@ -122,8 +121,11 @@ export default {
                                     if(sessionStorage.menuId3=='54'){
                                         that.$router.push({'path':'loraQuery'})
                                     }
+                                    if(sessionStorage.menuId3=='55'){
+                                        that.$router.push({'path':'Relay'})
+                                    }
                                 }else{
-                                    that.errorCode(data.errorCode)
+                                    that.errorCode(data)
                                 }
                             }
                         });
@@ -132,9 +134,9 @@ export default {
                 }
             });
             $('#jstree').bind("activate_node.jstree.jstree", function (e, data) {
-                console.log(data.node);
                 if(data.node.id==''||data.node.id==undefined){
                 }else{
+                    console.log(data.node.id)
                     sessionStorage.menuId3 = data.node.id
                     if(data.node.id=='51'){
                         that.$router.push({'path':'lampslanterns'})
@@ -150,6 +152,9 @@ export default {
                         setTimeout(function(){
                             that.$router.push({'path':'loraQuery'})
                         },200)
+                    }
+                    if(data.node.id=='55'){
+                        that.$router.push({'path':'Relay'})
                     }
                 }
             });

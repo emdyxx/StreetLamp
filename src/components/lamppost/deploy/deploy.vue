@@ -106,8 +106,14 @@ export default {
                                     if(sessionStorage.menuId3=='49'){ //loar
                                         that.$router.push({'path':'/loraSensor'})
                                     }
+                                    if(sessionStorage.menuId3=='50'){
+                                        that.$router.push({'path':'/solinRelayDeploy'})
+                                    }
+                                    if(sessionStorage.menuId3=='80'){
+                                        that.$router.push({'path':'/concentrator'})
+                                    }
                                 }else{
-                                    that.errorCode(data.errorCode)
+                                    that.errorCode(data)
                                 }
                             }
                         });
@@ -133,6 +139,12 @@ export default {
                     }
                     if(data.node.id=='49'){//loar
                         that.$router.push({'path':'/loraSensor'})
+                    }
+                    if(data.node.id=='50'){
+                        that.$router.push({'path':'/solinRelayDeploy'})
+                    }
+                    if(data.node.id=='80'){
+                        that.$router.push({'path':'/concentrator'})
                     }
                 }
             });

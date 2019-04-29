@@ -197,7 +197,7 @@ export default {
                         that.mediatableData = data.result.list
                         that.mediaTotal = data.result.total
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -212,14 +212,14 @@ export default {
                    audit:'1',
                    mediaType:'1',
                    nickName:'',
-                   projectId:sessionStorage.projectId
+                   projectIds:sessionStorage.projectId
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.mediatableData2 = data.result.list
                         that.mediaTotal2 = data.result.total
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -373,7 +373,7 @@ export default {
                             showClose: true,
                         });
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -392,7 +392,7 @@ export default {
                         that.programName = data.result.programName
                         that.mediadata = data.result.list
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })

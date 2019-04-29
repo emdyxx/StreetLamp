@@ -81,7 +81,7 @@ export default {
             // that.$router.push({'path':'/program'})
             that.$router.push({'path':'/index'})
           }else{
-            that.errorCode(data.errorCode)
+            that.errorCode(data)
           }
         },
       })

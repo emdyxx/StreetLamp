@@ -406,7 +406,7 @@ export default {
                         that.tableData2 = data.result.list
                         that.total2 = data.result.total
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -435,7 +435,7 @@ export default {
                         that.tableData2 = arr
                         that.total2 = data.result.total
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -454,7 +454,7 @@ export default {
                     if(data.errorCode=='0'){
                         that.options1 = data.result
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -505,7 +505,7 @@ export default {
                     if(data.errorCode=='0'){
                         that.$refs.tree.setCheckedKeys(data.result.operatorIds);
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -706,7 +706,7 @@ export default {
                     that.imageUrl1 = ''
                     $('#addedituser').modal('hide')
                 }else{
-                    that.errorCode(data.errorCode)
+                    that.errorCode(data)
                 }
             })
         },
@@ -727,7 +727,7 @@ export default {
                         });
                         that.ready()
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -764,7 +764,7 @@ export default {
                             });
                             
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -815,7 +815,7 @@ export default {
                                     data2.children = data.result
                                     jsonarray= data2;
                                 }else{
-                                    that.errorCode(data.errorCode)
+                                    that.errorCode(data)
                                 }
                             }
                         });
@@ -865,7 +865,7 @@ export default {
                         that.tableData = data.result.list
                         that.total = data.result.total
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -905,7 +905,7 @@ export default {
                                 message: '操作成功!'
                             });
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -946,7 +946,7 @@ export default {
                             }
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })

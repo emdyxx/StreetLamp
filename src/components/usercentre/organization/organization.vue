@@ -411,7 +411,7 @@ export default {
                     if(data.errorCode=='0'){
                         that.detailsData = data.result
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -440,7 +440,7 @@ export default {
                             that.userId = data.result.baseInformation.id
                         },200)
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -531,7 +531,7 @@ export default {
                     if(data.errorCode=='0'){
                         that.tableData2 = data.result.users
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -615,7 +615,7 @@ export default {
                             },200)
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -666,7 +666,7 @@ export default {
                     if(data.errorCode=='0'){
                         that.$refs.tree.setCheckedKeys(data.result.operatorIds);
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -785,7 +785,7 @@ export default {
                     that.imageUrl2 = ''
                     $('#addorganizations').modal('hide')
                 }else{
-                    that.errorCode(data.errorCode)
+                    that.errorCode(data)
                 }
             })
         },
@@ -821,7 +821,7 @@ export default {
                             });
                             
                         }else{
-                            that.errorCode(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
@@ -921,7 +921,7 @@ export default {
                         that.tableData = data.result.list
                         that.total = data.result.total
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -954,7 +954,7 @@ export default {
                             }
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })

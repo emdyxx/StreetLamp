@@ -2,7 +2,7 @@
     <!-- 广告屏日志 -->
     <div class="screenJournal">
         <el-tabs v-model="activeName" style="height:100%;" type="border-card" @tab-click="handleClick">
-            <el-tab-pane label="操作日志" v-if="viewScreenDeliveryLog" name='0' style="height: 100%;position:relative;">
+            <el-tab-pane label="操作日志" v-if="viewScreenOperatLog" name='0' style="height: 100%;position:relative;">
                 <div class="screenJournal_top">
                     <div class="search">
                         <span>操作模块:</span>
@@ -220,8 +220,8 @@ export default {
     data () {
         return {
             serverurl:localStorage.serverurl,
+            viewScreenOperatLog:false,
             viewScreenControlLog:false,
-            viewScreenDeliveryLog:false,
             activeName:'0',
             tableData:[],
             pageIndex:1,
@@ -350,7 +350,7 @@ export default {
                         that.tableData = data.result.list;
                         that.total = Number(data.result.total)
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -375,15 +375,15 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewScreenOperatLog'){
+                                that.viewScreenOperatLog = true
+                            }
                             if(data.result.operats[i].code=='viewScreenControlLog'){
                                 that.viewScreenControlLog = true
                             }
-                            if(data.result.operats[i].code=='viewScreenDeliveryLog'){
-                                that.viewScreenDeliveryLog = true
-                            }
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })

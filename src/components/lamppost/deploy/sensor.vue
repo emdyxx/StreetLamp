@@ -358,7 +358,7 @@ export default {
                             that.data.modelId = that.site[0].modelId
                         }
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -464,7 +464,7 @@ export default {
                         $('#addModal').modal('hide')
                         that.ready()
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -505,12 +505,12 @@ export default {
                             });
                             that.ready()
                         }else{
-                            that.errorCode2(data.errorCode)
+                            that.errorCode(data)
                         }
                     }
                 })
             }).catch(() => {
-                this.$message({
+                that.$message({
                     type: 'info',
                     message: '已取消删除'
                 });          
@@ -544,7 +544,7 @@ export default {
                         that.options5 = data.result.projects
                         that.value5 = ''
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -575,7 +575,7 @@ export default {
                         that.ready()
                         $('#sensorBindProjectModal').modal('hide')
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -627,7 +627,7 @@ export default {
                             },200)
                         }
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -670,7 +670,7 @@ export default {
                         that.tableData = data.result.list
                         that.total = data.result.total
                     }else{
-                        that.errorCode2(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })
@@ -714,7 +714,7 @@ export default {
                             }
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 }
             })

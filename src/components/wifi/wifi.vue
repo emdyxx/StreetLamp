@@ -175,7 +175,7 @@ export default {
                             that.value2 = Number(sessionStorage.projectId)
                         }
                     }else{
-                        that.errorCode(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
