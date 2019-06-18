@@ -10,11 +10,11 @@
             <div class="solinRelayDeploy_bottom_top">
                 <div class="search">
                     <label style="width:90px;">继电器名称:</label>
-                    <input v-model="nickName" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入继电器名称">
+                    <input v-model="nickName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入继电器名称">
                 </div>
                 <div class="search">
                     <label style="width:100px;">继电器编号:</label>
-                    <input v-model="relayNumber" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入继电器编号">
+                    <input v-model="relayNumber" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入继电器编号">
                 </div>
                 <div class="search">
                     <label style="width:90px;">继电器状态:</label>
@@ -62,10 +62,17 @@
                     min-width="120">
                     </el-table-column>
                     <el-table-column
-                    prop="concentratorSn"
+                    prop="modelName"
+                    align='center'
+                    label="继电器型号"
+                    :formatter="formatRole"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    prop="concentratorName"
                     align='center'
                     :formatter="formatRole"
-                    label="集中器序列号"
+                    label="集中器名称"
                     min-width="110">
                     </el-table-column>
                     <el-table-column
@@ -101,7 +108,7 @@
         </div>
         <!-- 添加/编辑继电器模态框 -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:500px;">
+            <div class="modal-dialog" style="width:550px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -111,11 +118,11 @@
                     <div class="modal-body">
                         <div class="form_input">
                             <label><span class="Required">*</span>继电器名称:</label>
-                            <input type="text" v-model.lazy="data.nickName" maxlength="40" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入继电器名称">
+                            <input type="text" v-model.lazy="data.nickName" maxlength="40" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入继电器名称">
                         </div>
                         <div class="form_input">
-                            <label><span class="Required">*</span>继电器地址:</label>
-                            <input type="text" v-model.lazy="data.relayNumber" maxlength="16" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入继电器地址">
+                            <label><span class="Required">*</span>继电器编号:</label>
+                            <el-input-number v-model.lazy="data.relayNumber" :min="1" :max="253" size="small" style="width:196px;" label="继电器编号"></el-input-number>
                         </div>
                         <div class="form_input">
                             <label><span class="Required">*</span>集中器序列号:</label>
@@ -123,8 +130,10 @@
                                 <el-option
                                 v-for="item in options2"
                                 :key="item.concentratorSn"
-                                :label="item.concentratorSn"
+                                :label="item.concentratorName"
                                 :value="item.concentratorSn">
+                                    <span style="float: left">{{ item.concentratorName }}</span>
+                                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.concentratorSn }}</span>
                                 </el-option>
                             </el-select>
                         </div>
@@ -161,7 +170,7 @@
                                     <div v-for="(item,index) in data.inputChannelDTOs" :key='item.id'>
                                         <span>输入通道{{index+1}}</span>
                                         <span style="padding:3px;">
-                                            <input type="text" v-model.lazy=item.channelName style="height:27px;" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="通道名称">
+                                            <input type="text" v-model.lazy=item.channelName style="height:27px;" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="通道名称">
                                         </span>
                                     </div>
                                 </div>
@@ -169,7 +178,7 @@
                                     <div v-for="(item,index) in data.outputChannelDTOs" :key='item.id'>
                                         <span>输出通道{{index+1}}</span>
                                         <span style="padding:3px;">
-                                            <input type="text" v-model.lazy=item.channelName style="height:27px;" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="通道名称">
+                                            <input type="text" v-model.lazy=item.channelName style="height:27px;" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="通道名称">
                                         </span>
                                     </div>
                                 </div>
@@ -371,7 +380,7 @@ export default {
                 data:{
                     page:1,
                     size:500,
-                    relayId:that.site[0].id,
+                    relayIds:that.site[0].id,
                     nickName:'',
                     channelType:'',
                 },
@@ -404,13 +413,11 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/lighting/concentrator',
+                url:that.serverurl+'/v1/solin/concentrator',
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     page:1,
                     size:500,
-                    nickName:'',
-                    concentratorSn:'',
                     projectIds:sessionStorage.projectId,
                 },
                 success:function(data){
@@ -498,7 +505,6 @@ export default {
         currentchange(val){this.pageIndex = val;this.ready();},
         sizechange(val){this.pageSize = val;this.ready()},
         search(){this.ready();},
-
         //权限请求
         Jurisdiction(){
             var that = this

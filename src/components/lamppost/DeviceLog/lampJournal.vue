@@ -19,6 +19,17 @@
                             </el-option>
                         </el-select>
                     </div>
+                    <div class="search">
+                        <span>操作类别:</span>
+                        <el-select v-model="value" clearable size='small' placeholder="请选择">
+                            <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
                     <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
                 </div>
                 <div class="lampJournal_bottom">
@@ -63,8 +74,9 @@
                                 <span v-if="scope.row.operatType=='0'">添加</span>
                                 <span v-if="scope.row.operatType=='1'">编辑</span>
                                 <span v-if="scope.row.operatType=='2'">删除</span>
-                                <span v-if="scope.row.operatType=='3'">启用/禁用</span>
-                                <span v-if="scope.row.operatType=='4'">审核</span>
+                                <span v-if="scope.row.operatType=='3'">绑定灯杆</span>
+                                <span v-if="scope.row.operatType=='4'">解绑灯杆</span>
+                                <span v-if="scope.row.operatType=='5'">绑定项目</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -140,12 +152,10 @@
                         min-width="100">
                         </el-table-column>
                         <el-table-column
+                        prop="serialNumber"
                         align='center'
                         label="单灯序列号"
-                        min-width="80">
-                            <template slot-scope="scope">
-                                <button @click="serialNumber_click(scope.row.serialNumbers)" style="height:20px;line-height:15px;">...</button>
-                            </template>
+                        min-width="120">
                         </el-table-column>
                         <el-table-column
                         align='center'
@@ -157,6 +167,7 @@
                                 <span v-if="scope.row.controlType=='3'">调光</span>
                                 <span v-if="scope.row.controlType=='4'">刷新状态</span>
                                 <span v-if="scope.row.controlType=='5'">下发策略</span>
+                                <span v-if="scope.row.controlType=='6'">清空策略</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -310,19 +321,6 @@
                 </div>
             </el-tab-pane>  
         </el-tabs>
-        <el-dialog
-            title="单灯序列号列表"
-            :visible.sync="dialogVisible"
-            width="25%">
-            <span style="display: inline-block;width: 100%;max-height: 300px;overflow: auto;">
-                <p v-for="item in serialNumberData" style="text-align: center;margin: 5px 0 5px 0;">
-                    {{item.lampSerialNumber}}
-                </p>
-            </span>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">关闭</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
 <script>
@@ -342,6 +340,27 @@ export default {
             serialNumber:'',
             valueType:'0',
             activeName:'0',
+            options:[{
+                value: '0',
+                label: '添加'
+                },{
+                value: '1',
+                label: '编辑'
+                },{
+                value: '2',
+                label: '删除'
+                },{
+                value: '3',
+                label: '绑定灯杆'
+                },{
+                value: '4',
+                label: '解绑灯杆'
+                },{
+                value: '5',
+                label: '绑定项目'
+                },
+            ],
+            value:'',
             options2:[{
                 value: '0',
                 label: '单灯'
@@ -362,8 +381,6 @@ export default {
                 }
             ],
             value4:'',
-            dialogVisible:false,
-            serialNumberData:'',
             options5:[
                 {
                     value: '1',
@@ -384,6 +401,10 @@ export default {
                 {
                     value: '5',
                     label: '下发策略'
+                },
+                {
+                    value: '6',
+                    label: '清空策略'
                 }
             ],
             value5:'',
@@ -423,6 +444,7 @@ export default {
             data.projectIds = sessionStorage.projectId
             if(this.activeName=='0'){
                 url='/v1/solin/lighting/lamp/log/operation'
+                data.operatType = this.value
                 data.operatModule = this.value2
                 data.serialNumber = this.serialNumber
             }
@@ -466,13 +488,6 @@ export default {
         sizechange(val){
             this.pageSize = val;
             this.ready()
-        },
-        //请求单灯序列号列表
-        serialNumber_click(val){
-            var array = [];
-            var val = JSON.parse(val)
-            this.serialNumberData = val
-            this.dialogVisible = true
         },
         //权限请求
         Jurisdiction(){

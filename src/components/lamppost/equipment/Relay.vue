@@ -18,11 +18,11 @@
             <div class="Relay_bottom_top">
                 <div class="search">
                     <label style="width:90px;">继电器名称:</label>
-                    <input v-model="nickName" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入继电器名称">
+                    <input v-model="nickName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入继电器名称">
                 </div>
                 <div class="search">
                     <label style="width:100px;">继电器编号:</label>
-                    <input v-model="relayNumber" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入继电器编号">
+                    <input v-model="relayNumber" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入继电器编号">
                 </div>
                 <div class="search">
                     <label style="width:90px;">继电器状态:</label>
@@ -86,7 +86,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                    prop="concentratorSn"
+                    prop="relaySceneName"
                     align='center'
                     :formatter="formatRole"
                     label="当前场景"
@@ -97,8 +97,8 @@
                     label="工作模式"
                     min-width="80">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.relaySceneId=='0'">正常</span>
-                            <span v-if="scope.row.relaySceneId=='1'">联动</span>
+                            <span v-if="scope.row.pattern=='0'">正常</span>
+                            <span v-if="scope.row.pattern=='1'">联动</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -133,7 +133,7 @@
         </div>
         <!-- 输出控制模态框 -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:450px;">
+            <div class="modal-dialog" style="width:550px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -160,7 +160,7 @@
                             min-width="110">
                             </el-table-column>
                             <el-table-column
-                            prop="nickName"
+                            prop="channelNumber"
                             align='center'
                             label="通道编号"
                             :formatter="formatRole"
@@ -236,7 +236,7 @@
                                 min-width="80">
                                 </el-table-column>
                                 <el-table-column
-                                prop="nickName"
+                                prop="channelNumber"
                                 align='center'
                                 label="通道编号"
                                 :formatter="formatRole"
@@ -271,7 +271,7 @@
                                 min-width="80">
                                 </el-table-column>
                                 <el-table-column
-                                prop="nickName"
+                                prop="channelNumber"
                                 align='center'
                                 label="通道编号"
                                 :formatter="formatRole"
@@ -483,7 +483,9 @@ export default {
                             type: 'success'
                         });
                         that.dialogVisible = false
-                        that.ready()
+                        setTimeout(function(){
+                            that.ready()
+                        },2000)
                     }else{
                         that.errorCode(data)
                     }
@@ -502,7 +504,7 @@ export default {
                 data:{
                     page:1,
                     size:500,
-                    relayId:that.site[0].id,
+                    relayIds:that.site[0].id,
                     nickName:'',
                     channelType:'1'
                 },
@@ -530,7 +532,7 @@ export default {
                 data:{
                     page:1,
                     size:500,
-                    relayId:val,
+                    relayIds:val,
                     nickName:'',
                     channelType:''
                 },

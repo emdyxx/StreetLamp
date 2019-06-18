@@ -22,7 +22,7 @@ export default {
         //初始化左侧树
         setTimeout(function(){
             that.readyLeft()
-        },500)
+        },300)
     },
     methods:{
         //请求左侧树
@@ -91,6 +91,7 @@ export default {
                                         datas[0].children.push(arr)
                                     }
                                     jsonarray= datas;
+                                    sessionStorage.menuId3 = data.result.menus[0].id
                                     if(sessionStorage.menuId3=='45'){
                                         that.$router.push({'path':'/LampPole'})
                                     }
@@ -148,7 +149,6 @@ export default {
                     }
                 }
             });
-            
         },
     },
     created() {

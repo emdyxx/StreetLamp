@@ -21,7 +21,7 @@
                                 <ul style="list-style:none;padding: 0;">
                                     <li v-for="item in mediatableData" :key=item.id :id=item.id class="programSimple_li">
                                         <el-button type="danger" icon="el-icon-delete" size='small' style="border-top-right-radius: 0;border-bottom-right-radius: 0;"></el-button>
-                                        <span @dragstart="dragstart" draggable="true" :id='item.id'>{{item.nickName}}</span>
+                                        <span @dragstart="dragstart" draggable="true" :id='item.id' :title=item.nickName>{{item.nickName}}</span>
                                     </li>
                                 </ul>
                                 <el-pagination
@@ -50,7 +50,7 @@
                                 <ul style="list-style:none;">
                                     <li v-for="item in mediatableData2" :key=item.id :id=item.id class="programSimple_li">
                                         <el-button type="danger" icon="el-icon-delete" size='small' style="border-top-right-radius: 0;border-bottom-right-radius: 0;"></el-button>
-                                        <span @dragstart="dragstart2" draggable="true" :id='item.id'>{{item.nickName}}</span>
+                                        <span @dragstart="dragstart2" draggable="true" :id='item.id' :title=item.nickName>{{item.nickName}}</span>
                                     </li>
                                 </ul>
                                 <el-pagination
@@ -168,7 +168,7 @@
                     </li>
                 </ul>
                 <div style="padding-top:10px;">
-                    <el-input v-model="programName" placeholder="节目名" size="small" style="width:126px;"></el-input>
+                    <el-input v-model="programName" placeholder="节目名" size="small" style="width:126px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     <el-input v-model=width placeholder="宽" size="small" :disabled="true" style="width:126px;margin-left:5px;">
                         <template slot="prepend">宽</template>
                     </el-input>
@@ -177,6 +177,7 @@
                     </el-input>
                     <el-button @click="mediaSave(0)" type="primary" size="small" style="margin:10px 10px 0 0;">保存</el-button>
                     <el-button @click="mediaSave(1)" type="primary" size="small" style="margin:10px 10px 0 0;">保存并退出</el-button>
+                    <el-button @click="backtrack" size="small" icon="el-icon-arrow-left" type="warning">返回</el-button>
                 </div>
             </div>
             <div class="programSenior_right_bottom">
@@ -210,27 +211,27 @@
                         </div>
                         <div>
                             距左
-                            <el-input v-model="timeData[i].site[j].marginLeft" placeholder="距左" size="small" style="width:196px;"></el-input>
+                            <el-input v-model="timeData[i].site[j].marginLeft" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w]/g,'')" placeholder="距左" size="small" style="width:196px;"></el-input>
                         </div>
                         <div>
                             距顶
-                            <el-input v-model="timeData[i].site[j].top" placeholder="距顶" size="small" style="width:196px;"></el-input>
+                            <el-input v-model="timeData[i].site[j].top" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w]/g,'')" placeholder="距顶" size="small" style="width:196px;"></el-input>
                         </div>
                         <div>
                             宽度
-                            <el-input v-model="timeData[i].site[j].width" placeholder="宽度" size="small" style="width:196px;"></el-input>
+                            <el-input v-model="timeData[i].site[j].width" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w]/g,'')" placeholder="宽度" size="small" style="width:196px;"></el-input>
                         </div>
                         <div>
                             高度
-                            <el-input v-model="timeData[i].site[j].height" placeholder="高度" size="small" style="width:196px;"></el-input>
+                            <el-input v-model="timeData[i].site[j].height" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w]/g,'')" placeholder="高度" size="small" style="width:196px;"></el-input>
                         </div>
                         <div>
                             开始时间(秒)
-                            <el-input v-model="timeData[i].site[j].playTime" @change="timeChange" placeholder="开始时间(秒)" size="small" style="width:146px;"></el-input>
+                            <el-input v-model="timeData[i].site[j].playTime" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w]/g,'')" @change="timeChange" placeholder="开始时间(秒)" size="small" style="width:146px;"></el-input>
                         </div>
                         <div>
                             持续时间(秒)
-                            <el-input :disabled="timeData[i].site[j].mediaType=='1'" v-model="timeData[i].site[j].timeSpan" @change="timeChange" placeholder="持续时间(秒)" size="small" style="width:146px;"></el-input>
+                            <el-input :disabled="timeData[i].site[j].mediaType=='1'" v-model="timeData[i].site[j].timeSpan" @change="timeChange" placeholder="持续时间(秒)" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w]/g,'')" size="small" style="width:146px;"></el-input>
                         </div>
                         <div v-if="timeData[i].site[j].mediaType=='2'">
                             速度(像素)
@@ -301,16 +302,7 @@ export default {
             timeData:[
                 {
                     site:[
-                        // {
-                        //     nickName:'',
-                        //     mediaMime:'',
-                        //     marginLeft:'',
-                        //     top:'',
-                        //     width:'',
-                        //     height:'',
-                        //     playTime:'',
-                        //     timeSpan:'',
-                        // }
+                        
                     ]
                 }
             ],
@@ -323,6 +315,7 @@ export default {
             j:'',
             timer:null,//单行文本循环
             editorContent: '',
+            clientX:'',
         }
     },
     mounted(){
@@ -450,8 +443,16 @@ export default {
                 this.timeData.push({site:[]})
             }
             if(val=='1'){
+                console.log(index,this.timeData)
+                if(this.timeData[index].site.length>0){
+                    this.$message({
+                        message: '请先移除时间轴所有媒体',
+                        type:'error',
+                        showClose: true,
+                    });
+                    return;
+                }
                 this.timeData.splice(index,1)
-                this.time()
             }
             if(val=='2'){}
             if(val=='3'){
@@ -523,7 +524,6 @@ export default {
         drop (e) {
             var that = this
             e.stopPropagation(); 
-            console.log('鼠标抬起')
             for(let i = 0;i<this.timeData[Number(e.target.id)].site.length;i++){
                 if(this.timeData[Number(e.target.id)].site[i].id == this.moveData.id){
                     return
@@ -534,6 +534,7 @@ export default {
                 this.moveData.playTime = Number(this.timeData[Number(e.target.id)].site[S].timeSpan)+Number(this.timeData[Number(e.target.id)].site[S].playTime)
             }
             this.timeData[Number(e.target.id)].site.push(JSON.parse(JSON.stringify(this.moveData)))
+            
             setTimeout(() => {
                 $('.resizable').resizable({ 
                     handles: 'e',
@@ -546,7 +547,7 @@ export default {
                     stop:function( e, ui ) {
                         that.i = Number(e.target.offsetParent.id)
                         that.j = Number(e.target.id)
-                        that.timeData[that.i].site[that.j].timeSpan = (ui.size.width+2)/10
+                        that.timeData[that.i].site[that.j].timeSpan = Math.round((ui.size.width+2)/10)
                         setTimeout(() => {
                             that.timeChange()
                             that.time()
@@ -561,10 +562,14 @@ export default {
                     axis:'x',
                     containment:'parent',
                     grid:[10,0],
+                    // start: function( e, ui ) {
+                    //     that.clientX = e.clientX
+                    // }, 　　
                     stop: function( e, ui ) {
+                        e.target.style.top = 0
                         that.i = Number(e.target.offsetParent.id)
                         that.j = Number(e.target.id)
-                        that.timeData[that.i].site[that.j].playTime = ui.position.left/10
+                        that.timeData[that.i].site[that.j].playTime = Math.round(ui.position.left/10)
                         setTimeout(() => {
                             that.timeChange()
                             that.time()
@@ -608,6 +613,7 @@ export default {
         },
         //视图放大缩小
         scale(val){
+            console.log(123)
             var that = this
             if(val=='0'){
                 this.scaleLevel = this.scaleLevel+0.5
@@ -629,6 +635,7 @@ export default {
         },
         //判断指针所在的的时间,显示对应时间段的媒体
         time(){
+            console.log(456)
             var that = this;
             var left = $('.axis').css('left').split('px')
             left = Number(left[0])/10
@@ -654,8 +661,8 @@ export default {
                 $('.viewDraggable').draggable({
                     containment:'parent',
                     stop:function( e, ui ){
-                        that.timeData[e.target.attributes.a.value].site[e.target.attributes.b.value].marginLeft = ui.position.left
-                        that.timeData[e.target.attributes.a.value].site[e.target.attributes.b.value].top = ui.position.top
+                        that.timeData[e.target.attributes.a.value].site[e.target.attributes.b.value].marginLeft = Math.round(ui.position.left)
+                        that.timeData[e.target.attributes.a.value].site[e.target.attributes.b.value].top = Math.round(ui.position.top)
                     },
                 })
                 //缩放
@@ -663,8 +670,8 @@ export default {
                     containment:'parent',
                     handles: " n, e, s, w, ne, se, sw, nw ",
                     stop:function( e,ui ){
-                        that.timeData[e.target.attributes.a.value].site[e.target.attributes.b.value].width = ui.size.width
-                        that.timeData[e.target.attributes.a.value].site[e.target.attributes.b.value].height = ui.size.height
+                        that.timeData[e.target.attributes.a.value].site[e.target.attributes.b.value].width = Math.round(ui.size.width)
+                        that.timeData[e.target.attributes.a.value].site[e.target.attributes.b.value].height = Math.round(ui.size.height)
                     },
                 })
                 //文本动画
@@ -694,6 +701,8 @@ export default {
                     }
                 },50)
             }, 20);
+            if(that.i==''||that.j==''){return}
+            console.log(that.timeData[that.i])
             if(that.timeData[that.i].site[that.j].mediaType=='2'){
                 $('#editor_content').html('')
                 setTimeout(function(){
@@ -722,7 +731,6 @@ export default {
         },
         //下侧视图中的媒体  鼠标按下事件
         view_mousedown(e){
-            console.log(e)
             if(e.target.className=='textMsgRoll_a'){
                 var i1 = e.target.offsetParent.offsetParent.attributes.a.value
                 var j1 = e.target.offsetParent.offsetParent.attributes.b.value
@@ -783,6 +791,7 @@ export default {
                 });
                 return;
             }
+            this.timeData[this.i].site[this.j].playTime=''
             this.timeData[this.i].site.splice(Number(this.j),1)
             this.i=''
             this.j=''
@@ -812,9 +821,9 @@ export default {
                 for(var j=0;j<that.timeData[i].site.length;j++){
                     that.timeData[i].site[j].layer = i+1
                     that.timeData[i].site[j].sort = j
-                    if(sessionStorage.programtype=='0'){
+                    // if(sessionStorage.programtype=='0'){
                         that.timeData[i].site[j].mediaId = that.timeData[i].site[j].id
-                    }
+                    // }
                 }
             }
             for(var i=0;i<that.timeData.length;i++){
@@ -833,10 +842,10 @@ export default {
             data.width = sessionStorage.width;
             data.height = sessionStorage.height;
             data.nickName = that.programName;
-            data.projectId = '1';
+            data.projectId = sessionStorage.projectId;
             data.programType = '1';
             data.programDetailsDtos = array
-            console.log(data)
+            // return
             $.ajax({
                 type:type,
                 async:true,
@@ -904,7 +913,6 @@ export default {
                                 }
                             }
                         }
-                        console.log(that.timeData)
                         setTimeout(() => {
                             $('.resizable').resizable({ 
                                 handles: 'e',
@@ -949,6 +957,8 @@ export default {
                 }
             })
         },
+        //返回上一级
+        backtrack(){this.$router.go(-1);},
     },
     created(){
         this.mediaready()

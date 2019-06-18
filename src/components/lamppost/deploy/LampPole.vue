@@ -11,7 +11,7 @@
             <div class="LampPole_bottom_top">
                 <div class="search">
                     <label>灯杆名称:</label>
-                    <input type="text" v-model="nickName" style="width:126px;" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入灯杆名称">
+                    <input type="text" v-model="nickName" style="width:126px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入灯杆名称">
                 </div>
                 <div class="search">
                     <label>灯杆类型:</label>
@@ -26,7 +26,7 @@
                 </div>
                 <div class="search">
                     <label>灯杆编号:</label>
-                    <input type="text" v-model="serialNumber" style="width:126px;" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入灯杆编号">
+                    <input type="text" v-model="serialNumber" style="width:126px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入灯杆编号">
                 </div>
                 <!-- <div class="search">
                     <label style="width:25px;">省:</label>
@@ -135,6 +135,14 @@
                         </template>
                     </el-table-column>
                     <el-table-column
+                    label="关联传感器"
+                    align='center'
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <button @click="loar(scope.row.id)" style="height:20px;line-height:15px;">...</button>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
                     prop="remark"
                     label="备注"
                     align='center'
@@ -168,7 +176,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label><span class="Required">*</span>昵称:</label>
-                            <input type="text" v-model="LampPoleData.nickName" class="form-control" id="email" placeholder="请输入名称">
+                            <input type="text" v-model="LampPoleData.nickName" class="form-control" id="email" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                             <label>灯杆类型:</label>
                             <el-select v-model="value" size='small' style="width:126px" placeholder="请选择">
                                 <el-option
@@ -216,9 +224,9 @@
                                 </el-option>
                             </el-select>
                             <label>地址:</label>
-                            <input type="text" v-model="LampPoleData.location" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入地址">
+                            <input type="text" v-model="LampPoleData.location" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入地址">
                         </div> 
-                        <div class="form-group" style=" justify-content: left;margin-left: 35px;">
+                        <div class="form-group">
                             <label>备注:</label>
                             <el-input
                                 type="textarea"
@@ -228,11 +236,11 @@
                                 v-model="LampPoleData.remark">
                             </el-input>
                             <label><span class="Required">*</span>灯杆编号:</label>
-                            <input type="text" v-model="LampPoleData.serialNumber" id="serialNumber" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入灯杆编号">
+                            <input type="text" v-model="LampPoleData.serialNumber" id="serialNumber" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入灯杆编号">
                         </div>
                         <div class="form-group" v-if="addtype=='0'">
                             <el-button v-if="addLamp" @click="addlamp(0)" type="primary" size='small'>添加灯具</el-button>
-                            <el-button v-if="relationLamp" @click="LampPole_data(0)" type="primary" size='small'>关联灯具</el-button>
+                            <!-- <el-button v-if="relationLamp" @click="LampPole_data(0)" type="primary" size='small'>关联灯具</el-button> -->
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -550,7 +558,7 @@
                             width="102">
                             </el-table-column>
                             <el-table-column
-                            prop="concentratorSN"
+                            prop="concentratorSn"
                             align='center'
                             label="集中器标识"
                             :formatter="formatRole"
@@ -607,7 +615,7 @@
                             width="102">
                             </el-table-column>
                             <el-table-column
-                            prop="concentratorSN"
+                            prop="concentratorSn"
                             align='center'
                             label="集中器标识"
                             :formatter="formatRole"
@@ -648,9 +656,144 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
+        <!-- 关联传感器 -->
+        <div class="modal fade" id="loarModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <div>
+                            <el-button v-if="relationSensor" @click="loar_data(0)" type="primary" size='small'>关联传感器</el-button>
+                            <el-button v-if="relationSensor" @click="loar_data(1)" type="primary" size='small'>解除关联</el-button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div style="text-align: left;">已关联传感器</div>
+                        <el-table
+                            :data="tableData8"
+                            @row-click="clickRow8" 
+                            ref="moviesTable8"
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            @selection-change="SelectionChange8"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="nickName"
+                            align='center'
+                            label="昵称"
+                            :formatter="formatRole"
+                            min-width="110">
+                            </el-table-column>
+                            <el-table-column
+                            prop="serialNumber"
+                            align='center'
+                            :formatter="formatRole"
+                            label="序列号"
+                            min-width="110">
+                            </el-table-column>
+                            <el-table-column
+                            prop="modelName"
+                            align='center'
+                            :formatter="formatRole"
+                            label="型号"
+                            min-width="120">
+                            </el-table-column>
+                            <el-table-column
+                            prop="remark"
+                            align='center'
+                            label="备注"
+                            :formatter="formatRole"
+                            show-overflow-tooltip>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- 点击关联传感器 -->
+        <div class="modal fade" id="loarModalTwo"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4>请选择传感器进行关联</h4>
+                    </div>
+                    <div class="modal-body">
+                        <el-table
+                            :data="tableData9"
+                            @row-click="clickRow9" 
+                            ref="moviesTable9"
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            @selection-change="SelectionChange9"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="nickName"
+                            align='center'
+                            label="昵称"
+                            :formatter="formatRole"
+                            min-width="110">
+                            </el-table-column>
+                            <el-table-column
+                            prop="serialNumber"
+                            align='center'
+                            :formatter="formatRole"
+                            label="序列号"
+                            min-width="110">
+                            </el-table-column>
+                            <el-table-column
+                            prop="modelName"
+                            align='center'
+                            :formatter="formatRole"
+                            label="型号"
+                            min-width="120">
+                            </el-table-column>
+                            <el-table-column
+                            prop="remark"
+                            align='center'
+                            label="备注"
+                            :formatter="formatRole"
+                            show-overflow-tooltip>
+                            </el-table-column>
+                        </el-table>
+                        <div class="block">
+                            <el-pagination
+                            background
+                            @size-change="sizechange9"
+                            @current-change="currentchange9"
+                            :current-page="pageIndex9"
+                            :page-sizes="[10, 20, 30, 50]"
+                            :page-size="pageSize9"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="total9">
+                            </el-pagination>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button @click="Relationfour" type="button" class="btn btn-primary">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+
         <!-- 添加灯具 -->
         <div class="modal fade" id="addlamp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:500px;">
+            <div class="modal-dialog" style="width:600px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -659,15 +802,9 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label><span class="Required">*</span>灯控器标识:</label>
-                            <input type="text" v-model="lampData.serialNumber" class="form-control" id="serialNumber" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入单灯序列号">
-                            <label><span class="Required">*</span>集中器标识:</label>
-                            <input type="text" v-model="lampData.concentratorSN" class="form-control" id="concentratorSN" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入集中器标识">
-                        </div> 
-                        <div class="form-group">
-                            <label><span class="Required">*</span>昵称:</label>
-                            <input type="text" v-model="lampData.nickName" class="form-control" id="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入单灯名称">
+                            <input type="text" v-model="lampData.serialNumber" class="form-control" id="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入灯控器标识">
                             <label><span class="Required">*</span>型号:</label>
-                            <el-select v-model="lampData.modelId" size='small' style='width:126px;' placeholder="请选择">
+                            <el-select v-model="lampData.modelId" @change="modelChange" size='small' style='width:176px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options4"
                                 :key="item.id"
@@ -677,12 +814,27 @@
                             </el-select>
                         </div> 
                         <div class="form-group">
+                            <label><span class="Required">*</span>昵称:</label>
+                            <input type="text" v-model="lampData.nickName" class="form-control" id="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入单灯名称">
+                            <label><span class="Required" v-if="modelType=='1'">*</span>集中器标识:</label>
+                            <el-select v-model="lampData.concentratorSn" :disabled="modelType=='2'" clearable size='small' style='width:175px;' placeholder="请选择">
+                                <el-option
+                                    v-for="item in concentratorSNData"
+                                    :key="item.concentratorSn"
+                                    :label="item.concentratorSn"
+                                    :value="item.concentratorSn">
+                                    <span style="float: left">{{ item.concentratorName }}</span>
+                                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.concentratorSn }}</span>
+                                </el-option>
+                            </el-select>
+                        </div> 
+                        <div class="form-group">
                             <label><span class="Required">*</span>灯具编号:</label>
                             <input type="text" v-model="lampData.lampNumber" class="form-control" id="lampNumber" placeholder="请输入灯具编号(自定义)">
                             <label>备注:</label>
                             <el-input
                                 type="textarea"
-                                style="width:126px"
+                                style="width:176px"
                                 :rows="1"
                                 v-model="lampData.mark"
                                 placeholder="请输入内容">
@@ -771,14 +923,16 @@ export default {
             value3:'',
             value3_search:'',
             options4:[],
+            concentratorSNData:[],
             lampData:{
                 serialNumber:'',
-                concentratorSN:'',
+                concentratorSn:'',
                 nickName:'',
                 modelId:'',
                 lampNumber:'1',
                 mark:'',
             },//添加灯具的信息
+            modelType:'',
             LampPoleData:{
                 nickName:'',
                 longitude:'',
@@ -811,6 +965,13 @@ export default {
             pageIndex7:1,
             pageSize7:10,
             total7:10,
+            tableData8:[],
+            site8:[],
+            tableData9:[],
+            site9:[],
+            pageIndex9:1,
+            pageSize9:10,
+            total9:10,
         }
     },
     mounted(){
@@ -845,6 +1006,12 @@ export default {
         clickRow7(row){
             this.$refs.moviesTable7.toggleRowSelection(row)
         },
+        clickRow8(row){
+            this.$refs.moviesTable8.toggleRowSelection(row)
+        },
+        clickRow9(row){
+            this.$refs.moviesTable9.toggleRowSelection(row)
+        },
         //省请求
         province(val){
             var that = this;
@@ -864,7 +1031,6 @@ export default {
                         if(val=='3'){
                             // that.value1_search = data.result.areas[0].id
                         }else{
-                            console.log(val)
                             if(val=='1'){
                                 if(that.site[0].provinceId==''||that.site[0].provinceId==null||that.site[0].provinceId==undefined){}else{
                                     that.value1 = Number(that.site[0].provinceId)
@@ -999,7 +1165,6 @@ export default {
                 this.value = this.site[0].poleType
                 this.LampPoleData.location = this.site[0].location
                 this.LampPoleData.remark = this.site[0].remark
-                console.log(this.site[0].coord)
                 if(this.site[0].coord==''||this.site[0].coord==null||this.site[0].coord==undefined){
                 }else{
                     var arr = this.site[0].coord.split(','); 
@@ -1055,6 +1220,7 @@ export default {
             data.remark = this.LampPoleData.remark;
             data.serialNumber = this.LampPoleData.serialNumber;
             data.projectId = sessionStorage.projectId
+            console.log(data)
             $.ajax({
                 type:type,
                 async:true,
@@ -1228,7 +1394,7 @@ export default {
                     serialNumber:'',
                     areaId:'',
                     poleId:val,
-                    projectId:sessionStorage.projectId,
+                    projectIds:sessionStorage.projectId,
                     online:''
                 }, 
                 success:function(data){
@@ -1417,7 +1583,7 @@ export default {
                     status:'',
                     serialNumber:'',
                     poleId:this.poleId,
-                    projectId:sessionStorage.projectId
+                    projectIds:sessionStorage.projectId
                 }, 
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -1495,7 +1661,7 @@ export default {
                     status:'',
                     serialNumber:'',
                     poleId:'0',
-                    projectId:sessionStorage.projectId
+                    projectIds:sessionStorage.projectId
                 }, 
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -1569,7 +1735,7 @@ export default {
                 page:1,
                 size:10,
                 poleId:this.poleId,
-                projectId:sessionStorage.projectId
+                projectIds:sessionStorage.projectId
             }
             $.ajax({
                 type:'get',
@@ -1609,7 +1775,7 @@ export default {
                 for(var i = 0;i<that.site6.length;i++){
                     arr.push(that.site6[i].id)
                 }
-                data.envs  = arr.join(',')
+                data.envs  = arr
                 data.poleId = 0;
                 data.projectId = sessionStorage.projectId
                 data.command = '2'
@@ -1618,7 +1784,8 @@ export default {
                     async:true,
                     dataType:'json',
                     url:that.serverurl+'/v1/solin/sensor/env/pole',
-                    data:data, 
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data), 
                     success:function(data){
                         if(data.errorCode=='0'){
                             that.$message({
@@ -1671,7 +1838,7 @@ export default {
                 arr.push(that.site7[i].id)
             }
             data.poleId = this.poleId;
-            data.envs = arr.join(',')
+            data.envs = arr
             data.projectId = sessionStorage.projectId
             data.command = '1'
             $.ajax({
@@ -1679,7 +1846,8 @@ export default {
                 async:true,
                 dataType:'json',
                 url:that.serverurl+'/v1/solin/sensor/env/pole',
-                data:data, 
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data), 
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.$message({
@@ -1694,34 +1862,188 @@ export default {
                 }
             })
         },
+
+        //关联传感器
+        loar(val){
+            if(sessionStorage.projectId=='0'){
+                this.$message({
+                    message: '此操作请选择具体项目!',
+                    type: 'warning'
+                });
+                return;
+            }
+            this.poleId = val
+            this.loarData();
+            $('#loarModal').modal('show')
+            /* 完成拖拽 */
+            $('#loarModal').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#loarModal').css("overflow", "hidden")
+        },
+        //获取已关联传感器
+        loarData(){
+            var that = this;
+            var data = {
+                page:1,
+                size:10,
+                command:'1',
+                poleId:this.poleId,
+                projectIds:sessionStorage.projectId
+            }
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/lora/pole',
+                contentType:'application/json;charset=UTF-8',
+                data:data,
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tableData8 = data.result.list
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
+        //获取未关联传感器
+        loarData2(){
+            var that = this;
+            var data = {
+                page:1,
+                size:10,
+                command:'2',
+                poleId:this.poleId,
+                projectIds:sessionStorage.projectId
+            }
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/lora/pole',
+                contentType:'application/json;charset=UTF-8',
+                data:data,
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tableData9 = data.result.list
+                        that.total9 = data.result.total
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
+        SelectionChange8(val){this.site8=val;},
+        SelectionChange9(val){this.site9=val;},
+        sizechange9(val){this.pageSize9=val;this.loarData2()},
+        currentchange9(val){this.pageIndex9=val;this.loarData2()},
+        //点击关联传感器/解除关联传感器
+        loar_data(val){
+            var that = this;
+            if(val=='0'){
+                this.loarData2()
+                $('#loarModalTwo').modal('show')
+            }
+            if(val=='1'){
+                if(this.site8.length==0){
+                    this.$message({
+                        message: '请选择传感器进行操作!',
+                        type: 'error'
+                    });
+                    return;
+                }
+                var data = {};
+                var arr = [];
+                for(var i = 0;i<that.site8.length;i++){
+                    arr.push(that.site8[i].id)
+                }
+                data.loraSensors  = arr
+                data.poleId = 0;
+                data.projectId = sessionStorage.projectId
+                data.command = '2'
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/lora/device/pole',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data), 
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '解除关联成功!',
+                                type: 'success'
+                            });
+                            that.loarData()
+                        }else{
+                            that.errorCode(data)
+                        }
+                    }
+                })
+            }
+        },
+        ////关联传感器--确定按钮
+        Relationfour(){
+            var that = this
+            var data = {};
+            var arr = [];
+            for(var i = 0;i<that.site9.length;i++){
+                arr.push(that.site9[i].id)
+            }
+            data.poleId = this.poleId;
+            data.loraSensors = arr
+            data.projectId = sessionStorage.projectId
+            data.command = '1'
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/lora/device/pole',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data), 
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '关联成功!',
+                            type: 'success'
+                        });
+                        $('#loarModalTwo').modal('hide')
+                        that.loarData()
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
+
         //添加灯具
         addlamp(){
             var that = this
             $('#addlamp').modal('show')
             $('#lampNumber').attr('disabled','disabled')
+            that.concentrator()
             $.ajax({
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/model/getModel',
+                url:that.serverurl+'/v1/solin/lighting/model',
                 contentType:'application/json;charset=UTF-8',
-                data:{
-                    modelType:'1'
-                },
+                data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
-                        that.options4 = data.result.models
-                        that.lampData.modelId = data.result.models[0].id
+                        that.options4 = data.result.mapList
+                        that.lampData.modelId = data.result.mapList[0].id
+                        that.modelChange()
                     }else{
                         that.errorCode(data)
                     }
                 }
             })
             this.lampData.serialNumber=''
-            this.lampData.concentratorSN=''
             this.lampData.nickName='',
             this.lampData.modelName=''
-            // this.lampData.lampNumber = ''
             this.lampData.mark=''
             /* 完成拖拽 */
             $('#addlamp').draggable({
@@ -1735,7 +2057,7 @@ export default {
             var that = this;
             //中文验证
             var result = /[\u4E00-\u9FA5\uF900-\uFA2D]/;
-            if(this.lampData.serialNumber==''||this.lampData.concentratorSN==''||this.lampData.nickName==''||this.lampData.lampNumber==''){
+            if(this.lampData.serialNumber==''||this.lampData.nickName==''||this.lampData.lampNumber==''){
                 this.$message({
                     message: '必填字段不能为空!',
                     type: 'error'
@@ -1744,15 +2066,15 @@ export default {
             }
             if(result.test(this.lampData.serialNumber)){
                 that.$message({
-                    message: '终端ID不能有中文',
+                    message: '灯控器标示不能有中文',
                     type: 'error',
                     showClose: true,
                 });
                 return;
             }
-            if(result.test(this.lampData.concentratorSN)){
-                that.$message({
-                    message: '控制器ID不能有中文',
+            if(this.modelType=='1'&&this.lampData.concentratorSn==''){
+                this.$message({
+                    message: '此型号下,集中器标识不能为空',
                     type: 'error',
                     showClose: true,
                 });
@@ -1775,6 +2097,38 @@ export default {
                             type: 'success'
                         });
                         $('#addlamp').modal('hide')
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
+        //灯具型号change事件
+        modelChange(){
+            for(var i = 0;i<this.options4.length;i++){
+                if(this.lampData.modelId==this.options4[i].id){
+                    this.modelType = this.options4[i].modelType
+                }
+            }
+            if(this.modelType!='1'){this.lampData.concentratorSn = ''}
+        },
+        //请求集中器标示
+        concentrator(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/concentrator',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    page:1,
+                    size:500,
+                    projectIds:sessionStorage.projectId,
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.concentratorSNData = data.result.list
                     }else{
                         that.errorCode(data)
                     }
@@ -1878,8 +2232,9 @@ export default {
         },
     },
     created(){
-        this.ready()
-        this.Jurisdiction()
+        var that = this
+        that.Jurisdiction()
+        that.ready()
     },
 }
 </script>
@@ -1897,7 +2252,7 @@ export default {
 
 .modal-body>div{margin-bottom: 10px;text-align: center;}
 .form-group{display:flex;justify-content: center;}
-.form-group>label{width: 75px;line-height: 34px;text-align: center;}
+.form-group>label{width: 95px;line-height: 34px;text-align: center;}
 .form-group>input{width: 125px;}
 .modal_body_table>div{margin-bottom: 10px;border: 1px solid #E4E4F1;padding: 5px;text-align: center;}
 

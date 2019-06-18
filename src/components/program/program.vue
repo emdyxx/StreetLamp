@@ -38,6 +38,12 @@
                     </template>
                 </el-table-column>
                 <el-table-column
+                prop="programSizeM"
+                align='center'
+                label="大小"
+                min-width="60">
+                </el-table-column>
+                <el-table-column
                 prop="width"
                 align='center'
                 label="宽(像素)"
@@ -87,10 +93,10 @@
                         <h4 class="modal-title" id="myModalLabel">创建节目</h4>
                     </div>
                     <div class="modal-body" style="text-align:center;">
-                        <el-input v-model="width" size='small' style="width:256px;">
+                        <el-input v-model="width" size='small' maxlength="10" style="width:256px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w]/g,'')">
                             <template slot="prepend">宽</template>
                         </el-input>
-                        <el-input v-model="height" size='small' style="width:256px;margin-left:20px;">
+                        <el-input v-model="height" size='small' maxlength="10" style="width:256px;margin-left:20px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w]/g,'')">
                             <template slot="prepend">高</template>
                         </el-input>
                     </div>
@@ -110,11 +116,11 @@
                         <h4 class="modal-title" id="myModalLabel">创建节目</h4>
                     </div>
                     <div class="modal-body" style="text-align:center;">
-                        <el-input v-model="width" size='small' style="width:256px;">
-                            <template slot="prepend">宽</template>
+                        <el-input v-model="width" size='small' style="width:256px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w]/g,'')">
+                            <template slot="prepend" maxlength="10">宽</template>
                         </el-input>
-                        <el-input v-model="height" size='small' style="width:256px;margin-left:20px;">
-                            <template slot="prepend">高</template>
+                        <el-input v-model="height" size='small' style="width:256px;margin-left:20px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w]/g,'')">
+                            <template slot="prepend" maxlength="10">高</template>
                         </el-input>
                     </div>
                     <div class="modal-footer">
@@ -140,8 +146,8 @@ export default {
             noticeIndex:1,
             noticeSize:10,
             Total:10,
-            width:'80',
-            height:'160',
+            width:'',
+            height:'',
             type:'0',
             programType:'',
         }
@@ -239,6 +245,13 @@ export default {
         //点击确定创建简易/高级节目按钮
         SuremyModal(val){
             var that = this;
+            if(that.width==''||that.height==''){
+                that.$message({
+                    message: '宽,高不能为空!',
+                    type: 'error'
+                });
+                return;
+            }
             sessionStorage.width = that.width
             sessionStorage.height = that.height
             sessionStorage.programtype = that.type
@@ -279,7 +292,7 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.$message({
-                            message: '删除成功!',
+                            message: '设置成功!',
                             type: 'success'
                         });
                         that.ready()

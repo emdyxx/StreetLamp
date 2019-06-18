@@ -65,21 +65,68 @@ export default {
       sessionStorage.menuId2 = id
       sessionStorage.headercolorType = val
       this.headercolorType = val
-      // if(val=='1'){
-      //   sessionStorage.menuId3='01'
-      //   this.$router.push({'path':'/pandect'})
-      // }
       if(val=='2'){
-        sessionStorage.menuId3='45'
         this.$router.push({'path':'/deploy'})
+        if(sessionStorage.menuId3=='45'){
+            that.$router.push({'path':'/LampPole'})
+        }
+        if(sessionStorage.menuId3=='46'){
+            that.$router.push({'path':'/Lampsandlanterns'})
+        }
+        if(sessionStorage.menuId3=='47'){
+            that.$router.push({'path':'/advertisingscreen'})
+        }
+        if(sessionStorage.menuId3=='48'){
+            that.$router.push({'path':'/sensor'})
+        }
+        if(sessionStorage.menuId3=='49'){ //loar
+            that.$router.push({'path':'/loraSensor'})
+        }
+        if(sessionStorage.menuId3=='50'){
+            that.$router.push({'path':'/solinRelayDeploy'})
+        }
+        if(sessionStorage.menuId3=='80'){
+            that.$router.push({'path':'/concentrator'})
+        }
       }
       if(val=='3'){
-        sessionStorage.menuId3='51'
         this.$router.push({'path':'/equipment'})
+        if(sessionStorage.menuId3=='51'){
+            that.$router.push({'path':'lampslanterns'})
+        }
+        if(sessionStorage.menuId3=='52'){
+            that.$router.push({'path':'advertisingScreens'})
+        }
+        if(sessionStorage.menuId3=='53'){
+            that.$router.push({'path':'sensors'})
+        }
+        if(sessionStorage.menuId3=='54'){
+            that.$router.push({'path':'loraQuery'})
+        }
+        if(sessionStorage.menuId3=='55'){
+            that.$router.push({'path':'Relay'})
+        }
       }
       if(val=='4'){
-        sessionStorage.menuId3='56'
         this.$router.push({'path':'/DeviceLog'})
+        if(sessionStorage.menuId3=='56'){
+            that.$router.push({'path':'/LampPoleJournal'})
+        }
+        if(sessionStorage.menuId3=='57'){
+            that.$router.push({'path':'/lampJournal'})
+        }
+        if(sessionStorage.menuId3=='58'){
+            that.$router.push({'path':'/screenJournal'})
+        }
+        if(sessionStorage.menuId3=='59'){
+            that.$router.push({'path':'/sensorJournal'})
+        }
+        if(sessionStorage.menuId3=='60'){
+            that.$router.push({'path':'/loraJournal'})
+        }
+        if(sessionStorage.menuId3=='61'){
+            that.$router.push({'path':'/RelayJournal'})
+        }
       }
     },
     //获取有权限的项目
@@ -156,11 +203,20 @@ export default {
         if(sessionStorage.menuId3=='59'){
             that.$router.push({'path':'/sensorJournal'})
         }
+        if(sessionStorage.menuId3=='60'){
+            that.$router.push({'path':'/loraJournal'})
+        }
+        if(sessionStorage.menuId3=='61'){
+            that.$router.push({'path':'/RelayJournal'})
+        }
         if(sessionStorage.menuId3=='54'||sessionStorage.menuId3=='64'||sessionStorage.menuId3=='65'||sessionStorage.menuId3=='66'||sessionStorage.menuId3=='67'||sessionStorage.menuId3=='68'||sessionStorage.menuId3=='69'||sessionStorage.menuId3=='70'){
             that.$router.push({'path':'loading'})
             setTimeout(function(){
                 that.$router.push({'path':'loraQuery'})
             },200)
+        }
+        if(sessionStorage.menuId3=='80'){
+            that.$router.push({'path':'/concentrator'})
         }
       },200)
     },
@@ -181,7 +237,6 @@ export default {
                       sessionStorage.menuId2 = data.result.menus[0].id
                       if(data.result.menus[0].id=='34'){
                         sessionStorage.headercolorType = '2'
-                        sessionStorage.menuId3 = '45'
                         that.$router.push({'path':'/deploy'})
                       }
                       if(data.result.menus[0].id=='35'){

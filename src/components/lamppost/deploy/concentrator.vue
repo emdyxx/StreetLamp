@@ -24,7 +24,7 @@
                 width="55">
                 </el-table-column>
                 <el-table-column
-                prop="nickName"
+                prop="concentratorName"
                 align='center'
                 label="集中器名字"
                 min-width="100">
@@ -34,6 +34,15 @@
                 align='center'
                 label="集中器序列号"
                 min-width="100">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="集中器状态"
+                min-width="100">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.online=='0'">离线</span>
+                        <span v-if="scope.row.online=='1'">在线</span>
+                    </template>
                 </el-table-column>
                 <el-table-column
                 prop="createTime"
@@ -68,11 +77,11 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label style="width:105px"><span class="Required">*</span>集中器名字:</label>
-                            <input style="width:155px" type="text" v-model="myModaldata.nickName" class="form-control" id="serialNumber" placeholder="请输入集中器名字">
+                            <input style="width:155px" type="text" v-model="myModaldata.concentratorName" class="form-control" id="serialNumber" placeholder="请输入集中器名字" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" v-if="myModal=='0'">
                             <label style="width:105px"><span class="Required">*</span>集中器序列号:</label>
-                            <input style="width:155px" type="text" v-model="myModaldata.concentratorSn" class="form-control" id="concentratorSN" placeholder="请输入集中器序列号">
+                            <input style="width:155px" type="text" v-model="myModaldata.concentratorSn" class="form-control" id="concentratorSN" placeholder="请输入集中器序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -97,7 +106,7 @@ export default {
             myModaltotal:10,
             myModal:'0',
             myModaldata:{
-                nickName:'',
+                concentratorName:'',
                 concentratorSn:''
             }
         }
@@ -122,7 +131,7 @@ export default {
             if(val=='0'){
                 that.myModal = '0'
                 $('#myModal2').modal('show')
-                that.myModaldata.nickName = ''
+                that.myModaldata.concentratorName = ''
                 that.myModaldata.concentratorSn = ''
             }
             if(val=='1'){
@@ -135,7 +144,7 @@ export default {
                 }
                 that.myModal = '1'
                 $('#myModal2').modal('show')
-                that.myModaldata.nickName = that.myModalSite[0].nickName
+                that.myModaldata.concentratorName = that.myModalSite[0].concentratorName
                 that.myModaldata.concentratorSn = that.myModalSite[0].concentratorSn
             }
             if(val=='2'){
@@ -159,7 +168,7 @@ export default {
                         type:'post',
                         async:true,
                         dataType:'json',
-                        url:that.serverurl+'/v1/solin/lighting/concentrator/deletes',
+                        url:that.serverurl+'/v1/solin/concentrator/deletes',
                         contentType:'application/json;charset=UTF-8',
                         data:JSON.stringify({
                             concentrators:arr
@@ -188,8 +197,7 @@ export default {
         //集中器管理添加,修改保存
         myModalsave(){
             var that = this
-            console.log(1)
-            if(that.myModaldata.nickName==''||that.myModaldata.concentratorSn==''){
+            if(that.myModaldata.concentratorName==''||that.myModaldata.concentratorSn==''){
                 that.$message({
                     message: '必填数据不能为空!',
                     type: 'error'
@@ -206,15 +214,14 @@ export default {
                 type = 'put'
                 data.id = that.myModalSite[0].id
             }
-            console.log(2)
-            data.nickName = that.myModaldata.nickName
+            data.concentratorName = that.myModaldata.concentratorName
             data.concentratorSn = that.myModaldata.concentratorSn
             data.projectId = sessionStorage.projectId
             $.ajax({
                 type:type,
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/lighting/concentrator',
+                url:that.serverurl+'/v1/solin/concentrator',
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify(data),
                 success:function(data){
@@ -238,11 +245,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/lighting/concentrator',
+                url:that.serverurl+'/v1/solin/concentrator',
                 contentType:'application/json;charset=UTF-8',
                 data:{
-                    nickName:'',
-                    concentratorSn:'',
                     page:that.myModalpageIndex,
                     size:that.myModalpageSize,
                     projectIds:sessionStorage.projectId,

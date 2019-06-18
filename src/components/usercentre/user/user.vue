@@ -16,15 +16,15 @@
                     <div class="usermanage_bottom_top">
                         <div class="search">
                             <label>用户名:</label>
-                            <input type="text" v-model="username" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
+                            <input type="text" v-model="username" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
                         </div>
                         <div class="search">
                             <label>姓名:</label>
-                            <input type="text" v-model="fullname" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入姓名">
+                            <input type="text" v-model="fullname" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入姓名">
                         </div>
                         <div class="search">
                             <label>电话:</label>
-                            <input type="text" v-model="mobile" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
+                            <input type="text" v-model="mobile" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
                         </div>
                         <div style="margin-left:15px;">
                             <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
@@ -151,19 +151,19 @@
                             <div class="tab-pane fade in active" id="a" style='padding-left: 70px;'>
                                 <div class="form-group" v-if="type=='0'">
                                     <label for="username"><span class="Required">*</span>用户名:</label>
-                                    <input type="text" v-model="data.username" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="username" placeholder="请输入名称">
+                                    <input type="text" v-model="data.username" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="username" placeholder="请输入名称">
                                 </div>
                                 <div class="form-group" v-if="type=='0'">
                                     <label for="userPwd"><span class="Required">*</span>密码:</label>
-                                    <input type="password" v-model="data.userPwd" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="userPwd" placeholder="请输入名称">
+                                    <input type="password" v-model="data.userPwd" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="userPwd" placeholder="请输入名称">
                                 </div>
                                 <div class="form-group">
                                     <label for="fullName"><span class="Required">*</span>用户姓名:</label>
-                                    <input type="text" v-model="data.fullName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入名称">
+                                    <input type="text" v-model="data.fullName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入名称">
                                 </div> 
                                 <div class="form-group">
                                     <label for="mobile"><span class="Required">*</span>电话:</label>
-                                    <input type="text" v-model="data.mobile" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="mobile" placeholder="请输入名称">
+                                    <input type="text" v-model="data.mobile" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="mobile" placeholder="请输入名称">
                                 </div> 
                                 <div class="form-group">
                                     <label for="email">邮箱:</label>
@@ -314,10 +314,6 @@ export default {
             },
             icon:'',
             tableData2:[],//项目数组
-            // pageIndex2:1,
-            // pageSize2:10,
-            // total2:10,
-            // site2All:[],
             site2:[],
             options:[{label:'启用',value:'0'},{label:'禁用',value:'1'}],//状态
             value:'0',
@@ -421,7 +417,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/manage/getUserNeedUpdate/userId/'+that.site[0].id,
+                url:that.serverurl+'/v1/manage/users/'+that.site[0].id,
                 contentType:'application/json;charset=UTF-8',
                 data:{},
                 success:function(data){
@@ -642,7 +638,6 @@ export default {
             if(this.type=='1'){
                 url='/v1/manage/users/'+that.site[0].id;
                 type = 'put'
-                // formdate.append("id", that.site[0].id)
                 formdate.append("icon",that.icon )
             }
             if(this.data.fullName==''||this.data.mobile==''){
@@ -742,7 +737,7 @@ export default {
                 });
                 return;
             }
-            this.$confirm('是否删除所选用户？?', '提示', {
+            this.$confirm('是否删除所选用户?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -811,8 +806,16 @@ export default {
                             success:function(data) {
                                 if(data.errorCode=='0'){
                                     that.readyRight()
-                                    var data2={"text" : "用户中心",'id':'0','type':'1',"state": {"opened" : true}}
-                                    data2.children = data.result
+                                    var data2={"text" : "用户中心",'id':'1','type':'1',"state": {"opened" : true}}
+                                    data2.children = data.result[0].children
+                                    for(var i=0;i<data.result[0].children.length;i++){
+                                        data.result[0].children[i].state={"opened" : true}
+                                        if(data.result[0].children[i].children==undefined){}else{
+                                            for(var j=0;j<data.result[0].children[i].children.length;j++){
+                                                data.result[0].children[i].children[j].state={"opened" : true}
+                                            }
+                                        }
+                                    }
                                     jsonarray= data2;
                                 }else{
                                     that.errorCode(data)
@@ -820,12 +823,13 @@ export default {
                             }
                         });
                         callback.call(this, jsonarray);
-                    }
+                    },
+                    
                 }
             });
             
             $('#jstree').bind("activate_node.jstree.jstree", function (e, data) {
-                console.log(data.node.original);
+                console.log(data.node);
                 if(data.node.id==''||data.node.id==undefined){
                 }else{
                     that.sizeType = data.node.original

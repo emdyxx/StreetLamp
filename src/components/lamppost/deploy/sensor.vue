@@ -11,11 +11,11 @@
             <div class="sensor_bottom_top">
                 <div class="search">
                     <label style="width:100px;">集中器标识:</label>
-                    <input type="text" v-model="concentratorSn" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入集中器标识">
+                    <input type="text" v-model="concentratorSn" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入集中器标识">
                 </div>
                 <div class="search">
                     <label style="width:90px;">名称:</label>
-                    <input type="text" v-model="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入气象站名称">
+                    <input type="text" v-model="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入气象站名称">
                 </div>
                 <div class="search">
                     <label>型号:</label>
@@ -61,9 +61,16 @@
                     min-width="110">
                     </el-table-column>
                     <el-table-column
+                    prop="concentratorName"
+                    align='center'
+                    label="集中器名字"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
                     prop="concentratorSn"
                     align='center'
-                    label="集中器标识"
+                    label="集中器序列号"
+                    :formatter="formatRole"
                     min-width="120">
                     </el-table-column>
                     <el-table-column
@@ -135,11 +142,20 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label><span class="Required">*</span>昵称:</label>
-                            <input type="text" v-model="data.nickName" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
+                            <input type="text" v-model="data.nickName" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                         </div> 
                         <div class="form-group">
                             <label><span class="Required">*</span>集中器标识:</label>
-                            <input type="text" v-model="data.concentratorSn" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入集中器标识">
+                            <el-select v-model="data.concentratorSn" size='small' style='width:196px;' placeholder="请选择">
+                                <el-option
+                                v-for="item in options2"
+                                :key="item.concentratorSn"
+                                :label="item.concentratorName"
+                                :value="item.concentratorSn">
+                                    <span style="float: left">{{ item.concentratorName }}</span>
+                                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.concentratorSn }}</span>
+                                </el-option>
+                            </el-select>
                         </div> 
                         <div class="form-group">
                             <label><span class="Required">*</span>型号:</label>
@@ -154,7 +170,7 @@
                         </div> 
                         <div class="form-group">
                             <label><span class="Required">*</span>气象站编号:</label>
-                            <input type="text" v-model="data.serialNumber" id="serialNumber" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入气象站编号">
+                            <input type="text" v-model="data.serialNumber" id="serialNumber" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入气象站编号">
                         </div>
                         <div class="form-group">
                             <label>备注:</label>
@@ -304,6 +320,7 @@ export default {
             total:10, 
             options:[],
             value:'1',
+            options2:[],//集中器标示
             data:{
                 nickName:'',
                 concentratorSn:'',
@@ -376,6 +393,7 @@ export default {
             if(val=='0'){
                 this.addtype = val;
                 this.ModelData()
+                this.concentrator()
                 this.data.nickName = ''
                 this.data.concentratorSn = ''
                 this.data.serialNumber = ''
@@ -396,6 +414,7 @@ export default {
                 }
                 this.addtype = val;
                 this.ModelData()
+                this.concentrator()
                 this.data.nickName = this.site[0].nickName
                 this.data.concentratorSn = this.site[0].concentratorSn
                 this.data.modelId = this.site[0].modelId
@@ -515,6 +534,32 @@ export default {
                     message: '已取消删除'
                 });          
             });
+        },
+        //请求集中器标示
+        concentrator(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/concentrator',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    page:1,
+                    size:500,
+                    projectIds:sessionStorage.projectId,
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.options2 = data.result.list
+                        if(that.addType=='1'){
+                            that.data.concentratorSn = that.site[0].concentratorSn
+                        }
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
         },
         //绑定项目
         sensorBindProjects(){

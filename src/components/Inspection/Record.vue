@@ -1,389 +1,191 @@
 <template>
     <div class="Record">
-        <div class="Record_top">
-            <el-select v-model="value" @change="Recordchange" style="margin:6px 0 0 10px;" size="small" placeholder="请选择">
-                <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-                </el-option>
-            </el-select>
-        </div>
-        <div class="Record_bottom">
-            <div class="Record_bottom_top">
-                <template v-if="value=='1'">
-                    <div class="search">
-                        <label>巡检员姓名:</label>
-                        <input v-model="inspectorName" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入巡检员姓名">
+        <el-tabs v-model="activeName" type="border-card" style="height:100%;">
+            <el-tab-pane label="巡检记录" name="0" style="height: 100%;position:relative;">
+                <div class="Record_top">
+                    <div>
+                        <span>点名称:</span>
+                        <input type="text" v-model="siteName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入计划名称">
                     </div>
-                </template>
-                <div class="search">
-                    <label>开始日期:</label>
-                    <el-date-picker
-                        size="small"
-                        align="right"
-                        type="date"
-                        value-format='yyyy-MM-dd'
-                        v-model="startTime"
-                        placeholder="选择日期">
-                    </el-date-picker>
+                    <div>
+                        <span>巡检员:</span>
+                        <input type="text" v-model="inspectorName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入巡检员">
+                    </div>
+                    <div style="margin-left:15px;">
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
                 </div>
-                <div class="search">
-                    <label>结束日期:</label>
-                    <el-date-picker
-                        size="small"
-                        align="right"
-                        type="date"
-                        value-format='yyyy-MM-dd'
-                        v-model="endTime"
-                        placeholder="选择日期">
-                    </el-date-picker>
-                </div>
-                <div style="margin-left:15px;">
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div>
-            <div class="Record_bottom_bottom">
-                <template v-if="value=='0'">
+                <div class="Record_bottom">
                     <el-table
                         :data="tableData"
-                        @row-click="clickRow" 
-                        ref="moviesTable"
                         border
                         stripe
                         size='small'
                         tooltip-effect="dark"
-                        @selection-change="SelectionChange"
                         style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                         <el-table-column
-                        type="selection"
+                        prop="siteName"
                         align='center'
-                        width="55">
+                        label="点名称"
+                        min-width="50">
                         </el-table-column>
                         <el-table-column
-                        prop="patrolPlanName"
-                        align='center'
-                        label="计划名称"
-                        min-width="80">
+                        prop="siteNumber"
+                        label="点编号"
+                        align='center'>
                         </el-table-column>
                         <el-table-column
-                        prop="userType"
-                        align='center'
-                        label="巡检人员"
-                        min-width="80">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.userType=='0'">男</span>
-                                <span v-if="scope.row.userType=='1'">女</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="mobile"
-                        align='center'
-                        label="巡检时间"
-                        min-width="150">
+                        prop="inspectorName"
+                        label="巡检员"
+                        align='center'>
                         </el-table-column>
                         <el-table-column
                         align='center'
-                        label="上报时间"
+                        label="是否为计划任务"
                         min-width="120">
                             <template slot-scope="scope">
-                                <span></span>
+                                <span v-if="scope.row.planType=='1'">是</span>
+                                <span v-if="scope.row.planType=='2'">否</span>
                             </template>
                         </el-table-column>
                         <el-table-column
-                        prop="createTime"
-                        label="执行情况"
                         align='center'
-                        min-width="180"
-                        show-overflow-tooltip>
+                        label="点状态"
+                        min-width="50">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.siteStatus=='1'" style="color:#67C23A;">正常</span>
+                                <span v-if="scope.row.siteStatus=='2'" style="color:#F56C6C;">异常</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                        align='center'
+                        label="巡检状态"
+                        min-width="50">
+                            <template slot-scope="scope">
+                                <template v-if="scope.row.planId=='0'||scope.row.planId==''">--</template>
+                                <template v-else>
+                                    <span style="color:#67C23A;">已巡检</span>
+                                </template>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                        prop="patrolTime"
+                        label="巡检时间"
+                        align='center'>
+                        </el-table-column>
+                        <el-table-column
+                        align='center'
+                        label="操作"
+                        min-width="50">
+                            <template slot-scope="scope">
+                                <el-button @click="details(scope.row)" :disabled="scope.row.recordId=='0'" type="primary" size='mini'>详情</el-button>
+                            </template>
                         </el-table-column>
                     </el-table>
-                </template>
-                <template v-if="value=='1'">
-                    <el-table
-                        :data="tableData"
-                        @row-click="clickRow" 
-                        ref="moviesTable"
-                        border
-                        stripe
-                        size='small'
-                        tooltip-effect="dark"
-                        @selection-change="SelectionChange"
-                        style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                        <el-table-column
-                        type="selection"
-                        align='center'
-                        width="55">
-                        </el-table-column>
-                        <el-table-column
-                        prop="patrolPlanName"
-                        align='center'
-                        label="计划名称"
-                        min-width="80">
-                        </el-table-column>
-                        <el-table-column
-                        prop="userType"
-                        align='center'
-                        label="巡检人员"
-                        min-width="80">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.userType=='0'">男</span>
-                                <span v-if="scope.row.userType=='1'">女</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="mobile"
-                        align='center'
-                        label="巡检时间"
-                        min-width="150">
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="上报时间"
-                        min-width="120">
-                            <template slot-scope="scope">
-                                <span></span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="createTime"
-                        label="执行情况"
-                        align='center'
-                        min-width="180"
-                        show-overflow-tooltip>
-                        </el-table-column>
-                    </el-table> 
-                </template>
-                <template v-if="value=='2'">
-                    <el-table
-                        :data="tableData"
-                        @row-click="clickRow" 
-                        ref="moviesTable"
-                        border
-                        stripe
-                        size='small'
-                        tooltip-effect="dark"
-                        @selection-change="SelectionChange"
-                        style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                        <el-table-column
-                        type="selection"
-                        align='center'
-                        width="55">
-                        </el-table-column>
-                        <el-table-column
-                        prop="patrolPlanName"
-                        align='center'
-                        label="计划名称"
-                        min-width="80">
-                        </el-table-column>
-                        <el-table-column
-                        prop="userType"
-                        align='center'
-                        label="巡检人员"
-                        min-width="80">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.userType=='0'">男</span>
-                                <span v-if="scope.row.userType=='1'">女</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="mobile"
-                        align='center'
-                        label="巡检时间"
-                        min-width="150">
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="上报时间"
-                        min-width="120">
-                            <template slot-scope="scope">
-                                <span></span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="createTime"
-                        label="执行情况"
-                        align='center'
-                        min-width="180"
-                        show-overflow-tooltip>
-                        </el-table-column>
-                    </el-table>
-                </template>
-                <div class="block">
-                    <el-pagination
-                    background
-                    @size-change="sizechange"
-                    @current-change="currentchange"
-                    :current-page="pageIndex"
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-                    </el-pagination>
+                    <div class="block">
+                        <el-pagination
+                        background
+                        @size-change="sizechange"
+                        @current-change="currentchange"
+                        :current-page="pageIndex"
+                        :page-sizes="[10, 20, 30, 50]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="total">
+                        </el-pagination>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <!-- 查看明细 模态框 -->
-        <div class="modal fade" id="Record" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:550px;">
+            </el-tab-pane>
+        </el-tabs>
+        <!-- 巡检计划详情模态框（Modal） -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">查看明细</h4>
+                        <h4 class="modal-title" id="myModalLabel">巡检点详情</h4>
                     </div>
-                    <div class="modal-body" style='min-height:200px;max-height:590px;overflow:auto;'>
-                        <table class="table table-bordered Record_table" style='text-align:center;'>
-                            <tbody>
-                                <tr>
-                                    <td>巡检人员</td>
-                                    <td></td>
-                                    <td>所属部门</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>巡检时间</td>
-                                    <td></td>
-                                    <td>巡检路线</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>点编号</td>
-                                    <td></td>
-                                    <td>点名称</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>点类型</td>
-                                    <td></td>
-                                    <td>巡检模式</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>分类目录</td>
-                                    <td></td>
-                                    <td>完成状态</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>计划名称</td>
-                                    <td></td>
-                                    <td>任务编号</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>是否合格</td>
-                                    <td></td>
-                                    <td>检查评分</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>检查项目</td>
-                                    <td colspan='3'>
-                                        <table class="table table-bordered" style='text-align:center;'>
-                                             <thead>
-                                                <tr>
-                                                    <th style='text-align:center;'>项目名称</th>
-                                                    <th style='text-align:center;'>检查结果</th>
-                                                    <th style='text-align:center;'>是否合格</th>
-                                                    <th style='text-align:center;'>评分</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>2</td>
-                                                    <td>3</td>
-                                                    <td>4</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>现场照片</td>
-                                    <td colspan='3'></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="modal-body">
+                        <el-table
+                            :data=tableData3.patrolRecordItemList
+                            border
+                            size='mini'
+                            style="width: 100%;">
+                            <el-table-column
+                            prop="itemName"
+                            align='center'
+                            label="项名称"
+                            min-width="120">
+                            </el-table-column>
+                            <el-table-column
+                            prop="itemCategoryName"
+                            label="项类别"
+                            align='center'>
+                            </el-table-column>
+                            <el-table-column
+                            align='center'
+                            label="状态"
+                            min-width="50">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.itemCheckStatus=='0'" style="color:#F56C6C;">不合格</span>
+                                    <span v-if="scope.row.itemCheckStatus=='1'" style="color:#67C23A;">合格</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                            prop="itemCheckResults"
+                            label="备注"
+                            align='center'>
+                            </el-table-column>
+                        </el-table>
+                        <div style="display:flex;flex-wrap: wrap;">
+                            <template v-for="item in tableData3.patrolRecordImgList">
+                                <div :key="item.id" style="width:25%;padding:5px;">
+                                    <img :src=serverurl+item.imgUrl alt=""  style="width:100%;">
+                                </div>
+                            </template>
+                        </div>
                     </div>
                 </div><!-- /.modal-content -->
             </div>
-        </div><!-- /.modal -->
+        </div><!-- /.modal -->        
     </div>
 </template>
 <script>
 export default {
-    name: 'UserSettings',
+    name: 'historyPatrolRecord',
     data () {
         return {
             serverurl:localStorage.serverurl,
-            options:[
-                {
-                    value: '0',
-                    label: '巡检计划统计'
-                }, 
-                {
-                    value: '1',
-                    label: '巡检员统计'
-                }, 
-                {
-                    value: '2',
-                    label: '巡检点统计'
-                }
-            ],
-            value:'0',
+            activeName:'0',
             tableData:[],
-            site:[],
             pageIndex:1,
-            pageSize:10,
+            site:[],
             total:10,
+            pageSize:10,
+            siteName:'',
             inspectorName:'',
-            startTime:'',
-            endTime:'',
+            tableData3:[],
         }
     },
     mounted(){
         
     },
     methods:{
-        clickRow(row){
-            this.$refs.moviesTable.toggleRowSelection(row)
-        },
-        Recordchange(val){
-            this.pageIndex = 1;
-            this.pageSize = 10;
-            this.inspectorName = ''
-            this.startTime = ''
-            this.endTime = ''
-            this.ready()
-        },   
-        //
         ready(){
             var that = this;
-            var url = '';
+            var url = ''
             var data = {
                 page:that.pageIndex,
                 size:that.pageSize,
-                startTime:that.startTime,
-                startTime:that.endTime,
+                siteName:that.siteName,
+                inspectorName:that.inspectorName,
                 projectIds:sessionStorage.projectId,
-            }
-            if(that.value=='0'){
-                url='/v1/solin/patrol/statistics/execute';
-            }
-            if(that.value=='1'){
-                data.inspectorName = that.inspectorName
-                url='/v1/solin/patrol/statistics/execute/inspector';
-            }
-            if(that.value=='2'){
-                url='/v1/solin/patrol/statistics/execute/site';
             }
             $.ajax({
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+url,
+                url:that.serverurl+'/v1/solin/patrol/execute/site/record',
                 contentType:'application/json;charset=UTF-8',
                 data:data,
                 success:function(data){
@@ -396,10 +198,29 @@ export default {
                 }
             })
         },
-        SelectionChange(val){this.site = val;},
         sizechange(val){this.pageSize=val;this.ready();},
         currentchange(val){this.pageIndex=val;this.ready();},
-        search(){this.ready();},
+        search(){this.ready()},
+        //获取点详情
+        details(row){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/patrol/execute/site/record/information/'+row.id,
+                contentType:'application/json;charset=UTF-8',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tableData3=data.result
+                        $('#myModal').modal('show')
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
     },
     created(){
         this.ready()
@@ -409,16 +230,9 @@ export default {
 <style scoped>
 .block{text-align: center;}
 .Record{width: 100%;height: 100%;}
-.Record>div{width: 100%;position: absolute;}
-.Record_top{height: 46px;border-bottom: none !important;display: flex;border: 1px solid #E4E4F1;}
-.Record_top>button{height:33px;margin:6px 0 0 10px;}
-.Record_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
-.Record_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.Record_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
-.search{display: flex;}
-.search>label{width: 80px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
-.search>div{width: 146px;}
-.Record_table tr>td:nth-of-type(1),.Record_table tr>td:nth-of-type(3){width:80px;}
-
+.Record_top{height: 40px;display: flex;justify-content: center;align-items: center;}
+.Record_top>div{display:flex;align-items: center;}
+.Record_top>div>span{line-height: 46px;width: 60px;text-align: right}
+.Record_top>div>input{width: 126px;}
+.Record_bottom{position: absolute;top: 40px;bottom: 0;width: 100%;}
 </style>

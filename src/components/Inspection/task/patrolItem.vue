@@ -5,13 +5,13 @@
             <el-button v-if="addPatrolItem" @click="operationPatrolItem(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="editPatrolItem" @click="operationPatrolItem(1)" type="primary" icon='el-icon-edit' size='small'>编辑</el-button>
             <el-button v-if="delPatrolItem" @click="operationPatrolItem(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <el-button v-if="addPatrolCategory" @click="operationPatrolItem(3)" type="primary" icon='el-icon-setting' size='small'>分类管理</el-button>
+            <el-button v-if="patrolCategoryManagement" @click="operationPatrolItem(3)" type="primary" icon='el-icon-setting' size='small'>分类管理</el-button>
         </div>
         <div class="patrolItem_bottom">
             <div class="patrolItem_bottom_top">
                 <div class="search">
                     <label>检查项名称:</label>
-                    <input v-model="itemName" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
+                    <input v-model="itemName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
                 </div>
                 <div class="search">
                     <label>检查项分类:</label>
@@ -96,7 +96,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label><span class="Required">*</span>检查项名称:</label>
-                            <input v-model="data.itemName" type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入检查项名称">
+                            <input v-model="data.itemName" type="text" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入检查项名称">
                         </div>
                         <div class="form-group">
                             <label><span class="Required">*</span>归属分类:</label>
@@ -178,7 +178,7 @@ export default {
             addPatrolItem:false,
             editPatrolItem:false,
             delPatrolItem:false,
-            addPatrolCategory:false,
+            patrolCategoryManagement:false,
             itemName:'',
             options:[],
             categoryId:'',
@@ -322,7 +322,7 @@ export default {
                         that.ready()
                         $('#myModal').modal('hide')
                     }else{
-                        that.errorCode3(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -367,7 +367,7 @@ export default {
                                 });
                                 that.classification()
                             }else{
-                                that.errorCode3(data.errorCode)
+                                that.errorCode(data)
                             }
                         },
                     })
@@ -410,7 +410,7 @@ export default {
                         });
                         that.classification()
                     }else{
-                        that.errorCode3(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -435,7 +435,7 @@ export default {
                         that.options = data.result.list
                         that.tableData2 = data.result.list
                     }else{
-                        that.errorCode3(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -462,7 +462,7 @@ export default {
                         that.tableData = data.result.list
                         that.total = data.result.total
                     }else{
-                        that.errorCode3(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -478,7 +478,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
+                url:that.serverurl+'/v1/manage/operat/'+39,
                 contentType:'application/json;charset=UTF-8',
                 data:{},
                 success:function(data){
@@ -493,8 +493,8 @@ export default {
                             if(data.result.operats[i].code=='delPatrolItem'){
                                 that.delPatrolItem = true
                             }
-                            if(data.result.operats[i].code=='addPatrolCategory'){
-                                that.addPatrolCategory = true
+                            if(data.result.operats[i].code=='patrolCategoryManagement'){
+                                that.patrolCategoryManagement = true
                             }
                         }
                     }else{

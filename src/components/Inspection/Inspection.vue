@@ -108,16 +108,19 @@ export default {
                                             data.result.menus[i].text = data.result.menus[i].menuName
                                         }
                                         if(data.result.menus[i].code=='patrolItem'){
-                                            data.result.menus[i].type = '7'
-                                            data.result.menus[i].text = data.result.menus[i].menuName
+                                            data.result.menus.splice(i,1)
+                                            // data.result.menus[i].type = '7'
+                                            // data.result.menus[i].text = data.result.menus[i].menuName
                                         }
                                         if(data.result.menus[i].code=='patrolSite'){
-                                            data.result.menus[i].type = '4'
-                                            data.result.menus[i].text = data.result.menus[i].menuName
+                                            data.result.menus.splice(i,1)
+                                            // data.result.menus[i].type = '4'
+                                            // data.result.menus[i].text = data.result.menus[i].menuName
                                         }
                                         if(data.result.menus[i].code=='patrolRoute'){
-                                            data.result.menus[i].type = '5'
-                                            data.result.menus[i].text = data.result.menus[i].menuName
+                                            data.result.menus.splice(i,1)
+                                            // data.result.menus[i].type = '5'
+                                            // data.result.menus[i].text = data.result.menus[i].menuName
                                         }
                                         if(data.result.menus[i].code=='patrolPlan'){
                                             data.result.menus[i].type = '6'
@@ -125,6 +128,22 @@ export default {
                                         }
                                         if(data.result.menus[i].code=='patrolStatistics'){
                                             data.result.menus[i].type = '2'
+                                            data.result.menus[i].text = data.result.menus[i].menuName
+                                        }
+                                        if(data.result.menus[i].code=='todayPatrolPlan'){
+                                            data.result.menus[i].type = '6'
+                                            data.result.menus[i].text = data.result.menus[i].menuName
+                                        }
+                                        if(data.result.menus[i].code=='historyPatrolRecord'){
+                                            data.result.menus[i].type = '6'
+                                            data.result.menus[i].text = data.result.menus[i].menuName
+                                        }
+                                        if(data.result.menus[i].code=='patrolRecord'){
+                                            data.result.menus[i].type = '6'
+                                            data.result.menus[i].text = data.result.menus[i].menuName
+                                        }
+                                        if(data.result.menus[i].code=='patrolApp'){
+                                            data.result.menus[i].type = '6'
                                             data.result.menus[i].text = data.result.menus[i].menuName
                                         }
                                     }
@@ -146,27 +165,32 @@ export default {
                     if(data.node.id=='38'){
                         that.$router.push({'path':'/UserSettings'})
                     }
-                    if(data.node.id=='39'){
-                        that.$router.push({'path':'/patrolItem'})
-                        // that.$router.push({'path':'/QueryStatistics'})
-                    }
-                    if(data.node.id=='40'){
-                        that.$router.push({'path':'/InspectionItems'})
-                    }
-                    if(data.node.id=='41'){
-                        that.$router.push({'path':'/InspectionSite'})
-                    }
-                    if(data.node.id=='42'){
-                        that.$router.push({'path':'/InspectionRoute'})
-                    }
+                    // if(data.node.id=='39'){
+                    //     that.$router.push({'path':'/patrolItem'})
+                    // }
+                    // if(data.node.id=='41'){
+                    //     that.$router.push({'path':'/InspectionSite'})
+                    // }
+                    // if(data.node.id=='42'){
+                    //     that.$router.push({'path':'/InspectionRoute'})
+                    // }
                     if(data.node.id=='43'){
-                        that.$router.push({'path':'/PatrolPlan'})
+                        that.$router.push({'path':'/task'})
                     }
                     if(data.node.id=='44'){
+                        that.$router.push({'path':'/Statistics'})
+                    }
+                    if(data.node.id=='82'){
+                        that.$router.push({'path':'/todayPatrolPlan'})
+                    }
+                    if(data.node.id=='83'){
+                        that.$router.push({'path':'/historyPatrolRecord'})
+                    }
+                    if(data.node.id=='84'){
                         that.$router.push({'path':'/Record'})
                     }
-                    if(data.node.id=='81'){
-                        that.$router.push({'path':'/category'})
+                    if(data.node.id=='85'){
+                        that.$router.push({'path':'/AppUpgrade'})
                     }
                 }
             });
@@ -200,24 +224,32 @@ export default {
                 if(sessionStorage.menuId3=='38'){
                     that.$router.push({'path':'/UserSettings'})
                 }
-                if(sessionStorage.menuId3=='39'){
-                    that.$router.push({'path':'/patrolItem'})
-                    // that.$router.push({'path':'/QueryStatistics'})
-                }
-                if(sessionStorage.menuId3=='40'){
-                    that.$router.push({'path':'/InspectionItems'})
-                }
-                if(sessionStorage.menuId3=='41'){
-                    that.$router.push({'path':'/InspectionSite'})
-                }
-                if(sessionStorage.menuId3=='42'){
-                    that.$router.push({'path':'/InspectionRoute'})
-                }
+                // if(sessionStorage.menuId3=='39'){
+                //     that.$router.push({'path':'/patrolItem'})
+                // }
+                // if(sessionStorage.menuId3=='41'){
+                //     that.$router.push({'path':'/InspectionSite'})
+                // }
+                // if(sessionStorage.menuId3=='42'){
+                //     that.$router.push({'path':'/InspectionRoute'})
+                // }
                 if(sessionStorage.menuId3=='43'){
-                    that.$router.push({'path':'/PatrolPlan'})
+                    that.$router.push({'path':'/task'})
                 }
                 if(sessionStorage.menuId3=='44'){
+                    that.$router.push({'path':'/Statistics'})
+                }
+                if(sessionStorage.menuId3=='82'){
+                    that.$router.push({'path':'/todayPatrolPlan'})
+                }
+                if(sessionStorage.menuId3=='83'){
+                    that.$router.push({'path':'/historyPatrolRecord'})
+                }
+                if(sessionStorage.menuId3=='84'){
                     that.$router.push({'path':'/Record'})
+                }
+                if(sessionStorage.menuId3=='85'){
+                    that.$router.push({'path':'/AppUpgrade'})
                 }
             },200)
         },

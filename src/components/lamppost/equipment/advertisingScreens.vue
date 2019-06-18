@@ -13,6 +13,7 @@
                     <el-dropdown-item v-if="operation" command="3">屏幕音量</el-dropdown-item>
                     <el-dropdown-item v-if="operation" command="4">屏幕截图</el-dropdown-item>
                     <el-dropdown-item v-if="operation" command="5">屏幕重启</el-dropdown-item>
+                    <el-dropdown-item v-if="operation" command="6">状态查询</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
             <el-button v-if="viewProgram" type="primary" size='small' @click="notice" style="width:125px;margin-left:25px;">节目管理</el-button>
@@ -24,7 +25,7 @@
             <div class="advertisingScreens_bottom_top">
                 <div class="search">
                     <label>序列号:</label>
-                    <input type="text" v-model="serialNumber" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入屏幕序列号">
+                    <input type="text" v-model="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入屏幕序列号">
                 </div>
                 <div class="search">
                     <label>状态:</label>
@@ -61,29 +62,33 @@
                     prop="nickName"
                     align='center'
                     label="名称"
+                    :formatter="formatRole"
                     min-width="80">
                     </el-table-column>
                     <el-table-column
                     prop="serialNumber"
                     align='center'
                     label="序列号"
+                    :formatter="formatRole"
                     min-width="125">
                     </el-table-column>
                     <el-table-column
                     prop="width"
                     align='center'
                     label="宽度(像素)"
+                    :formatter="formatRole"
                     min-width="80">
                     </el-table-column>
                     <el-table-column
                     prop="height"
                     align='center'
                     label="高度(像素)"
+                    :formatter="formatRole"
                     min-width="80">
                     </el-table-column>
                     <el-table-column
                     align='center'
-                    label="状态"
+                    label="屏幕状态"
                     min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.status=='0'">关闭</span>
@@ -91,11 +96,48 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                    prop="programName"
                     align='center'
-                    label="当前播放节目"
+                    label="在线状态"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.online=='0'">离线</span>
+                            <span v-if="scope.row.online=='1'">在线</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="taskName"
+                    align='center'
+                    label="当前播放任务"
                     :formatter="formatRole"
                     min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    prop="brightness"
+                    align='center'
+                    label="亮度"
+                    :formatter="formatRole"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="volume"
+                    align='center'
+                    label="音量"
+                    :formatter="formatRole"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="versionName"
+                    align='center'
+                    label="版本号"
+                    :formatter="formatRole"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="timestamp"
+                    align='center'
+                    label="采集时间"
+                    :formatter="formatRole"
+                    min-width="120">
                     </el-table-column>
                     <el-table-column
                     prop="remark"
@@ -159,7 +201,7 @@
                                 size='small'
                                 ref="mediartableData"
                                 tooltip-effect="dark"
-                                height='250'
+                                height='350'
                                 style="width: 100%;overflow:auto;max-height:80%;margin-bottom:10px;"
                                 @selection-change="mediartableChange">
                                 <el-table-column
@@ -192,7 +234,7 @@
                                 min-width="180">
                                 </el-table-column>
                                 <el-table-column
-                                prop="username"
+                                prop="createUser"
                                 align='center'
                                 label="上传者"
                                 min-width="80">
@@ -237,9 +279,9 @@
                         </div>
                         <div class="form-group">
                             <label>文件别名:</label>
-                            <input type="text" id="nickName" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入文件别名">
+                            <input type="text" id="nickName" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入文件别名">
                         </div> 
-                        <div class="el-upload__tip" style="text-align: center;font-size: 14px;">只能上传jpg/png/gif图片，MP4/MKV视频,且不超过50M</div>
+                        <div class="el-upload__tip" style="text-align: center;font-size: 14px;">只能上传jpg/png/gif图片，MP4/3GP视频,且不超过50M</div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -323,10 +365,11 @@
                                 <el-button @click="switchOperation(1)" type="primary" size='small'>编辑</el-button>
                                 <el-button @click="switchOperation(2)" type="primary" size='small'>删除</el-button>
                                 <el-button @click="switchOperation(3)" type="primary" size='small'>发送</el-button>
+                                <el-button @click="switchOperation(4)" type="primary" size='small'>清除定时信息</el-button>
                                 <div v-if="addType=='0'||addType=='1'" style="width:100%;height:auto;margin-top:10px">
                                     <div>
                                         <span>定时名称:</span>
-                                        <el-input v-model="switchData.name" placeholder="请输入定时名称称" size='small' style="width:156px;"></el-input>
+                                        <el-input v-model="switchData.name" placeholder="请输入定时名称称" size='small' oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" style="width:156px;"></el-input>
                                     </div>
                                     <div style="margin-top:10px;">
                                         <el-radio-group v-model="switchData.radio0">
@@ -360,14 +403,14 @@
                                         <div v-if="switchData.radio1=='1'">
                                             <el-time-picker
                                                 v-model="switchData.value3"
-                                                value-format='hh:mm'
+                                                value-format='HH:mm'
                                                 size='small'
                                                 placeholder="开始时间"
                                                 style="width:126px;margin-left:10px;">
                                             </el-time-picker>
                                             <el-time-picker
                                                 v-model="switchData.value4"
-                                                value-format='hh:mm'
+                                                value-format='HH:mm'
                                                 size='small'
                                                 placeholder="结束时间"
                                                 style="width:126px;margin-left:10px;">
@@ -393,7 +436,7 @@
                                     </div>
                                     <div style="margin-top:10px;">
                                         <el-button @click="switchSubmit" type="primary" size='small'>保存</el-button>
-                                        <el-button @click="switchOperation(4)" type="primary" size='small'>关闭</el-button>
+                                        <el-button @click="switchOperation(5)" type="primary" size='small'>关闭</el-button>
                                     </div>
                                 </div>
                                 <div style="margin-top:10px;">
@@ -500,6 +543,7 @@
                                 <el-button @click="DimmingOperation(1)" type="primary" size='small'>编辑</el-button>
                                 <el-button @click="DimmingOperation(2)" type="primary" size='small'>删除</el-button>
                                 <el-button @click="DimmingOperation(3)" type="primary" size='small'>发送</el-button>
+                                <el-button @click="DimmingOperation(4)" type="primary" size='small'>清除定时信息</el-button>
                                 <div v-if="addType=='0'||addType=='1'" style="width:100%;height:auto;margin-top:10px">
                                     <div>
                                         <span>定时名称:</span>
@@ -539,14 +583,14 @@
                                         <div v-if="DimmingDatas.radio1=='1'">
                                             <el-time-picker
                                                 v-model="DimmingDatas.value3"
-                                                value-format='hh:mm'
+                                                value-format='HH:mm'
                                                 size='small'
                                                 placeholder="开始时间"
                                                 style="width:126px;margin-left:10px;">
                                             </el-time-picker>
                                             <el-time-picker
                                                 v-model="DimmingDatas.value4"
-                                                value-format='hh:mm'
+                                                value-format='HH:mm'
                                                 size='small'
                                                 placeholder="结束时间"
                                                 style="width:126px;margin-left:10px;">
@@ -576,7 +620,7 @@
                                     </div>
                                     <div style="margin-top:10px;">
                                         <el-button @click="DimmingSubmit2" type="primary" size='small'>保存</el-button>
-                                        <el-button @click="DimmingOperation(4)" type="primary" size='small'>关闭</el-button>
+                                        <el-button @click="DimmingOperation(5)" type="primary" size='small'>关闭</el-button>
                                     </div>
                                 </div>
                                 <div style="margin-top:10px;">
@@ -684,13 +728,14 @@
                             <el-tab-pane label="手动" name="0">
                                 <el-input-number v-model="volume" :min="0" :max="15" size='small' label="屏幕音量"></el-input-number>
                                 <el-button @click="volumeSubmit" type="primary" size='small'>发送</el-button>
-                                <p>提示:1（最暗）~ 64（最亮）</p>
+                                <p>提示:0（最小）~ 15(最大)</p>
                             </el-tab-pane>
                             <el-tab-pane label="定时" name="1">
                                 <el-button @click="volumeOperation(0)" type="primary" size='small'>添加</el-button>
                                 <el-button @click="volumeOperation(1)" type="primary" size='small'>编辑</el-button>
                                 <el-button @click="volumeOperation(2)" type="primary" size='small'>删除</el-button>
                                 <el-button @click="volumeOperation(3)" type="primary" size='small'>发送</el-button>
+                                <el-button @click="volumeOperation(4)" type="primary" size='small'>清除定时信息</el-button>
                                 <div v-if="addType=='0'||addType=='1'" style="width:100%;height:auto;margin-top:10px">
                                     <div>
                                         <span>定时名称:</span>
@@ -730,14 +775,14 @@
                                         <div v-if="volumeDatas.radio1=='1'">
                                             <el-time-picker
                                                 v-model="volumeDatas.value3"
-                                                value-format='hh:mm'
+                                                value-format='HH:mm'
                                                 size='small'
                                                 placeholder="开始时间"
                                                 style="width:126px;margin-left:10px;">
                                             </el-time-picker>
                                             <el-time-picker
                                                 v-model="volumeDatas.value4"
-                                                value-format='hh:mm'
+                                                value-format='HH:mm'
                                                 size='small'
                                                 placeholder="结束时间"
                                                 style="width:126px;margin-left:10px;">
@@ -767,7 +812,7 @@
                                     </div>
                                     <div style="margin-top:10px;">
                                         <el-button @click="volumeSubmit2" type="primary" size='small'>保存</el-button>
-                                        <el-button @click="volumeOperation(4)" type="primary" size='small'>关闭</el-button>
+                                        <el-button @click="volumeOperation(5)" type="primary" size='small'>关闭</el-button>
                                     </div>
                                 </div>
                                 <div style="margin-top:10px;">
@@ -880,7 +925,7 @@
                                 <span style="margin-left:20px;">时间:{{item.timestamp}}</span>     
                             </div>
                             <div :key="item.key">
-                                <img :src=item.screenshotMsg style="width:100%;" alt="">
+                                <img :src=item.screenshotMsg class="imgClass" style="width:100%;" alt="">
                             </div>
                         </template>
                     </div>
@@ -905,6 +950,7 @@
                                 <el-button @click="restartOperation(1)" type="primary" size='small'>编辑</el-button>
                                 <el-button @click="restartOperation(2)" type="primary" size='small'>删除</el-button>
                                 <el-button @click="restartOperation(3)" type="primary" size='small'>发送</el-button>
+                                <el-button @click="restartOperation(4)" type="primary" size='small'>清除定时信息</el-button>
                                 <div v-if="addType=='0'||addType=='1'" style="width:100%;height:auto;margin-top:10px">
                                     <div>
                                         <span>定时名称:</span>
@@ -912,7 +958,7 @@
                                         <span style="margin-left:20px;">重启时间:</span>
                                         <el-time-picker
                                             v-model="rebootTime"
-                                            value-format='hh:mm'
+                                            value-format='HH:mm'
                                             size='small'
                                             placeholder="重启时间"
                                             style="width:126px;margin-left:10px;">
@@ -920,7 +966,7 @@
                                     </div>
                                     <div style="margin-top:10px;">
                                         <el-button @click="restartSubmit" type="primary" size='small'>保存</el-button>
-                                        <el-button @click="restartOperation(4)" type="primary" size='small'>关闭</el-button>
+                                        <el-button @click="restartOperation(5)" type="primary" size='small'>关闭</el-button>
                                     </div>
                                 </div>
                                 <div style="margin-top:10px;">
@@ -1049,7 +1095,7 @@
                         <el-button @click="programOperation(2)" size='small' type="primary">删除节目</el-button>
                         <div style="margin-top:10px;">
                             <span>任务名称:</span>
-                            <el-input v-model="tasknickName" placeholder="请输入任务名称" size='small' style="width:156px;"></el-input>
+                            <el-input v-model="tasknickName" placeholder="请输入任务名称" size='small' style="width:156px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                             <el-tooltip class="item" effect="dark" content="上移(排序)" placement="top-start">
                                 <el-button @click="move(0)" icon="el-icon-caret-top" size='mini' type="primary"></el-button>
                             </el-tooltip>
@@ -1148,6 +1194,12 @@
                             min-width="80">
                             </el-table-column>
                             <el-table-column
+                            prop="programSizeM"
+                            align='center'
+                            label="大小"
+                            min-width="60">
+                            </el-table-column>
+                            <el-table-column
                             prop="createTime"
                             label="创建时间"
                             align='center'
@@ -1199,14 +1251,14 @@
                             <div v-if="taskSchedule.radio1=='1'">
                                 <el-time-picker
                                     v-model="taskSchedule.value3"
-                                    value-format='hh:mm'
+                                    value-format='HH:mm'
                                     size='small'
                                     placeholder="开始时间"
                                     style="width:126px;margin-left:10px;">
                                 </el-time-picker>
                                 <el-time-picker
                                     v-model="taskSchedule.value4"
-                                    value-format='hh:mm'
+                                    value-format='HH:mm'
                                     size='small'
                                     placeholder="结束时间"
                                     style="width:126px;margin-left:10px;">
@@ -1232,7 +1284,7 @@
                         </div>
                         <div style="margin-top:10px;">
                             <span>播放次数:</span>
-                            <el-input v-model="taskSchedule.repeatTimes" placeholder="请输入播放次数" size='small' style="width:156px;"></el-input>
+                            <el-input v-model="taskSchedule.repeatTimes" placeholder="请输入播放次数" size='small' style="width:156px;"  oninput="value=value.replace(/[^\d]/g,'')"></el-input>
                             <el-button @click="addprogram" size='small' type="primary">添加</el-button>
                         </div>
                     </div>
@@ -1407,7 +1459,7 @@ export default {
             programpageSize:10,
             programtotal:10,
             taskSchedule:{
-                repeatTimes:'',
+                repeatTimes:'1',
                 radio0:0,
                 radio1:0,
                 radio2:0,
@@ -1464,18 +1516,27 @@ export default {
                 $('#switchModal').modal('show')
                 that.switchType = '0'
                 that.addType='2'
+                $('#switchModal').on('hide.bs.modal', function () {
+                    that.ready()
+                })
             }
             //屏幕调光
             if(val=='2'){
                 $('#DimmingModal').modal('show')
                 that.DimmingType='0'
                 that.addType='2'
+                $('#DimmingModal').on('hide.bs.modal', function () {
+                    that.ready()
+                })
             }
             //屏幕音量
             if(val=='3'){
                 $('#volumeModal').modal('show')
                 that.volumeType='0'
                 that.addType='2'
+                $('#volumeModal').on('hide.bs.modal', function () {
+                    that.ready()
+                })
             }
             //屏幕截图
             if(val=='4'){
@@ -1487,6 +1548,7 @@ export default {
                     data.screens.push(that.tableSite1[i].id)
                 }
                 data.command = '6'
+                var screens = data.screens.join(',')
                 $.ajax({
                     type:'post',
                     async:true,
@@ -1496,41 +1558,74 @@ export default {
                     data:JSON.stringify(data),
                     success:function(data){
                         if(data.errorCode=='0'){
-                            
+                            setTimeout(function(){
+                                $.ajax({
+                                    type:'get',
+                                    async:true,
+                                    dataType:'json',
+                                    url:that.serverurl+'/v1/solin/screen/device/screenshot',
+                                    contentType:'application/json;charset=UTF-8',
+                                    data:{
+                                        screens:screens
+                                    },
+                                    success:function(data){
+                                        if(data.errorCode=='0'){
+                                            for(var i=0;i<data.result.length;i++){
+                                                data.result[i].screenshotMsg='data:image/jpeg;base64,'+data.result[i].screenshotMsg
+                                            }
+                                            that.screenshotData = data.result
+                                            that.loading = false
+                                        }else{
+                                            that.errorCode(data)
+                                        }
+                                    }
+                                })
+                            },2500)
                         }else{
                             that.errorCode(data)
                         }
                     }
                 })
-                setTimeout(function(){
-                    $.ajax({
-                        type:'post',
-                        async:true,
-                        dataType:'json',
-                        url:that.serverurl+'/v1/solin/screen/device/screenshot',
-                        contentType:'application/json;charset=UTF-8',
-                        data:JSON.stringify({
-                            screens:data.screens
-                        }),
-                        success:function(data){
-                            if(data.errorCode=='0'){
-                                for(var i=0;i<data.result.length;i++){
-                                    data.result[i].screenshotMsg='data:image/jpeg;base64,'+data.result[i].screenshotMsg
-                                }
-                                that.screenshotData = data.result
-                                that.loading = false
-                            }else{
-                                that.errorCode(data)
-                            }
-                        }
-                    })
-                },2500)
+                
             }
             //屏幕重启
             if(val=='5'){
                 $('#restartMyModal').modal('show')
                 that.restartType = '0'
                 that.addType='2'
+                $('#restartMyModal').on('hide.bs.modal', function () {
+                    that.ready()
+                })
+            }
+            //状态查询
+            if(val=='6'){
+                var data = {}
+                data.screens = []
+                for(var i=0;i<that.tableSite1.length;i++){
+                    data.screens.push(that.tableSite1[i].id)
+                }
+                data.command = '5'
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/screen/control',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '状态查询中...',
+                                type: 'success'
+                            });
+                            setTimeout(function(){
+                                that.ready()
+                            },3000)
+                        }else{
+                            that.errorCode(data)
+                        }
+                    }
+                })
             }
         },
         //下发任务
@@ -1702,9 +1797,6 @@ export default {
                                 message: '屏幕开启成功!',
                                 type: 'success'
                             });
-                            setTimeout(function(){
-                                that.ready()
-                            },3000)
                         }else{
                             that.errorCode(data)
                         }
@@ -1734,9 +1826,6 @@ export default {
                                 message: '屏幕关闭成功!',
                                 type: 'success'
                             });
-                            setTimeout(function(){
-                                that.ready()
-                            },3000)
                         }else{
                             that.errorCode(data)
                         }
@@ -1749,6 +1838,15 @@ export default {
             var that = this;
             if(val=='0'){
                 that.addType='0'
+                that.switchData.name=''
+                that.switchData.radio0=0
+                that.switchData.radio1=0
+                that.switchData.radio2=0
+                that.switchData.value1=''
+                that.switchData.value2=''
+                that.switchData.value3=''
+                that.switchData.value4=''
+                that.switchData.checkList = []
             }
             if(val=='1'){
                 if(that.switchsite.length==0||that.switchsite.length>1){
@@ -1768,7 +1866,11 @@ export default {
                 that.switchData.value2=that.switchsite[0].endDate
                 that.switchData.value3=that.switchsite[0].startTime
                 that.switchData.value4=that.switchsite[0].endTime
-                that.switchData.checkList=that.switchsite[0].filterValue.split(',')
+                if(that.switchsite[0].filterValue==''){
+                    that.switchData.checkList = []
+                }else{
+                    that.switchData.checkList=that.switchsite[0].filterValue.split(',')
+                }
                 for(var i=0;i<that.switchData.checkList.length;i++){
                     that.switchData.checkList[i] = Number(that.switchData.checkList[i])
                 }
@@ -1849,7 +1951,37 @@ export default {
                     }
                 })
             }
-            if(val=='4'){that.addType='2'}
+            if(val=='4'){
+                var data = {}
+                var arr = []
+                for(var i=0;i<that.tableSite1.length;i++){
+                    arr.push(that.tableSite1[i].id)
+                }
+                data.command = '1'
+                data.screens = arr
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/screen/control/schedule/clear',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '清除成功',
+                                type:'success',
+                                showClose: true,
+                            });
+                            $('#switchModal').modal('hide')
+                            that.ready()
+                        }else{
+                            that.errorCode(data)
+                        }
+                    }
+                })
+            }
+            if(val=='5'){that.addType='2'}
         },
         //屏幕开关定时信息列表changge事件
         switchtableChange(val){this.switchsite = val;},
@@ -1873,6 +2005,9 @@ export default {
                     });
                     return;
                 }
+            }else{
+                that.switchData.value1 = ''
+                that.switchData.value2 = ''
             }
             if(that.switchData.radio1=='1'){
                 if(that.switchData.value3==''||that.switchData.value4==''){
@@ -1883,6 +2018,9 @@ export default {
                     });
                     return;
                 }
+            }else{
+                that.switchData.value3 = ''
+                that.switchData.value4 = ''
             }
             if(that.switchData.radio2=='1'){
                 if(that.switchData.checkList.length==0){
@@ -1893,6 +2031,8 @@ export default {
                     });
                     return;
                 }
+            }else{
+                that.switchData.checkList = []
             }
             var data = {}
             var type = ''
@@ -1975,7 +2115,20 @@ export default {
         //调光定时信息页面 添加/编辑/删除/发送/关闭
         DimmingOperation(val){
             var that = this;
-            if(val=='0'){that.addType='0'}
+            if(val=='0'){
+                that.addType='0'
+                that.DimmingDatas.DimmingName=''
+                that.DimmingDatas.defaultBrightness=5
+                that.DimmingDatas.radio0 = 0
+                that.DimmingDatas.radio1 = 0
+                that.DimmingDatas.radio2 = 0
+                that.DimmingDatas.value1 = ''
+                that.DimmingDatas.value2 = ''
+                that.DimmingDatas.value3 = ''
+                that.DimmingDatas.value4 = ''
+                that.DimmingDatas.checkList = []
+                that.DimmingDatas.brightness2 = 1
+            }
             if(val=='1'){
                 if(that.Dimmingsite.length==0||that.Dimmingsite.length>1){
                     that.$message({
@@ -1995,11 +2148,15 @@ export default {
                 that.DimmingDatas.value2 = that.Dimmingsite[0].endDate
                 that.DimmingDatas.value3 = that.Dimmingsite[0].startTime
                 that.DimmingDatas.value4 = that.Dimmingsite[0].endTime
-                that.DimmingDatas.checkList=that.Dimmingsite[0].filterValue.split(',')
+                if(that.Dimmingsite[0].filterValue==''){
+                    that.DimmingDatas.checkList = []
+                }else{
+                    that.DimmingDatas.checkList=that.Dimmingsite[0].filterValue.split(',')
+                }
                 for(var i=0;i<that.DimmingDatas.checkList.length;i++){
                     that.DimmingDatas.checkList[i] = Number(that.DimmingDatas.checkList[i])
                 }
-                that.brightness2=Number(that.Dimmingsite[0].brightness)
+                that.DimmingDatas.brightness2=Number(that.Dimmingsite[0].brightness)
             }
             if(val=='2'){
                 //删除
@@ -2078,14 +2235,44 @@ export default {
                     }
                 })
             }
-            if(val=='4'){that.addType='2'}
+            if(val=='4'){
+                var data = {}
+                var arr = []
+                for(var i=0;i<that.tableSite1.length;i++){
+                    arr.push(that.tableSite1[i].id)
+                }
+                data.command = '2'
+                data.screens = arr
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/screen/control/schedule/clear',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '清除成功',
+                                type:'success',
+                                showClose: true,
+                            });
+                            $('#DimmingModal').modal('hide')
+                            that.ready()
+                        }else{
+                            that.errorCode(data)
+                        }
+                    }
+                })
+            }
+            if(val=='5'){that.addType='2'}
         },
         //屏幕亮度定时信息列表changge事件
         DimmingtableChange(val){this.Dimmingsite = val;},
         //调光定时信息页面 添加/编辑 保存
         DimmingSubmit2(){
             var that = this;
-            if(that.DimmingDatas.volumeName==''){
+            if(that.DimmingDatas.DimmingName==''){
                 that.$message({
                     message: '定时名称不能为空!',
                     type:'error',
@@ -2102,6 +2289,9 @@ export default {
                     });
                     return;
                 }
+            }else{
+                that.DimmingDatas.value1=''
+                that.DimmingDatas.value2=''
             }
             if(that.DimmingDatas.radio1==1){
                 if(that.DimmingDatas.value3==''||that.DimmingDatas.value4==''){
@@ -2112,6 +2302,9 @@ export default {
                     });
                     return;
                 }
+            }else{
+                that.DimmingDatas.value3 = ''
+                that.DimmingDatas.value4 = ''
             }
             if(that.DimmingDatas.radio2==1){
                 if(that.DimmingDatas.checkList.length==0){
@@ -2122,13 +2315,15 @@ export default {
                     });
                     return;
                 }
+            }else{
+                that.DimmingDatas.checkList = []
             }
             var data = {}
             var type = ''
             if(that.addType == '0'){type='post'}
             if(that.addType == '1'){type='put';data.id = that.Dimmingsite[0].id}
             data.type = '3'
-            data.nickName = that.DimmingDatas.volumeName
+            data.nickName = that.DimmingDatas.DimmingName
             data.defaultBrightness = that.DimmingDatas.defaultBrightness
             data.dateType = that.DimmingDatas.radio0
             data.timeType = that.DimmingDatas.radio1
@@ -2208,7 +2403,20 @@ export default {
         //音量定时信息页面 添加/编辑/删除/发送/关闭
         volumeOperation(val){
             var that= this;
-            if(val=='0'){that.addType='0'}
+            if(val=='0'){
+                that.addType='0'
+                that.volumeDatas.volumeName=''
+                that.volumeDatas.defaultVolume=0
+                that.volumeDatas.radio0 = 0
+                that.volumeDatas.radio1 = 0
+                that.volumeDatas.radio2 = 0
+                that.volumeDatas.value1 = ''
+                that.volumeDatas.value2 = ''
+                that.volumeDatas.value3 = ''
+                that.volumeDatas.value4 = ''
+                that.volumeDatas.checkList = []
+                that.volumeDatas.volume=1
+            }
             if(val=='1'){
                 if(that.volumesite.length==0||that.volumesite.length>1){
                     that.$message({
@@ -2228,7 +2436,11 @@ export default {
                 that.volumeDatas.value2 = that.volumesite[0].endDate
                 that.volumeDatas.value3 = that.volumesite[0].startTime
                 that.volumeDatas.value4 = that.volumesite[0].endTime
-                that.volumeDatas.checkList=that.volumesite[0].filterValue.split(',')
+                if(that.volumesite[0].filterValue==''){
+                    that.volumeDatas.checkList = []
+                }else{
+                    that.volumeDatas.checkList=that.volumesite[0].filterValue.split(',')
+                }
                 for(var i=0;i<that.volumeDatas.checkList.length;i++){
                     that.volumeDatas.checkList[i] = Number(that.volumeDatas.checkList[i])
                 }
@@ -2311,7 +2523,37 @@ export default {
                     }
                 })
             }
-            if(val=='4'){that.addType='2'}
+            if(val=='4'){
+                var data = {}
+                var arr = []
+                for(var i=0;i<that.tableSite1.length;i++){
+                    arr.push(that.tableSite1[i].id)
+                }
+                data.command = '3'
+                data.screens = arr
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/screen/control/schedule/clear',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '清除成功',
+                                type:'success',
+                                showClose: true,
+                            });
+                            $('#volumeModal').modal('hide')
+                            that.ready()
+                        }else{
+                            that.errorCode(data)
+                        }
+                    }
+                })
+            }
+            if(val=='5'){that.addType='2'}
         },
         //音量定时信息页面 添加/编辑 保存
         volumeSubmit2(){
@@ -2333,6 +2575,9 @@ export default {
                     });
                     return;
                 }
+            }else{
+                that.volumeDatas.value1 = ''
+                that.volumeDatas.value2 = ''
             }
             if(that.volumeDatas.radio1==1){
                 if(that.volumeDatas.value3==''||that.volumeDatas.value4==''){
@@ -2343,6 +2588,9 @@ export default {
                     });
                     return;
                 }
+            }else{
+                that.volumeDatas.value3 = ''
+                that.volumeDatas.value4 = ''
             }
             if(that.volumeDatas.radio2==1){
                 if(that.volumeDatas.checkList.length==0){
@@ -2353,6 +2601,8 @@ export default {
                     });
                     return;
                 }
+            }else{
+                that.volumeDatas.checkList = []
             }
             var data = {}
             var type = ''
@@ -2430,7 +2680,11 @@ export default {
         //重启定时页面   添加/编辑/删除/发送/关闭
         restartOperation(val){
             var that = this
-            if(val=='0'){that.addType='0'}
+            if(val=='0'){
+                that.addType='0'
+                that.restartName = ''
+                that.rebootTime = ''
+            }
             if(val=='1'){
                 that.addType='1'
                 if(that.restartsite.length==0||that.restartsite.length>1){
@@ -2518,7 +2772,37 @@ export default {
                     }
                 })
             }
-            if(val=='4'){that.addType='2'}
+            if(val=='4'){
+                var data = {}
+                var arr = []
+                for(var i=0;i<that.tableSite1.length;i++){
+                    arr.push(that.tableSite1[i].id)
+                }
+                data.command = '4'
+                data.screens = arr
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/screen/control/schedule/clear',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '清除成功',
+                                type:'success',
+                                showClose: true,
+                            });
+                            $('#restartMyModal').modal('hide')
+                            that.ready()
+                        }else{
+                            that.errorCode(data)
+                        }
+                    }
+                })
+            }
+            if(val=='5'){that.addType='2'}
         },
         //重启定时信息保存
         restartSubmit(){
@@ -2749,7 +3033,8 @@ export default {
             formdate.append('creatorId',1)
             if(value[0]=='video'){
                 type='1'
-                if(value[1]=='mp4'||value[1]=='mkv'||value[1]=='MP4'||value[1]=='MKV'){
+                console.log(value)
+                if(value[1]=='mp4'||value[1]=='3gpp'||value[1]=='MP4'||value[1]=='3GPP'){
                     
                 }else{
                     that.$message({
@@ -2761,13 +3046,16 @@ export default {
                 }
             }else if(value[0]=='image'){
                 type='0'
-            }else{
-                that.$message({
-                    message: '不支持的文件格式!',
-                    type:'success',
-                    showClose: true,
-                });
-                return;
+                if(value[1]=='jpg'||value[1]=='jpeg'||value[1]=='png'||value[1]=='gif'||value[1]=='JPEG'||value[1]=='PNG'||value[1]=='GIF'||value[1]=='JPG'){
+                    
+                }else{
+                    that.$message({
+                        message: '不支持的文件格式!',
+                        type:'success',
+                        showClose: true,
+                    });
+                    return;
+                }
             }
             formdate.append('mediaType ',type)
             formdate.append('projectId ',sessionStorage.projectId)
@@ -2792,7 +3080,7 @@ export default {
                     that.mediaready()
                 }else{
                     that.filesuploadLoading = false
-                    that.errorCode2(res.errorCode)
+                    that.errorCode(res)
                     $('#filesupload').modal('hide')
                 }
             }).error(function(res){
@@ -2805,7 +3093,6 @@ export default {
             var url = val.mediaUrl
             window.open(that.serverurl+"/v1/solin/file/download?fileUrl="+url)
         },
-
         //任务管理
         taskManagement(){
             $('#taskMyModal').modal('show');
@@ -2820,8 +3107,8 @@ export default {
                 dataType:'json',
                 url:that.serverurl+'/v1/solin/screen/task',
                 data:{
-                   page:that.pageIndex,
-                   size:that.pageSize,
+                   page:that.taskpageIndex,
+                   size:that.taskpageSize,
                    nickName:'',
                    projectIds:sessionStorage.projectId
                 },
@@ -2843,6 +3130,8 @@ export default {
         taskoperation(val){
             var that = this;
             if(val=='0'){
+                this.tasknickName =''
+                this.taskDetailsData = []
                 $('#taskMyModal2').modal('show')
                 this.addType='0'
             }
@@ -2872,7 +3161,6 @@ export default {
                 })
                 $('#taskMyModal2').modal('show')
                 this.addType='1'
-
             }
             if(val=='2'){
                 if(this.tasktableSite.length==0){
@@ -2925,7 +3213,7 @@ export default {
                 that.taskSchedule.value3 = ''
                 that.taskSchedule.value4 = ''
                 that.taskSchedule.checkList = []
-                that.taskSchedule.repeatTimes = ''
+                that.taskSchedule.repeatTimes = '1'
             }
             if(val=='1'){
                 if(this.taskDetailsSite.length==0||this.taskDetailsSite.length>=2){
@@ -2946,13 +3234,33 @@ export default {
                 that.taskSchedule.value2 = that.taskDetailsSite[0].taskSchedule.endDate 
                 that.taskSchedule.value3 = that.taskDetailsSite[0].taskSchedule.startTime 
                 that.taskSchedule.value4 = that.taskDetailsSite[0].taskSchedule.endTime 
-                that.taskSchedule.checkList = that.taskDetailsSite[0].taskSchedule.filterValue.split(',')
-                for(var i=0;i<that.taskSchedule.checkList.length;i++){
-                    that.taskSchedule.checkList[i] = Number(that.taskSchedule.checkList[i])
+                if(that.taskDetailsSite[0].taskSchedule.filterValue==''){
+                    that.taskSchedule.checkList = []
+                }else{
+                    that.taskSchedule.checkList = that.taskDetailsSite[0].taskSchedule.filterValue.split(',')
+                    for(var i=0;i<that.taskSchedule.checkList.length;i++){
+                        that.taskSchedule.checkList[i] = Number(that.taskSchedule.checkList[i])
+                    }
                 }
+                
                 that.taskSchedule.repeatTimes = that.taskDetailsSite[0].repeatTimes 
             }
-            if(val=='2'){}
+            if(val=='2'){
+                var arr = false
+                for(var i=0;i<that.taskDetailsSite.length;i++){
+                    arr = false
+                    for(var j = 0;j<that.taskDetailsData.length;j++){
+                        if(that.taskDetailsSite[i].programId==that.taskDetailsData[j].programId){
+                            that.taskDetailsData.splice(j,1)
+                            arr = true
+                        }
+                    }
+                    if(arr == true){
+                        i--
+                        j--
+                    }
+                }
+            }
         },
         taskDetailsChange(val){this.taskDetailsSite = val},
         //上下移动
@@ -3044,6 +3352,18 @@ export default {
                 });
                 return;
             }
+            if(this.addType2=='0'){
+                for(var i = 0;i<that.taskDetailsData.length;i++){
+                    if(that.programtablesite[0].id == that.taskDetailsData[i].programId){
+                        that.$message({
+                            message: '请不要选择重复节目!',
+                            type:'error',
+                            showClose: true,
+                        });
+                        return;
+                    }
+                }
+            }
             if(that.taskSchedule.radio0==1){
                 if(that.taskSchedule.value1==''||that.taskSchedule.value2==''){
                     that.$message({
@@ -3053,6 +3373,9 @@ export default {
                     });
                     return;
                 }
+            }else{
+                that.taskSchedule.value1=''
+                that.taskSchedule.value2=''
             }
             if(that.taskSchedule.radio1==1){
                 if(that.taskSchedule.value3==''||that.taskSchedule.value4==''){
@@ -3063,6 +3386,9 @@ export default {
                     });
                     return;
                 }
+            }else{
+                that.taskSchedule.value3=''
+                that.taskSchedule.value4=''
             }
             if(that.taskSchedule.radio2==1){
                 if(that.taskSchedule.checkList.length==0){
@@ -3073,6 +3399,8 @@ export default {
                     });
                     return;
                 }
+            }else{
+               that.taskSchedule.checkList = [] 
             }
             if(that.taskSchedule.repeatTimes==''){
                 that.$message({
@@ -3164,7 +3492,6 @@ export default {
                 }
             })
         },
-
         //点击在线更新按钮
         update(){
             if(this.tableSite1.length==0){
@@ -3203,7 +3530,7 @@ export default {
                         showClose: true,
                     });
                 }else{
-                    that.errorCode2(res.errorCode)
+                    that.errorCode(res.errorCode)
                 }
             }).error(function(res){
                 
@@ -3318,7 +3645,7 @@ export default {
 .mediaLibrary_bottom{width: 100%;height: auto;margin-top:5px;}
 .setProgram{width: 100%;display: flex;height: 450px;overflow: auto;}
 .setProgram>div{width:320px;border: 1px solid #e5e5e5;border-radius: 5px;position: relative;overflow: auto;}
-.setProgram_left{}
+
 .setProgram_center{margin-left: 5%;}
 .setProgram_div_top{width: 100%;height: 40px;line-height: 35px;border-bottom: 1px solid #e5e5e5;}
 .setProgram_div_bottom{position: absolute;top:40px;bottom: 0;left: 0;right: 0;padding: 5px;}
@@ -3326,7 +3653,7 @@ export default {
 .programSetting{width: 100%;height: 340px;position: relative;}
 .programSetting_top{width: 100%;height: 40px;line-height: 38px;}
 .programSetting_bottom{width: 100%;position: absolute;top:45px;bottom: 0;height: auto;}
-.form-group{display:flex;justify-content: center;}
+.form-group{display:flex;justify-content: center;margin:10px;}
 .form-group>label{width: 75px;line-height: 34px;text-align: center;}
 .form-group>input{width: 196px;}
 

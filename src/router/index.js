@@ -52,6 +52,8 @@ import lampJournal from '@/components/lamppost/DeviceLog/lampJournal' //灯具�
 import screenJournal from '@/components/lamppost/DeviceLog/screenJournal' //广告屏日志
 import sensorJournal from '@/components/lamppost/DeviceLog/sensorJournal' //气象站日志
 import loraJournal from '@/components/lamppost/DeviceLog/loraJournal' //lora传感器日志
+import RelayJournal from '@/components/lamppost/DeviceLog/RelayJournal' //继电器日志
+
 
 
 import mapHomgPage from '@/components/map/mapHomgPage' //地图主页
@@ -67,14 +69,16 @@ import programSenior from '@/components/program/programSenior' //高级节目页
 
 import Inspection from '@/components/Inspection/Inspection' //巡检管理页面
 import UserSettings from '@/components/Inspection/UserSettings' //用户设置
-import category from '@/components/Inspection/category' //巡检类别
-import patrolItem from '@/components/Inspection/patrolItem' //巡检项
-import QueryStatistics from '@/components/Inspection/QueryStatistics' //查询统计
-import InspectionItems from '@/components/Inspection/InspectionItems' //检查项目
-import InspectionSite from '@/components/Inspection/InspectionSite' //巡检地点
-import InspectionRoute from '@/components/Inspection/InspectionRoute' //巡检路线
-import PatrolPlan from '@/components/Inspection/PatrolPlan' //巡检计划
+import task from '@/components/Inspection/task/task' //巡检计划 (总页面)
+import patrolItem from '@/components/Inspection/task/patrolItem' //巡检项
+import InspectionSite from '@/components/Inspection/task/InspectionSite' //巡检地点
+import InspectionRoute from '@/components/Inspection/task/InspectionRoute' //巡检路线
+import PatrolPlan from '@/components/Inspection/task/PatrolPlan' //巡检计划
+import Statistics from '@/components/Inspection/Statistics' //巡检记录
+import todayPatrolPlan from '@/components/Inspection/todayPatrolPlan' //今日任务
+import historyPatrolRecord from '@/components/Inspection/historyPatrolRecord' //历史任务
 import Record from '@/components/Inspection/Record' //巡检记录
+import AppUpgrade from '@/components/Inspection/AppUpgrade' //巡检APP升级
 import loading2 from '@/components/Inspection/loading' //巡检loading
 
 //  
@@ -172,18 +176,6 @@ export default new Router({
       component: lamppost,
       children:[
         {
-          path: '/',
-          name: 'deploy',
-          component: deploy,
-          // children:[
-          //   {
-          //     path: '/',
-          //     name: 'LampPole',
-          //     component: LampPole,
-          //   },
-          // ]
-        },
-        {
           path: '/Refresh',
           name: 'Refresh',
           component: Refresh
@@ -194,7 +186,7 @@ export default new Router({
           component: equipment,
           children:[
             {
-              path: '/',
+              path: '/lampslanterns',
               name: 'lampslanterns',
               component: lampslanterns,
             },
@@ -213,11 +205,7 @@ export default new Router({
               name: 'programSenior',
               component: programSenior
             },
-            {
-              path: '/lampslanterns',
-              name: 'lampslanterns',
-              component: lampslanterns,
-            },
+            
             {
               path: '/chargingPiles',
               name: 'chargingPiles',
@@ -266,16 +254,6 @@ export default new Router({
           component: deploy,
           children:[
             {
-              path: '/',
-              name: 'LampPole',
-              component: LampPole,
-            },
-            // {
-            //   path: '/deployhomepage',
-            //   name: 'deployhomepage',
-            //   component: deployhomepage,
-            // },
-            {
               path: '/concentrator',
               name: 'concentrator',
               component: concentrator,
@@ -318,11 +296,6 @@ export default new Router({
           component: DeviceLog,
           children:[
             {
-              path: '/',
-              name: 'LampPoleJournal',
-              component: LampPoleJournal,
-            },
-            {
               path: '/LampPoleJournal',
               name: 'LampPoleJournal',
               component: LampPoleJournal,
@@ -346,6 +319,11 @@ export default new Router({
               path: '/loraJournal',
               name: 'loraJournal',
               component: loraJournal,
+            },
+            {
+              path: '/RelayJournal',
+              name: 'RelayJournal',
+              component: RelayJournal,
             },
           ]
         }
@@ -424,34 +402,47 @@ export default new Router({
           component: UserSettings,
         },
         {
-          path: '/QueryStatistics',
-          name: 'QueryStatistics',
-          component: QueryStatistics,
+          path: '/task',
+          name: 'task',
+          component: task,
+          children:[
+            {
+              path: '/patrolItem',
+              name: 'patrolItem',
+              component: patrolItem,
+            },
+            {
+              path: '/InspectionSite',
+              name: 'InspectionSite',
+              component: InspectionSite,
+            },
+            {
+              path: '/InspectionRoute',
+              name: 'InspectionRoute',
+              component: InspectionRoute,
+            },
+            {
+              path: '/PatrolPlan',
+              name: 'PatrolPlan',
+              component: PatrolPlan,
+            },
+          ]
+        },
+        
+        {
+          path: '/Statistics',
+          name: 'Statistics',
+          component: Statistics,
         },
         {
-          path: '/InspectionItems',
-          name: 'InspectionItems',
-          component: InspectionItems,
+          path: '/todayPatrolPlan',
+          name: 'todayPatrolPlan',
+          component: todayPatrolPlan,
         },
         {
-          path: '/InspectionSite',
-          name: 'InspectionSite',
-          component: InspectionSite,
-        },
-        {
-          path: '/InspectionRoute',
-          name: 'InspectionRoute',
-          component: InspectionRoute,
-        },
-        {
-          path: '/PatrolPlan',
-          name: 'PatrolPlan',
-          component: PatrolPlan,
-        },
-        {
-          path: '/category',
-          name: 'category',
-          component: category,
+          path: '/historyPatrolRecord',
+          name: 'historyPatrolRecord',
+          component: historyPatrolRecord,
         },
         {
           path: '/Record',
@@ -459,9 +450,9 @@ export default new Router({
           component: Record,
         },
         {
-          path: '/patrolItem',
-          name: 'patrolItem',
-          component: patrolItem,
+          path: '/AppUpgrade',
+          name: 'AppUpgrade',
+          component: AppUpgrade,
         },
         {
           path: '/loading2',

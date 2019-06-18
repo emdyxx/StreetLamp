@@ -1,4 +1,5 @@
 <template>
+    <!-- lora传感器 -->
     <div class="loraQuery">
         <div class="loraQuery_top">
             <el-button @click="HistoryData()" v-if="type=='0'" type="primary" icon='el-icon-search' size='small'>获取历史数据</el-button>
@@ -8,15 +9,15 @@
             <div class="loraQuery_bottom_top">
                 <div class="search">
                     <label style="width:100px;">传感器名字:</label>
-                    <input type="text" v-model="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入传感器名字">
+                    <input type="text" v-model="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入传感器名字">
                 </div>
                 <div class="search">
                     <label style="width:90px;">传感器序列号:</label>
-                    <input type="text" v-model="serialNumber" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入传感器序列号">
+                    <input type="text" v-model="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入传感器序列号">
                 </div>
                 <div class="search">
                     <label>传感器型号:</label>
-                    <input type="text" v-model="modelName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入传感器型号">
+                    <input type="text" v-model="modelName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入传感器型号">
                 </div>
                 <div style="margin-left:15px;">
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
@@ -293,7 +294,7 @@
                         <el-table-column
                         prop="distance"
                         align='center'
-                        label="距离cm"
+                        label="距离m"
                         :formatter="formatRole"
                         min-width="80">
                         </el-table-column>
@@ -310,8 +311,8 @@
                         :formatter="formatRole"
                         min-width="100">
                             <template slot-scope="scope">
-                                <span v-if="scope.row.voltageState=='0'">正常</span>
-                                <span v-if="scope.row.voltageState=='1'">欠压</span>
+                                <span v-if="scope.row.voltageStatus=='0'">正常</span>
+                                <span v-if="scope.row.voltageStatus=='1'">欠压</span>
                             </template>
                         </el-table-column>
                     </template>
@@ -605,7 +606,7 @@
                     <el-table-column
                     prop="distance"
                     align='center'
-                    label="距离cm"
+                    label="距离m"
                     :formatter="formatRole"
                     min-width="80">
                     </el-table-column>
@@ -622,8 +623,8 @@
                     :formatter="formatRole"
                     min-width="100">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.voltageState=='0'">正常</span>
-                            <span v-if="scope.row.voltageState=='1'">欠压</span>
+                            <span v-if="scope.row.voltageStatus=='0'">正常</span>
+                            <span v-if="scope.row.voltageStatus=='1'">欠压</span>
                         </template>
                     </el-table-column>
                 </template>

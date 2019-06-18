@@ -11,7 +11,7 @@
             <div class="advertisingscreen_bottom_top">
                 <div class="search">
                     <label>屏幕标识:</label>
-                    <input type="text" v-model="serialNumber" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入屏幕序列号">
+                    <input type="text" v-model="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入屏幕序列号">
                 </div>
                 <div class="search">
                     <label>屏幕状态:</label>
@@ -128,7 +128,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label><span class="Required">*</span>昵称:</label>
-                            <input type="text" v-model='form.nickName' class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
+                            <input type="text" v-model='form.nickName' class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                             <label><span class="Required">*</span>型号:</label>
                             <el-select v-model="form.modelId" size='small' style='width:126px;' placeholder="请选择">
                                 <el-option
@@ -141,19 +141,19 @@
                         </div> 
                         <div class="form-group">
                             <label><span class="Required">*</span>屏宽(像素):</label>
-                            <input type="text" v-model='form.width' class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入宽度">
+                            <input type="text" v-model='form.width' class="form-control" maxlength="10" oninput="value=value.replace(/[^\d]/g,'')" placeholder="请输入宽度">
                             <label><span class="Required">*</span>屏高(像素):</label>
-                            <input type="text" v-model='form.height' class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入高度">
+                            <input type="text" v-model='form.height' class="form-control" maxlength="10" oninput="value=value.replace(/[^\d]/g,'')" placeholder="请输入高度">
                         </div>
                         <div class="form-group">
                             <label><span class="Required">*</span>控制卡标识:</label>
-                            <input type="text" v-model="form.serialNumber" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入屏幕标识">
-                            <label><span class="Required">*</span>控制卡宽度:</label>
-                            <input type="text" v-model="form.controlCardWidth" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入控制卡宽">
+                            <input type="text" v-model="form.serialNumber" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入屏幕标识">
+                            <label>控制卡宽度:</label>
+                            <input type="text" v-model="form.controlCardWidth" maxlength="10" class="form-control" oninput="value=value.replace(/[^\d]/g,'')" placeholder="请输入控制卡宽">
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>控制卡高度:</label>
-                            <input type="text" v-model="form.controlCardHeight" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入控制卡高">
+                            <label>控制卡高度:</label>
+                            <input type="text" v-model="form.controlCardHeight" maxlength="10" class="form-control" oninput="value=value.replace(/[^\d]/g,'')" placeholder="请输入控制卡高">
                             <label>备注:</label>
                             <el-input
                                 type="textarea"
@@ -446,13 +446,16 @@ export default {
         //删除广告屏
         deleteadvertisingscreen(){
             var that = this
-            var arr = [this.site[0].id]
-            if(this.site.length==0||this.site.length>=2){
+            var arr = []
+            if(this.site.length==0){
                 this.$message({
-                    message: '请选择单个屏幕进行删除!',
+                    message: '请选择屏幕进行删除!',
                     type: 'warning'
                 });
                 return;
+            }
+            for(var i=0;i<this.site.length;i++){
+                arr.push(this.site[i].id)
             }
             this.$confirm('是否删除所选屏幕？', '提示', {
                 confirmButtonText: '确定',
@@ -661,7 +664,7 @@ export default {
                 });
                 return;
             }
-            if(that.form.controlCardWidth==''||that.form.controlCardHeight==''||that.form.serialNumber==''){
+            if(that.form.serialNumber==''){
                 that.$message({
                     message: '必填字段不能为空!',
                     type: 'error'

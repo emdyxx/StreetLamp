@@ -10,7 +10,7 @@
             <div class="InspectionSite_bottom_top">
                 <div class="search">
                     <label>点名称:</label>
-                    <input v-model="siteName" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入点名称">
+                    <input v-model="siteName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入点名称">
                 </div>
                 <div style="margin-left:15px;">
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
@@ -112,11 +112,11 @@
                             <div class="tab-pane fade in active" id="a" style='margin-top:10px;'>
                                 <div class="form-group">
                                     <label><span class="Required">*</span>点名称:</label>
-                                    <input v-model.lazy="data.siteName" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入点名称">
+                                    <input v-model.lazy="data.siteName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入点名称">
                                 </div>
                                 <div class="form-group">
                                     <label><span class="Required">*</span>点编号:</label>
-                                    <input v-model="data.siteNumber" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入点编号">
+                                    <input v-model="data.siteNumber" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入点编号">
                                 </div>
                                 <div class="form-group">
                                     <label for="phone">点状态:</label>
@@ -141,7 +141,7 @@
                                 </div>  
                                 <div class="form-group">
                                     <label>有效巡检距离:</label>
-                                    <input v-model="data.offsetDistance" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入有效巡检距离(米)">
+                                    <input v-model="data.offsetDistance" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入有效巡检距离(米)">
                                 </div>
                                 <div class="form-group">
                                     <label>参考位置:</label>
@@ -150,11 +150,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label>最少拍照数量:</label>
-                                    <input v-model='data.minPhoto' type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入最少拍照数量">
+                                    <input v-model='data.minPhoto' type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入最少拍照数量">
                                 </div>
                                 <div class="form-group">
                                     <label>最多拍照数量:</label>
-                                    <input v-model='data.maxPhoto' type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入最多拍照数量">
+                                    <input v-model='data.maxPhoto' type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入最多拍照数量">
                                 </div>
                                 <div class="form-group">
                                     <label>点图片:</label>
@@ -181,6 +181,8 @@
                                             <div style="font-size: 14px;color: #606266;margin:2px 5px 10px 5px;">
                                                 已关联巡检项:
                                                 <el-button @click='leftDelete' type="primary" size="mini">移除</el-button>  
+                                                <el-button @click="Move(0)" type="primary" icon="el-icon-arrow-down" size="mini"></el-button>  
+                                                <el-button @click="Move(1)" type="primary" icon="el-icon-arrow-up" size="mini"></el-button>  
                                             </div>
                                             <div class="term_left_data">
                                                 <el-table
@@ -194,7 +196,7 @@
                                                     <el-table-column
                                                     type="selection"
                                                     align='center'
-                                                    width="30">
+                                                    width="55">
                                                     </el-table-column>
                                                     <el-table-column
                                                     prop="itemName"
@@ -239,7 +241,7 @@
                                                     <el-table-column
                                                     type="selection"
                                                     align='center'
-                                                    width="30">
+                                                    width="55">
                                                     </el-table-column>
                                                     <el-table-column
                                                     prop="itemName"
@@ -601,7 +603,7 @@ export default {
                     if(data.errorCode=='0'){
                         that.options = data.result.list
                     }else{
-                        that.errorCode3(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -629,7 +631,7 @@ export default {
                         that.termData_right = data.result.list
                         that.total2 = data.result.total
                     }else{
-                        that.errorCode3(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -655,6 +657,41 @@ export default {
                         this.termData_left.push(this.rightSize[i])
                     }
                 }
+            }
+        },
+        //已关联巡检项  移动位置
+        Move(val){
+            if(this.leftSize.length>=2){
+                this.$message({
+                    message: '请选择单个巡检项进行操作!',
+                    type: 'error'
+                });
+                return
+            }
+            var data = this.leftSize[0]
+            var length = this.termData_left.length
+            var index = ''
+            //上移一级
+            if(val=='1'){
+                for(var i=0;i<length;i++){
+                    if(this.termData_left[i].id==this.leftSize[0].id){
+                        index = i
+                    }
+                }
+                if(index==0){return}
+                this.termData_left.splice(index,1)
+                this.termData_left.splice(index-1,0,data)
+            }
+            //下移一级
+            if(val=='0'){
+                for(var i=0;i<length;i++){
+                    if(this.termData_left[i].id==this.leftSize[0].id){
+                        index = i
+                    }
+                }
+                if(index==length-1){return}
+                this.termData_left.splice(index,1)
+                this.termData_left.splice(index+1,0,data)
             }
         },
         //移除
@@ -712,7 +749,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
+                url:that.serverurl+'/v1/manage/operat/'+41,
                 contentType:'application/json;charset=UTF-8',
                 data:{},
                 success:function(data){

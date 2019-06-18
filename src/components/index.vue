@@ -116,15 +116,15 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="password1">原始密码:</label>
-                        <input type="password" v-model="password1" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入原始密码">
+                        <input type="password" v-model="password1" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入原始密码">
                     </div>
                     <div class="form-group">
                         <label for="password2">新密码:</label>
-                        <input type="password" v-model="password2" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入新密码">
+                        <input type="password" v-model="password2" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入新密码">
                     </div>
                     <div class="form-group">
                         <label for="password3">确认密码:</label>
-                        <input type="password" v-model="password3" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请确认新密码">
+                        <input type="password" v-model="password3" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请确认新密码">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -136,7 +136,6 @@
     </div><!-- /.modal -->
   </div>
 </template>
-
 <script>
 export default {
     name: 'index',
@@ -151,8 +150,11 @@ export default {
             },
             password1:'',
             password2:"",
-            password3:''
+            password3:'',
+            mediaUrl:'',
         }
+    },
+    mounted(){
     },
     methods:{
         // 退出登录
@@ -231,7 +233,6 @@ export default {
         lamppost(val){
             sessionStorage.menuId = val
             sessionStorage.headercolorType = '2'
-            sessionStorage.menuId3='45'
             this.$router.push({'path':'/lamppost'})
         },
         //gis地图系统
@@ -376,19 +377,6 @@ export default {
 .index_center>div:nth-of-type(5){top: -65px;left: 330px;}
 .index_center>div:nth-of-type(6){top: 65px;left: 330px;}
 .index_center>div:nth-of-type(7){top: 0px;left: 440px;}
-/* .index_center{margin: 40px auto;}
-.index_center div{margin-right: 30px;margin-left:30px;cursor: pointer;}
-.index_center div>img{transition: all 1S;-webkit-transition: all 1S;}
-.index_center p{color: white;margin-top:10px;font-size: 16px} */
-/* .index_center_top,.index_center_bottom{display: flex;justify-content: center;}
-.index_center_top>div,.index_center_bottom>div{width: 150px;height: 20px;background-repeat: no-repeat !important;background-position: center 25% !important;color: #FFF;text-align: center;font-size: 14px;opacity: 0.9;padding: 99px 5px 15px 10px;margin: 10px 10px 10px 10px;line-height: 5px;cursor: pointer;border: 2px solid transparent;}
-.index_center_top>div:hover,.index_center_bottom>div:hover{border: 2px solid white;} */
-/* .index_center_top_usercentre{background: #2196F3 url('../assets/user.png');}
-.index_center_top_lampost{background:#9C27B0 url('../assets/smartpole.png');}
-.index_center_top_coordinate{background:#67C23A url('../assets/coordinate.png');}
-.index_center_bottom_video{background:#BB6F6B url('../assets/video.png');}
-.index_center_bottom_wifi{background:#79BD8F url('../assets/wifi.png');}
-.index_center_bottom_broadcast{background:#E6A23C url('../assets/broadcast.png');} */
 
 .header_img{text-align: left;margin-left: 30px;}
 .header_img>img{width: 80px;height: 80px;border-radius: 50%;}

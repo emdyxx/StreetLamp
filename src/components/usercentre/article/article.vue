@@ -14,11 +14,11 @@
                 <div class="article_right_bottom_top">
                     <div class="search">
                         <label>项目名称:</label>
-                        <input type="text" v-model="projectName2" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入项目名称">
+                        <input type="text" v-model="projectName2" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入项目名称">
                     </div>
                     <div class="search">
                         <label>负责人:</label>
-                        <input type="text" v-model="principal2" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入负责人">
+                        <input type="text" v-model="principal2" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入负责人">
                     </div>
                     <div class="search">
                         <label>归属机构:</label>
@@ -130,11 +130,11 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="name"><span class="Required">*</span>项目名称:</label>
-                            <input type="text" v-model="projectName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="name" placeholder="请输入项目名称">
+                            <input type="text" v-model="projectName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="name" placeholder="请输入项目名称">
                         </div> 
                         <div class="form-group">
                             <label for="name2"><span class="Required">*</span>负责人:</label>
-                            <input type="text" v-model="principal" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="name2" placeholder="请输入负责人">
+                            <input type="text" v-model="principal" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="name2" placeholder="请输入负责人">
                         </div> 
                         <div class="form-group">
                             <label>所属机构:</label>
@@ -182,7 +182,7 @@
                         </div> 
                         <div class="form-group">
                             <label>场景:</label>
-                            <el-select v-model="value4" size='small' style="width: 196px;" placeholder="请选择">
+                            <el-select v-model="value4" size='small' clearable style="width: 196px;" placeholder="请选择">
                                 <el-option
                                 v-for="item in options4"
                                 :key="item.id"
@@ -326,10 +326,10 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.options1 = data.result.areas
-                        if(val=='0'){
-                            that.value1 = data.result.areas[0].id
-                        }else{
+                        if(val=='1'){
                             that.value1 = that.detailsData.firstAreaId
+                        }else{
+                            that.value1 = data.result.areas[0].id
                         }
                         that.city(val)
                     }else{
@@ -354,10 +354,10 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.options2 = data.result.areas
-                        if(val=='0'){
-                            that.value2 = data.result.areas[0].id
-                        }else{
+                        if(val=='1'){
                             that.value2 = that.detailsData.secondAreaId
+                        }else{
+                           that.value2 = data.result.areas[0].id 
                         }
                         that.area(val)
                     }else{
@@ -382,10 +382,10 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.options3 = data.result.areas
-                        if(val=='0'){
-                            that.value3 = data.result.areas[0].id
-                        }else{
+                        if(val=='1'){
                             that.value3 = that.detailsData.thirdAreaId
+                        }else{
+                            that.value3 = data.result.areas[0].id
                         }
                     }else{
                         that.errorCode(data)
@@ -499,7 +499,11 @@ export default {
                         that.projectName = that.detailsData.projectName
                         that.principal = that.detailsData.pricipal
                         that.mark = that.site[0].remark
-                        that.value4 = that.detailsData.scene
+                        if(that.detailsData.scene==null||that.detailsData.scene==undefined){
+                            that.value4 = ''
+                        }else{
+                            that.value4 = that.detailsData.scene
+                        }
                         that.value5 = String(that.detailsData.locationType)
                         that.imgurl = that.detailsData.planUrl
                         if(that.detailsData.planUrl==''){}else{
@@ -681,6 +685,14 @@ export default {
                             async: false,
                             success:function(data) {
                                 if(data.errorCode=='0'){
+                                    for(var i=0;i<data.result.length;i++){
+                                        data.result[i].state={"opened" : true}
+                                        if(data.result[i].children==undefined){}else{
+                                            for(var j=0;j<data.result[i].children.length;j++){
+                                                data.result[i].children[j].state={"opened" : true}
+                                            }
+                                        }
+                                    }
                                     that.regitReady()
                                     var data2={"text" : "中国",'id':'0','type':'0',"state": {"opened" : true}}
                                     data2.children = data.result

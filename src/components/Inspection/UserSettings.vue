@@ -10,15 +10,15 @@
             <div class="UserSettings_bottom_top">
                 <div class="search">
                     <label>巡检员姓名:</label>
-                    <input v-model="inspectorName" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
+                    <input v-model="inspectorName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
                 </div>
                 <div class="search">
                     <label>巡检员编号:</label>
-                    <input v-model="inspectorNumber" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入姓名">
+                    <input v-model="inspectorNumber" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入姓名">
                 </div>
                 <div class="search">
                     <label>手机号:</label>
-                    <input v-model="mobile" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
+                    <input v-model="mobile" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
                 </div>
                 <div style="margin-left:15px;">
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
@@ -104,23 +104,23 @@
                     <div class="modal-body" style='min-height:200px;max-height:590px;overflow:auto;'>
                         <div class="form-group">
                             <label><span class="Required">*</span>手机号(账号):</label>
-                            <input v-model="data.mobile" type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入手机号码">
+                            <input v-model="data.mobile" type="text" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入手机号码">
                         </div>
                         <div class="form-group">
                             <label><span class="Required">*</span>密码:</label>
-                            <input v-model="data.loginPwd" type="password" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入密码">
+                            <input v-model="data.loginPwd" type="password" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入密码">
                         </div>
                         <div class="form-group">
                             <label><span class="Required">*</span>确认密码:</label>
-                            <input v-model="data.loginPwd2" type="password" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入确认密码">
+                            <input v-model="data.loginPwd2" type="password" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入确认密码">
                         </div>
                         <div class="form-group">
                             <label><span class="Required">*</span>巡检员姓名:</label>
-                            <input v-model="data.inspectorName" type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入巡检员姓名">
+                            <input v-model="data.inspectorName" type="text" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入巡检员姓名">
                         </div>
                         <div class="form-group">
                             <label><span class="Required">*</span>巡检员编号:</label>
-                            <input v-model="data.inspectorNumber" type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入巡检员编号">
+                            <input v-model="data.inspectorNumber" type="text" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入巡检员编号">
                         </div>
                         <div class="form-group">
                             <label>性别:</label>
@@ -281,10 +281,16 @@ export default {
             }
             var type = ''
             var data = {}
-            if(that.type=='0'){type='post';}
-            if(that.type=='1'){type='put';data.id = that.site[0].id;}
+            if(that.type=='0'){
+                type='post';
+                data.loginPwd = md5(that.data.loginPwd);
+            }
+            if(that.type=='1'){
+                type='put';
+                data.id = that.site[0].id;
+                data.loginPwd = that.data.loginPwd;
+            }
             data.mobile = that.data.mobile;
-            data.loginPwd = md5(that.data.loginPwd);
             data.inspectorName = that.data.inspectorName;
             data.inspectorNumber = that.data.inspectorNumber;
             data.sex = that.data.sex;
@@ -306,7 +312,7 @@ export default {
                         that.ready()
                         $('#addUserSettings').modal('hide')
                     }else{
-                        that.errorCode3(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -333,7 +339,7 @@ export default {
                         that.tableData = data.result.list
                         that.total = data.result.total
                     }else{
-                        that.errorCode3(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })

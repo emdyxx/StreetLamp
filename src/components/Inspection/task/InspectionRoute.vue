@@ -10,7 +10,7 @@
             <div class="UserSettings_bottom_top">
                 <div class="search">
                     <label>路线名称:</label>
-                    <input v-model="routeName" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入路线名称">
+                    <input v-model="routeName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入路线名称">
                 </div>
                 <div style="margin-left:15px;">
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
@@ -78,11 +78,11 @@
                     <div class="modal-body" style='min-height:200px;max-height:590px;overflow:auto;'>
                         <div class="form-group">
                             <label><span class="Required">*</span>路线名称:</label>
-                            <input v-model="data.routeName" type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入手机号码">
+                            <input v-model="data.routeName" type="text" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入路线名称">
                         </div>
                         <div class="form-group">
                             <label>备注说明:</label>
-                            <input v-model="data.remark" type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入用户姓名">
+                            <input v-model="data.remark" type="text" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入备注说明">
                         </div>
                         <div class="spot">
                             <div>
@@ -253,6 +253,10 @@ export default {
                     });
                     return;
                 }
+                var arr = []
+                for(var i=0;i<that.site.length;i++){
+                    arr.push(that.site[i].id)
+                }
                 that.$confirm('是否删除所选巡检路线？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -331,7 +335,7 @@ export default {
                         that.ready()
                         $('#addInspectionRoute').modal('hide')
                     }else{
-                        that.errorCode3(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -461,7 +465,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
+                url:that.serverurl+'/v1/manage/operat/'+42,
                 contentType:'application/json;charset=UTF-8',
                 data:{},
                 success:function(data){
@@ -500,7 +504,7 @@ export default {
 .UserSettings_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
 .UserSettings_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
 .search{display: flex;}
-.search>label{width: 60px;}
+.search>label{width: 70px;}
 .search>input{width: 146px;margin-top:7px;height: 34px;}
 .Required{color: red;font-size: 17px;}
 .form-group{display:flex;justify-content: center;}

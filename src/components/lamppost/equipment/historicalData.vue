@@ -1,8 +1,9 @@
 <template>
     <!-- 气象站历史数据 -->
     <div class="historicalData">
-        <el-tabs v-model="activeName" @tab-click="activeName_change" type="border-card">
-            <el-tab-pane label="列表展示" name="0" style="position:relative;width:100%;height:100%;">
+        <el-button @click="backtrack" type="warning" size='small' icon="el-icon-arrow-left" style="position:absolute;top:5px;left:220px;z-index:9999;">返回</el-button>
+        <el-tabs v-model="activeName" @tab-click="activeName_change" type="border-card" style="height:100%;">
+            <el-tab-pane label="列表展示" name="0">
                 <div class="historicalData_top">
                     <div>
                         <span>日期:</span>
@@ -11,7 +12,7 @@
                         style="width:340px;"
                         size='small'
                         type="datetimerange"
-                        range-separator="--"
+                        range-separator="-"
                         value-format='yyyy-MM-dd HH:mm:ss'
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
@@ -115,7 +116,7 @@
                     </div>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="图表展示" name="1" style="position:relative;width:100%;height:100%;">
+            <el-tab-pane label="图表展示" name="1">
                 <div class="historicalData_top">
                     <div>
                         <span>日期:</span>
@@ -124,7 +125,7 @@
                         style="width:340px;"
                         size='small'
                         type="datetimerange"
-                        range-separator="--"
+                        range-separator="-"
                         value-format='yyyy-MM-dd HH:mm:ss'
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
@@ -146,6 +147,7 @@
     </div>
 </template>
 <script>
+
 export default {
     name: 'chargingPile',
     data () {
@@ -179,7 +181,7 @@ export default {
             var that = this;
             var url = ''
             var data = {}
-            data.projectId = sessionStorage.projectId
+            data.projectIds = sessionStorage.projectId
             url='/v1/solin/sensor/env/log/data'
             data.concentratorSn = sessionStorage.concentratorSn 
             if(this.activeName=='0'){
@@ -225,6 +227,19 @@ export default {
                     data:data,
                     success:function(data){
                         if(data.errorCode=='0'){
+                            var key = data.result
+                            // 将二进制字符串转换为字符数组
+                            var charData = key.split('').map(function (x) { return x.charCodeAt(0); });
+                            // 将数字数组转换成字节数组
+                            var binData = new Uint8Array(charData);
+                            // 解压
+                            var datas = pako.inflate(binData);
+                            // 将GunZip ByTAREAR转换回ASCII字符串
+                            var key2 = String.fromCharCode.apply(null, new Uint16Array(datas));
+                            //  解压后解码，防止中文乱码
+                            key2 = unescape(key2)
+                            //将string对象转化为json对象并重新赋值
+                            data.result = $.parseJSON(key2)
                             var myChart = that.$echarts.init(document.getElementById('myChart'))
                             var myChart1 = that.$echarts.init(document.getElementById('myChart1'))
                             var myChart2 = that.$echarts.init(document.getElementById('myChart2'))
@@ -752,6 +767,8 @@ export default {
         },
         sizechange(val){this.pageSize = val;this.ready()},
         currentchange(val){this.pageIndex = val;this.ready()},
+        //返回上一级
+        backtrack(){this.$router.go(-1);},
     },
     created() {
         
@@ -761,7 +778,7 @@ export default {
 <style scoped>
 .historicalData{width: 100%;height: 100%;border: 1px solid #E4E4F1;}
 .historicalData_top{width: 100%;height: 40px;line-height: 40px;display: flex;justify-content: center;}
-.historicalData_bottom{position: absolute;top: 40px;bottom: 0;left: 0;right: 0;}
+.historicalData_bottom{position: absolute;top: 60px;bottom: 0;left: 0;right: 0;}
 .historicalData_bottom2{display: flex;justify-content: center;flex-wrap: wrap;overflow: auto;}
 .historicalData_bottom_echarts{width: 350px;height: 250px;margin-left: 3%;}
 .block{text-align: center;}

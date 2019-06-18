@@ -21,13 +21,12 @@ export default {
         //初始化左侧树
         setTimeout(function(){
             that.readyLeft()
-        },200)
+        },400)
     },
     methods:{
         //请求左侧树
         readyLeft(){
             var that = this;
-            $('#jstree').jstree("destroy");
             $('#jstree').jstree({
                 "types" : {
                     "1" : {
@@ -46,7 +45,6 @@ export default {
                         "icon" : 'jstree_icon5',
                     }
                 },
-                // "state" : { "key" : that.sizeType.text },
                 "plugins" : ['types'],
                 'core' : {
                     'data':function(obj,callback){
@@ -86,6 +84,7 @@ export default {
                                         arr.id = data.result.menus[i].id
                                         datas[0].children.push(arr)
                                     }
+                                    sessionStorage.menuId3 = data.result.menus[0].id
                                     $.ajax({
                                         type:"GET",
                                         url:that.serverurl+'/v1/manage/menu/54',

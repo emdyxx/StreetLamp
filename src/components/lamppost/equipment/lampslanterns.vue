@@ -44,11 +44,11 @@
             <div class="lampslanterns_bottom_top">
                 <div class="search">
                     <label>名称:</label>
-                    <input type="text" v-model="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入单灯名称">
+                    <input type="text" v-model="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入单灯名称">
                 </div>
                 <div class="search">
                     <label>序列号:</label>
-                    <input type="text" v-model="serialNumber" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入序列号">
+                    <input type="text" v-model="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入序列号">
                 </div>
                 <div class="search">
                     <label>在线状态:</label>
@@ -274,7 +274,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label><span class="Required">*</span>策略名称:</label>
-                            <input type="text" id="strategyName" v-model="data.strategyName" class="form-control" placeholder="请输入策略名称">
+                            <input type="text" id="strategyName" v-model="data.strategyName" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入策略名称">
                             <label>有效期:</label>
                             <el-date-picker
                             v-model="data.expire"
@@ -371,7 +371,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="myModalLabel">群组策略</h4>
                     </div>
-                    <div class="modal-body" style="height: 580px;">
+                    <div class="modal-body" style="height: 600px;">
                         <el-tabs v-model="GroupStrategyType" type="card" @tab-click="GroupStrategyClick">
                             <el-tab-pane label="集中器" name="0" style='padding:25px 10px 0 10px;'>
                                 <p>请选中集中器:</p>
@@ -393,7 +393,7 @@
                                         width="55">
                                         </el-table-column>
                                         <el-table-column
-                                        prop="nickName"
+                                        prop="concentratorName"
                                         align='center'
                                         label="集中器名字"
                                         min-width="100">
@@ -426,7 +426,7 @@
                                     </div>
                                 </div>
                                 <p>请选择策略:</p>
-                                <div style="width:100%;height:200px;">
+                                <div style="width:100%;max-height:200px;">
                                     <el-table
                                         :data="tableData2"
                                         @row-click="clickRow4" 
@@ -479,6 +479,34 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
+        <!-- 单灯策略 清空策略 -->
+        <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible"
+        width="30%"
+        style="border: none;">
+        <span>
+            <el-checkbox v-model="dialogVisibleChecked">是否恢复感光模式</el-checkbox>
+        </span>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button @click="ClearanceStrategy" type="primary">确 定</el-button>
+        </span>
+        </el-dialog>
+        <!-- 群组策略 清空策略 -->
+        <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible2"
+        width="30%"
+        style="border: none;">
+        <span>
+            <el-checkbox v-model="dialogVisibleChecked2">是否恢复感光模式</el-checkbox>
+        </span>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible2 = false">取 消</el-button>
+            <el-button @click="ClearanceStrategy2" type="primary">确 定</el-button>
+        </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -530,6 +558,10 @@ export default {
             maxbrightness:100,
             timer:'',//时间节点
             strategyType:'',
+            dialogVisible:false,
+            dialogVisibleChecked:false,
+            dialogVisible2:false,
+            dialogVisibleChecked2:false,
             // 群组策略参数
             GroupStrategyType:"0",
             myModaltableData:[],
@@ -855,11 +887,9 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/lighting/concentrator',
+                url:that.serverurl+'/v1/solin/concentrator',
                 contentType:'application/json;charset=UTF-8',
                 data:{
-                    nickName:'',
-                    concentratorSn:'',
                     page:that.myModalpageIndex,
                     size:that.myModalpageSize,
                     projectIds:sessionStorage.projectId,
@@ -924,57 +954,42 @@ export default {
                     })
                     return;
                 }
-                var data = {}
-                data.command = '2'
-                data.concentratorId = that.myModalSite[0].id
-                this.$confirm('是否恢复感光模式?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    data.lightSense = '1'
-                    $.ajax({
-                        type:'post',
-                        async:true,
-                        dataType:'json',
-                        url:that.serverurl+'/v1/solin/lighting/concentrator/strategy',
-                        contentType:'application/json;charset=UTF-8',
-                        data:JSON.stringify(data),
-                        success:function(data){
-                            if(data.errorCode=='0'){
-                                that.$message({
-                                    message: '策略清空成功',
-                                    type: 'success'
-                                });
-                                that.ConcentratorManagement()
-                            }else{
-                                that.errorCode(data)
-                            }
-                        }
-                    })
-                }).catch(() => {
-                    data.lightSense = '0'
-                    $.ajax({
-                        type:'post',
-                        async:true,
-                        dataType:'json',
-                        url:that.serverurl+'/v1/solin/lighting/concentrator/strategy',
-                        contentType:'application/json;charset=UTF-8',
-                        data:JSON.stringify(data),
-                        success:function(data){
-                            if(data.errorCode=='0'){
-                                that.$message({
-                                    message: '策略清空成功',
-                                    type: 'success'
-                                });
-                                that.ConcentratorManagement()
-                            }else{
-                                that.errorCode(data)
-                            }
-                        }
-                    })    
-                });
+                this.dialogVisible2 = true
+                this.dialogVisibleChecked2 = false
             }
+        },
+        //群组策略--清空策略确定按钮
+        ClearanceStrategy2(){
+            var that = this
+            var data = {}
+            data.command = '2'
+            data.concentratorId = that.myModalSite[0].id
+            if(that.dialogVisibleChecked2==true){
+                data.lightSense = '1'
+            }
+            if(that.dialogVisibleChecked2==false){
+                data.lightSense = '0'
+            }
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/lighting/concentrator/strategy',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '策略清空成功',
+                            type: 'success'
+                        });
+                        that.dialogVisible2 = false
+                        that.ConcentratorManagement()
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
         },
         // 策略管理列表  增加/删除/修改/查看详情/清空策略
         strategy(val,datas){
@@ -1148,63 +1163,47 @@ export default {
                     });
                     return;
                 }
-                var data = {}
-                var lampId = []
-                for(var i=0;i<that.site.length;i++){
-                    lampId.push(that.site[i].id)
-                }
-                data.command = '2'
-                data.lamps = lampId
-                this.$confirm('是否恢复感光模式?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    data.lightSense = '1'
-                    $.ajax({
-                        type:'post',
-                        async:true,
-                        dataType:'json',
-                        url:that.serverurl+'/v1/solin/lighting/control/strategy',
-                        contentType:'application/json;charset=UTF-8',
-                        data:JSON.stringify(data),
-                        success:function(data){
-                            if(data.errorCode=='0'){
-                                that.$message({
-                                    message: '策略清空成功',
-                                    type: 'success'
-                                });
-                                $('#myModal').modal('hide')
-                                that.ready()
-                            }else{
-                                that.errorCode(data)
-                            }
-                        }
-                    })
-                }).catch(() => {
-                    data.lightSense = '0'
-                    $.ajax({
-                        type:'post',
-                        async:true,
-                        dataType:'json',
-                        url:that.serverurl+'/v1/solin/lighting/control/strategy',
-                        contentType:'application/json;charset=UTF-8',
-                        data:JSON.stringify(data),
-                        success:function(data){
-                            if(data.errorCode=='0'){
-                                that.$message({
-                                    message: '策略清空成功',
-                                    type: 'success'
-                                });
-                                $('#myModal').modal('hide')
-                                that.ready()
-                            }else{
-                                that.errorCode(data)
-                            }
-                        }
-                    })    
-                });
+                this.dialogVisible = true
+                this.dialogVisibleChecked = false
             }
+        },
+        //单灯策略--清空策略确定按钮
+        ClearanceStrategy(){
+            var that = this
+            var data = {}
+            var lampId = []
+            for(var i=0;i<that.site.length;i++){
+                lampId.push(that.site[i].id)
+            }
+            data.command = '2'
+            data.lamps = lampId
+            if(that.dialogVisibleChecked==true){
+                data.lightSense = '1'
+            }
+            if(that.dialogVisibleChecked==false){
+                data.lightSense = '0'
+            }
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/lighting/control/strategy',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '策略清空成功',
+                            type: 'success'
+                        });
+                        that.dialogVisible = false
+                        $('#myModal').modal('hide')
+                        that.ready()
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
         },
         // 策略保存
         addSubmit(){

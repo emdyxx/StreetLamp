@@ -11,7 +11,7 @@
             <div class="scene_bottom_top">
                 <div class="search">
                     <label style="width:90px;">场景名字:</label>
-                    <input v-model="nickName" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入场景名字">
+                    <input v-model="nickName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入场景名字">
                 </div>
                 <div style="margin-left:15px;">
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
@@ -48,7 +48,7 @@
                     min-width="120">
                     </el-table-column>
                     <el-table-column
-                    prop="concentratorSn"
+                    prop="relayCount"
                     align='center'
                     :formatter="formatRole"
                     label="包含继电器数量"
@@ -59,8 +59,8 @@
                     label="下发状态"
                     min-width="80">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.online=='0'">已下发</span>
-                            <span v-if="scope.row.online=='1'">未下发</span>
+                            <span v-if="scope.row.sendStatus=='0'">未下发</span>
+                            <span v-if="scope.row.sendStatus=='1'">已下发</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -77,9 +77,14 @@
                     min-width="170"
                     show-overflow-tooltip>
                         <template slot-scope="scope">
-                            <el-button type="primary" size='mini'>详情</el-button>
-                            <el-button type="primary" size='mini'>下发</el-button>
-                            <el-button type="primary" size='mini'>启用</el-button>
+                            <el-button @click="details(scope.row.id)" type="primary" size='mini'>详情</el-button>
+                            <el-button @click="Lowerhair(scope.row.id)" type="primary" size='mini'>下发</el-button>
+                            <template v-if="scope.row.status=='0'">
+                                <el-button @click="status(scope.row.id,scope.row.status)" type="primary" size='mini'>启用</el-button>
+                            </template>
+                            <template v-if="scope.row.status=='1'">
+                                <el-button @click="status(scope.row.id,scope.row.status)" type="danger" size='mini'>禁用</el-button>
+                            </template>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -99,7 +104,7 @@
         </div>
         <!-- 添加场景 -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:570px;">
+            <div class="modal-dialog" style="width:650px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -109,14 +114,16 @@
                     <div class="modal-body">
                         <div class="sceneDataTop">
                             <span><span class="Required">*</span>场景名称:</span>
-                            <input v-model="nickName_s" type="text" style="width:156px;" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入场景名称">
+                            <input v-model="nickName_s" type="text" style="width:156px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入场景名称">
                             <span style="margin-left:10px;"><span class="Required">*</span>集中器:</span>
-                            <el-select v-model="value" @change="optionsChange" size='small' clearable style='width:176px;' placeholder="请选择">
+                            <el-select v-model="value" @change="optionsChange" size='small' style='width:176px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options"
                                 :key="item.concentratorSn"
-                                :label="item.concentratorSn"
+                                :label="item.concentratorName"
                                 :value="item.concentratorSn">
+                                    <span style="float: left">{{ item.concentratorName }}</span>
+                                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.concentratorSn }}</span>
                                 </el-option>
                             </el-select>
                         </div>
@@ -130,11 +137,6 @@
                                     size='small'
                                     tooltip-effect="dark"
                                     style="width: 100%;overflow:auto;height:auto;">
-                                    <el-table-column
-                                    type="selection"
-                                    align='center'
-                                    width="55">
-                                    </el-table-column>
                                     <el-table-column
                                     align='center'
                                     label="继电器名称"
@@ -156,7 +158,7 @@
                                     label="继电器型号"
                                     min-width="80">
                                         <template slot-scope="scope">
-                                            <span>{{scope.row.relayVO.concentratorSn}}</span>
+                                            <span>{{scope.row.relayVO.modelName}}</span>
                                         </template>
                                     </el-table-column>
                                     <el-table-column
@@ -188,6 +190,7 @@
                             <div>
                                 <el-table
                                     :data="tableData3"
+                                    :key="Math.random()"
                                     border
                                     stripe
                                     size='small'
@@ -200,7 +203,11 @@
                                         <template slot-scope="scope">
                                             <el-button @click="SetupInput(scope,0)" type="primary" size='mini'>设置</el-button>
                                             <span v-if='scope.row.controlType=="1"'>时间控制-{{scope.row.controlTime}}</span>
-                                            <span v-if='scope.row.controlType=="2"'>输入控制/{{scope.row.relayName}}/{{scope.row.channelName}}</span>
+                                            <span v-if='scope.row.controlType=="2"'>
+                                                输入控制/{{scope.row.relayName}}/{{scope.row.inputChannelName}}/
+                                                <template v-if="scope.row.inputState=='3'">有效</template>
+                                                <template v-if="scope.row.inputState=='4'">无效</template>
+                                            </span>
                                         </template>
                                     </el-table-column>
                                     <el-table-column
@@ -372,7 +379,7 @@
                 <el-button @click="outputSubmit" type="primary">确 定</el-button>
             </span>
         </el-dialog>
-        <!-- 通道设置-输出接口 -->
+        <!-- 通道设置-输出详情 -->
         <el-dialog
             title="输出通道详情"
             :visible.sync="dialogVisible3"
@@ -420,6 +427,81 @@
                 <el-button @click="dialogVisible3 = false">关 闭</el-button>
             </span>
         </el-dialog>
+        <!-- 场景通道详情 -->
+        <el-dialog
+            title="场景通道详情"
+            :visible.sync="dialogVisible4"
+            width="50%">
+            <span>
+                <div style="max-height:300px;overflow:auto;">
+                    <el-table
+                        :data="tableData3"
+                        border
+                        stripe
+                        size='small'
+                        tooltip-effect="dark"
+                        style="width: 100%">
+                        <el-table-column type="expand">
+                            <template slot-scope="props">
+                                <el-table
+                                :data=props.row.relaySceneOutputDTOs
+                                border
+                                size='mini'
+                                style="width: 100%;">
+                                    <el-table-column
+                                    prop="relayName"
+                                    label="继电器名称"
+                                    align='center'>
+                                    </el-table-column>
+                                    <el-table-column
+                                    prop="nickName"
+                                    label="通道名称"
+                                    align='center'>
+                                    </el-table-column>
+                                    <el-table-column
+                                    prop="channelNumber"
+                                    label="通道编号"
+                                    align='center'>
+                                    </el-table-column>
+                                    <el-table-column
+                                    label="输出状态"
+                                    align='center'>
+                                        <template slot-scope="scope">
+                                            <span v-if="scope.row.outputState=='1'">开启</span>
+                                            <span v-if="scope.row.outputState=='2'">关闭</span>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                        align='center'
+                        label="控制类型">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.controlType=='1'">时间控制</span>
+                                <span v-if="scope.row.controlType=='2'">输入通道控制</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                        prop="nickName"
+                        align='center'
+                        label="控制详情">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.controlType=='1'">{{scope.row.controlTime}}</span>
+                                <span v-if="scope.row.controlType=='2'">
+                                    {{scope.row.relayName}}/{{scope.row.nickName}}/
+                                    <template v-if="scope.row.inputState=='3'">有效</template>
+                                    <template v-if="scope.row.inputState=='4'">无效</template>
+                                </span>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible4 = false">关 闭</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -446,6 +528,7 @@ export default {
             dialogVisible:false,
             dialogVisible2:false,
             dialogVisible3:false,
+            dialogVisible4:false,
             options2:[
                 {
                     label:'时间选择',
@@ -505,6 +588,16 @@ export default {
             if(val=='0'){
                 that.type = '0'
                 this.concentratorSnData()
+                this.nickName_s = ''
+                this.value = ''
+                this.tableData2 = []
+                this.tableData3 = []
+                this.tableData4 = []
+                this.tableDat5 = []
+                this.site4 = []
+                this.site5 = []
+                this.value2 = ''
+                this.time = ''
                 $('#myModal').modal('show')
             }
             if(val=='1'){
@@ -517,7 +610,56 @@ export default {
                 }
                 that.type = '1'
                 this.concentratorSnData()
+                this.scenedetailed()
+                this.nickName_s = this.site[0].nickName
+                this.value = this.site[0].concentratorSn
+                this.optionsChange()
                 $('#myModal').modal('show')
+            }
+            if(val=='2'){
+                if(this.site.length=='0'){
+                    this.$message({
+                        message: '请选择场景进行删除!',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                var arr = []
+                for(var i=0;i<that.site.length;i++){
+                    arr.push(that.site[i].id)
+                }
+                this.$confirm('是否删除所选场景？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    $.ajax({
+                        type:'post',
+                        async:true,
+                        dataType:'json',
+                        url:that.serverurl+'/v1/solin/relay/scene/deletes',
+                        contentType:'application/json;charset=UTF-8',
+                        data:JSON.stringify({
+                            relayScenes:arr
+                        }),
+                        success:function(data){
+                            if(data.errorCode=='0'){
+                                that.$message({
+                                    message: '删除成功!',
+                                    type: 'success'
+                                });
+                                that.ready()
+                            }else{
+                                that.errorCode(data)
+                            }
+                        }
+                    })
+                }).catch(() => {
+                    that.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });          
+                }); 
             }
         },
         //添加  编辑  保存
@@ -566,6 +708,45 @@ export default {
                 },
             })
         },
+        //请求场景详细信息
+        scenedetailed(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/relay/scene/'+that.site[0].id,
+                contentType:'application/json;charset=UTF-8',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tableData3 = data.result
+                    }else{
+                        that.errorCode(data)
+                    }
+                },
+            })
+        },
+        //点击查看场景通道详情
+        details(val){
+            var that = this;
+            that.dialogVisible4 = true
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/relay/scene/'+val,
+                contentType:'application/json;charset=UTF-8',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tableData3 = data.result
+                    }else{
+                        that.errorCode(data)
+                    }
+                },
+            })
+        },
         //集中器序列号
         concentratorSnData(){
             var that = this;
@@ -573,13 +754,11 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/lighting/concentrator',
+                url:that.serverurl+'/v1/solin/concentrator',
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     page:1,
                     size:500,
-                    nickName:'',
-                    concentratorSn:'',
                     relayUsed:'1',
                     projectIds:sessionStorage.projectId,
                 },
@@ -666,7 +845,6 @@ export default {
                 }
                 this.tableData5 = arr
                 this.dialogVisible2 = true;
-                console.log(this.tableData5)
             }
             if(index=='3'){
                 this.tableData3.splice(val.$index,1)
@@ -712,7 +890,7 @@ export default {
                 this.tableData3[this.$index].inputState = this.site4[0].inputState
                 this.tableData3[this.$index].relayId = this.site4[0].relayId
                 this.tableData3[this.$index].relayName = this.site4[0].relayName
-                this.tableData3[this.$index].channelName = this.site4[0].nickName
+                this.tableData3[this.$index].inputChannelName = this.site4[0].nickName
             }
             this.tableData3[this.$index].controlType = this.value2
             this.dialogVisible = false;
@@ -740,6 +918,71 @@ export default {
                 })
             }
             this.dialogVisible2 = false;
+        },
+        //启用,禁用
+        status(id,val){
+            var that = this;
+            var data = {}
+            if(val=='0'){
+                data.command = '2'
+            }
+            if(val=='1'){
+                data.command = '1'
+            }
+            data.sceneId = id
+            $.ajax({
+                type:'put',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/relay/scene/status',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        if(val=='0'){
+                            that.$message({
+                                message: '启用成功',
+                                type: 'success'
+                            });
+                        }
+                        if(val=='1'){
+                            that.$message({
+                                message: '禁用成功',
+                                type: 'success'
+                            });
+                        }
+                        that.ready()
+                    }else{
+                        that.errorCode(data)
+                    }
+                },
+            })
+        },
+        //下发
+        Lowerhair(id){
+            var that = this;
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/relay/scene/control',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify({
+                    command:'1',
+                    relaySceneId:id
+                }),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '下发成功',
+                            type: 'success'
+                        });
+                        that.ready()
+                    }else{
+                        that.errorCode(data)
+                    }
+                },
+            })
         },
         //场景列表请求
         ready(){
@@ -795,6 +1038,6 @@ export default {
 
 .sceneDataTop{display: flex;}
 .sceneDataTop>span{display: inline-block;padding-top:8px;}
-.sceneDataCenter{width: 100%;max-height: 150px;border: 1px solid #E4E4F1;margin-top:10px;}
-.sceneDataBottom{width: 100%;max-height: 250px;border: 1px solid #E4E4F1;margin-top:10px;}
+.sceneDataCenter{width: 100%;max-height: 150px;border: 1px solid #E4E4F1;margin-top:10px;overflow: auto;}
+.sceneDataBottom{width: 100%;max-height: 250px;border: 1px solid #E4E4F1;margin-top:10px;overflow: auto;}
 </style>

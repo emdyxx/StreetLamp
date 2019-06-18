@@ -6,34 +6,44 @@
 
 <script>
 export default {
-  name: 'App',
-  created(){
-    // localStorage.serverurl = 'http://192.168.10.54:8080/SD-IOT-API'
-    // localStorage.serverurl = 'http://192.168.10.46:8080/SD-IOT-API'
-    localStorage.serverurl = 'http://192.168.10.54:8080/SD-IOT-API'
-    // localStorage.serverurl = 'http://192.168.70.10:8071/SD-IOT-API'
+	name: 'App',
+	created(){
+		// localStorage.serverurl = 'http://192.168.10.10:8080/SD-IOT-API'
+		// localStorage.serverurl = 'http://192.168.10.46:8080/SD-IOT-API'
+		//  localStorage.serverurl = 'http://192.168.10.54:8080/SD-IOT-API'
+		localStorage.serverurl = 'http://192.168.70.10:8071/SD-IOT-API'
 
-    // $.ajax({
-    //   type:'post',
-    //   async:true,
-    //   xhrFields:{withCredentials:true},
-    //   url:'json/url.json',
-    //   dataType:'json',
-    //   success:function(data){
-    //       localStorage.serverurl = data.url;
-    //   }
-    // })
-    // $.ajax({
-    //   type:'post',
-    //   async:true,
-    //   xhrFields:{withCredentials:true},
-    //   url:'json/versionNumber.json',
-    //   dataType:'json',
-    //   success:function(data){
-    //       localStorage.versionNumber = data.versionNumber;
-    //   }
-    // })
-  },
+    
+		// $.ajax({
+		// 	type:'post',
+		// 	async:true,
+		// 	xhrFields:{withCredentials:true},
+		// 	url:'json/url.json',
+		// 	dataType:'json',
+		// 	success:function(data){
+		// 		if(data.url==''||data.url==undefined||data.url==null){
+		// 			console.log(window.location.href)
+		// 			var url = window.location.href
+		// 			url = url.split('/')
+		// 			console.log(url[0]+'//'+url[2]+'/SD-IOT-API')
+		// 			localStorage.serverurl = url[0]+'//'+url[2]+'/SD-IOT-API';
+		// 		}else{
+		// 			localStorage.serverurl = data.url;
+		// 		}  
+		// 	}
+		// })
+
+		// $.ajax({
+		// 	type:'post',
+		// 	async:true,
+		// 	xhrFields:{withCredentials:true},
+		// 	url:'json/versionNumber.json',
+		// 	dataType:'json',
+		// 	success:function(data){
+		// 		localStorage.versionNumber = data.versionNumber;
+		// 	}
+		// })
+  	},
 }
 </script>
 
@@ -47,7 +57,7 @@ export default {
   color: #2c3e50;
 }
 .el-tabs__content {
-  height: 90%;
+  height: 93%;
   /* position: absolute !important;
   left: 0 !important;
   right: 0 !important;

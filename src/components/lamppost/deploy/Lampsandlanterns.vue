@@ -12,11 +12,11 @@
             <div class="chargingpile_bottom_top">
                 <div class="search">
                     <label>昵称:</label>
-                    <input type="text" v-model="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入单灯名称">
+                    <input type="text" v-model="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入单灯名称">
                 </div>
                 <div class="search">
                     <label>灯控器标识:</label>
-                    <input type="text" v-model="serialNumber" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入序列号">
+                    <input type="text" v-model="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入序列号">
                 </div>
                 <div style="margin-left:15px;">
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
@@ -53,9 +53,9 @@
                     min-width="120">
                     </el-table-column>
                     <el-table-column
-                    prop="concentratorSn"
+                    prop="concentratorName"
                     align='center'
-                    label="集中器标识"
+                    label="集中器名称"
                     :formatter="formatRole"
                     min-width="120">
                     </el-table-column>
@@ -120,7 +120,7 @@
         </div>
         <!-- 添加编辑模态框 -->
         <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:500px;">
+            <div class="modal-dialog" style="width:600px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -130,9 +130,9 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label><span class="Required">*</span>灯控器标识:</label>
-                            <input type="text" v-model="data.serialNumber" class="form-control" id="serialNumber" placeholder="请输入灯控器标识">
+                            <input type="text" v-model="data.serialNumber" class="form-control" maxlength="16" id="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入灯控器标识">
                             <label>型号:</label>
-                            <el-select v-model="data.modelId" size='small' style='width:126px;' placeholder="请选择">
+                            <el-select v-model="data.modelId" @change="modelChange" size='small' style='width:175px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options"
                                 :key="item.id"
@@ -143,10 +143,18 @@
                         </div> 
                         <div class="form-group">
                             <label><span class="Required">*</span>昵称:</label>
-                            <input type="text" v-model="data.nickName" class="form-control" id="nickName" placeholder="请输入昵称">
-                            <label>集中器标识:</label>
-                            <input type="text" v-model="data.concentratorSn" disabled class="form-control" id="concentratorSN" placeholder="集中器标识">
-                            <i @click="concentratorClikc" class="el-icon-date" style='font-size: 22px;margin-top: 5px;cursor: pointer;position: absolute;right: 5px;'></i>
+                            <input type="text" v-model="data.nickName" class="form-control" id="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入昵称">
+                            <label><span class="Required" v-if="modelType=='1'">*</span>集中器标识:</label>
+                            <el-select v-model="data.concentratorSn" :disabled="modelType=='2'" clearable size='small' style='width:175px;' placeholder="请选择">
+                                <el-option
+                                    v-for="item in myModaltableData"
+                                    :key="item.concentratorSn"
+                                    :label="item.concentratorSn"
+                                    :value="item.concentratorSn">
+                                    <span style="float: left">{{ item.concentratorName }}</span>
+                                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.concentratorSn }}</span>
+                                </el-option>
+                            </el-select>
                         </div> 
                         <div class="form-group">
                             <label><span class="Required">*</span>灯具编号:</label>
@@ -154,7 +162,7 @@
                             <label>备注:</label>
                             <el-input
                                 type="textarea"
-                                style="width:126px"
+                                style="width:175px"
                                 :rows="1"
                                 placeholder="请输入内容"
                                 v-model="data.remark">
@@ -413,71 +421,6 @@
                 </div>
             </div>
         </div>
-        <!-- 集中器列表 -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:570px;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">集中器</h4>
-                    </div>
-                    <div class="modal-body">
-                        <el-table
-                            :data="myModaltableData"
-                            @row-click="clickRow3" 
-                            ref="myModalmoviesTable"
-                            border
-                            stripe
-                            size='small'
-                            slot="empty"
-                            tooltip-effect="dark"
-                            @selection-change="myModalChange"
-                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;margin-top:10px;">
-                            <el-table-column
-                            type="selection"
-                            align='center'
-                            width="55">
-                            </el-table-column>
-                            <el-table-column
-                            prop="nickName"
-                            align='center'
-                            label="集中器名字"
-                            min-width="100">
-                            </el-table-column>
-                            <el-table-column
-                            prop="concentratorSn"
-                            align='center'
-                            label="集中器序列号"
-                            min-width="100">
-                            </el-table-column>
-                            <el-table-column
-                            prop="createTime"
-                            align='center'
-                            label="创建时间"
-                            :formatter="formatRole"
-                            xshow-overflow-tooltip>
-                            </el-table-column>
-                        </el-table>
-                        <div class="block">
-                            <el-pagination
-                            background
-                            @size-change="myModalsizechange"
-                            @current-change="myModalcurrentchange"
-                            :current-page="myModalpageIndex"
-                            :page-sizes="[10, 20, 30, 50]"
-                            :page-size="myModalpageSize"
-                            layout="total, sizes, prev, pager, next, jumper"
-                            :total="myModaltotal">
-                            </el-pagination>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button @click="myModalsave" type="button" class="btn btn-primary">确定</button>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div>
-        </div><!-- /.modal -->
     </div>
 </template>
 <script>
@@ -510,6 +453,7 @@ export default {
                 modelId:'',
                 remark:'',//弹窗文本域
             },
+            modelType:'',
             longitude:'',//经度
             latitude:'',//纬度
             tableData2:[],
@@ -530,12 +474,7 @@ export default {
             Time_pageIndex2:1,
             Time_pageSize2:10,
             Time_total2:30,
-            //集中器列表
-            myModaltableData:[],
-            myModalSite:[],
-            myModalpageIndex:1,
-            myModalpageSize:10,
-            myModaltotal:10,
+            myModaltableData:[],//集中器
         }
     },
     mounted(){
@@ -555,66 +494,28 @@ export default {
         clickRow2(row){
             this.$refs.multipleTable.toggleRowSelection(row)
         },
-        clickRow3(row){
-            this.$refs.myModalmoviesTable.toggleRowSelection(row)
-        },
         //集中器
-        concentratorClikc(){
-            this.concentrator()
-            $('#myModal').modal('show')
-        },
         concentrator(){
             var that = this;
-            $('#myModal').modal('show')
             $.ajax({
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/lighting/concentrator',
+                url:that.serverurl+'/v1/solin/concentrator',
                 contentType:'application/json;charset=UTF-8',
                 data:{
-                    nickName:'',
-                    concentratorSn:'',
-                    page:that.myModalpageIndex,
-                    size:that.myModalpageSize,
+                    page:1,
+                    size:500,
                     projectIds:sessionStorage.projectId,
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
                        that.myModaltableData = data.result.list
-                       that.myModaltotal = data.result.total
-                       if(that.addType=='1'){
-                           var arr = []
-                           for(var i = 0;i<data.result.list.length;i++){
-                               if(that.site[0].concentratorSn==data.result.list[i].concentratorSn){
-                                   arr.push(data.result.list[i])
-                               }
-                           }
-                           setTimeout(function(){
-                                arr.forEach(row => {
-                                    that.$refs.myModalmoviesTable.toggleRowSelection(row);
-                                });
-                            },200)
-                       }
                     }else{
                         that.errorCode(data)
                     }
                 }
             })
-        },
-        myModalChange(val){this.myModalSite = val},
-        myModalsizechange(val){this.myModalpageSize = val;this.concentrator();},
-        myModalcurrentchange(val){this.myModalpageIndex = val;this.concentrator();},
-        myModalsave(){
-            if(this.myModalSite.length==0||this.myModalSite.length>=2){
-                this.$message({
-                    message: '只能关联一个集中器!',
-                    type: 'error'
-                });
-                return;
-            }
-            $('#myModal').modal('hide')
-            this.data.concentratorSn = this.myModalSite[0].concentratorSn
         },
         //请求断电时间信息
         dataTime(){
@@ -904,12 +805,22 @@ export default {
                         if(that.addType=='1'){
                             that.data.modelId = that.site[0].modelId
                         }
-                        
+                        that.modelChange()
                     }else{
                         that.errorCode(data)
                     }
                 }
             })
+        },
+        //型号change事件
+        modelChange(){
+            for(var i = 0;i<this.options.length;i++){
+                if(this.data.modelId==this.options[i].id){
+                    this.modelType = this.options[i].modelType
+                }
+            }
+            if(this.modelType!='1'){this.data.concentratorSn = ''}
+            this.concentrator()
         },
         //点击添加或者编辑按钮
         addchargingpile(val){
@@ -933,6 +844,7 @@ export default {
                 that.data.nickName = ''
                 that.data.mark = ''
                 that.myModalSite = []
+                this.modelType = ''
             }
             if(val=='1'){
                 if(this.site.length==0||this.site.length>=2){
@@ -1010,7 +922,7 @@ export default {
         currentchange2(val){this.pageIndex2 = val;this.LampPoleData();},
         //关联确认
         Relation(){
-            if(this.site2.length>=2||this.site2.length==0){
+            if(this.site2.length>=2){
                 this.$message({
                     message: '只能关联一个灯杆!',
                     type: 'warning'
@@ -1033,7 +945,15 @@ export default {
             }
             if(result.test(this.data.serialNumber)){
                 that.$message({
-                    message: '终端ID不能有中文',
+                    message: '灯控器标识不能有中文',
+                    type: 'error',
+                    showClose: true,
+                });
+                return;
+            }
+            if(this.modelType=='1'&&this.data.concentratorSn==''){
+                this.$message({
+                    message: '此型号下,集中器标识不能为空',
                     type: 'error',
                     showClose: true,
                 });
@@ -1287,7 +1207,7 @@ export default {
 
 .form-group{display:flex;justify-content: center;}
 .form-group>label{width: 95px;line-height: 34px;text-align: center;}
-.form-group>input{width: 125px;}
+.form-group>input{width: 175px;}
 .modal_body_table>div{margin-bottom: 10px;border: 1px solid #E4E4F1;padding: 5px;text-align: center;}
 
 .search{display: flex;}

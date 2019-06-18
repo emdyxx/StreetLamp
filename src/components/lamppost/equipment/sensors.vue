@@ -8,11 +8,11 @@
             <div class="cameras_bottom_top">
                 <div class="search">
                     <label style="width:100px;">集中器标识:</label>
-                    <input type="text" v-model="concentratorSn" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入集中器标识">
+                    <input type="text" v-model="concentratorSn" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入集中器标识">
                 </div>
                 <div class="search">
                     <label style="width:90px;">气象站名称:</label>
-                    <input type="text" v-model="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入气象站名称">
+                    <input type="text" v-model="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入气象站名称">
                 </div>
                 <div class="search">
                     <label>型号:</label>
@@ -52,9 +52,15 @@
                     min-width="110">
                     </el-table-column>
                     <el-table-column
+                    prop="concentratorName"
+                    align='center'
+                    label="集中器名字"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
                     prop="concentratorSn"
                     align='center'
-                    label="集中器标识"
+                    label="集中器序列号"
                     min-width="120">
                     </el-table-column>
                     <el-table-column
@@ -254,7 +260,7 @@ export default {
                 page:that.pageIndex,
                 size:that.pageSize,
                 poleId:'',
-                projectId:sessionStorage.projectId,
+                projectIds:sessionStorage.projectId,
                 concentratorSn:that.concentratorSn,
                 nickName:that.nickName,
                 modelId:that.modelId,

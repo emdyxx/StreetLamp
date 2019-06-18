@@ -13,16 +13,16 @@
             <div class="organization_right_bottom">
                 <div class="organization_right_bottom_top">
                     <div class="search">
-                        <label>组织名称:</label>
-                        <input type="text" v-model="orgName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入组织名称">
+                        <label>机构名称:</label>
+                        <input type="text" v-model="orgName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入机构名称">
                     </div>
                     <div class="search">
                         <label>负责人:</label>
-                        <input type="text" v-model="principal" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入负责人">
+                        <input type="text" v-model="principal" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入负责人">
                     </div>
                     <div class="search">
                         <label>电话:</label>
-                        <input type="text" v-model="mobile" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入电话">
+                        <input type="text" v-model="mobile" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入电话">
                     </div>
                     <div style="margin-left:15px;">
                         <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
@@ -106,25 +106,25 @@
                                 <a href="#a" data-toggle="tab">基本信息</a>
                             </li>
                             <li>
-                                <a href="#b" data-toggle="tab" @click="handleClick">管理员</a>
+                                <a href="#b" data-toggle="tab">管理员</a>
                             </li>
                             <li>
-                                <a href="#c" data-toggle="tab" @click="handleClick">权限</a>
+                                <a href="#c" data-toggle="tab">权限</a>
                             </li>
                         </ul>
                         <div id="myTabContent" class="tab-content">
                             <div class="tab-pane fade in active" id="a" style='padding-left: 70px;'>
                                 <div class="form-group">
                                     <label for="name"><span class="Required">*</span>机构名称:</label>
-                                    <input type="text" v-model="data.orgName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入机构名称">
+                                    <input type="text" v-model="data.orgName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入机构名称">
                                 </div> 
                                 <div class="form-group">
                                     <label for="password"><span class="Required">*</span>负责人:</label>
-                                    <input type="text" v-model="data.principal" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入负责人">
+                                    <input type="text" v-model="data.principal" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入负责人">
                                 </div> 
                                 <div class="form-group">
                                     <label for="password2"><span class="Required">*</span>电话:</label>
-                                    <input type="text" v-model="data.orgMobile" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
+                                    <input type="text" v-model="data.orgMobile" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
                                 </div> 
                                 <div class="form-group">
                                     <label for="name2">邮箱:</label>
@@ -161,19 +161,19 @@
                             <div class="tab-pane fade" id="b" style='padding-left: 70px;'>
                                 <div class="form-group" v-if="type=='0'">
                                     <label for="name"><span class="Required">*</span>用户名:</label>
-                                    <input type="text" v-model="data.userName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
+                                    <input type="text" v-model="data.userName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
                                 </div> 
                                 <div class="form-group" v-if="type=='0'">
                                     <label for="username"><span class="Required">*</span>密码:</label>
-                                    <input type="password" v-model="data.userPwd" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入密码">
+                                    <input type="password" v-model="data.userPwd" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入密码">
                                 </div> 
                                 <div class="form-group">
                                     <label for="password"><span class="Required">*</span>姓名:</label>
-                                    <input type="text" v-model="data.fullName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入姓名">
+                                    <input type="text" v-model="data.fullName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入姓名">
                                 </div> 
                                 <div class="form-group">
                                     <label for="password2"><span class="Required">*</span>电话:</label>
-                                    <input type="text" v-model="data.userMobile" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
+                                    <input type="text" v-model="data.userMobile" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
                                 </div> 
                                 <div class="form-group">
                                     <label for="name2">邮箱:</label>
@@ -310,7 +310,6 @@ export default {
             pageSize:10,
             pageIndex:1,
             total:50,
-            tableDatatwo:[],
             options:[],//所属组织数据
             optionspros:{
                 value: 'id',
@@ -391,12 +390,6 @@ export default {
             that.detailsData.adminId = this.AppointSite[0].id
             $('#AppointModal').modal('hide')
         },
-        //点击管理员栏目
-        handleClick(){
-            if(this.type=='1'){
-                this.details2(this.detailsData.adminId)
-            }
-        },
         //获取机构详细信息
         details(){
             var that = this;
@@ -410,6 +403,7 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.detailsData = data.result
+                        that.details2(that.detailsData.adminId)
                     }else{
                         that.errorCode(data)
                     }
@@ -423,7 +417,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/manage/getUserNeedUpdate/userId/'+val,
+                url:that.serverurl+'/v1/manage/users/'+val,
                 contentType:'application/json;charset=UTF-8',
                 data:{},
                 success:function(data){
@@ -868,8 +862,16 @@ export default {
                             success:function(data) {
                                 if(data.errorCode=='0'){
                                     that.readyRight()
-                                    var data2={"text" : "机构中心",'id':'0','type':'1',"state": {"opened" : true}}
-                                    data2.children = data.result
+                                    var data2={"text" : "机构中心",'id':'1','type':'1',"state": {"opened" : true}}
+                                    data2.children = data.result[0].children
+                                    for(var i=0;i<data.result[0].children.length;i++){
+                                        data.result[0].children[i].state={"opened" : true}
+                                        if(data.result[0].children[i].children==undefined){}else{
+                                            for(var j=0;j<data.result[0].children[i].children.length;j++){
+                                                data.result[0].children[i].children[j].state={"opened" : true}
+                                            }
+                                        }
+                                    }
                                     jsonarray= data2;
                                 }else{
                                     that.errorCode
@@ -881,7 +883,6 @@ export default {
                 }
             });
             $('#jstree').bind("activate_node.jstree.jstree", function (e, data) {
-                console.log(data.node.original);
                 if(data.node.id==''||data.node.id==undefined){
                 }else{
                     that.sizeType = data.node.original

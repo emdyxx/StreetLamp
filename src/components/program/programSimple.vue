@@ -27,7 +27,7 @@
                                             <img :src=serverurl+item.mediaUrl alt="">
                                         </p>    
                                         <p>
-                                            <span>{{item.nickName}}</span>
+                                            <span :title=item.nickName>{{item.nickName}}</span>
                                             <span>{{item.mediaSizeKb}}</span>
                                         </p>
                                     </li>
@@ -64,7 +64,7 @@
                                             <img :src=serverurl+item.mediaPicUrl alt="">
                                         </p>
                                         <p>
-                                            <span>{{item.nickName}}</span>
+                                            <span :title=item.nickName>{{item.nickName}}</span>
                                             <span>{{item.mediaSizeKb}}</span>
                                         </p>
                                     </li>
@@ -92,7 +92,7 @@
             </div>
             <div>
                 <div style="display:flex;">
-                    <el-input v-model="programName" placeholder="节目名称" size='small'></el-input>
+                    <el-input v-model="programName" placeholder="节目名称" size='small' oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     <el-button @click="mediaSave" type="success" icon="el-icon-plus" size='small' style="margin-left: 5px;">保存</el-button>
                 </div>
                 <div style="display:flex;margin-top:10px;">
@@ -118,10 +118,10 @@
                             </template>
                         </p>
                         <p>
-                            <span>{{item.nickName}}</span>
+                            <span :title=item.nickName>{{item.nickName}}</span>
                             <span style="margin-top:20px;">
                                 <template v-if="item.mediaType=='0'">
-                                    <el-input v-model="item.timeSpan" placeholder="播放时长" size='small' style='width:126px;'></el-input>
+                                    <el-input v-model="item.timeSpan" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w]/g,'')" placeholder="播放时长" size='small' style='width:126px;'></el-input>
                                 </template>
                                 <template v-if="item.mediaType=='1'">
                                     <el-input v-model="item.timeSpan" placeholder="播放时长" :disabled="true" size='small' style='width:126px;'></el-input>
@@ -138,6 +138,7 @@
         <div class="programSimple_right">
             <div class="top_style top_style2">
                 视图
+                <el-button @click="backtrack" style="position: absolute;right: 5px;top: 7px;" size="mini" icon="el-icon-arrow-left" type="warning">返回</el-button>
             </div>
             <div>
                 <template v-if="previewData.mediaType=='0'">
@@ -169,7 +170,6 @@ export default {
             mediaTotal2:5,
             mediaVlaue:'1',
             mediadata:[],
-            checked:false,
             checkKey:[],
             previewData:'',
         }
@@ -234,10 +234,18 @@ export default {
         },
         //点击添加媒体文件
         addmedia(val){
+            var type= true
+            for(var i=0;i<this.mediadata.length;i++){
+                if(this.mediadata[i].id==val.id){
+                    type = false
+                }
+            }
+            if(type==false){return}
             this.mediadata.unshift(val)
         },
         //媒体check选择
         checkId(value,e){
+            console.log(value,e.target.defaultValue)
             if(value==true){
                 this.checkKey.push(e.target.defaultValue)
             }
@@ -302,7 +310,7 @@ export default {
         //点击下载媒体
         Download(val){
             var that = this
-            window.open(that.serverurl+"/v1/solin/file/download?fileUrl="+that.serverurl+val)
+            window.open(that.serverurl+"/v1/solin/file/download?fileUrl="+val)
         },
         //点击保存简易节目
         mediaSave(){
@@ -323,7 +331,8 @@ export default {
                 that.mediadata[i].entryEffectTimeSpan =  0
                 that.mediadata[i].exitEffect = 'None'
                 that.mediadata[i].exitEffectTimeSpan =  0
-                that.mediadata[i].height = 0
+                that.mediadata[i].width = sessionStorage.width
+                that.mediadata[i].height = sessionStorage.height
                 that.mediadata[i].layer = 1
                 that.mediadata[i].marginLeft = 0
                 that.mediadata[i].programId = 0
@@ -333,15 +342,14 @@ export default {
                 that.mediadata[i].textMsg = ''
                 that.mediadata[i].top = 0
                 that.mediadata[i].type = 1
-                that.mediadata[i].width = 0
                 that.mediadata[i].sort = i
-                if(sessionStorage.programtype=='0'){
+                // if(sessionStorage.programtype=='0'){
                     that.mediadata[i].mediaId = that.mediadata[i].id
-                }
+                // }
                 if(i==0){
                     that.mediadata[i].playTime = 0
                 }else{
-                    that.mediadata[i].playTime = that.mediadata[i-1].playTime+that.mediadata[i-1].timeSpan
+                    that.mediadata[i].playTime = Number(that.mediadata[i-1].playTime)+Number(that.mediadata[i-1].timeSpan)
                 }
             }
             if(sessionStorage.programtype=='0'){
@@ -397,6 +405,8 @@ export default {
                 }
             })
         },
+        //返回上一级
+        backtrack(){this.$router.go(-1);},
     },
     created(){
         this.mediaready()

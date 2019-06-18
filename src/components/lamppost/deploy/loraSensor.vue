@@ -1,6 +1,6 @@
 <template>
     <div class="loraSensor">
-        <!-- 气象站部署 -->
+        <!-- 传感器部署 -->
         <div class="loraSensor_top">
             <el-button v-if="addLoraSensor" @click="addloraSensor(0)" type="primary" icon='el-icon-plus' size='small'>添加loar传感器</el-button>
             <el-button v-if="editLoraSensor" @click="addloraSensor(1)" type="primary" icon="el-icon-edit" size='small'>编辑loar传感器</el-button>
@@ -11,11 +11,11 @@
             <div class="loraSensor_bottom_top">
                 <div class="search">
                     <label style="width:120px;">lora传感器名称:</label>
-                    <input type="text" v-model="nickName" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入lora传感器名称">
+                    <input type="text" v-model="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入lora传感器名称">
                 </div>
                 <div class="search">
                     <label style="width:120px;">lora传感器序列号:</label>
-                    <input type="text" v-model="serialNumber" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入lora传感器序列号">
+                    <input type="text" v-model="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入lora传感器序列号">
                 </div>
                 <div class="search">
                     <label style="width:120px;">lora传感器类型:</label>
@@ -133,11 +133,11 @@
                     <div class="modal-body">
                         <div class="form_input">
                             <label><span class="Required">*</span>名称:</label>
-                            <input type="text" v-model.lazy="data.nickName" maxlength="40" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
+                            <input type="text" v-model.lazy="data.nickName" maxlength="40" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                         </div>
                         <div class="form_input">
                             <label><span class="Required">*</span>序列号:</label>
-                            <input type="text" v-model.lazy="data.serialNumber" :disabled='type=="1"' maxlength="16" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
+                            <input type="text" v-model.lazy="data.serialNumber" :disabled='type=="1"' maxlength="16" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
                         </div>
                         <div class="form_input">
                             <label><span class="Required">*</span>型号:</label>
@@ -172,29 +172,29 @@
                                 </el-option>
                             </el-select>
                         </div>
-                        <template v-if="networkIdChangeData.name=='Device-profiles-abp'">
+                        <template v-if="networkType=='0'">
                             <div class="form_input">
                                 <label><span class="Required">*</span>设备地址:</label>
-                                <input type="text" v-model.lazy="data.devAddr" maxlength="8" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入设备地址">
+                                <input type="text" v-model.lazy="data.devAddr" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入设备地址">
                             </div>
                             <div class="form_input">
                                 <label><span class="Required">*</span>网络秘钥:</label>
-                                <input type="text" v-model.lazy="data.nwksKey" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入网络秘钥">
+                                <input type="text" v-model.lazy="data.nwksKey" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入网络秘钥">
                             </div>
                             <div class="form_input">
                                 <label><span class="Required">*</span>应用秘钥:</label>
-                                <input type="text" v-model.lazy="data.appsKey" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入应用秘钥">
+                                <input type="text" v-model.lazy="data.appsKey" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入应用秘钥">
                             </div>
                         </template>
-                        <template v-if="networkIdChangeData.name=='Device-profiles-otaa'">
+                        <template v-if="networkType=='1'">
                             <div class="form_input">
                                 <label><span class="Required">*</span>应用秘钥:</label>
-                                <input type="text" v-model.lazy="data.applicationKey" maxlength="32" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入应用秘钥">
+                                <input type="text" v-model.lazy="data.applicationKey" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入应用秘钥">
                             </div>
                         </template>
                         <div class="form_input">
                             <label>位置:</label>
-                            <input type="text" v-model.lazy="data.location" class="form-control" onchange="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入位置">
+                            <input type="text" v-model.lazy="data.location" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入位置">
                         </div>
                         <div class="form_input">
                             <label>备注:</label>
@@ -344,6 +344,7 @@ export default {
             type:'0',
             options2:[],
             networkIdChangeData:{},
+            networkType:'',
             options3:[],
             data:{
                 nickName:'',
@@ -408,6 +409,7 @@ export default {
                 this.data.applicationKey = ''
                 this.data.location = ''
                 this.data.remark = ''
+                this.networkType = ''
                 $('#myModal').modal('show')
             }
             if(val=='1'){
@@ -434,7 +436,6 @@ export default {
                 this.data.applicationKey = this.site[0].applicationKey
                 this.data.location = this.site[0].location
                 this.data.remark = this.site[0].remark
-                
                 $('#myModal').modal('show')
             }
         },
@@ -718,7 +719,17 @@ export default {
                         that.options2 = data.result.network
                         setTimeout(function(){
                             if(that.type=='1'){
-                                that.networkIdChange(that.site[0].networkId)
+                                var length=''
+                                for(var i = 0;i<that.options2.length;i++){
+                                    if(that.site[0].networkId!=that.options2[i].id){
+                                        length++
+                                    }
+                                }
+                                if(length==that.options2.length){
+                                    that.data.networkId = ''
+                                }else{
+                                    that.networkIdChange(that.site[0].networkId)
+                                }
                             }
                         },50)
                     }else{
@@ -733,6 +744,14 @@ export default {
             for(var i = 0;i<this.options2.length;i++){
                 if(val==this.options2[i].id){
                     this.networkIdChangeData = this.options2[i]
+                }
+            }
+            if(this.networkIdChangeData.name!=undefined){
+                if(this.networkIdChangeData.name.toLowerCase().indexOf('abp'.toLowerCase())!=-1){
+                    this.networkType='0'
+                }
+                if(this.networkIdChangeData.name.toLowerCase().indexOf('otaa'.toLowerCase())!=-1){
+                    this.networkType='1'
                 }
             }
         },

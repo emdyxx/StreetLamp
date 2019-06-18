@@ -56,6 +56,7 @@ export default {
                                         datas.push(arr)
                                     }
                                     jsonarray= datas;
+                                    sessionStorage.menuId3 = data.result.menus[0].id
                                     if(sessionStorage.menuId3=='56'){
                                         that.$router.push({'path':'/LampPoleJournal'})
                                     }
@@ -70,6 +71,9 @@ export default {
                                     }
                                     if(sessionStorage.menuId3=='60'){
                                         that.$router.push({'path':'/loraJournal'})
+                                    }
+                                    if(sessionStorage.menuId3=='61'){
+                                        that.$router.push({'path':'/RelayJournal'})
                                     }
                                 }else{
                                     that.errorCode(data)
@@ -98,6 +102,9 @@ export default {
                     }
                     if(data.node.id=='60'){
                         that.$router.push({'path':'/loraJournal'})
+                    }
+                    if(data.node.id=='61'){
+                        that.$router.push({'path':'/RelayJournal'})
                     }
                 }
             });

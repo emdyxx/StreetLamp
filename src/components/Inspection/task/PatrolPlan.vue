@@ -9,8 +9,8 @@
         <div class="PatrolPlan_bottom">
             <div class="PatrolPlan_bottom_top">
                 <div class="search">
-                    <label>巡检计划名称:</label>
-                    <input v-model="planName" type="text" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入巡检计划名称">
+                    <label>计划名称:</label>
+                    <input v-model="planName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入巡检计划名称">
                 </div>
                 <div style="margin-left:15px;">
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
@@ -39,30 +39,20 @@
                     min-width="120">
                     </el-table-column>
                     <el-table-column
-                    prop="fullName"
-                    align='center'
-                    label="计划名称"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="userType"
-                    align='center'
-                    label="计划类型"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.userType=='0'">男</span>
-                            <span v-if="scope.row.userType=='1'">女</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="mobile"
+                    prop="routeName"
                     align='center'
                     label="巡检路线"
                     min-width="150">
                     </el-table-column>
                     <el-table-column
+                    prop="inspectorName"
+                    align='center'
+                    label="巡检员"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
                     prop="createTime"
-                    label="备注说明"
+                    label="创建时间"
                     align='center'
                     min-width="180"
                     show-overflow-tooltip>
@@ -94,17 +84,17 @@
                     <div class="modal-body" style='min-height:200px;max-height:590px;overflow:auto;'>
                         <div class="form-group">
                             <label><span class="Required">*</span>计划名称:</label>
-                            <input v-model="data.planName" type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入计划名称">
+                            <input v-model="data.planName" type="text" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入计划名称">
                         </div>
                         <div class="form-group" style="position:relative;">
                             <label><span class="Required">*</span>巡检路线:</label>
-                            <input v-model="data.route.routeName" :disabled=true type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请选择巡检路线">
-                            <img @click="Appoint(0)" src="../../assets/route.png" style="position:absolute;top:5px;right:60px;width:25px;height:25px;;" alt="">
+                            <input v-model="data.route.routeName" :disabled=true type="text" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请选择巡检路线">
+                            <img @click="Appoint(0)" src="../../../assets/route.png" style="position:absolute;top:5px;right:60px;width:25px;height:25px;;" alt="">
                         </div>
                         <div class="form-group" style="position:relative;">
                             <label><span class="Required">*</span>指定巡检员:</label>
-                            <input v-model="data.inspector.inspectorName" :disabled=true type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请指定巡检员">
-                            <img @click="Appoint(1)" src="../../assets/login.png" style="position:absolute;top:5px;right:60px;width:25px;height:25px;;" alt="">
+                            <input v-model="data.inspector.inspectorName" :disabled=true type="text" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请指定巡检员">
+                            <img @click="Appoint(1)" src="../../../assets/login.png" style="position:absolute;top:5px;right:60px;width:25px;height:25px;;" alt="">
                         </div>
                         <div class="form-group">
                             <label><span class="Required">*</span>按顺序巡检:</label>
@@ -226,7 +216,7 @@
                         </div>
                         <div class="form-group" v-if="data.dayPlanType=='2'">
                             <label>固定间隔时间:</label>
-                            <input v-model="data.executionInterval" type="text" class="form-control" onblur="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="固定间隔时间(分钟)">
+                            <input v-model="data.executionInterval" type="text" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="固定间隔时间(分钟)">
                         </div>
                         <div v-if="data.dayPlanType=='3'">
                             <el-button @click="custom(0)" type="primary" size="small">添加</el-button>
@@ -297,7 +287,7 @@
             </span>
         </el-dialog>
         <el-dialog
-            title="自定义时间"
+            title="巡检信息"
             :visible.sync="dialogVisible2"
             width="70%">
             <span>
@@ -660,7 +650,7 @@ export default {
                         that.ready()
                         $('#addPatrolPlan').modal('hide')
                     }else{
-                        that.errorCode3(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -769,7 +759,7 @@ export default {
                         that.tableData3 = data.result.list
                         that.total3 = data.result.total
                     }else{
-                        that.errorCode3(data.errorCode)
+                        that.errorCode(data)
                     }
                 },
             })
@@ -848,7 +838,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
+                url:that.serverurl+'/v1/manage/operat/'+43,
                 contentType:'application/json;charset=UTF-8',
                 data:{},
                 success:function(data){
@@ -894,7 +884,7 @@ export default {
 .PatrolPlan_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
 .PatrolPlan_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
 .search{display: flex;}
-.search>label{width: 60px;}
+.search>label{width: 70px;}
 .search>input{width: 146px;margin-top:7px;height: 34px;}
 .Required{color: red;font-size: 17px;}
 .form-group{display:flex;justify-content: center;}
