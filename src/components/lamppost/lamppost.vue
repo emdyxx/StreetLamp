@@ -136,7 +136,7 @@ export default {
         type:'get',
         async:true,
         dataType:'json',
-        url:that.serverurl+'/v1/manage/owner/projects/type/1',
+        url:that.serverurl+'/v1/manage/owner/projects/type/2',
         contentType:'application/json;charset=UTF-8',
         data:{},
         success:function(data){
@@ -146,6 +146,7 @@ export default {
             if(sessionStorage.projectId==''||sessionStorage.projectId==undefined||sessionStorage.projectId==null){
               that.value2 = that.options2[0].id
               sessionStorage.projectId = that.options2[0].id
+              sessionStorage.areaname = that.options2[0].area.name
             }else{
               that.value2 = Number(sessionStorage.projectId)
             }
@@ -156,69 +157,74 @@ export default {
         },
       })
     },
-    projectChange(){
-      var that = this;
-      sessionStorage.projectId = this.value2 
-      this.$router.push({'path':'/Refresh'})
-      setTimeout(function(){
-        if(sessionStorage.menuId3=='45'){
-            that.$router.push({'path':'/LampPole'})
+    projectChange(val){
+        var that = this;
+        for(var i=0;i<this.options2.length;i++){
+            if(this.options2[i].id==val){
+                sessionStorage.areaname = this.options2[i].area.name
+            }
         }
-        if(sessionStorage.menuId3=='46'){
-            that.$router.push({'path':'/Lampsandlanterns'})
-        }
-        if(sessionStorage.menuId3=='47'){
-            that.$router.push({'path':'/advertisingscreen'})
-        }
-        if(sessionStorage.menuId3=='48'){
-            that.$router.push({'path':'/sensor'})
-        }
-        if(sessionStorage.menuId3=='49'){
-            that.$router.push({'path':'/loraSensor'})
-        }
-        if(sessionStorage.menuId3=='50'){
-            that.$router.push({'path':'/solinRelayDeploy'})
-        }
-        if(sessionStorage.menuId3=='51'){
-            that.$router.push({'path':'/lampslanterns'})
-        }
-        if(sessionStorage.menuId3=='52'){
-            that.$router.push({'path':'/advertisingScreens'})
-        }
-        if(sessionStorage.menuId3=='53'){
-            that.$router.push({'path':'/sensors'})
-        }
-        if(sessionStorage.menuId3=='55'){
-            that.$router.push({'path':'Relay'})
-        }
-        if(sessionStorage.menuId3=='56'){
-            that.$router.push({'path':'/LampPoleJournal'})
-        }
-        if(sessionStorage.menuId3=='57'){
-            that.$router.push({'path':'/lampJournal'})
-        }
-        if(sessionStorage.menuId3=='58'){
-            that.$router.push({'path':'/screenJournal'})
-        }
-        if(sessionStorage.menuId3=='59'){
-            that.$router.push({'path':'/sensorJournal'})
-        }
-        if(sessionStorage.menuId3=='60'){
-            that.$router.push({'path':'/loraJournal'})
-        }
-        if(sessionStorage.menuId3=='61'){
-            that.$router.push({'path':'/RelayJournal'})
-        }
-        if(sessionStorage.menuId3=='54'||sessionStorage.menuId3=='64'||sessionStorage.menuId3=='65'||sessionStorage.menuId3=='66'||sessionStorage.menuId3=='67'||sessionStorage.menuId3=='68'||sessionStorage.menuId3=='69'||sessionStorage.menuId3=='70'){
-            that.$router.push({'path':'loading'})
-            setTimeout(function(){
-                that.$router.push({'path':'loraQuery'})
-            },200)
-        }
-        if(sessionStorage.menuId3=='80'){
-            that.$router.push({'path':'/concentrator'})
-        }
-      },200)
+        sessionStorage.projectId = this.value2
+        this.$router.push({'path':'/Refresh'})
+        setTimeout(function(){
+            if(sessionStorage.menuId3=='45'){
+                that.$router.push({'path':'/LampPole'})
+            }
+            if(sessionStorage.menuId3=='46'){
+                that.$router.push({'path':'/Lampsandlanterns'})
+            }
+            if(sessionStorage.menuId3=='47'){
+                that.$router.push({'path':'/advertisingscreen'})
+            }
+            if(sessionStorage.menuId3=='48'){
+                that.$router.push({'path':'/sensor'})
+            }
+            if(sessionStorage.menuId3=='49'){
+                that.$router.push({'path':'/loraSensor'})
+            }
+            if(sessionStorage.menuId3=='50'){
+                that.$router.push({'path':'/solinRelayDeploy'})
+            }
+            if(sessionStorage.menuId3=='51'){
+                that.$router.push({'path':'/lampslanterns'})
+            }
+            if(sessionStorage.menuId3=='52'){
+                that.$router.push({'path':'/advertisingScreens'})
+            }
+            if(sessionStorage.menuId3=='53'){
+                that.$router.push({'path':'/sensors'})
+            }
+            if(sessionStorage.menuId3=='55'){
+                that.$router.push({'path':'Relay'})
+            }
+            if(sessionStorage.menuId3=='56'){
+                that.$router.push({'path':'/LampPoleJournal'})
+            }
+            if(sessionStorage.menuId3=='57'){
+                that.$router.push({'path':'/lampJournal'})
+            }
+            if(sessionStorage.menuId3=='58'){
+                that.$router.push({'path':'/screenJournal'})
+            }
+            if(sessionStorage.menuId3=='59'){
+                that.$router.push({'path':'/sensorJournal'})
+            }
+            if(sessionStorage.menuId3=='60'){
+                that.$router.push({'path':'/loraJournal'})
+            }
+            if(sessionStorage.menuId3=='61'){
+                that.$router.push({'path':'/RelayJournal'})
+            }
+            if(sessionStorage.menuId3=='54'||sessionStorage.menuId3=='64'||sessionStorage.menuId3=='65'||sessionStorage.menuId3=='66'||sessionStorage.menuId3=='67'||sessionStorage.menuId3=='68'||sessionStorage.menuId3=='69'||sessionStorage.menuId3=='70'){
+                that.$router.push({'path':'loading'})
+                setTimeout(function(){
+                    that.$router.push({'path':'loraQuery'})
+                },200)
+            }
+            if(sessionStorage.menuId3=='80'){
+                that.$router.push({'path':'/concentrator'})
+            }
+        },200)
     },
     //请求权限
     Jurisdiction(){

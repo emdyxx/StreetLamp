@@ -190,7 +190,6 @@
                             <div>
                                 <el-table
                                     :data="tableData3"
-                                    :key="Math.random()"
                                     border
                                     stripe
                                     size='small'
@@ -1017,6 +1016,8 @@ export default {
         backtrack(){this.$router.go(-1)}
     },
     created(){
+        this.tableData = []
+        console.log(123456789)
         this.ready()
     }
 }

@@ -805,6 +805,7 @@ export default {
         //保存高级节目
         mediaSave(val){
             var that = this;
+            console.log(that.programName)
             if(that.programName==''){
                 that.$message({
                     message: '节目名称不能为空',

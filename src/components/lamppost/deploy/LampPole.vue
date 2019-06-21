@@ -2,166 +2,143 @@
     <div class="LampPole">
         <!-- 灯杆模式 -->
         <div class="LampPole_top">
-            <el-button v-if="addPole" @click="addLampPole(0)" type="primary" icon='el-icon-plus' size='small'>添加灯杆</el-button>
-            <el-button v-if="editPole" @click="addLampPole(1)" type="primary" icon="el-icon-edit" size='small'>编辑灯杆</el-button>
-            <el-button v-if="delPole" @click="deleteLampPole" type="primary" icon='el-icon-delete' size='small'>删除灯杆</el-button>
-            <el-button v-if="poleBindProject" @click="poleBindProjects" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button>
-        </div>
-        <div class="LampPole_bottom">
-            <div class="LampPole_bottom_top">
-                <div class="search">
-                    <label>灯杆名称:</label>
-                    <input type="text" v-model="nickName" style="width:126px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入灯杆名称">
+            <el-button v-if="addPole" @click="addLampPole(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="editPole" @click="addLampPole(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="delPole" @click="deleteLampPole" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <el-dropdown v-if="poleBindProject" size="small" split-button type="primary">
+                <i class="el-icon-setting el-icon--left"></i>设置
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item @click.native="poleBindProjects">绑定项目</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+            <div class="search">
+                <el-dropdown size="small" split-button>
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='类别';type='3';">类型</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="type=='1'">
+                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type=='2'">
+                        <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type=='3'">
+                        <el-select v-model="value_search" size='small' style="width:194px;" clearable placeholder="请选择">
+                            <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </template>
                 </div>
-                <div class="search">
-                    <label>灯杆类型:</label>
-                    <el-select v-model="value_search" size='small' style="width:126px;" clearable placeholder="请选择">
-                        <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="search">
-                    <label>灯杆编号:</label>
-                    <input type="text" v-model="serialNumber" style="width:126px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入灯杆编号">
-                </div>
-                <!-- <div class="search">
-                    <label style="width:25px;">省:</label>
-                    <el-select @change="city(3)" v-model="value1_search" clearable size='small' style="width: 126px;" placeholder="请选择">
-                        <el-option
-                        v-for="item in options1"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="search">
-                    <label style="width:25px;">市:</label>
-                    <el-select @change="area(3)" v-model="value2_search" clearable size='small' style="width: 126px;" placeholder="请选择">
-                        <el-option
-                        v-for="item in options2"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="search">
-                    <label style="width:35px;">区/县:</label>
-                    <el-select v-model="value3_search" clearable size='small' style="width: 126px;" placeholder="请选择">
-                        <el-option
-                        v-for="item in options3"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
-                        </el-option>
-                    </el-select>
-                </div> -->
-                <div style="margin-left:15px;">
+                <div>
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
             </div>
-            <div class="LampPole_bottom_bottom">
-                <el-table
-                    :data="tableData"
-                    @row-click="clickRow" 
-                    ref="moviesTable"
-                    border
-                    stripe
-                    size='small'
-                    tooltip-effect="dark"
-                    show-overflow-tooltip=true
-                    @selection-change="SelectionChange"
-                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                    <el-table-column
-                    type="selection"
-                    align='center'
-                    width="55">
-                    </el-table-column>
-                    <el-table-column
-                    prop="nickName"
-                    align='center'
-                    label="昵称"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="serialNumber"
-                    align='center'
-                    label="编号"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="灯杆类型"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.poleType=='0'">普通灯杆</span>
-                            <span v-if="scope.row.poleType=='1'">智慧灯杆</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="location"
-                    align='center'
-                    label="位置"
-                    :formatter="formatRole"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="关联灯具"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <button @click="LampPole_click(scope.row.id)" style="height:20px;line-height:15px;">...</button>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    label="关联屏幕"
-                    align='center'
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <button @click="relevancelanterns(scope.row.id)" style="height:20px;line-height:15px;">...</button>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    label="关联气象站"
-                    align='center'
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <button @click="sensor(scope.row.id)" style="height:20px;line-height:15px;">...</button>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    label="关联传感器"
-                    align='center'
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <button @click="loar(scope.row.id)" style="height:20px;line-height:15px;">...</button>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="remark"
-                    label="备注"
-                    align='center'
-                    :formatter="formatRole"
-                    show-overflow-tooltip>
-                    </el-table-column>
-                </el-table>
-                <div class="block">
-                    <el-pagination
-                    background
-                    @size-change="sizechange"
-                    @current-change="currentchange"
-                    :current-page="pageIndex"
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-                    </el-pagination>
-                </div>
+        </div>
+        <div class="LampPole_bottom">
+            <el-table
+                :data="tableData"
+                @row-click="clickRow" 
+                ref="moviesTable"
+                border
+                stripe
+                size='small'
+                tooltip-effect="dark"
+                show-overflow-tooltip=true
+                @selection-change="SelectionChange"
+                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                <el-table-column
+                type="selection"
+                align='center'
+                width="55">
+                </el-table-column>
+                <el-table-column
+                prop="nickName"
+                align='center'
+                label="名称"
+                min-width="80">
+                </el-table-column>
+                <el-table-column
+                prop="serialNumber"
+                align='center'
+                label="序列号"
+                min-width="80">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="类型"
+                min-width="80">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.poleType=='0'">普通灯杆</span>
+                        <span v-if="scope.row.poleType=='1'">智慧灯杆</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="灯具"
+                min-width="80">
+                    <template slot-scope="scope">
+                        <button @click="LampPole_click(scope.row.id)" style="height:20px;line-height:15px;">...</button>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                label="LED屏幕"
+                align='center'
+                min-width="80">
+                    <template slot-scope="scope">
+                        <button @click="relevancelanterns(scope.row.id)" style="height:20px;line-height:15px;">...</button>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                label="气象站"
+                align='center'
+                min-width="80">
+                    <template slot-scope="scope">
+                        <button @click="sensor(scope.row.id)" style="height:20px;line-height:15px;">...</button>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                label="传感器"
+                align='center'
+                min-width="80">
+                    <template slot-scope="scope">
+                        <button @click="loar(scope.row.id)" style="height:20px;line-height:15px;">...</button>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                prop="remark"
+                label="备注"
+                align='center'
+                :formatter="formatRole"
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                prop="createTime"
+                label="创建时间"
+                align='center'
+                :formatter="formatRole"
+                show-overflow-tooltip>
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                background
+                @size-change="sizechange"
+                @current-change="currentchange"
+                :current-page="pageIndex"
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+                </el-pagination>
             </div>
         </div>
         <!-- 添加编辑灯杆 -->
@@ -175,10 +152,16 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label><span class="Required">*</span>昵称:</label>
+                            <label><span class="Required">*</span>名称:</label>
                             <input type="text" v-model="LampPoleData.nickName" class="form-control" id="email" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="Required">*</span>序列号:</label>
+                            <input type="text" v-model="LampPoleData.serialNumber" id="serialNumber" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
+                        </div>
+                        <div class="form-group">
                             <label>灯杆类型:</label>
-                            <el-select v-model="value" size='small' style="width:126px" placeholder="请选择">
+                            <el-select v-model="value" size='small' style="width:195px" placeholder="请选择">
                                 <el-option
                                 v-for="item in options"
                                 :key="item.value"
@@ -187,7 +170,7 @@
                                 </el-option>
                             </el-select>
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label>经度:</label>
                             <input type="text" v-model="LampPoleData.longitude" class="form-control" id="email" placeholder="请输入经度">
                             <label>纬度:</label>
@@ -225,18 +208,21 @@
                             </el-select>
                             <label>地址:</label>
                             <input type="text" v-model="LampPoleData.location" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入地址">
-                        </div> 
+                        </div>  -->
+                        <div class="form-group">
+                            <label>位置:</label>
+                            <input type="text" v-model="LampPoleData.coord" :disabled='true' class="form-control" id="email" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="地图选点">
+                            <i @click="mapClick" class="iconfont icon-baidumap mappoint"></i>
+                        </div>
                         <div class="form-group">
                             <label>备注:</label>
                             <el-input
                                 type="textarea"
-                                :rows="1"
-                                style="width:126px;"
+                                :rows="2"
+                                style="width:195px;"
                                 placeholder="请输入内容"
                                 v-model="LampPoleData.remark">
                             </el-input>
-                            <label><span class="Required">*</span>灯杆编号:</label>
-                            <input type="text" v-model="LampPoleData.serialNumber" id="serialNumber" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入灯杆编号">
                         </div>
                         <div class="form-group" v-if="addtype=='0'">
                             <el-button v-if="addLamp" @click="addlamp(0)" type="primary" size='small'>添加灯具</el-button>
@@ -877,6 +863,22 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
+        <!-- 地图选点 -->
+        <div class="modal fade" id="map" tabindex="-1" role="dialog" style="margin-top:15%;" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width:350px;">
+                <div class="modal-content">
+                    <div class="modal-body map_Z" style='height:300px'>
+                        <div>点击地图选取坐标--坐标:{{referencePosition}}</div>
+                        <div>
+                            <div style="width:100%;height:100%;" id="allmap"></div>
+                        </div>
+                        <div>
+                            <el-button @click="mapSubmit" type="primary" size='mini'>确定</el-button>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
     </div>
 </template>
 <script>
@@ -884,6 +886,8 @@ export default {
     name: 'user',
     data () {
         return {
+            name:'名称',
+            type:'1',
             serverurl:localStorage.serverurl,
             addPole:false,
             editPole:false,
@@ -915,13 +919,10 @@ export default {
             radio1: '0', //模态框单选按钮
             options1:[],
             value1:'',
-            value1_search:'',
             options2:[],
             value2:'',
-            value2_search:'',
             options3:[],
             value3:'',
-            value3_search:'',
             options4:[],
             concentratorSNData:[],
             lampData:{
@@ -933,14 +934,15 @@ export default {
                 mark:'',
             },//添加灯具的信息
             modelType:'',
+            referencePosition:'',
             LampPoleData:{
                 nickName:'',
-                longitude:'',
-                latitude:'',
-                
-                location:'',
+                serialNumber:'',
+                // longitude:'',
+                // latitude:'',
+                // location:'',
+                coord:'',
                 remark:'',
-                serialNumber:''
             },//添加灯杆的信息
             tableData2:[],//已关联灯杆的灯具信息
             site2:[],
@@ -1012,6 +1014,27 @@ export default {
         clickRow9(row){
             this.$refs.moviesTable9.toggleRowSelection(row)
         },
+        //点击拉取地图
+        mapClick(){
+            var that = this
+            $('#map').modal('show')
+            var map = new BMap.Map("allmap");    // 创建Map实例
+            console.log(sessionStorage.areaname)
+            map.centerAndZoom(sessionStorage.areaname, 12);  // 初始化地图,设置中心点坐标和地图级别
+            map.addEventListener("click", function(e){
+                map.clearOverlays();
+                var point = new BMap.Point(e.point.lng,e.point.lat);
+                var marker = new BMap.Marker(point);  // 创建标注
+                map.addOverlay(marker);              // 将标注添加到地图中  
+                that.referencePosition = e.point.lng+','+e.point.lat
+            });
+            map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+        },
+        //地图确定
+        mapSubmit(){
+            $('#map').modal('hide')
+            this.LampPoleData.coord = this.referencePosition
+        },
         //省请求
         province(val){
             var that = this;
@@ -1022,14 +1045,13 @@ export default {
                 url:that.serverurl+'/v1/manage/areas/subset/0',
                 contentType:'application/json;charset=UTF-8',
                 data:{
-                    // parentId:0,
                     id:1
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.options1 = data.result.areas
                         if(val=='3'){
-                            // that.value1_search = data.result.areas[0].id
+                            
                         }else{
                             if(val=='1'){
                                 if(that.site[0].provinceId==''||that.site[0].provinceId==null||that.site[0].provinceId==undefined){}else{
@@ -1055,11 +1077,7 @@ export default {
             var data = {
                 id:2
             }
-            if(val=='3'){
-                data.parentId = that.value1_search
-            }else{
-                data.parentId = that.value1
-            }
+            data.parentId = that.value1
             $.ajax({
                 type:'get',
                 async:true,
@@ -1071,7 +1089,7 @@ export default {
                     if(data.errorCode=='0'){
                         that.options2 = data.result.areas
                         if(val=='3'){
-                            // that.value2_search = data.result.areas[0].id
+
                         }else{
                             if(val=='1'){
                                 if(that.site[0].cityId==''||that.site[0].cityId==null||that.site[0].cityId==undefined){}else{
@@ -1095,11 +1113,7 @@ export default {
         area(val){
             var that = this;
             var data = {id:3}
-            if(val=='3'){
-                data.parentId = that.value2_search
-            }else{
-                data.parentId = that.value2
-            }
+            data.parentId = that.value2
             $.ajax({
                 type:'get',
                 async:true,
@@ -1111,7 +1125,7 @@ export default {
                     if(data.errorCode=='0'){
                         that.options3 = data.result.areas
                         if(val=='3'){
-                            // that.value3_search = data.result.areas[0].id
+                            
                         }else{
                             if(val=='1'){
                                 if(that.site[0].areaId==''||that.site[0].areaId==null||that.site[0].areaId==undefined){}else{
@@ -2139,28 +2153,12 @@ export default {
         ready(){
             var that = this;
             var areaId='';
-            if(that.value3_search!=''){
-                areaId = that.value3_search
-            }
-            if(that.value3_search==''){
-                if(that.value2_search!=''){
-                    areaId = that.value2_search
-                }
-            }
-            if(that.value3_search==''){
-                if(that.value2_search==''){
-                    if(that.value1_search!=''){
-                        areaId = that.value1_search
-                    }
-                }
-            }
             var data = {
                 page:that.pageIndex,
                 size:that.pageSize,
                 nickName:that.nickName,
                 poleType:that.value_search,
                 serialNumber:that.serialNumber,
-                areaId:areaId,
                 projectIds:sessionStorage.projectId
             }
             $.ajax({
@@ -2243,20 +2241,24 @@ export default {
 .LampPole{width: 100%;height: 100%;}
 .LampPole>div{width: 100%;position: absolute;}
 .LampPole_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.LampPole_top>button{height:33px;margin:8px 0 0 10px;}
+.LampPole_top>button,.LampPole_top>div{height:33px;margin:8px 0 0 10px;}
 .LampPole_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
-.LampPole_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.LampPole_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
 .block{text-align: center;}
 
 
 .modal-body>div{margin-bottom: 10px;text-align: center;}
 .form-group{display:flex;justify-content: center;}
 .form-group>label{width: 95px;line-height: 34px;text-align: center;}
-.form-group>input{width: 125px;}
+.form-group>input{width: 195px;}
+.mappoint{font-size: 24px;position: absolute;right: 110px;cursor: pointer;}
 .modal_body_table>div{margin-bottom: 10px;border: 1px solid #E4E4F1;padding: 5px;text-align: center;}
 
-.search{display: flex;}
-.search>label{width: 85px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
+
+.map_Z{margin: 0;padding: 0;position: relative;}
+.map_Z>div:nth-of-type(1){width: 100%;height: 30px;line-height: 30px;}
+.map_Z>div:nth-of-type(2){width: 100%;position: absolute;top: 30px;bottom: 30px;}
+.map_Z>div:nth-of-type(3){width: 100%;height: 30px;line-height: 30px;position: absolute;bottom: 1px;text-align: center;}
 </style>

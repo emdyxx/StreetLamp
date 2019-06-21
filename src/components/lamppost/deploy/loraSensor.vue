@@ -339,6 +339,11 @@ export default {
             nickName:'',
             serialNumber:'',
             options:[],
+            props:{
+                value: 'modelId',
+                label:'text',
+                children: 'children'
+            },
             value:'',
             //添加/编辑
             type:'0',
@@ -359,11 +364,6 @@ export default {
                 location:'',
                 remark:'',
             },
-            props:{
-                value: 'modelId',
-                label:'text',
-                children: 'children'
-            },
             //绑定灯杆页面
             tableData2:[],
             site2:[],
@@ -376,7 +376,6 @@ export default {
         }
     },
     mounted(){
-        this.modal()
     },
     methods:{
         formatRole:function(val, column, cellValue, index){
@@ -847,6 +846,7 @@ export default {
     created(){
         this.Jurisdiction()
         this.ready()
+        this.modal()
     },
 }
 </script>
