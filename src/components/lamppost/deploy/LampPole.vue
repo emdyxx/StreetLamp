@@ -170,13 +170,7 @@
                                 </el-option>
                             </el-select>
                         </div>
-                        <!-- <div class="form-group">
-                            <label>经度:</label>
-                            <input type="text" v-model="LampPoleData.longitude" class="form-control" id="email" placeholder="请输入经度">
-                            <label>纬度:</label>
-                            <input type="text" v-model="LampPoleData.latitude" class="form-control" id="email" placeholder="请输入纬度">
-                        </div> 
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label>省:</label>
                             <el-select @change="provinceChange" v-model="value1" size='small' style="width: 126px;" placeholder="请选择">
                                 <el-option
@@ -224,10 +218,10 @@
                                 v-model="LampPoleData.remark">
                             </el-input>
                         </div>
-                        <div class="form-group" v-if="addtype=='0'">
-                            <el-button v-if="addLamp" @click="addlamp(0)" type="primary" size='small'>添加灯具</el-button>
+                        <!-- <div class="form-group" v-if="addtype=='0'"> -->
+                            <!-- <el-button v-if="addLamp" @click="addlamp(0)" type="primary" size='small'>添加灯具</el-button> -->
                             <!-- <el-button v-if="relationLamp" @click="LampPole_data(0)" type="primary" size='small'>关联灯具</el-button> -->
-                        </div>
+                        <!-- </div> -->
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -776,9 +770,8 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
-
         <!-- 添加灯具 -->
-        <div class="modal fade" id="addlamp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <!-- <div class="modal fade" id="addlamp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:600px;">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -831,9 +824,10 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                         <button @click="submitLamp" type="button" class="btn btn-primary">确定</button>
                     </div>
-                </div><!-- /.modal-content -->
+                </div>
             </div>
-        </div><!-- /.modal -->
+        </div> -->
+        <!-- /.modal -->
         <!-- 绑定项目 -->
         <div class="modal fade" id="poleBindProjectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:350px;">
@@ -938,8 +932,6 @@ export default {
             LampPoleData:{
                 nickName:'',
                 serialNumber:'',
-                // longitude:'',
-                // latitude:'',
                 // location:'',
                 coord:'',
                 remark:'',
@@ -1157,9 +1149,7 @@ export default {
                 this.province(0)
                 this.addtype = val
                 this.LampPoleData.nickName = ''
-                this.LampPoleData.longitude = ''
-                this.LampPoleData.latitude = ''
-                this.LampPoleData.location = ''
+                // this.LampPoleData.location = ''
                 this.LampPoleData.remark = ''
                 this.LampPoleData.serialNumber = ''
             }
@@ -1177,14 +1167,8 @@ export default {
                 $('#serialNumber').attr('disabled','disabled')
                 this.LampPoleData.nickName = this.site[0].nickName
                 this.value = this.site[0].poleType
-                this.LampPoleData.location = this.site[0].location
                 this.LampPoleData.remark = this.site[0].remark
-                if(this.site[0].coord==''||this.site[0].coord==null||this.site[0].coord==undefined){
-                }else{
-                    var arr = this.site[0].coord.split(','); 
-                    this.LampPoleData.longitude = arr[0]
-                    this.LampPoleData.latitude = arr[1]
-                }
+                this.LampPoleData.coord = this.site[0].coord
                 this.LampPoleData.serialNumber = this.site[0].serialNumber
             }
             /* 完成拖拽 */
@@ -1207,7 +1191,6 @@ export default {
             var data = {};
             var url = '';
             var type = ''
-            var coord = [this.LampPoleData.longitude,this.LampPoleData.latitude];
             var lampIds = []
             if(this.addtype=='0'){
                 url='/v1/solin/lighting/pole';
@@ -1224,17 +1207,12 @@ export default {
             };
             data.nickName = this.LampPoleData.nickName;
             data.poleType = this.value;
-            if(this.LampPoleData.longitude=='0'||this.LampPoleData.latitude==''){
-                data.coord=''
-            }else{
-                data.coord = coord.join(',');
-            }
             data.areaId = this.value3;
-            data.location = this.LampPoleData.location;
+            // data.location = this.LampPoleData.location;
             data.remark = this.LampPoleData.remark;
             data.serialNumber = this.LampPoleData.serialNumber;
+            data.coord = this.LampPoleData.coord
             data.projectId = sessionStorage.projectId
-            console.log(data)
             $.ajax({
                 type:type,
                 async:true,

@@ -2,9 +2,29 @@
     <div class="concentrator">
         <!-- 集中器模式 -->
         <div class="concentrator_top">
-            <el-button @click="myModalOperation(0)" type="primary" icon='el-icon-plus' size='small'>添加集中器</el-button>
-            <el-button @click="myModalOperation(1)" type="primary" icon="el-icon-edit" size='small'>编辑集中器</el-button>
-            <el-button @click="myModalOperation(2)" type="primary" icon='el-icon-delete' size='small'>删除集中器</el-button>
+            <el-button @click="myModalOperation(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button @click="myModalOperation(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button @click="myModalOperation(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <div class="search">
+                <el-dropdown size="small" split-button>
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='名称';type1='1';">名称</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='序列号';type1='2';">序列号</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="type1=='1'">
+                        <el-input v-model="concentratorName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type1=='2'">
+                        <el-input v-model="concentratorSn" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                </div>
+                <div>
+                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                </div>
+            </div>
         </div>
         <div class="concentrator_bottom">
             <el-table
@@ -26,23 +46,30 @@
                 <el-table-column
                 prop="concentratorName"
                 align='center'
-                label="集中器名字"
+                label="名称"
                 min-width="100">
                 </el-table-column>
                 <el-table-column
                 prop="concentratorSn"
                 align='center'
-                label="集中器序列号"
+                label="序列号"
                 min-width="100">
                 </el-table-column>
                 <el-table-column
                 align='center'
-                label="集中器状态"
+                label="状态"
                 min-width="100">
                     <template slot-scope="scope">
                         <span v-if="scope.row.online=='0'">离线</span>
                         <span v-if="scope.row.online=='1'">在线</span>
                     </template>
+                </el-table-column>
+                <el-table-column
+                prop="remark"
+                align='center'
+                label="备注"
+                :formatter="formatRole"
+                min-width="100">
                 </el-table-column>
                 <el-table-column
                 prop="createTime"
@@ -71,17 +98,26 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 v-if="myModal=='0'" class="modal-title" id="myModalLabel">添加</h4>
-                        <h4 v-if="myModal=='1'" class="modal-title" id="myModalLabel">修改</h4>
+                        <h4 v-if="myModal=='0'" class="modal-title" id="myModalLabel">添加集中器</h4>
+                        <h4 v-if="myModal=='1'" class="modal-title" id="myModalLabel">修改集中器</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label style="width:105px"><span class="Required">*</span>集中器名字:</label>
-                            <input style="width:155px" type="text" v-model="myModaldata.concentratorName" class="form-control" id="serialNumber" placeholder="请输入集中器名字" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')">
+                            <label><span class="Required">*</span>名称:</label>
+                            <input type="text" v-model="myModaldata.concentratorName" class="form-control" id="serialNumber" placeholder="请输入集中器名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')">
                         </div>
                         <div class="form-group" v-if="myModal=='0'">
-                            <label style="width:105px"><span class="Required">*</span>集中器序列号:</label>
-                            <input style="width:155px" type="text" v-model="myModaldata.concentratorSn" class="form-control" id="concentratorSN" placeholder="请输入集中器序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')">
+                            <label><span class="Required">*</span>序列号:</label>
+                            <input type="text" v-model="myModaldata.concentratorSn" class="form-control" id="concentratorSN" placeholder="请输入集中器序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')">
+                        </div>
+                        <div class="form-group">
+                            <label>备注:</label>
+                            <el-input
+                                type="textarea"
+                                :rows="2"
+                                placeholder="请输入备注"
+                                v-model="myModaldata.remark">
+                            </el-input>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -98,6 +134,10 @@ export default {
     name: 'concentrator',
     data () {
         return {
+            name:'名称',
+            type1:'1',
+            concentratorName:'',
+            concentratorSn:'',
             serverurl:localStorage.serverurl,
             myModaltableData:[],
             myModalSite:[],
@@ -107,7 +147,8 @@ export default {
             myModal:'0',
             myModaldata:{
                 concentratorName:'',
-                concentratorSn:''
+                concentratorSn:'',
+                remark:'',
             }
         }
     },
@@ -133,6 +174,7 @@ export default {
                 $('#myModal2').modal('show')
                 that.myModaldata.concentratorName = ''
                 that.myModaldata.concentratorSn = ''
+                that.myModaldata.remark = ''
             }
             if(val=='1'){
                 if(that.myModalSite.length==0||that.myModalSite.length>1){
@@ -146,6 +188,7 @@ export default {
                 $('#myModal2').modal('show')
                 that.myModaldata.concentratorName = that.myModalSite[0].concentratorName
                 that.myModaldata.concentratorSn = that.myModalSite[0].concentratorSn
+                that.myModaldata.remark = that.myModalSite[0].remark
             }
             if(val=='2'){
                 if(that.myModalSite.length==0){
@@ -216,6 +259,7 @@ export default {
             }
             data.concentratorName = that.myModaldata.concentratorName
             data.concentratorSn = that.myModaldata.concentratorSn
+            data.remark = that.myModaldata.remark
             data.projectId = sessionStorage.projectId
             $.ajax({
                 type:type,
@@ -250,6 +294,8 @@ export default {
                 data:{
                     page:that.myModalpageIndex,
                     size:that.myModalpageSize,
+                    concentratorName:that.concentratorName,
+                    concentratorSn:that.concentratorSn,
                     projectIds:sessionStorage.projectId,
                 },
                 success:function(data){
@@ -265,6 +311,7 @@ export default {
         myModalChange(val){this.myModalSite = val},
         myModalsizechange(val){this.myModalpageSize = val;this.ready();},
         myModalcurrentchange(val){this.myModalpageIndex = val;this.ready();},
+        search(){this.ready();},
     },
     created(){
         this.ready()
@@ -276,13 +323,15 @@ export default {
 .concentrator{width: 100%;height: 100%;}
 .concentrator>div{width: 100%;position: absolute;}
 .concentrator_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.concentrator_top>button{height:33px;margin:8px 0 0 10px;}
+.concentrator_top>button,.concentrator_top>div{height:33px;margin:8px 0 0 10px;}
 .concentrator_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
 .block{text-align: center;}
 
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
 
 .form-group{display:flex;justify-content: center;}
-.form-group>label{width: 75px;line-height: 34px;text-align: center;}
-.form-group>input{width: 196px;}
-
+.form-group>label{width: 105px;line-height: 34px;text-align: center;}
+.form-group>input,.form-group>div{width: 155px;}
 </style>

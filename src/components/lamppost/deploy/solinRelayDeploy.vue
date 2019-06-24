@@ -2,35 +2,42 @@
     <!-- 继电器部署 -->
     <div class="solinRelayDeploy">
         <div class="solinRelayDeploy_top">
-            <el-button v-if="addRelay" @click="solinRelayDeployOpreat(0)" type="primary" icon='el-icon-plus' size='small'>添加继电器</el-button>
-            <el-button v-if="editRelay" @click="solinRelayDeployOpreat(1)" type="primary" icon="el-icon-edit" size='small'>编辑继电器</el-button>
-            <el-button v-if="delRelay" @click="solinRelayDeployOpreat(2)" type="primary" icon='el-icon-delete' size='small'>删除继电器</el-button>
-        </div>
-        <div class="solinRelayDeploy_bottom">
-            <div class="solinRelayDeploy_bottom_top">
-                <div class="search">
-                    <label style="width:90px;">继电器名称:</label>
-                    <input v-model="nickName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入继电器名称">
+            <el-button v-if="addRelay" @click="solinRelayDeployOpreat(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="editRelay" @click="solinRelayDeployOpreat(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="delRelay" @click="solinRelayDeployOpreat(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <div class="search">
+                <el-dropdown size="small" split-button>
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='名称';type1='1';">名称</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='序列号';type1='2';">序列号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='状态';type1='3';">状态</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="type1=='1'">
+                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type1=='2'">
+                        <el-input v-model="relayNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type1=='3'">
+                        <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
+                            <el-option
+                            v-for="item in options"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </template>
                 </div>
-                <div class="search">
-                    <label style="width:100px;">继电器编号:</label>
-                    <input v-model="relayNumber" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入继电器编号">
-                </div>
-                <div class="search">
-                    <label style="width:90px;">继电器状态:</label>
-                    <el-select v-model="value" size='small' clearable style='width:146px;' placeholder="请选择">
-                        <el-option
-                        v-for="item in options"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div style="margin-left:15px;">
+                <div>
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
             </div>
+        </div>
+        <div class="solinRelayDeploy_bottom"> 
             <div class="solinRelayDeploy_bottom_bottom">
                 <el-table
                     :data="tableData"
@@ -50,7 +57,7 @@
                     <el-table-column
                     prop="nickName"
                     align='center'
-                    label="继电器名称"
+                    label="名称"
                     :formatter="formatRole"
                     min-width="110">
                     </el-table-column>
@@ -58,13 +65,22 @@
                     prop="relayNumber"
                     align='center'
                     :formatter="formatRole"
-                    label="继电器地址"
+                    label="序列号"
                     min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    align='center'
+                    label="状态"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.online=='0'">离线</span>
+                            <span v-if="scope.row.online=='1'">在线</span>
+                        </template>
                     </el-table-column>
                     <el-table-column
                     prop="modelName"
                     align='center'
-                    label="继电器型号"
+                    label="型号"
                     :formatter="formatRole"
                     min-width="110">
                     </el-table-column>
@@ -76,18 +92,23 @@
                     min-width="110">
                     </el-table-column>
                     <el-table-column
+                    prop="concentratorSn"
                     align='center'
-                    label="继电器状态"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.online=='0'">离线</span>
-                            <span v-if="scope.row.online=='1'">在线</span>
-                        </template>
+                    :formatter="formatRole"
+                    label="集中器序列号"
+                    min-width="110">
                     </el-table-column>
                     <el-table-column
                     prop="remark"
                     align='center'
+                    :formatter="formatRole"
                     label="备注"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="createTime"
+                    align='center'
+                    label="创建时间"
                     :formatter="formatRole"
                     show-overflow-tooltip>
                     </el-table-column>
@@ -117,15 +138,26 @@
                     </div>
                     <div class="modal-body">
                         <div class="form_input">
-                            <label><span class="Required">*</span>继电器名称:</label>
+                            <label><span class="Required">*</span>名称:</label>
                             <input type="text" v-model.lazy="data.nickName" maxlength="40" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入继电器名称">
                         </div>
                         <div class="form_input">
-                            <label><span class="Required">*</span>继电器编号:</label>
-                            <el-input-number v-model.lazy="data.relayNumber" :min="1" :max="253" size="small" style="width:196px;" label="继电器编号"></el-input-number>
+                            <label><span class="Required">*</span>序列号:</label>
+                            <el-input-number v-model.lazy="data.relayNumber" :min="1" :max="253" size="small" style="width:196px;" label="继电器序列号"></el-input-number>
                         </div>
                         <div class="form_input">
-                            <label><span class="Required">*</span>集中器序列号:</label>
+                            <label><span class="Required">*</span>型号:</label>
+                            <el-select v-model="data.modelId" @change="modelChange" size='small' clearable style='width:196px;' placeholder="请选择">
+                                <el-option
+                                v-for="item in options3"
+                                :key="item.id"
+                                :label="item.modelName"
+                                :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="form_input">
+                            <label><span class="Required">*</span>集中器:</label>
                             <el-select v-model="data.concentratorSn" size='small' clearable style='width:196px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options2"
@@ -134,17 +166,6 @@
                                 :value="item.concentratorSn">
                                     <span style="float: left">{{ item.concentratorName }}</span>
                                     <span style="float: right; color: #8492a6; font-size: 13px">{{ item.concentratorSn }}</span>
-                                </el-option>
-                            </el-select>
-                        </div>
-                        <div class="form_input">
-                            <label><span class="Required">*</span>继电器型号:</label>
-                            <el-select v-model="data.modelId" @change="modelChange" size='small' clearable style='width:196px;' placeholder="请选择">
-                                <el-option
-                                v-for="item in options3"
-                                :key="item.id"
-                                :label="item.modelName"
-                                :value="item.id">
                                 </el-option>
                             </el-select>
                         </div>
@@ -160,15 +181,15 @@
                         </div>
                         <div class="passageway">
                             <div class="passageway_div1">
-                                <span>输入通道编号</span>
+                                <span>输入通道</span>
                                 <span>通道名称</span>
-                                <span>输出通道编号</span>
+                                <span>输出通道</span>
                                 <span>通道名称</span>
                             </div>
                             <div class="passageway_div2">
                                 <div>
                                     <div v-for="(item,index) in data.inputChannelDTOs" :key='item.id'>
-                                        <span>输入通道{{index+1}}</span>
+                                        <span>{{index+1}}</span>
                                         <span style="padding:3px;">
                                             <input type="text" v-model.lazy=item.channelName style="height:27px;" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="通道名称">
                                         </span>
@@ -176,7 +197,7 @@
                                 </div>
                                 <div>
                                     <div v-for="(item,index) in data.outputChannelDTOs" :key='item.id'>
-                                        <span>输出通道{{index+1}}</span>
+                                        <span>{{index+1}}</span>
                                         <span style="padding:3px;">
                                             <input type="text" v-model.lazy=item.channelName style="height:27px;" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="通道名称">
                                         </span>
@@ -199,6 +220,8 @@ export default {
     name: 'solinRelayDeploy',
     data () {
         return {
+            name:'名称',
+            type1:'1',
             addRelay:false,
             editRelay:false,
             delRelay:false,
@@ -548,14 +571,13 @@ export default {
 .solinRelayDeploy{width: 100%;height: 100%;}
 .solinRelayDeploy>div{width: 100%;position: absolute;}
 .solinRelayDeploy_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.solinRelayDeploy_top>button{height:33px;margin:8px 0 0 10px;}
+.solinRelayDeploy_top>button,.solinRelayDeploy_top>div{height:33px;margin:8px 0 0 10px;}
 .solinRelayDeploy_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
-.solinRelayDeploy_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.solinRelayDeploy_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
+.solinRelayDeploy_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
 
-.search{display: flex;}
-.search>label{width: 60px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
 .block{text-align: center;}
 
 .form_input{display:flex;justify-content: center;}

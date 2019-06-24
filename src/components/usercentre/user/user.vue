@@ -594,6 +594,8 @@ export default {
             var result = /[\u4E00-\u9FA5\uF900-\uFA2D]/;
             //手机号码验证
             var phone = /^((0[0-9]{1,3}-\d{5,8})|(1[3584]\d{9}))$/;
+            //字母与数字组合
+            var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/;
             for(var i=0;i<that.site2.length;i++){
                 projectIds.push(that.site2[i].id)
             }
@@ -629,6 +631,14 @@ export default {
                 if(result.test(this.data.userPwd)){
                     that.$message({
                         message: '密码字段不能有中文',
+                        type: 'error',
+                        showClose: true,
+                    });
+                    return;
+                }
+                if(!reg.test(this.data.userPwd)){
+                    that.$message({
+                        message: '密码字段必须为字母与数字组合',
                         type: 'error',
                         showClose: true,
                     });

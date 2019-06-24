@@ -2,26 +2,49 @@
     <div class="chargingpile">
         <!-- 灯具 -->
         <div class="chargingpile_top">
-            <el-button v-if="addLanternsDeployment" @click="addchargingpile(0)" type="primary" icon='el-icon-plus' size='small'>添加灯具</el-button>
-            <el-button v-if="editLanternsDeployment" @click="addchargingpile(1)" type="primary" icon="el-icon-edit" size='small'>编辑灯具</el-button>
-            <el-button v-if="delLanternsDeployment" @click="deletechargingpile" type="primary" icon='el-icon-delete' size='small'>删除灯具</el-button>
-            <el-button v-if="lampBindProject" @click="lampBindProjects" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button>
-            <el-button @click="Powerfailuretime" type="primary" icon='el-icon-time' size='small'>断电时间</el-button>
-        </div>
-        <div class="chargingpile_bottom">
-            <div class="chargingpile_bottom_top">
-                <div class="search">
-                    <label>昵称:</label>
-                    <input type="text" v-model="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入单灯名称">
+            <el-button v-if="addLanternsDeployment" @click="addchargingpile(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="editLanternsDeployment" @click="addchargingpile(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="delLanternsDeployment" @click="deletechargingpile" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <el-dropdown size="small" split-button type="primary">
+                <i class="el-icon-setting el-icon--left"></i>设置
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item v-if="lampBindProject" @click.native="lampBindProjects">绑定项目</el-dropdown-item>
+                    <el-dropdown-item @click.native="Powerfailuretime">断电时间</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+            <div class="search">
+                <el-dropdown size="small" split-button>
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='在线状态';type='3';">在线状态</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="type=='1'">
+                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type=='2'">
+                        <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type=='3'">
+                        <el-select v-model="online" size='small' style="width:194px;" clearable placeholder="请选择">
+                            <el-option
+                            v-for="item in options0"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </template>
                 </div>
-                <div class="search">
-                    <label>灯控器标识:</label>
-                    <input type="text" v-model="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入序列号">
-                </div>
-                <div style="margin-left:15px;">
+                <div>
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
             </div>
+        </div>
+        <div class="chargingpile_bottom">
             <div class="chargingpile_bottom_bottom">
                 <el-table
                     :data="tableData"
@@ -42,20 +65,13 @@
                     <el-table-column
                     prop="nickName"
                     align='center'
-                    label="昵称"
+                    label="名称"
                     min-width="80">
                     </el-table-column>
                     <el-table-column
                     prop="serialNumber"
                     align='center'
-                    label="灯控器标识"
-                    :formatter="formatRole"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="concentratorName"
-                    align='center'
-                    label="集中器名称"
+                    label="序列号"
                     :formatter="formatRole"
                     min-width="120">
                     </el-table-column>
@@ -85,21 +101,28 @@
                     <el-table-column
                     prop="poleName"
                     align='center'
-                    label="所属灯杆"
+                    label="归属灯杆"
                     :formatter="formatRole"
                     min-width="80">
                     </el-table-column>
                     <el-table-column
-                    prop="location"
-                    label="位置"
+                    prop="concentratorName"
+                    align='center'
+                    label="集中器"
+                    :formatter="formatRole"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="remark"
+                    label="备注"
                     :formatter="formatRole"
                     align='center'
                     min-width="120">
                     </el-table-column>
                     <el-table-column
-                    prop="remark"
+                    prop="createTime"
                     align='center'
-                    label="备注"
+                    label="创建时间"
                     :formatter="formatRole"
                     xshow-overflow-tooltip>
                     </el-table-column>
@@ -120,7 +143,7 @@
         </div>
         <!-- 添加编辑模态框 -->
         <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:600px;">
+            <div class="modal-dialog" style="width:500px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -129,10 +152,16 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label><span class="Required">*</span>灯控器标识:</label>
-                            <input type="text" v-model="data.serialNumber" class="form-control" maxlength="16" id="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入灯控器标识">
-                            <label>型号:</label>
-                            <el-select v-model="data.modelId" @change="modelChange" size='small' style='width:175px;' placeholder="请选择">
+                            <label><span class="Required">*</span>名称:</label>
+                            <input type="text" v-model="data.nickName" class="form-control" id="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
+                        </div> 
+                        <div class="form-group">
+                            <label><span class="Required">*</span>序列号:</label>
+                            <input type="text" v-model="data.serialNumber" class="form-control" maxlength="16" id="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="Required">*</span>型号:</label>
+                            <el-select v-model="data.modelId" @change="modelChange" size='small' style='width:195px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options"
                                 :key="item.id"
@@ -140,12 +169,14 @@
                                 :value="item.id">
                                 </el-option>
                             </el-select>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="Required">*</span>灯具编号:</label>
+                            <input type="text" v-model="data.lampNumber" class="form-control" id="lampNumber" placeholder="请输入灯具编号(自定义)">
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>昵称:</label>
-                            <input type="text" v-model="data.nickName" class="form-control" id="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入昵称">
-                            <label><span class="Required" v-if="modelType=='1'">*</span>集中器标识:</label>
-                            <el-select v-model="data.concentratorSn" :disabled="modelType=='2'" clearable size='small' style='width:175px;' placeholder="请选择">
+                            <label><span class="Required" v-if="modelType=='1'">*</span>集中器:</label>
+                            <el-select v-model="data.concentratorSn" :disabled="modelType=='2'" clearable size='small' style='width:195px;' placeholder="请选择">
                                 <el-option
                                     v-for="item in myModaltableData"
                                     :key="item.concentratorSn"
@@ -155,15 +186,18 @@
                                     <span style="float: right; color: #8492a6; font-size: 13px">{{ item.concentratorSn }}</span>
                                 </el-option>
                             </el-select>
-                        </div> 
+                        </div>
                         <div class="form-group">
-                            <label><span class="Required">*</span>灯具编号:</label>
-                            <input type="text" v-model="data.lampNumber" class="form-control" id="lampNumber" placeholder="请输入灯具编号(自定义)">
+                            <label>位置:</label>
+                            <input type="text" v-model="data.coord" :disabled='true' class="form-control" id="email" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="地图选点">
+                            <i @click="mapClick" class="iconfont icon-baidumap mappoint"></i>
+                        </div>
+                        <div class="form-group">
                             <label>备注:</label>
                             <el-input
                                 type="textarea"
-                                style="width:175px"
-                                :rows="1"
+                                style="width:195px"
+                                :rows="2"
                                 placeholder="请输入内容"
                                 v-model="data.remark">
                             </el-input>
@@ -421,6 +455,22 @@
                 </div>
             </div>
         </div>
+        <!-- 地图选点 -->
+        <div class="modal fade" id="map" tabindex="-1" role="dialog" style="margin-top:15%;" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width:350px;">
+                <div class="modal-content">
+                    <div class="modal-body map_Z" style='height:300px'>
+                        <div>点击地图选取坐标--坐标:{{referencePosition}}</div>
+                        <div>
+                            <div style="width:100%;height:100%;" id="allmap"></div>
+                        </div>
+                        <div>
+                            <el-button @click="mapSubmit" type="primary" size='mini'>确定</el-button>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
     </div>
 </template>
 <script>
@@ -428,6 +478,8 @@ export default {
     name: 'user',
     data () {
         return {
+            name:'名称',
+            type:'1',
             serverurl:localStorage.serverurl,
             addLanternsDeployment:false,
             editLanternsDeployment:false,
@@ -444,6 +496,16 @@ export default {
             total:10, 
             nickName:'',
             serialNumber:'',
+            online:'',
+            options0:[
+                {
+                    value: 0,
+                    label: '离线'
+                    }, {
+                    value: 1,
+                    label: '在线'
+                }
+            ],
             options:[],
             data:{
                 serialNumber:'',
@@ -451,11 +513,11 @@ export default {
                 nickName:'',
                 lampNumber:'1',
                 modelId:'',
+                coord:'',
                 remark:'',//弹窗文本域
             },
             modelType:'',
-            longitude:'',//经度
-            latitude:'',//纬度
+            referencePosition:'',
             tableData2:[],
             site2:[],
             pageSize2:10,
@@ -493,6 +555,26 @@ export default {
         },
         clickRow2(row){
             this.$refs.multipleTable.toggleRowSelection(row)
+        },
+        //点击拉取地图
+        mapClick(){
+            var that = this
+            $('#map').modal('show')
+            var map = new BMap.Map("allmap");    // 创建Map实例
+            map.centerAndZoom(sessionStorage.areaname, 12);  // 初始化地图,设置中心点坐标和地图级别
+            map.addEventListener("click", function(e){
+                map.clearOverlays();
+                var point = new BMap.Point(e.point.lng,e.point.lat);
+                var marker = new BMap.Marker(point);  // 创建标注
+                map.addOverlay(marker);              // 将标注添加到地图中  
+                that.referencePosition = e.point.lng+','+e.point.lat
+            });
+            map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+        },
+        //地图确定
+        mapSubmit(){
+            $('#map').modal('hide')
+            this.data.coord = this.referencePosition
         },
         //集中器
         concentrator(){
@@ -845,6 +927,7 @@ export default {
                 that.data.mark = ''
                 that.myModalSite = []
                 this.modelType = ''
+                this.data.coord = ''
             }
             if(val=='1'){
                 if(this.site.length==0||this.site.length>=2){
@@ -863,6 +946,7 @@ export default {
                 that.data.nickName = that.site[0].nickName
                 that.data.lampNumber = that.site[0].lampNumber
                 that.data.remark = that.site[0].remark
+                this.data.coord = that.site[0].coord
             }
         },
         //点击关联灯杆
@@ -945,7 +1029,7 @@ export default {
             }
             if(result.test(this.data.serialNumber)){
                 that.$message({
-                    message: '灯控器标识不能有中文',
+                    message: '序列号不能有中文',
                     type: 'error',
                     showClose: true,
                 });
@@ -953,7 +1037,7 @@ export default {
             }
             if(this.modelType=='1'&&this.data.concentratorSn==''){
                 this.$message({
-                    message: '此型号下,集中器标识不能为空',
+                    message: '此型号下,集中器不能为空',
                     type: 'error',
                     showClose: true,
                 });
@@ -981,6 +1065,7 @@ export default {
                 datas.poleId = this.site2[0].id
             }
             if(this.addType=='1'){datas.id=that.site[0].id}
+            data.coord = that.data.coord
             $.ajax({
                 type:type,
                 async:true,
@@ -1121,7 +1206,7 @@ export default {
                 serialNumber:that.serialNumber,
                 poleId:'',
                 projectIds:sessionStorage.projectId,
-                online:''
+                online:that.online
             }
             $.ajax({
                 type:'get',
@@ -1199,18 +1284,23 @@ export default {
 .chargingpile{width: 100%;height: 100%;}
 .chargingpile>div{width: 100%;position: absolute;}
 .chargingpile_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.chargingpile_top>button{height:33px;margin:8px 0 0 10px;}
-.chargingpile_bottom{top: 46px;border: 1px solid #E4E4F1;bottom: 0;padding: 5px;overflow: auto;}
-.chargingpile_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.chargingpile_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
+.chargingpile_top>button,.chargingpile_top>div{height:33px;margin:8px 0 0 10px;}
+.chargingpile_bottom{top: 46px;border: 1px solid #E4E4F1;bottom: 0;overflow: auto;}
+.chargingpile_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
 .block{text-align: center;}
 
 .form-group{display:flex;justify-content: center;}
 .form-group>label{width: 95px;line-height: 34px;text-align: center;}
-.form-group>input{width: 175px;}
+.form-group>input{width: 195px;}
+.mappoint{font-size: 24px;position: absolute;right: 110px;cursor: pointer;}
 .modal_body_table>div{margin-bottom: 10px;border: 1px solid #E4E4F1;padding: 5px;text-align: center;}
 
-.search{display: flex;}
-.search>label{width: 85px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
+
+.map_Z{margin: 0;padding: 0;position: relative;}
+.map_Z>div:nth-of-type(1){width: 100%;height: 30px;line-height: 30px;}
+.map_Z>div:nth-of-type(2){width: 100%;position: absolute;top: 30px;bottom: 30px;}
+.map_Z>div:nth-of-type(3){width: 100%;height: 30px;line-height: 30px;position: absolute;bottom: 1px;text-align: center;}
 </style>

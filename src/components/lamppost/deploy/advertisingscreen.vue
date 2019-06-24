@@ -2,32 +2,48 @@
     <div class="advertisingscreen">
         <!-- 广告屏 -->
         <div class="advertisingscreen_top">
-            <el-button v-if="addScreenDeployment" @click="addadvertisingscreen(0)" type="primary" icon='el-icon-plus' size='small'>添加屏幕</el-button>
-            <el-button v-if="editScreenDeployment" @click="addadvertisingscreen(1)" type="primary" icon="el-icon-edit" size='small'>编辑屏幕</el-button>
-            <el-button v-if="delScreenDeployment" @click="deleteadvertisingscreen" type="primary" icon='el-icon-delete' size='small'>删除屏幕</el-button>
-            <el-button v-if="screenBindProject" @click="screenBindProjectss" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button>
-        </div>
-        <div class="advertisingscreen_bottom">
-            <div class="advertisingscreen_bottom_top">
-                <div class="search">
-                    <label>屏幕标识:</label>
-                    <input type="text" v-model="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入屏幕序列号">
+            <el-button v-if="addScreenDeployment" @click="addadvertisingscreen(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="editScreenDeployment" @click="addadvertisingscreen(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="delScreenDeployment" @click="deleteadvertisingscreen" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <el-dropdown size="small" split-button type="primary">
+                <i class="el-icon-setting el-icon--left"></i>设置
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item v-if="screenBindProject" @click.native="screenBindProjectss">绑定项目</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+            <div class="search">
+                <el-dropdown size="small" split-button>
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='状态';type='3';">状态</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="type=='1'">
+                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type=='2'">
+                        <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type=='3'">
+                        <el-select v-model="value4" size='small' style="width:194px;" clearable placeholder="请选择">
+                            <el-option
+                            v-for="item in options4"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </template>
                 </div>
-                <div class="search">
-                    <label>屏幕状态:</label>
-                    <el-select v-model="value4" style="width:126px;" size='small' clearable placeholder="请选择">
-                        <el-option
-                        v-for="item in options4"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div style="margin-left:15px;">
+                <div>
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
             </div>
+        </div>
+        <div class="advertisingscreen_bottom">
             <div class="advertisingscreen_bottom_bottom">
                 <el-table
                     :data="tableData"
@@ -47,7 +63,28 @@
                     <el-table-column
                     prop="nickName"
                     align='center'
-                    label="昵称"
+                    label="名称"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="serialNumber"
+                    align='center'
+                    label="序列号"
+                    min-width="140">
+                    </el-table-column>
+                    <el-table-column
+                    align='center'
+                    label="在线状态"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.online=='0'">离线</span>
+                            <span v-if="scope.row.online=='1'">在线</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="modelName"
+                    align='center'
+                    label="型号"
                     min-width="100">
                     </el-table-column>
                     <el-table-column
@@ -65,26 +102,14 @@
                     <el-table-column
                     prop="poleName"
                     align='center'
-                    label="所属灯杆"
+                    label="归属灯杆"
                     :formatter="formatRole"
                     min-width="100">
                     </el-table-column>
                     <el-table-column
-                    prop="serialNumber"
+                    prop="remark"
                     align='center'
-                    label="屏幕标识"
-                    min-width="140">
-                    </el-table-column>
-                    <el-table-column
-                    prop="modelName"
-                    align='center'
-                    label="型号"
-                    min-width="100">
-                    </el-table-column>
-                    <el-table-column
-                    prop="location"
-                    align='center'
-                    label="位置"
+                    label="备注"
                     :formatter="formatRole"
                     min-width="120">
                     </el-table-column>
@@ -92,13 +117,6 @@
                     prop="createTime"
                     label="创建时间"
                     align='center'
-                    min-width="160">
-                    </el-table-column>
-                    <el-table-column
-                    prop="remark"
-                    align='center'
-                    label="备注"
-                    :formatter="formatRole"
                     show-overflow-tooltip>
                     </el-table-column>
                 </el-table>
@@ -118,7 +136,7 @@
         </div>
         <!-- 添加编辑模态框 -->
         <div class="modal fade" id="addModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:465px;">
+            <div class="modal-dialog" style="width:500px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -127,10 +145,16 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label><span class="Required">*</span>昵称:</label>
+                            <label><span class="Required">*</span>名称:</label>
                             <input type="text" v-model='form.nickName' class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
+                        </div> 
+                        <div class="form-group">
+                            <label><span class="Required">*</span>序列号:</label>
+                            <input type="text" v-model="form.serialNumber" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
+                        </div>
+                        <div class="form-group">
                             <label><span class="Required">*</span>型号:</label>
-                            <el-select v-model="form.modelId" size='small' style='width:126px;' placeholder="请选择">
+                            <el-select v-model="form.modelId" size='small' style='width:195px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options"
                                 :key="item.id"
@@ -138,31 +162,38 @@
                                 :value="item.id">
                                 </el-option>
                             </el-select>
-                        </div> 
+                        </div>
                         <div class="form-group">
                             <label><span class="Required">*</span>屏宽(像素):</label>
                             <input type="text" v-model='form.width' class="form-control" maxlength="10" oninput="value=value.replace(/[^\d]/g,'')" placeholder="请输入宽度">
+                        </div>
+                        <div class="form-group">
                             <label><span class="Required">*</span>屏高(像素):</label>
                             <input type="text" v-model='form.height' class="form-control" maxlength="10" oninput="value=value.replace(/[^\d]/g,'')" placeholder="请输入高度">
                         </div>
                         <div class="form-group">
-                            <label><span class="Required">*</span>控制卡标识:</label>
-                            <input type="text" v-model="form.serialNumber" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入屏幕标识">
                             <label>控制卡宽度:</label>
                             <input type="text" v-model="form.controlCardWidth" maxlength="10" class="form-control" oninput="value=value.replace(/[^\d]/g,'')" placeholder="请输入控制卡宽">
                         </div> 
                         <div class="form-group">
                             <label>控制卡高度:</label>
                             <input type="text" v-model="form.controlCardHeight" maxlength="10" class="form-control" oninput="value=value.replace(/[^\d]/g,'')" placeholder="请输入控制卡高">
+                        </div>
+                        <div class="form-group">
+                            <label>位置:</label>
+                            <input type="text" v-model="form.coord" :disabled='true' class="form-control" id="email" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="地图选点">
+                            <i @click="mapClick" class="iconfont icon-baidumap mappoint"></i>
+                        </div>  
+                        <div class="form-group">
                             <label>备注:</label>
                             <el-input
                                 type="textarea"
                                 v-model='form.remark'
-                                :rows="1"
-                                style="width:126px;"
+                                :rows="2"
+                                style="width:195px;"
                                 placeholder="请输入备注">
                             </el-input>
-                        </div>                                                                                                     
+                        </div>                                                                                             
                         <div class="form-group">
                             <el-button v-if="relationPole" @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
                         </div> 
@@ -275,6 +306,22 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
+        <!-- 地图选点 -->
+        <div class="modal fade" id="map" tabindex="-1" role="dialog" style="margin-top:15%;" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width:350px;">
+                <div class="modal-content">
+                    <div class="modal-body map_Z" style='height:300px'>
+                        <div>点击地图选取坐标--坐标:{{referencePosition}}</div>
+                        <div>
+                            <div style="width:100%;height:100%;" id="allmap"></div>
+                        </div>
+                        <div>
+                            <el-button @click="mapSubmit" type="primary" size='mini'>确定</el-button>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
     </div>
 </template>
 <script>
@@ -282,6 +329,8 @@ export default {
     name: 'user',
     data () {
         return {
+            name:'名称',
+            type:'1',
             serverurl:localStorage.serverurl,
             addScreenDeployment:false,
             editScreenDeployment:false,
@@ -297,6 +346,7 @@ export default {
             pageSize:10,
             pageIndex:1,
             total:10, 
+            nickName:'',
             serialNumber:'',
             options4:[
                 {
@@ -311,6 +361,7 @@ export default {
             value4:'',
             options:[],
             value:'',
+            referencePosition:'',
             form:{
                 nickName:'',
                 width:'',
@@ -319,8 +370,9 @@ export default {
                 serialNumber:'',
                 remark:'',
                 brightness:'1',
-                controlCardWidth:'',
-                controlCardHeight:'',
+                controlCardWidth:'512',
+                controlCardHeight:'1280',
+                coord:'',
             },
             tableData2:[],
             site2:[],
@@ -345,6 +397,26 @@ export default {
         },
         clickRow2(row){
             this.$refs.multipleTable.toggleRowSelection(row)
+        },
+        //点击拉取地图
+        mapClick(){
+            var that = this
+            $('#map').modal('show')
+            var map = new BMap.Map("allmap");    // 创建Map实例
+            map.centerAndZoom(sessionStorage.areaname, 12);  // 初始化地图,设置中心点坐标和地图级别
+            map.addEventListener("click", function(e){
+                map.clearOverlays();
+                var point = new BMap.Point(e.point.lng,e.point.lat);
+                var marker = new BMap.Marker(point);  // 创建标注
+                map.addOverlay(marker);              // 将标注添加到地图中  
+                that.referencePosition = e.point.lng+','+e.point.lat
+            });
+            map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+        },
+        //地图确定
+        mapSubmit(){
+            $('#map').modal('hide')
+            this.form.coord = this.referencePosition
         },
         // 列表数据change事件 进行编辑,删除操作
         userSelectionChange(val){
@@ -377,18 +449,6 @@ export default {
                 }
             })
         },
-        //屏幕安装模式
-        Pattern(){
-            console.log(this.value2)
-            if(this.value2=='1'){
-                this.form.controlCardWidth = '1280'
-                this.form.controlCardHeight = '512'
-            }
-            if(this.value2=='2'){
-                this.form.controlCardWidth = '512'
-                this.form.controlCardHeight = '1280'
-            }
-        },
         //添加 编辑点击事件
         addadvertisingscreen(val){
             if(sessionStorage.projectId=='0'){
@@ -403,14 +463,12 @@ export default {
             if(val=='0'){
                 this.addType = val
                 this.ModelData()
-                this.Pattern()
                 that.form.nickName = ''
                 that.form.width = ''
                 that.form.height = ''
                 that.form.serialNumber = ''
                 that.form.remark = ''
-                that.value2 = '2'
-                that.value3 = '1'
+                that.form.coord = ''
                 $('#addModal').modal('show')
             }
             if(val=='1'){
@@ -432,6 +490,7 @@ export default {
                     that.form.remark = that.site[0].remark
                     that.form.controlCardWidth = that.site[0].controlCardWidth
                     that.form.controlCardHeight = that.site[0].controlCardHeight
+                    that.form.coord = that.site[0].coord
                 },400)
                 
                 $('#addModal').modal('show')
@@ -631,6 +690,7 @@ export default {
                 data:{
                    page:that.pageIndex,
                    size:that.pageSize,
+                   nickName:that.nickName,
                    serialNumber:that.serialNumber,
                    status:that.value4,
                    poleId:'',
@@ -682,6 +742,7 @@ export default {
                 type = 'put'
             }
             data.projectId=sessionStorage.projectId
+            data.coord = that.form.coord
             if(this.site2.length==''){
                 if(this.addType=='0'){
                     data.poleId='0'
@@ -770,18 +831,23 @@ export default {
 .advertisingscreen{width: 100%;height: 100%;}
 .advertisingscreen>div{width: 100%;position: absolute;}
 .advertisingscreen_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.advertisingscreen_top>button{height:33px;margin:8px 0 0 10px;}
+.advertisingscreen_top>button,.advertisingscreen_top>div{height:33px;margin:8px 0 0 10px;}
 .advertisingscreen_bottom{top: 46px;border: 1px solid #E4E4F1;bottom: 0;padding: 5px;overflow: auto;}
-.advertisingscreen_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.advertisingscreen_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
+.advertisingscreen_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
 .block{text-align: center;}
 
 .form-group{display:flex;justify-content: center;}
 .form-group>label{width: 95px;line-height: 34px;text-align: center;}
-.form-group>input{width: 126px;}
+.form-group>input{width: 195px;}
+.mappoint{font-size: 24px;position: absolute;right: 110px;cursor: pointer;}
 .modal_body_table>div{margin-bottom: 10px;border: 1px solid #E4E4F1;padding: 5px;text-align: center;}
 
-.search{display: flex;}
-.search>label{width: 85px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
+
+.map_Z{margin: 0;padding: 0;position: relative;}
+.map_Z>div:nth-of-type(1){width: 100%;height: 30px;line-height: 30px;}
+.map_Z>div:nth-of-type(2){width: 100%;position: absolute;top: 30px;bottom: 30px;}
+.map_Z>div:nth-of-type(3){width: 100%;height: 30px;line-height: 30px;position: absolute;bottom: 1px;text-align: center;}
 </style>

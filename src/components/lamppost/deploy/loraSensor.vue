@@ -2,36 +2,49 @@
     <div class="loraSensor">
         <!-- 传感器部署 -->
         <div class="loraSensor_top">
-            <el-button v-if="addLoraSensor" @click="addloraSensor(0)" type="primary" icon='el-icon-plus' size='small'>添加loar传感器</el-button>
-            <el-button v-if="editLoraSensor" @click="addloraSensor(1)" type="primary" icon="el-icon-edit" size='small'>编辑loar传感器</el-button>
-            <el-button v-if="delLoraSensor" @click="deletloraSensor" type="primary" icon='el-icon-delete' size='small'>删除loar传感器</el-button>
-            <el-button v-if="setLoraSensorProject" @click="loraSensorBindProjects" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button>
-        </div>
-        <div class="loraSensor_bottom">
-            <div class="loraSensor_bottom_top">
-                <div class="search">
-                    <label style="width:120px;">lora传感器名称:</label>
-                    <input type="text" v-model="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入lora传感器名称">
+            <el-button v-if="addLoraSensor" @click="addloraSensor(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="editLoraSensor" @click="addloraSensor(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="delLoraSensor" @click="deletloraSensor" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <!-- <el-button v-if="setLoraSensorProject" @click="loraSensorBindProjects" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button> -->
+            <el-dropdown size="small" split-button type="primary">
+                <i class="el-icon-setting el-icon--left"></i>设置
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item v-if="setLoraSensorProject" @click.native="loraSensorBindProjects">绑定项目</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+            <div class="search">
+                <el-dropdown size="small" split-button>
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='名称';type1='1';">名称</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='序列号';type1='2';">序列号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='类型';type1='3';">类型</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="type1=='1'">
+                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type1=='2'">
+                        <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type1=='3'">
+                        <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
+                            <el-option
+                            v-for="item in options"
+                            :key="item.modelId"
+                            :label="item.text"
+                            :value="item.modelId">
+                            </el-option>
+                        </el-select>
+                    </template>
                 </div>
-                <div class="search">
-                    <label style="width:120px;">lora传感器序列号:</label>
-                    <input type="text" v-model="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入lora传感器序列号">
-                </div>
-                <div class="search">
-                    <label style="width:120px;">lora传感器类型:</label>
-                    <el-select v-model="value" size='small' clearable style='width:146px;' placeholder="请选择">
-                        <el-option
-                        v-for="item in options"
-                        :key="item.modelId"
-                        :label="item.text"
-                        :value="item.modelId">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div style="margin-left:15px;">
+                <div>
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
             </div>
+        </div>
+        <div class="loraSensor_bottom">
             <div class="loraSensor_bottom_bottom">
                 <el-table
                     :data="tableData"
@@ -51,7 +64,7 @@
                     <el-table-column
                     prop="nickName"
                     align='center'
-                    label="昵称"
+                    label="名称"
                     :formatter="formatRole"
                     min-width="110">
                     </el-table-column>
@@ -59,22 +72,8 @@
                     prop="serialNumber"
                     align='center'
                     :formatter="formatRole"
-                    label="lora传感器序列号"
+                    label="序列号"
                     min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    prop="modelName"
-                    align='center'
-                    :formatter="formatRole"
-                    label="lora传感器型号"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="network"
-                    align='center'
-                    :formatter="formatRole"
-                    label="lora传感器入网方式"
-                    min-width="120">
                     </el-table-column>
                     <el-table-column
                     align='center'
@@ -86,23 +85,37 @@
                         </template>
                     </el-table-column>
                     <el-table-column
+                    prop="modelName"
+                    align='center'
+                    :formatter="formatRole"
+                    label="型号"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="network"
+                    align='center'
+                    :formatter="formatRole"
+                    label="入网方式"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
                     prop="poleName"
                     align='center'
-                    label="所属灯杆"
+                    label="归属灯杆"
                     min-width="110"
                     :formatter="formatRole">
                     </el-table-column>
                     <el-table-column
-                    prop="location"
-                    label="位置"
+                    prop="remark"
+                    label="备注"
                     align='center'
                     :formatter="formatRole"
                     min-width="120">
                     </el-table-column>
                     <el-table-column
-                    prop="remark"
+                    prop="createTime"
                     align='center'
-                    label="备注"
+                    label="创建时间"
                     :formatter="formatRole"
                     show-overflow-tooltip>
                     </el-table-column>
@@ -127,8 +140,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 v-if="type=='0'" class="modal-title" id="myModalLabel">添加</h4>
-                        <h4 v-if="type=='1'" class="modal-title" id="myModalLabel">编辑</h4>
+                        <h4 v-if="type=='0'" class="modal-title" id="myModalLabel">添加传感器</h4>
+                        <h4 v-if="type=='1'" class="modal-title" id="myModalLabel">编辑传感器</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form_input">
@@ -149,17 +162,6 @@
                                 size='small'
                                 style="width:196px;">
                             </el-cascader>
-                        </div>
-                        <div class="form_input">
-                            <label><span class="Required">*</span>服务配置:</label>
-                            <el-select v-model="data.serviceProfileId" size='small' clearable style='width:196px;' placeholder="请选择">
-                                <el-option
-                                v-for="item in options3"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                                </el-option>
-                            </el-select>
                         </div>
                         <div class="form_input">
                             <label><span class="Required">*</span>入网方式:</label>
@@ -193,8 +195,20 @@
                             </div>
                         </template>
                         <div class="form_input">
+                            <label><span class="Required">*</span>服务配置:</label>
+                            <el-select v-model="data.serviceProfileId" size='small' clearable style='width:196px;' placeholder="请选择">
+                                <el-option
+                                v-for="item in options3"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="form_input">
                             <label>位置:</label>
-                            <input type="text" v-model.lazy="data.location" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入位置">
+                            <input type="text" v-model="data.coord" :disabled='true' class="form-control" id="email" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="地图选点">
+                            <i @click="mapClick" class="iconfont icon-baidumap mappoint"></i>
                         </div>
                         <div class="form_input">
                             <label>备注:</label>
@@ -318,6 +332,22 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
+        <!-- 地图选点 -->
+        <div class="modal fade" id="map" tabindex="-1" role="dialog" style="margin-top:15%;" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width:350px;">
+                <div class="modal-content">
+                    <div class="modal-body map_Z" style='height:300px'>
+                        <div>点击地图选取坐标--坐标:{{referencePosition}}</div>
+                        <div>
+                            <div style="width:100%;height:100%;" id="allmap"></div>
+                        </div>
+                        <div>
+                            <el-button @click="mapSubmit" type="primary" size='mini'>确定</el-button>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
     </div>
 </template>
 <script>
@@ -325,6 +355,8 @@ export default {
     name: 'lamppost',
     data () {
         return {
+            name:'名称',
+            type1:'1',
             addLoraSensor:false,
             editLoraSensor:false,
             delLoraSensor:false,
@@ -351,6 +383,7 @@ export default {
             networkIdChangeData:{},
             networkType:'',
             options3:[],
+            referencePosition:'',
             data:{
                 nickName:'',
                 serialNumber:'',
@@ -362,6 +395,7 @@ export default {
                 appsKey:'',
                 applicationKey:'',
                 location:'',
+                coord:'',
                 remark:'',
             },
             //绑定灯杆页面
@@ -391,6 +425,26 @@ export default {
         clickRow2(row){
             this.$refs.multipleTable.toggleRowSelection(row)
         },
+        //点击拉取地图
+        mapClick(){
+            var that = this
+            $('#map').modal('show')
+            var map = new BMap.Map("allmap");    // 创建Map实例
+            map.centerAndZoom(sessionStorage.areaname, 12);  // 初始化地图,设置中心点坐标和地图级别
+            map.addEventListener("click", function(e){
+                map.clearOverlays();
+                var point = new BMap.Point(e.point.lng,e.point.lat);
+                var marker = new BMap.Marker(point);  // 创建标注
+                map.addOverlay(marker);              // 将标注添加到地图中  
+                that.referencePosition = e.point.lng+','+e.point.lat
+            });
+            map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+        },
+        //地图确定
+        mapSubmit(){
+            $('#map').modal('hide')
+            this.data.coord = this.referencePosition
+        },
         //添加,编辑loar传感器 按钮
         addloraSensor(val){
             if(val=='0'){
@@ -409,6 +463,7 @@ export default {
                 this.data.location = ''
                 this.data.remark = ''
                 this.networkType = ''
+                this.data.coord = ''
                 $('#myModal').modal('show')
             }
             if(val=='1'){
@@ -435,6 +490,7 @@ export default {
                 this.data.applicationKey = this.site[0].applicationKey
                 this.data.location = this.site[0].location
                 this.data.remark = this.site[0].remark
+                this.data.coord = this.site[0].coord
                 $('#myModal').modal('show')
             }
         },
@@ -482,6 +538,7 @@ export default {
             data.location = that.data.location
             data.remark = that.data.remark
             data.projectId = sessionStorage.projectId
+            data.coord = that.data.coord
             if(that.site2.length==0){
                 if(that.type=='0'){
                     data.poleId='0'
@@ -855,18 +912,23 @@ export default {
 .loraSensor{width: 100%;height: 100%;}
 .loraSensor>div{width: 100%;position: absolute;}
 .loraSensor_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.loraSensor_top>button{height:33px;margin:8px 0 0 10px;}
+.loraSensor_top>button,.loraSensor_top>div{height:33px;margin:8px 0 0 10px;}
 .loraSensor_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
-.loraSensor_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.loraSensor_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
-.search{display: flex;}
-.search>label{width: 60px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
+.loraSensor_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
 .block{text-align: center;}
 
 
 .form_input{display:flex;justify-content: center;}
 .form_input>label{width: 105px;line-height: 34px;text-align: center;}
 .form_input>input{width: 196px;}
+.mappoint{font-size: 24px;position: absolute;right: 110px;cursor: pointer;}
+
+.map_Z{margin: 0;padding: 0;position: relative;}
+.map_Z>div:nth-of-type(1){width: 100%;height: 30px;line-height: 30px;}
+.map_Z>div:nth-of-type(2){width: 100%;position: absolute;top: 30px;bottom: 30px;}
+.map_Z>div:nth-of-type(3){width: 100%;height: 30px;line-height: 30px;position: absolute;bottom: 1px;text-align: center;}
 </style>
 

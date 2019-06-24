@@ -61,7 +61,7 @@ export default {
                             data:{},
                             success:function(data) {
                                 var datas = [{
-                                    text:'智慧灯杆',
+                                    text:'设备管理',
                                     id:'03',
                                     type:'1',
                                     "state": {"opened" : true},

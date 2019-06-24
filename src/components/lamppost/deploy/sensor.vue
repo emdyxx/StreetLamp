@@ -5,33 +5,40 @@
             <el-button v-if="addSensor" @click="addsensor(0)" type="primary" icon='el-icon-plus' size='small'>添加气象站</el-button>
             <el-button v-if="editSensor" @click="addsensor(1)" type="primary" icon="el-icon-edit" size='small'>编辑气象站</el-button>
             <el-button v-if="delSensor" @click="deletesensor" type="primary" icon='el-icon-delete' size='small'>删除气象站</el-button>
-            <el-button v-if="sensorBindProject" @click="sensorBindProjects" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button>
-        </div>
-        <div class="sensor_bottom">
-            <div class="sensor_bottom_top">
-                <div class="search">
-                    <label style="width:100px;">集中器标识:</label>
-                    <input type="text" v-model="concentratorSn" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入集中器标识">
+            <!-- <el-button v-if="sensorBindProject" @click="sensorBindProjects" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button> -->
+            <div class="search">
+                <el-dropdown size="small" split-button>
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='集中器';type='2';">集中器序列号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='状态';type='3';">型号</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="type=='1'">
+                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type=='2'">
+                        <el-input v-model="concentratorSn" size="small" placeholder="请输入集中器序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type=='3'">
+                        <el-select v-model="modelId" size='small' style="width:194px;" clearable placeholder="请选择">
+                            <el-option
+                            v-for="item in options"
+                            :key="item.id"
+                            :label="item.modelName"
+                            :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </template>
                 </div>
-                <div class="search">
-                    <label style="width:90px;">名称:</label>
-                    <input type="text" v-model="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入气象站名称">
-                </div>
-                <div class="search">
-                    <label>型号:</label>
-                    <el-select v-model="modelId" size='small' clearable style='width:146px;' placeholder="请选择">
-                        <el-option
-                        v-for="item in options"
-                        :key="item.id"
-                        :label="item.modelName"
-                        :value="item.id">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div style="margin-left:15px;">
+                <div>
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
             </div>
+        </div>
+        <div class="sensor_bottom">
             <div class="sensor_bottom_bottom">
                 <el-table
                     :data="tableData"
@@ -51,33 +58,14 @@
                     <el-table-column
                     prop="nickName"
                     align='center'
-                    label="昵称"
+                    label="名称"
                     min-width="110">
                     </el-table-column>
                     <el-table-column
                     prop="serialNumber"
                     align='center'
-                    label="气象站编号"
+                    label="序列号"
                     min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    prop="concentratorName"
-                    align='center'
-                    label="集中器名字"
-                    min-width="100">
-                    </el-table-column>
-                    <el-table-column
-                    prop="concentratorSn"
-                    align='center'
-                    label="集中器序列号"
-                    :formatter="formatRole"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="modelName"
-                    align='center'
-                    label="型号"
-                    min-width="120">
                     </el-table-column>
                     <el-table-column
                     align='center'
@@ -89,30 +77,42 @@
                         </template>
                     </el-table-column>
                     <el-table-column
+                    prop="modelName"
+                    align='center'
+                    label="型号"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="concentratorName"
+                    align='center'
+                    label="集中器名称"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="concentratorSn"
+                    align='center'
+                    label="集中器序列号"
+                    :formatter="formatRole"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
                     prop="poleName"
                     align='center'
-                    label="所属灯杆"
+                    label="归属灯杆"
                     min-width="110"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    prop="mark"
+                    align='center'
+                    label="备注"
+                    min-width="120"
                     :formatter="formatRole">
                     </el-table-column>
                     <el-table-column
                     prop="createTime"
                     align='center'
                     label="创建时间"
-                    min-width="140">
-                    </el-table-column>
-                    <el-table-column
-                    prop="location"
-                    label="位置"
-                    align='center'
-                    :formatter="formatRole"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="mark"
-                    align='center'
-                    label="备注"
-                    :formatter="formatRole"
                     show-overflow-tooltip>
                     </el-table-column>
                 </el-table>
@@ -132,7 +132,7 @@
         </div>
         <!-- 添加编辑气象站模态框 -->
         <div class="modal fade" id="addModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:450px;">
+            <div class="modal-dialog" style="width:500px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -141,11 +141,26 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label><span class="Required">*</span>昵称:</label>
+                            <label><span class="Required">*</span>名称:</label>
                             <input type="text" v-model="data.nickName" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>集中器标识:</label>
+                            <label><span class="Required">*</span>序列号:</label>
+                            <input type="text" v-model="data.serialNumber" id="serialNumber" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="Required">*</span>型号:</label>
+                            <el-select v-model="data.modelId" size='small' style='width:195px;' placeholder="请选择">
+                                <el-option
+                                v-for="item in options"
+                                :key="item.id"
+                                :label="item.modelName"
+                                :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </div> 
+                        <div class="form-group">
+                            <label><span class="Required">*</span>集中器:</label>
                             <el-select v-model="data.concentratorSn" size='small' style='width:196px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options2"
@@ -158,26 +173,16 @@
                             </el-select>
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>型号:</label>
-                            <el-select v-model="data.modelId" size='small' style='width:196px;' placeholder="请选择">
-                                <el-option
-                                v-for="item in options"
-                                :key="item.id"
-                                :label="item.modelName"
-                                :value="item.id">
-                                </el-option>
-                            </el-select>
-                        </div> 
-                        <div class="form-group">
-                            <label><span class="Required">*</span>气象站编号:</label>
-                            <input type="text" v-model="data.serialNumber" id="serialNumber" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入气象站编号">
+                            <label>位置:</label>
+                            <input type="text" v-model="data.coord" :disabled='true' class="form-control" id="email" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="地图选点">
+                            <i @click="mapClick" class="iconfont icon-baidumap mappoint"></i>
                         </div>
                         <div class="form-group">
                             <label>备注:</label>
                             <el-input
                                 type="textarea"
-                                :rows="1"
-                                style="width:196px;"
+                                :rows="2"
+                                style="width:195px;"
                                 placeholder="请输入内容"
                                 v-model="data.mark">
                             </el-input>
@@ -294,6 +299,22 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
+        <!-- 地图选点 -->
+        <div class="modal fade" id="map" tabindex="-1" role="dialog" style="margin-top:15%;" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width:350px;">
+                <div class="modal-content">
+                    <div class="modal-body map_Z" style='height:300px'>
+                        <div>点击地图选取坐标--坐标:{{referencePosition}}</div>
+                        <div>
+                            <div style="width:100%;height:100%;" id="allmap"></div>
+                        </div>
+                        <div>
+                            <el-button @click="mapSubmit" type="primary" size='mini'>确定</el-button>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
     </div>
 </template>
 <script>
@@ -301,6 +322,8 @@ export default {
     name: 'user',
     data () {
         return {
+            name:'名称',
+            type:'1',
             serverurl:localStorage.serverurl,
             addSensor:false,
             editSensor:false,
@@ -321,13 +344,15 @@ export default {
             options:[],
             value:'1',
             options2:[],//集中器标示
+            referencePosition:'',
             data:{
                 nickName:'',
                 concentratorSn:'',
                 modelId:'',
                 online:'0',
                 mark:'',
-                serialNumber:''
+                serialNumber:'',
+                coord:'',
             },//添加气象站数据
             tableData2:[],
             site2:[],
@@ -352,6 +377,26 @@ export default {
         },
         clickRow2(row){
             this.$refs.multipleTable.toggleRowSelection(row)
+        },
+        //点击拉取地图
+        mapClick(){
+            var that = this
+            $('#map').modal('show')
+            var map = new BMap.Map("allmap");    // 创建Map实例
+            map.centerAndZoom(sessionStorage.areaname, 12);  // 初始化地图,设置中心点坐标和地图级别
+            map.addEventListener("click", function(e){
+                map.clearOverlays();
+                var point = new BMap.Point(e.point.lng,e.point.lat);
+                var marker = new BMap.Marker(point);  // 创建标注
+                map.addOverlay(marker);              // 将标注添加到地图中  
+                that.referencePosition = e.point.lng+','+e.point.lat
+            });
+            map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+        },
+        //地图确定
+        mapSubmit(){
+            $('#map').modal('hide')
+            this.data.coord = this.referencePosition
         },
         //获取型号列表
         ModelData(){
@@ -401,6 +446,7 @@ export default {
                 this.data.location = ''
                 this.data.mark = ''
                 this.value = ''
+                this.data.coord = ''
                 $('#addModal').modal('show')
                 $('#serialNumber').removeAttr('disabled')
             }
@@ -421,6 +467,7 @@ export default {
                 this.data.location = this.site[0].location
                 this.data.mark = this.site[0].mark
                 this.data.serialNumber = this.site[0].serialNumber
+                this.data.coord = this.site[0].coord
                 // this.value = ''
                 $('#addModal').modal('show')
                 $('#serialNumber').attr('disabled','disabled')
@@ -445,19 +492,12 @@ export default {
                 });
                 return;
             }
-            if(result.test(this.data.concentratorSn)){
-                that.$message({
-                    message: '集中器标识不能有中文',
-                    type: 'error',
-                    showClose: true,
-                });
-                return;
-            }
             data = this.data
             data.concentratorSn = data.concentratorSn.toUpperCase()
             if(this.addtype=='0'){type='post'}
             if(this.addtype=='1'){data.id=this.site[0].id;type='put'}
             data.projectId = sessionStorage.projectId
+            data.coord = this.data.coord
             if(this.site2.length==0){
                 if(this.addtype=='0'){
                     data.poleId='0'
@@ -776,23 +816,28 @@ export default {
 .sensor{width: 100%;height: 100%;}
 .sensor>div{width: 100%;position: absolute;}
 .sensor_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.sensor_top>button{height:33px;margin:8px 0 0 10px;}
+.sensor_top>button,.sensor_top>div{height:33px;margin:8px 0 0 10px;}
 .sensor_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
-.sensor_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.sensor_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
+.sensor_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
 .block{text-align: center;}
 
 
 .form-group{display:flex;justify-content: center;}
 .form-group>label{width: 105px;line-height: 34px;text-align: center;}
-.form-group>input{width: 196px;}
+.form-group>input{width: 195px;}
+.mappoint{font-size: 24px;position: absolute;right: 110px;cursor: pointer;}
 .modal_body_table>div{margin-bottom: 10px;border: 1px solid #E4E4F1;padding: 5px;text-align: center;}
 .table_data{width: 100%;padding: 10px;}
 .table_data>table{width:100%;}
 .table_data>table tr{display: flex;}
 .table_data>table tr>td{width: 25%;text-align: center;line-height: 25px !important;}
 
-.search{display: flex;}
-.search>label{width: 60px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
+
+.map_Z{margin: 0;padding: 0;position: relative;}
+.map_Z>div:nth-of-type(1){width: 100%;height: 30px;line-height: 30px;}
+.map_Z>div:nth-of-type(2){width: 100%;position: absolute;top: 30px;bottom: 30px;}
+.map_Z>div:nth-of-type(3){width: 100%;height: 30px;line-height: 30px;position: absolute;bottom: 1px;text-align: center;}
 </style>
