@@ -2,33 +2,17 @@
     <div class="lampslanterns">
         <!-- 灯具 -->
         <div class="lampslanterns_top">
-            <el-dropdown style="margin-left:10px;" @command='operation'>
+            <el-dropdown v-if="lampControl" style="margin-left:10px;" @command='operation'>
                 <el-button type="primary" size='small' style="width:85px;">
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown"> 
                     <el-dropdown-item v-if="lampControl" command='1'>开灯</el-dropdown-item>
                     <el-dropdown-item v-if="lampControl" command='2'>关灯</el-dropdown-item>
-                    <el-dropdown-item v-if="lampControl" command='3'>刷新状态</el-dropdown-item>
+                    <el-dropdown-item v-if="lampControl" command='3'>调光</el-dropdown-item>
+                    <el-dropdown-item v-if="lampControl" command='4'>刷新状态</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>    
-            <el-dropdown v-if="lampControl" style="margin-left:10px;" @command='dropdown'>
-                <el-button type="primary" size='small' style="width:85px;">
-                    调光<i class="el-icon-arrow-down el-icon--right"></i>
-                </el-button>
-                <el-dropdown-menu slot="dropdown"> 
-                    <el-dropdown-item command='10'>100%</el-dropdown-item>
-                    <el-dropdown-item command='9'>90%</el-dropdown-item>
-                    <el-dropdown-item command='8'>80%</el-dropdown-item>
-                    <el-dropdown-item command='7'>70%</el-dropdown-item>
-                    <el-dropdown-item command='6'>60%</el-dropdown-item>
-                    <el-dropdown-item command='5'>50%</el-dropdown-item>
-                    <el-dropdown-item command='4'>40%</el-dropdown-item>
-                    <el-dropdown-item command='3'>30%</el-dropdown-item>
-                    <el-dropdown-item command='2'>20%</el-dropdown-item>
-                    <el-dropdown-item command='1'>10%</el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>
             <el-dropdown style="margin-left:10px;" @command='switchOff' v-if="viewLampStrategy">
                 <el-button type="primary" size='small' style="width:85px;">
                     策略<i class="el-icon-arrow-down el-icon--right"></i>
@@ -38,33 +22,40 @@
                     <el-dropdown-item v-if="viewLampStrategy" command='6'>单灯策略</el-dropdown-item>
                     <el-dropdown-item v-if="viewLampStrategy" command='7'>群组策略</el-dropdown-item>
                 </el-dropdown-menu>
-            </el-dropdown>   
-        </div>
-        <div class="lampslanterns_bottom">
-            <div class="lampslanterns_bottom_top">
-                <div class="search">
-                    <label>名称:</label>
-                    <input type="text" v-model="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入单灯名称">
+            </el-dropdown>
+            <div class="search">
+                <el-dropdown size="small" split-button>
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='类型';type='3';">状态</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="type=='1'">
+                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type=='2'">
+                        <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type=='3'">
+                        <el-select v-model="value" clearable placeholder="请选择" size='small'>
+                            <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </template>
                 </div>
-                <div class="search">
-                    <label>序列号:</label>
-                    <input type="text" v-model="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入序列号">
-                </div>
-                <div class="search">
-                    <label>在线状态:</label>
-                    <el-select v-model="value" clearable placeholder="请选择" size='small'>
-                        <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div style="margin-left:15px;">
+                <div>
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
             </div>
+        </div>
+        <div class="lampslanterns_bottom">
             <div class="lampslanterns_bottom_bottom">
                 <el-table
                     :data="tableData"
@@ -102,7 +93,7 @@
                             <span v-if="scope.row.online=='1'">在线</span>
                         </template>
                     </el-table-column>
-                    <el-table-column
+                    <!-- <el-table-column
                     align='center'
                     label="灯状态"
                     min-width="80">
@@ -111,14 +102,14 @@
                             <span v-if="scope.row.lampStatus=='1'">开启</span>
                             <span v-if="scope.row.lampStatus=='2'">告警</span>
                         </template>
-                    </el-table-column>
-                    <el-table-column
+                    </el-table-column> -->
+                    <!-- <el-table-column
                     prop="lampNumber"
                     align='center'
                     label="灯具编号"
                     :formatter="formatRole"
                     min-width="80">
-                    </el-table-column>
+                    </el-table-column> -->
                     <el-table-column
                     prop="strategyName"
                     align='center'
@@ -127,17 +118,17 @@
                     min-width="80">
                     </el-table-column>
                     <el-table-column
-                    prop="brightness"
-                    align='center'
-                    :formatter="formatRole"
-                    label="亮度"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
                     prop="envBrightness"
                     align='center'
                     :formatter="formatRole"
                     label="环境亮度"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="brightness"
+                    align='center'
+                    :formatter="formatRole"
+                    label="灯亮度"
                     min-width="80">
                     </el-table-column>
                     <el-table-column
@@ -161,16 +152,16 @@
                     label="功率(W)"
                     min-width="80">
                     </el-table-column>
-                    <el-table-column
+                    <!-- <el-table-column
                     prop="location"
                     align='center'
                     label="区域"
                     min-width="120">
-                    </el-table-column>
+                    </el-table-column> -->
                     <el-table-column
                     prop="timestamp"
                     :formatter="formatRole"
-                    label="采集时间"
+                    label="更新时间"
                     align='center'
                     min-width="160">
                     </el-table-column>
@@ -479,6 +470,27 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
+        <!-- 调光 -->
+        <el-dialog
+        title="调光"
+        :visible.sync="dialogVisible0"
+        width="30%"
+        style="border: none;">
+        <span>
+            <el-select v-model="value2" placeholder="请选择">
+                <el-option
+                v-for="item in options2"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+                </el-option>
+            </el-select>
+        </span>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible0 = false">取 消</el-button>
+            <el-button @click="dropdown" type="primary">确 定</el-button>
+        </span>
+        </el-dialog>
         <!-- 单灯策略 清空策略 -->
         <el-dialog
         title="提示"
@@ -514,6 +526,8 @@ export default {
     name: 'lampslanterns',
     data () {
          return{
+            name:'名称',
+            type:'1',
             serverurl:localStorage.serverurl,
             lampControl:false,
             viewLampStrategy:false,
@@ -558,6 +572,11 @@ export default {
             maxbrightness:100,
             timer:'',//时间节点
             strategyType:'',
+            dialogVisible0:false,
+            options2:[{value: '1',label: '10%'},{value: '2',label: '20%'},{value: '3',label: '30%'},{value: '4',label: '40%'},
+            {value: '5',label: '50%'},{value: '6',label: '60%'},{value: '7',label: '70%'},{value: '8',label: '80%'},{value: '9',label: '90%'},
+            {value: '10',label: '100%'}],
+            value2:'7',
             dialogVisible:false,
             dialogVisibleChecked:false,
             dialogVisible2:false,
@@ -657,30 +676,16 @@ export default {
         dropdown(val){
             var that = this;
             var lampIds = []
-            if(sessionStorage.projectId=='0'){
-                this.$message({
-                    message: '此操作请选择具体项目!',
-                    type: 'warning'
-                });
-                return;
-            }
-            if(that.site.length==0){
-                that.$message({
-                    message: '请选择灯具进行操作!',
-                    type: 'error'
-                });
-                return;
-            }
             for(var i=0;i<that.site.length;i++){
                 lampIds.push(that.site[i].id)
             }
             var data = {
-                "brightness": val*10,
+                "brightness": this.value2*10,
                 'command':3,
                 "lamps": lampIds,
                 projectId:sessionStorage.projectId
             }
-            this.$confirm('确认调节光亮度为'+val*10+'%', '提示', {
+            this.$confirm('确认调节光亮度为'+this.value2*10+'%', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -782,6 +787,23 @@ export default {
                 });
             }
             if(val=='3'){
+                if(sessionStorage.projectId=='0'){
+                    this.$message({
+                        message: '此操作请选择具体项目!',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                if(that.site.length==0){
+                    that.$message({
+                        message: '请选择灯具进行操作!',
+                        type: 'error'
+                    });
+                    return;
+                }
+                this.dialogVisible0 = true;
+            }
+            if(val=='4'){
                 if(that.site.length==0||that.site.length>=2){
                     that.$message({
                         message: '请选择单个灯具进行状态刷新!',
@@ -1384,8 +1406,7 @@ export default {
 .lampslanterns>div{width: 100%;border: 1px solid #E4E4F1;position: absolute;}
 .lampslanterns_top{height: 46px;border-bottom: none !important;display: flex;align-items: center;font-size: 16px;padding-left: 20px;}
 .lampslanterns_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;}
-.lampslanterns_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.lampslanterns_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
+.lampslanterns_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
 .block{text-align: center;}
 .strategy{width: 100%;}
 .strategy_top{width: 100%;height: 40px;line-height: 40px;}
@@ -1395,10 +1416,9 @@ export default {
 .form-group>div{height: 34px;line-height: 34px;}
 .form-group>input{width: 185px;}
 
-.search{display: flex;}
-.search>label{width: 85px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
-.search>div{width: 106px;}
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
 </style>
 <style>
 /* .el-tabs__content{position: relative;top:0;height: 505px;} */

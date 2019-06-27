@@ -20,68 +20,66 @@
             <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
         </div>
         <div class="LampPoleJournal_bottom">
-            <div class="lampJournal_bottom">
-                <el-table
-                    :data="tableData"
-                    border
-                    stripe
-                    size='small'
-                    tooltip-effect="dark"
-                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                    <el-table-column
-                    type="selection"
-                    align='center'
-                    width="55">
-                    </el-table-column>
-                    <el-table-column
-                    prop="nickName"
-                    align='center'
-                    label="操作用户"
-                    min-width="100">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="操作类别"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.operatType=='0'">添加</span>
-                            <span v-if="scope.row.operatType=='1'">编辑</span>
-                            <span v-if="scope.row.operatType=='2'">删除</span>
-                            <span v-if="scope.row.operatType=='3'">启用/禁用</span>
-                            <span v-if="scope.row.operatType=='4'">审核</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="serialNumber"
-                    align='center'
-                    label="灯杆编号"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="createTime"
-                    align='center'
-                    label="操作时间"
-                    min-width="150">
-                    </el-table-column>
-                    <el-table-column
-                    prop="content"
-                    label="操作明细"
-                    align='center'
-                    show-overflow-tooltip>
-                    </el-table-column>
-                </el-table>
-                <div class="block">
-                    <el-pagination
-                    background
-                    @size-change="sizechange"
-                    @current-change="currentchange"
-                    :current-page="pageIndex"
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-                    </el-pagination>
-                </div>
+            <el-table
+                :data="tableData"
+                border
+                stripe
+                size='small'
+                tooltip-effect="dark"
+                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                <el-table-column
+                type="selection"
+                align='center'
+                width="55">
+                </el-table-column>
+                <el-table-column
+                prop="nickName"
+                align='center'
+                label="操作用户"
+                min-width="100">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="操作类别"
+                min-width="80">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.operatType=='0'">添加</span>
+                        <span v-if="scope.row.operatType=='1'">编辑</span>
+                        <span v-if="scope.row.operatType=='2'">删除</span>
+                        <span v-if="scope.row.operatType=='3'">启用/禁用</span>
+                        <span v-if="scope.row.operatType=='4'">审核</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                prop="serialNumber"
+                align='center'
+                label="灯杆编号"
+                min-width="80">
+                </el-table-column>
+                <el-table-column
+                prop="createTime"
+                align='center'
+                label="操作时间"
+                min-width="150">
+                </el-table-column>
+                <el-table-column
+                prop="content"
+                label="操作明细"
+                align='center'
+                show-overflow-tooltip>
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                background
+                @size-change="sizechange"
+                @current-change="currentchange"
+                :current-page="pageIndex"
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+                </el-pagination>
             </div>
         </div>
     </div>
@@ -159,7 +157,7 @@ export default {
 }
 </script>
 <style scoped>
-.LampPoleJournal{width: 10%;height: 100%;}
+.LampPoleJournal{width: 100%;height: 100%;}
 .LampPoleJournal>div{width: 100%;position: absolute;}
 .LampPoleJournal_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;line-height: 46px;padding-left: 15px;}
 .LampPoleJournal_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}

@@ -53,8 +53,8 @@ import screenJournal from '@/components/lamppost/DeviceLog/screenJournal' //广�
 import sensorJournal from '@/components/lamppost/DeviceLog/sensorJournal' //气象站日志
 import loraJournal from '@/components/lamppost/DeviceLog/loraJournal' //lora传感器日志
 import RelayJournal from '@/components/lamppost/DeviceLog/RelayJournal' //继电器日志
-
-
+import loadingLog from '@/components/lamppost/DeviceLog/loading' //继电器日志
+import ConcentratorLog from '@/components/lamppost/DeviceLog/ConcentratorLog' //继电器日志
 
 import mapHomgPage from '@/components/map/mapHomgPage' //地图主页
 import mapDetails from '@/components/map/mapDetails' //地图主页
@@ -324,6 +324,16 @@ export default new Router({
               path: '/RelayJournal',
               name: 'RelayJournal',
               component: RelayJournal,
+            },
+            {
+              path: '/ConcentratorLog',
+              name: 'ConcentratorLog',
+              component: ConcentratorLog,
+            },
+            {
+              path: '/loadingLog',
+              name: 'loadingLog',
+              component: loadingLog,
             },
           ]
         }

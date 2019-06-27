@@ -82,20 +82,22 @@ export default {
                 if(data.errorCode==0){
                     that.menu = data.result.menus
                     console.log(data.result.menus[0].id)
-                    sessionStorage.menuId2 = data.result.menus[0].id
-                    if(data.result.menus[0].id=='4'){
+                    if(sessionStorage.menuId2==''||sessionStorage.menuId2==undefined){
+                      sessionStorage.menuId2 = data.result.menus[0].id
+                    }
+                    if(sessionStorage.menuId2=='4'){
                       sessionStorage.headercolorType = '1'
                       that.$router.push({'path':'/user'})
                     }
-                    if(data.result.menus[0].id=='5'){
+                    if(sessionStorage.menuId2=='5'){
                       sessionStorage.headercolorType = '2'
                       that.$router.push({'path':'/organization'})
                     }
-                    if(data.result.menus[0].id=='6'){
+                    if(sessionStorage.menuId2=='6'){
                       sessionStorage.headercolorType = '3'
                       that.$router.push({'path':'/article'})
                     }
-                    if(data.result.menus[0].id=='7'){
+                    if(sessionStorage.menuId2=='7'){
                       sessionStorage.headercolorType = '4'
                       that.$router.push({'path':'/journal'})
                     }

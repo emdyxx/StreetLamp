@@ -90,7 +90,30 @@ export default {
                                         arr.id = data.result.menus[i].id
                                         datas[0].children.push(arr)
                                     }
-                                    jsonarray= datas;
+                                    //485设备下侧菜单请求
+                                    $.ajax({
+                                        type:"GET",
+                                        url:that.serverurl+'/v1/manage/menu/86',
+                                        dataType:"json",
+                                        async: false,
+                                        data:{},
+                                        success:function(data){
+                                            let array = [];
+                                            let data2 = {}
+                                            for(let i=0;i<data.result.menus.length;i++){
+                                                data2 = {}
+                                                data2.text = data.result.menus[i].menuName
+                                                data2.id = data.result.menus[i].id
+                                                array.push(data2)
+                                            }
+                                            for(let j=0;j<datas[0].children.length;j++){
+                                                if(datas[0].children[j].id=='86'){
+                                                    datas[0].children[j].children = array
+                                                }
+                                            }
+                                            jsonarray= datas;
+                                        },
+                                    })
                                     sessionStorage.menuId3 = data.result.menus[0].id
                                     if(sessionStorage.menuId3=='45'){
                                         that.$router.push({'path':'/LampPole'})

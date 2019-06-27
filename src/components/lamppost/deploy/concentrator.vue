@@ -56,13 +56,15 @@
                 min-width="100">
                 </el-table-column>
                 <el-table-column
+                prop=""
                 align='center'
-                label="状态"
+                label="关联设备数量"
+                :formatter="formatRole"
                 min-width="100">
-                    <template slot-scope="scope">
+                    <!-- <template slot-scope="scope">
                         <span v-if="scope.row.online=='0'">离线</span>
                         <span v-if="scope.row.online=='1'">在线</span>
-                    </template>
+                    </template> -->
                 </el-table-column>
                 <el-table-column
                 prop="remark"

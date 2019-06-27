@@ -197,7 +197,8 @@ export default {
             var data = {
                 newPassword:md5(that.password2),
                 confirmPassword:md5(that.password3),
-                oldPassword:md5(that.password1)
+                oldPassword:md5(that.password1),
+                mqttPassword:that.password1
             }
             $.ajax({
                 type:'post',

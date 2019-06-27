@@ -13,32 +13,39 @@
                 </el-dropdown-menu>
             </el-dropdown>  
             <el-button @click="sceneRouter" type="primary" size='small'>场景管理</el-button>
-        </div>
-        <div class="Relay_bottom">
-            <div class="Relay_bottom_top">
-                <div class="search">
-                    <label style="width:90px;">继电器名称:</label>
-                    <input v-model="nickName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入继电器名称">
+            <div class="search">
+                <el-dropdown size="small" split-button>
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='类型';type='3';">状态</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="type=='1'">
+                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type=='2'">
+                        <el-input v-model="relayNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type=='3'">
+                        <el-select v-model="value" clearable placeholder="请选择" size='small'>
+                            <el-option
+                            v-for="item in options"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </template>
                 </div>
-                <div class="search">
-                    <label style="width:100px;">继电器编号:</label>
-                    <input v-model="relayNumber" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入继电器编号">
-                </div>
-                <div class="search">
-                    <label style="width:90px;">继电器状态:</label>
-                    <el-select v-model="value" size='small' clearable style='width:146px;' placeholder="请选择">
-                        <el-option
-                        v-for="item in options"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div style="margin-left:15px;">
+                <div>
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
             </div>
+        </div>
+        <div class="Relay_bottom">
             <div class="Relay_bottom_bototm">
                 <el-table
                     :data="tableData"
@@ -58,22 +65,15 @@
                     <el-table-column
                     prop="nickName"
                     align='center'
-                    label="继电器名称"
+                    label="名称"
                     :formatter="formatRole"
                     min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    prop="relayNumber"
-                    align='center'
-                    :formatter="formatRole"
-                    label="继电器地址"
-                    min-width="120">
                     </el-table-column>
                     <el-table-column
                     prop="concentratorSn"
                     align='center'
                     :formatter="formatRole"
-                    label="集中器序列号"
+                    label="序列号"
                     min-width="110">
                     </el-table-column>
                     <el-table-column
@@ -86,10 +86,10 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                    prop="relaySceneName"
+                    prop="modelName"
                     align='center'
+                    label="型号"
                     :formatter="formatRole"
-                    label="当前场景"
                     min-width="110">
                     </el-table-column>
                     <el-table-column
@@ -102,6 +102,13 @@
                         </template>
                     </el-table-column>
                     <el-table-column
+                    prop="relaySceneName"
+                    align='center'
+                    :formatter="formatRole"
+                    label="当前场景"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
                     align='center'
                     label="通道状态"
                     min-width="80">
@@ -110,9 +117,9 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                    prop="createTime"
+                    prop="editTime"
                     align='center'
-                    label="创建时间"
+                    label="更新时间"
                     :formatter="formatRole"
                     show-overflow-tooltip>
                     </el-table-column>
@@ -300,6 +307,8 @@ export default {
     name: 'Relay',
     data () {
         return {
+            name:'名称',
+            type:'1',
             serverurl:localStorage.serverurl, 
             tableData:[],
             site:[],
@@ -633,11 +642,10 @@ export default {
 .Relay_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
 .Relay_top>button{height:33px;margin:8px 0 0 10px;}
 .Relay_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
-.Relay_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
 .Relay_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
 
-.search{display: flex;}
-.search>label{width: 60px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
 .block{text-align: center;}
 </style>

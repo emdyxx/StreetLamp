@@ -8,7 +8,7 @@
 export default {
 	name: 'App',
 	created(){
-		// localStorage.serverurl = 'http://192.168.10.10:8080/SD-IOT-API'
+		// localStorage.serverurl = 'http://192.168.10.10:8081/SD-IOT-API'
 		// localStorage.serverurl = 'http://192.168.10.46:8080/SD-IOT-API'
 		//  localStorage.serverurl = 'http://192.168.10.54:8080/SD-IOT-API'
 		localStorage.serverurl = 'http://192.168.70.10:8071/SD-IOT-API'
@@ -43,7 +43,7 @@ export default {
 		// 		localStorage.versionNumber = data.versionNumber;
 		// 	}
 		// })
-  	},
+  },
 }
 </script>
 
@@ -51,7 +51,7 @@ export default {
 #app {
   width:100%;
   height:100%;
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
   /* -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; */
   color: #2c3e50;

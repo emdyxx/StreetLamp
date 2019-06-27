@@ -172,14 +172,6 @@
                             <input type="text" v-model='form.height' class="form-control" maxlength="10" oninput="value=value.replace(/[^\d]/g,'')" placeholder="请输入高度">
                         </div>
                         <div class="form-group">
-                            <label>控制卡宽度:</label>
-                            <input type="text" v-model="form.controlCardWidth" maxlength="10" class="form-control" oninput="value=value.replace(/[^\d]/g,'')" placeholder="请输入控制卡宽">
-                        </div> 
-                        <div class="form-group">
-                            <label>控制卡高度:</label>
-                            <input type="text" v-model="form.controlCardHeight" maxlength="10" class="form-control" oninput="value=value.replace(/[^\d]/g,'')" placeholder="请输入控制卡高">
-                        </div>
-                        <div class="form-group">
                             <label>位置:</label>
                             <input type="text" v-model="form.coord" :disabled='true' class="form-control" id="email" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="地图选点">
                             <i @click="mapClick" class="iconfont icon-baidumap mappoint"></i>
@@ -370,8 +362,6 @@ export default {
                 serialNumber:'',
                 remark:'',
                 brightness:'1',
-                controlCardWidth:'512',
-                controlCardHeight:'1280',
                 coord:'',
             },
             tableData2:[],
@@ -488,8 +478,6 @@ export default {
                     that.form.height = that.site[0].height
                     that.form.serialNumber = that.site[0].serialNumber
                     that.form.remark = that.site[0].remark
-                    that.form.controlCardWidth = that.site[0].controlCardWidth
-                    that.form.controlCardHeight = that.site[0].controlCardHeight
                     that.form.coord = that.site[0].coord
                 },400)
                 

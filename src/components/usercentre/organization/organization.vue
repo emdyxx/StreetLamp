@@ -672,9 +672,11 @@ export default {
             var url = ''
             var type = ''
             //手机号码验证
-            var phone = /^((0[0-9]{1,3}-\d{5,8})|(1[3584]\d{9}))$/;
+            var phone = /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/;
             //中文验证
             var result = /[\u4E00-\u9FA5\uF900-\uFA2D]/;
+            //字母与数字组合
+            var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/;
             if(this.data.orgName==''||this.data.principal==''||this.data.orgMobile==''){
                 this.$message({
                     message: '必填字段不能为空!',
@@ -716,6 +718,14 @@ export default {
                     });
                     return false;
                 }
+                if(!reg.test(this.data.userPwd)){
+                    that.$message({
+                        message: '密码字段必须为字母与数字组合',
+                        type: 'error',
+                        showClose: true,
+                    });
+                    return;
+                }
             }
             if(this.type=='1'){
                 url = '/v1/manage/orgs/'+this.site[0].id
@@ -754,6 +764,7 @@ export default {
             formdate.append("iconFile", this.$refs.img2.files[0])
             formdate.append("userName", this.data.userName)
             formdate.append("userPwd", md5(this.data.userPwd))
+            formdate.append("mqttPassword", this.data.userPwd)
             formdate.append("fullName", this.data.fullName)
             formdate.append("userMobile", this.data.userMobile)
             formdate.append("userEmail", this.data.userEmail)

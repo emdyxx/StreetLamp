@@ -2,13 +2,13 @@
     <!-- 场景管理 -->
     <div class="scene">
         <div class="scene_top">
-            <el-button @click="backtrack" type="success" plain icon='el-icon-arrow-left' size='small'>返回</el-button>
             <el-button @click="sceneOperation(0)" type="primary" icon='el-icon-plus' size='small'>添加场景</el-button>
             <el-button @click="sceneOperation(1)" type="primary" icon="el-icon-edit" size='small'>编辑场景</el-button>
             <el-button @click="sceneOperation(2)" type="primary" icon='el-icon-delete' size='small'>删除场景</el-button>
+            <el-button @click="backtrack" type="success" plain icon='el-icon-arrow-left' size='small' style="position:absolute;right:10px;">返回</el-button>
         </div>
         <div class="scene_bottom">
-            <div class="scene_bottom_top">
+            <!-- <div class="scene_bottom_top">
                 <div class="search">
                     <label style="width:90px;">场景名字:</label>
                     <input v-model="nickName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入场景名字">
@@ -16,7 +16,7 @@
                 <div style="margin-left:15px;">
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
-            </div>
+            </div> -->
             <div class="scene_bottom_bottom">
                 <el-table
                     :data="tableData"
@@ -1030,7 +1030,7 @@ export default {
 .scene_top>button{height:33px;margin:8px 0 0 10px;}
 .scene_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
 .scene_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.scene_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
+.scene_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
 
 .search{display: flex;}
 .search>label{width: 60px;}

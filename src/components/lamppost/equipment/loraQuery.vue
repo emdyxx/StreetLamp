@@ -2,27 +2,37 @@
     <!-- lora传感器 -->
     <div class="loraQuery">
         <div class="loraQuery_top">
-            <el-button @click="HistoryData()" v-if="type=='0'" type="primary" icon='el-icon-search' size='small'>获取历史数据</el-button>
-            <el-button @click="Return()" v-if="type=='1'" type="primary" icon='el-icon-search' size='small'>返回</el-button>
-        </div>
-        <div class="loraQuery_bottom" v-if="type=='0'">
-            <div class="loraQuery_bottom_top">
-                <div class="search">
-                    <label style="width:100px;">传感器名字:</label>
-                    <input type="text" v-model="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入传感器名字">
+            <el-dropdown v-if="type=='0'" trigger='click'>
+                <el-button type="primary" size='small' style="width:115px;">
+                    操作<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item @click.native="HistoryData">查看历史数据</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+            <el-button @click="Return()" v-if="type=='1'" type="primary" icon='el-icon-back' size='small'>返回</el-button>
+            <div class="search" v-if="type=='0'">
+                <el-dropdown size="small" split-button>
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='名称';type1='1';">名称</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='序列号';type1='2';">序列号</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="type1=='1'">
+                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type1=='2'">
+                        <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
                 </div>
-                <div class="search">
-                    <label style="width:90px;">传感器序列号:</label>
-                    <input type="text" v-model="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入传感器序列号">
-                </div>
-                <div class="search">
-                    <label>传感器型号:</label>
-                    <input type="text" v-model="modelName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入传感器型号">
-                </div>
-                <div style="margin-left:15px;">
+                <div>
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
             </div>
+        </div>
+        <div class="loraQuery_bottom" v-if="type=='0'">
             <div class="loraQuery_bottom_bottom">
                 <el-table
                     :data="tableData"
@@ -656,6 +666,8 @@ export default {
     name: 'loraQuery',
     data () {
         return {
+            name:'名称',
+            type1:'1',
             serverurl:localStorage.serverurl, 
             type:'0', //0实时数据   1历史数据
             nickName:'',
@@ -747,8 +759,6 @@ export default {
                 }
             })
         },
-
-
         ready(){
             var that = this;
             var url = ''
@@ -801,10 +811,9 @@ export default {
 .loraQuery>div{width: 100%;border: 1px solid #E4E4F1;position: absolute;}
 .loraQuery_top{height: 46px;border-bottom: none !important;display: flex;align-items: center;font-size: 16px;padding-left: 20px;}
 .loraQuery_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;}
-.loraQuery_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.loraQuery_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
+.loraQuery_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
 .block{text-align: center;}
-.search{display: flex;}
-.search>label{width: 90px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
 </style>

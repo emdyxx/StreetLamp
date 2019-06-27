@@ -3,7 +3,7 @@
     <div class="advertisingScreens">
         <div class="advertisingScreens_top">
             <el-dropdown trigger='click' @command="handleCommand">
-                <el-button type="primary" size='small' style="width:125px;">
+                <el-button type="primary" size='small' style="width:115px;">
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
@@ -16,32 +16,50 @@
                     <el-dropdown-item v-if="operation" command="6">状态查询</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <el-button v-if="viewProgram" type="primary" size='small' @click="notice" style="width:125px;margin-left:25px;">节目管理</el-button>
-            <el-button v-if="viewMedia" type="primary" size='small' @click="mediaLibrary" style="width:125px;margin-left:25px;">媒体库</el-button>
-            <el-button v-if="viewTask" @click="taskManagement" type="primary" size='small' style="width:125px;margin-left:25px;">任务管理</el-button>
-            <el-button @click="update" type="primary" size='small' style="width:125px;margin-left:25px;">在线更新</el-button>
-        </div>
-        <div class="advertisingScreens_bottom">
-            <div class="advertisingScreens_bottom_top">
-                <div class="search">
-                    <label>序列号:</label>
-                    <input type="text" v-model="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入屏幕序列号">
+            <el-dropdown trigger='click' style="margin-left:25px;">
+                <el-button type="primary" size='small' style="width:115px;">
+                    管理<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item v-if="viewMedia" @click.native="mediaLibrary">媒体库</el-dropdown-item>
+                    <el-dropdown-item v-if="viewProgram" @click.native="notice">节目管理</el-dropdown-item>
+                    <el-dropdown-item v-if="viewTask" @click.native="taskManagement">任务管理</el-dropdown-item>
+                    <el-dropdown-item @click.native="update">在线更新</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+            <div class="search">
+                <el-dropdown size="small" split-button>
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='类型';type='3';">状态</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="type=='1'">
+                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type=='2'">
+                        <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type=='3'">
+                        <el-select v-model="value" clearable placeholder="请选择" size='small'>
+                            <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </template>
                 </div>
-                <div class="search">
-                    <label>状态:</label>
-                    <el-select v-model="value" style="width:126px;" size='small' clearable placeholder="请选择">
-                        <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div style="margin-left:15px;">
+                <div>
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
             </div>
+        </div>
+        <div class="advertisingScreens_bottom">
             <div class="advertisingScreens_bottom_bottom">
                 <el-table
                     :data="tableData"
@@ -73,18 +91,13 @@
                     min-width="125">
                     </el-table-column>
                     <el-table-column
-                    prop="width"
                     align='center'
-                    label="宽度(像素)"
-                    :formatter="formatRole"
+                    label="在线状态"
                     min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="height"
-                    align='center'
-                    label="高度(像素)"
-                    :formatter="formatRole"
-                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.online=='0'">离线</span>
+                            <span v-if="scope.row.online=='1'">在线</span>
+                        </template>
                     </el-table-column>
                     <el-table-column
                     align='center'
@@ -96,18 +109,18 @@
                         </template>
                     </el-table-column>
                     <el-table-column
+                    prop="width"
                     align='center'
-                    label="在线状态"
+                    label="宽:高(像素)"
                     min-width="80">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.online=='0'">离线</span>
-                            <span v-if="scope.row.online=='1'">在线</span>
+                            <span>{{scope.row.width}}:{{scope.row.height}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
                     prop="taskName"
                     align='center'
-                    label="当前播放任务"
+                    label="当前播放"
                     :formatter="formatRole"
                     min-width="110">
                     </el-table-column>
@@ -128,21 +141,14 @@
                     <el-table-column
                     prop="versionName"
                     align='center'
-                    label="版本号"
+                    label="版本"
                     :formatter="formatRole"
                     min-width="80">
                     </el-table-column>
                     <el-table-column
                     prop="timestamp"
                     align='center'
-                    label="采集时间"
-                    :formatter="formatRole"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="remark"
-                    label="备注"
-                    align='center'
+                    label="更新时间"
                     :formatter="formatRole"
                     show-overflow-tooltip>
                     </el-table-column>
@@ -1315,6 +1321,8 @@ export default {
     name: 'chargingPile',
     data () {
         return {
+            name:'名称',
+            type:'1',
             inputColumn:'',
             serverurl:localStorage.serverurl,
             operation:false,
@@ -1334,6 +1342,7 @@ export default {
             pageIndex:1,
             total:10,
             site:[],
+            nickName:'',
             serialNumber:'',
             options:[
                 {
@@ -3548,6 +3557,7 @@ export default {
                    page:that.pageIndex,
                    size:that.pageSize,
                    status:that.value,
+                   nickName:that.nickName,
                    serialNumber:that.serialNumber,
                    poleId:'',
                    projectIds:sessionStorage.projectId
@@ -3631,8 +3641,7 @@ export default {
 .advertisingScreens>div{width: 100%;position: absolute;overflow:auto;}
 .advertisingScreens_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;align-items: center;font-size: 16px;padding-left: 20px;}
 .advertisingScreens_bottom{top: 46px;border: 1px solid #E4E4F1;bottom: 0;padding: 5px;overflow:auto;}
-.advertisingScreens_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.advertisingScreens_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
+.advertisingScreens_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
 .block{text-align: center;}
 .table_button{height: 20px;padding: 5px;}
 .notice_bottom{margin-top: 10px;}
@@ -3657,9 +3666,9 @@ export default {
 .form-group>label{width: 75px;line-height: 34px;text-align: center;}
 .form-group>input{width: 196px;}
 
-.search{display: flex;}
-.search>label{width: 85px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
 </style>
 <style>
 /* .el-tabs__content{position: relative !important;top:0 !important;height: auto !important;} */

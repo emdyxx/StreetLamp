@@ -1,25 +1,17 @@
 <template>
-    <!-- 灯具日志 -->
-    <div class="lampJournal">
-        <div class="lampJournal_top">
-            <template v-if="type=='93'">
+    <div class="ConcentratorLog">
+        <div class="ConcentratorLog_top">
+            <template v-if="type=='104'">
+                <div class="search">
+                    <span>名称:</span>
+                    <input type="text" v-model="nickName" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
+                </div>
                 <div class="search">
                     <span>序列号:</span>
-                    <input type="text" v-model="serialNumber" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入单灯序列号">
+                    <input type="text" v-model="concentratorSn" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
                 </div>
                 <div class="search">
-                    <span>日志模块:</span>
-                    <el-select v-model="value2" clearable size='small' placeholder="请选择">
-                        <el-option
-                        v-for="item in options2"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="search">
-                    <span>操作类别:</span>
+                    <span>操作类型:</span>
                     <el-select v-model="value" clearable size='small' placeholder="请选择">
                         <el-option
                         v-for="item in options"
@@ -31,12 +23,20 @@
                 </div>
                 <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
             </template>
-            <template v-if="type=='94'">
+            <template v-if="type=='105'">
                 <div class="search">
-                    <span>操作类别:</span>
-                    <el-select v-model="value5" clearable size='small' placeholder="请选择">
+                    <span>名称:</span>
+                    <input type="text" v-model="nickName" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
+                </div>
+                <div class="search">
+                    <span>序列号:</span>
+                    <input type="text" v-model="concentratorSn" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
+                </div>
+                <div class="search">
+                    <span>控制类型:</span>
+                    <el-select v-model="value1" clearable size='small' placeholder="请选择">
                         <el-option
-                        v-for="item in options5"
+                        v-for="item in options1"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -44,10 +44,10 @@
                     </el-select>
                 </div>
                 <div class="search">
-                    <span>操作状态:</span>
-                    <el-select v-model="value6" clearable size='small' placeholder="请选择">
+                    <span>控制状态:</span>
+                    <el-select v-model="value2" clearable size='small' placeholder="请选择">
                         <el-option
-                        v-for="item in options6"
+                        v-for="item in options2"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -57,8 +57,8 @@
                 <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
             </template>
         </div>
-        <div class="lampJournal_bottom">
-            <template v-if="type=='93'">
+        <div class="ConcentratorLog_bottom">
+            <template v-if="type=='104'">
                 <el-table
                     :data="tableData"
                     border
@@ -69,55 +69,51 @@
                     <el-table-column
                     type="selection"
                     align='center'
-                    width="55">
+                    min-width="55">
                     </el-table-column>
                     <el-table-column
-                    prop="createUser"
+                    prop="nickName"
                     align='center'
-                    label="操作用户"
+                    label="名称"
                     min-width="100">
                     </el-table-column>
                     <el-table-column
-                    prop="serialNumber"
+                    prop="concentratorSn"
                     align='center'
-                    label="单灯序列号"
-                    min-width="130">
+                    label="序列号"
+                    min-width="100">
                     </el-table-column>
                     <el-table-column
                     align='center'
                     label="操作模块"
                     min-width="80">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.operatModule=='0'">单灯</span>
-                            <span v-if="scope.row.operatModule=='1'">单灯策略</span>
+                            <span v-if="scope.row.operatModule=='1'">集中器</span>
                         </template>
                     </el-table-column>
                     <el-table-column
                     align='center'
-                    label="操作类别"
+                    label="操作类型"
                     min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.operatType=='0'">添加</span>
                             <span v-if="scope.row.operatType=='1'">编辑</span>
                             <span v-if="scope.row.operatType=='2'">删除</span>
-                            <span v-if="scope.row.operatType=='3'">绑定灯杆</span>
-                            <span v-if="scope.row.operatType=='4'">解绑灯杆</span>
-                            <span v-if="scope.row.operatType=='5'">绑定项目</span>
                         </template>
                     </el-table-column>
                     <el-table-column
-                    prop="createTime"
+                    prop="createUser"
                     align='center'
-                    label="操作时间"
+                    label="操作人员"
                     min-width="145">
                     </el-table-column>
                     <el-table-column
-                    prop="content"
-                    label="操作明细"
+                    prop="createTime"
+                    label="操作时间"
                     align='center'
                     show-overflow-tooltip>
                     </el-table-column>
-                </el-table>
+                </el-table>                   
                 <div class="block">
                     <el-pagination
                     background
@@ -131,7 +127,7 @@
                     </el-pagination>
                 </div>
             </template>
-            <template v-if="type=='94'">
+            <template v-if="type=='105'">
                 <el-table
                     :data="tableData"
                     border
@@ -142,36 +138,32 @@
                     <el-table-column
                     type="selection"
                     align='center'
-                    width="55">
+                    min-width="55">
                     </el-table-column>
                     <el-table-column
-                    prop="createUser"
+                    prop="nickName"
                     align='center'
-                    label="操作用户"
+                    label="名称"
                     min-width="100">
                     </el-table-column>
                     <el-table-column
-                    prop="serialNumber"
+                    prop="concentratorSn"
                     align='center'
-                    label="单灯序列号"
-                    min-width="120">
+                    label="序列号"
+                    min-width="100">
                     </el-table-column>
                     <el-table-column
                     align='center'
-                    label="操控类别"
+                    label="控制类型"
                     min-width="80">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.controlType=='1'">开启</span>
-                            <span v-if="scope.row.controlType=='2'">关闭</span>
-                            <span v-if="scope.row.controlType=='3'">调光</span>
-                            <span v-if="scope.row.controlType=='4'">刷新状态</span>
-                            <span v-if="scope.row.controlType=='5'">下发策略</span>
-                            <span v-if="scope.row.controlType=='6'">清空策略</span>
+                            <span v-if="scope.row.controlType=='1'">下发群组策略</span>
+                            <span v-if="scope.row.controlType=='2'">清空群组策略</span>
                         </template>
                     </el-table-column>
                     <el-table-column
                     align='center'
-                    label="操控状态"
+                    label="控制状态"
                     min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.controlStatus=='0'">成功</span>
@@ -179,18 +171,18 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                    prop="createTime"
+                    prop="createUser"
                     align='center'
-                    label="操作时间"
+                    label="操作人员"
                     min-width="145">
                     </el-table-column>
                     <el-table-column
-                    prop="content"
-                    label="控制明细"
+                    prop="createTime"
+                    label="操作时间"
                     align='center'
                     show-overflow-tooltip>
                     </el-table-column>
-                </el-table>
+                </el-table>                   
                 <div class="block">
                     <el-pagination
                     background
@@ -204,7 +196,7 @@
                     </el-pagination>
                 </div>
             </template>
-        </div>
+        </div>    
     </div>
 </template>
 <script>
@@ -215,12 +207,13 @@ export default {
             serverurl:localStorage.serverurl,
             type:'',
             tableData:[],
-            tableData2:[],
             pageIndex:1,
             pageSize:10,
-            total:10,
-            serialNumber:'',
-            options:[{
+            total:50,
+            nickName:'',
+            concentratorSn:'',
+            options:[
+                {
                 value: '0',
                 label: '添加'
                 },{
@@ -229,103 +222,53 @@ export default {
                 },{
                 value: '2',
                 label: '删除'
-                },{
-                value: '3',
-                label: '绑定灯杆'
-                },{
-                value: '4',
-                label: '解绑灯杆'
-                },{
-                value: '5',
-                label: '绑定项目'
-                },
+                }
             ],
             value:'',
-            options2:[{
+            options1:[
+                {
+                value: '1',
+                label: '下发群组策略'
+                },{
+                value: '2',
+                label: '清空群组策略'
+                }
+            ],
+            value1:'',
+            options2:[
+                {
                 value: '0',
-                label: '单灯'
+                label: '成功'
                 },{
                 value: '1',
-                label: '单灯策略'
-            }],
-            value2:'0',
-            options3:[{
-                value: '1',
-                label: '故障'
+                label: '失败'
                 }
             ],
-            value3:'',
-            options4:[{
-                value: '1',
-                label: '紧急'
-                }
-            ],
-            value4:'',
-            options5:[
-                {
-                    value: '1',
-                    label: '开启'
-                },
-                {
-                    value: '2',
-                    label: '关闭'
-                },
-                {
-                    value: '3',
-                    label: '调光'
-                },
-                {
-                    value: '4',
-                    label: '刷新状态'
-                },
-                {
-                    value: '5',
-                    label: '下发策略'
-                },
-                {
-                    value: '6',
-                    label: '清空策略'
-                }
-            ],
-            value5:'',
-            options6:[
-                {
-                    value: '0',
-                    label: '成功'
-                },
-                {
-                    value: '1',
-                    label: '失败'
-                }
-            ],
-            value6:'',
+            value2:'',
         }
     },
     mounted(){
         
     },
     methods:{
-        search(){
-            this.ready()
-        },
         ready(){
             var that = this;
+            var url = ''
             var data = {
+                projectIds:sessionStorage.projectId,
                 page:that.pageIndex,
-                size:that.pageSize
-            };
-            var url = '';
-            data.projectIds = sessionStorage.projectId
-            if(this.type=='93'){
-                url='/v1/solin/lighting/lamp/log/operation'
-                data.operatType = this.value
-                data.operatModule = this.value2
-                data.serialNumber = this.serialNumber
+                size:that.pageSize,
+                nickName:that.nickName,
+                concentratorSn:that.concentratorSn
             }
-            if(this.type=='94'){
-                url='/v1/solin/lighting/lamp/log/control'
-                data.controlType = that.value5
-                data.controlStatus = that.value6
+            if(this.type=='104'){
+                url='/v1/solin/concentrator/log/operation'
+                data.operatType = that.value
+            }
+            if(this.type=='105'){
+                url='/v1/solin/concentrator/log/control'
+                data.controlType = that.value1
+                data.controlStatus = that.value2
             }
             $.ajax({
                 type:'get',
@@ -344,32 +287,28 @@ export default {
                 },
             })
         },
-        currentchange(val){
-            this.pageIndex = val;
+        search(){
             this.ready()
         },
-        sizechange(val){
-            this.pageSize = val;
-            this.ready()
-        },
+        sizechange(val){this.pageSize=val;this.ready();},
+        currentchange(val){this.pageIndex=val;this.ready();},
     },
-    created() {
-        var that = this
+    created(){
         this.type = this.$route.query.id
         this.ready()
-    },
+    }
 }
 </script>
 <style scoped>
-.lampJournal{width: 100%;height: 100%;}
-.lampJournal>div{width: 100%;position:absolute;}
-.lampJournal_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;line-height: 46px;padding-left: 15px;}
-.lampJournal_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
+.ConcentratorLog{width: 100%;height: 100%;}
+.ConcentratorLog>div{width: 100%;position:absolute;}
+.ConcentratorLog_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;line-height: 46px;padding-left: 15px;}
+.ConcentratorLog_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
 
 
 .search{display: flex;margin-left:10px;}
 .search>span{line-height: 30px;line-height: 45px;}
-.search>input{height: 30px;width: 110px;margin-top: 6px;height: 33px;}
-.search>div{height: 30px;width: 110px;}
+.search>input{height: 30px;width: 135px;margin-top: 6px;height: 33px;}
+.search>div{height: 30px;width: 135px;}
 .block{text-align: center;}
 </style>

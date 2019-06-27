@@ -34,38 +34,47 @@
                         width="55">
                         </el-table-column>
                         <el-table-column
+                        prop="nickName"
+                        align='center'
+                        label="名称"
+                        min-width="110">
+                        </el-table-column>
+                        <el-table-column
+                        align='center'
+                        label="状态"
+                        min-width="80">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.online=='0'">离线</span>
+                                <span v-if="scope.row.online=='1'">在线</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                        prop="modelName"
+                        align='center'
+                        label="型号"
+                        min-width="100">
+                        </el-table-column>
+                        <!-- <el-table-column
                         prop="concentratorSn"
                         align='center'
                         label="集中器标识"
                         min-width="120">
+                        </el-table-column> -->
+                        <el-table-column
+                        align='center'
+                        label="风向/风速"
+                        min-width="90">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.windDirectionAverage}}/{{scope.row.windSpeedAverage}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
-                        prop="windDirectionAverage"
                         align='center'
-                        label="风向"
-                        min-width="80"
-                        :formatter="formatRole">
-                        </el-table-column>
-                        <el-table-column
-                        prop="windSpeedAverage"
-                        align='center'
-                        label="风速"
-                        min-width="80"
-                        :formatter="formatRole">
-                        </el-table-column>
-                        <el-table-column
-                        prop="temperature"
-                        align='center'
-                        label="温度"
-                        min-width="80"
-                        :formatter="formatRole">
-                        </el-table-column>
-                        <el-table-column
-                        prop="humidity"
-                        align='center'
-                        label="湿度"
-                        min-width="80"
-                        :formatter="formatRole">
+                        label="温度/湿度"
+                        min-width="80">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.temperature}}/{{scope.row.humidity}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                         prop="pressure"
@@ -81,22 +90,16 @@
                         min-width="80">
                         </el-table-column>
                         <el-table-column
-                        prop="pM2"
                         align='center'
-                        label="PM2.5"
-                        min-width="80"
-                        :formatter="formatRole">
-                        </el-table-column>
-                        <el-table-column
-                        prop="pM10"
-                        label="PM10"
-                        align='center'
-                        min-width="80"
-                        :formatter="formatRole">
+                        label="PM2.5/PM10"
+                        min-width="80">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.PM2}}/{{scope.row.PM10}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                         prop="createTime"
-                        label="时间"
+                        label="采集时间"
                         align='center'
                         min-width="160"
                         :formatter="formatRole">

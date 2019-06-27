@@ -1,228 +1,226 @@
 <template>
     <div class="RelayJournal">
-        <el-tabs v-model="activeName" style="height:100%;" type="border-card" @tab-click="handleClick">
-            <el-tab-pane label="操作日志" v-if="viewRelayOperatLog" name='0' style="height: 100%;position:relative;">
-                <div class="RelayJournal_top">
-                    <div class="search">
-                        <span>继电器名称:</span>
-                        <input type="text" v-model="nickName" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入继电器名称">
-                    </div>
-                    <div class="search">
-                        <span>操作模块:</span>
-                        <el-select v-model="value" clearable size='small' placeholder="请选择">
-                            <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div class="search">
-                        <span>操作类型:</span>
-                        <el-select v-model="value1" clearable size='small' placeholder="请选择">
-                            <el-option
-                            v-for="item in options1"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
+        <div class="RelayJournal_top">
+            <template v-if="type=='99'">
+                <div class="search">
+                    <span>继电器名称:</span>
+                    <input type="text" v-model="nickName" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入继电器名称">
                 </div>
-                <div class="RelayJournal_bottom">
-                    <el-table
-                        :data="tableData"
-                        border
-                        stripe
-                        size='small'
-                        tooltip-effect="dark"
-                        style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                        <el-table-column
-                        type="selection"
-                        align='center'
-                        min-width="55">
-                        </el-table-column>
-                        <el-table-column
-                        prop="nickName"
-                        align='center'
-                        label="继电器名称"
-                        min-width="100">
-                        </el-table-column>
-                        <el-table-column
-                        prop="relayNumber"
-                        align='center'
-                        label="继电器编号"
-                        min-width="100">
-                        </el-table-column>
-                        <el-table-column
-                        prop="concentratorSn"
-                        align='center'
-                        label="集中器序列号"
-                        min-width="100">
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="操作模块"
-                        min-width="80">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.operatModule=='1'">继电器</span>
-                                <span v-if="scope.row.operatModule=='2'">通道</span>
-                                <span v-if="scope.row.operatModule=='3'">场景</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="操作类型"
-                        min-width="80">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.operatType=='0'">添加</span>
-                                <span v-if="scope.row.operatType=='1'">编辑</span>
-                                <span v-if="scope.row.operatType=='2'">删除</span>
-                                <span v-if="scope.row.operatType=='3'">启用</span>
-                                <span v-if="scope.row.operatType=='4'">禁用</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="createUser"
-                        align='center'
-                        label="操作人员"
-                        min-width="145">
-                        </el-table-column>
-                        <el-table-column
-                        prop="createTime"
-                        label="操作时间"
-                        align='center'
-                        show-overflow-tooltip>
-                        </el-table-column>
-                    </el-table>                   
-                    <div class="block">
-                        <el-pagination
-                        background
-                        @size-change="sizechange"
-                        @current-change="currentchange"
-                        :current-page="pageIndex"
-                        :page-sizes="[10, 20, 30, 50]"
-                        :page-size="pageSize"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="total">
-                        </el-pagination>
-                    </div>
+                <div class="search">
+                    <span>操作模块:</span>
+                    <el-select v-model="value" clearable size='small' placeholder="请选择">
+                        <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
                 </div>
-            </el-tab-pane>
-            <el-tab-pane label="控制日志" v-if="viewRelayControlLog" name='1' style="height: 100%;position:relative;">
-                <div class="RelayJournal_top">
-                    <div class="search">
-                        <span>继电器名称:</span>
-                        <input type="text" v-model="nickName" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入继电器名称">
-                    </div>
-                    <div class="search">
-                        <span>控制类型:</span>
-                        <el-select v-model="value2" clearable size='small' placeholder="请选择">
-                            <el-option
-                            v-for="item in options2"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div class="search">
-                        <span>控制状态:</span>
-                        <el-select v-model="value3" clearable size='small' placeholder="请选择">
-                            <el-option
-                            v-for="item in options3"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
+                <div class="search">
+                    <span>操作类型:</span>
+                    <el-select v-model="value1" clearable size='small' placeholder="请选择">
+                        <el-option
+                        v-for="item in options1"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
                 </div>
-                <div class="RelayJournal_bottom">
-                    <el-table
-                        :data="tableData"
-                        border
-                        stripe
-                        size='small'
-                        tooltip-effect="dark"
-                        style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                        <el-table-column
-                        type="selection"
-                        align='center'
-                        min-width="55">
-                        </el-table-column>
-                        <el-table-column
-                        prop="nickName"
-                        align='center'
-                        label="继电器名称"
-                        min-width="100">
-                        </el-table-column>
-                        <el-table-column
-                        prop="relayNumber"
-                        align='center'
-                        label="继电器编号"
-                        min-width="100">
-                        </el-table-column>
-                        <el-table-column
-                        prop="concentratorSn"
-                        align='center'
-                        label="集中器序列号"
-                        min-width="100">
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="控制类型"
-                        min-width="80">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.controlType=='3'">多控开启</span>
-                                <span v-if="scope.row.controlType=='4'">多控关闭</span>
-                                <span v-if="scope.row.controlType=='7'">切换正常工作模式</span>
-                                <span v-if="scope.row.controlType=='8'">切换联动模式</span>
-                                <span v-if="scope.row.controlType=='9'">场景控制</span>
-                                <span v-if="scope.row.controlType=='10'">清空场景控制</span>
-                                <span v-if="scope.row.controlType=='11'">状态查询</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="控制状态"
-                        min-width="80">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.controlStatus=='0'">成功</span>
-                                <span v-if="scope.row.controlStatus=='1'">失败</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="createUser"
-                        align='center'
-                        label="操作人员"
-                        min-width="145">
-                        </el-table-column>
-                        <el-table-column
-                        prop="createTime"
-                        label="操作时间"
-                        align='center'
-                        show-overflow-tooltip>
-                        </el-table-column>
-                    </el-table>                   
-                    <div class="block">
-                        <el-pagination
-                        background
-                        @size-change="sizechange"
-                        @current-change="currentchange"
-                        :current-page="pageIndex"
-                        :page-sizes="[10, 20, 30, 50]"
-                        :page-size="pageSize"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="total">
-                        </el-pagination>
-                    </div>
+                <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
+            </template>
+            <template v-if="type=='100'">
+                <div class="search">
+                    <span>继电器名称:</span>
+                    <input type="text" v-model="nickName" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入继电器名称">
                 </div>
-            </el-tab-pane>
-        </el-tabs>
+                <div class="search">
+                    <span>控制类型:</span>
+                    <el-select v-model="value2" clearable size='small' placeholder="请选择">
+                        <el-option
+                        v-for="item in options2"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="search">
+                    <span>控制状态:</span>
+                    <el-select v-model="value3" clearable size='small' placeholder="请选择">
+                        <el-option
+                        v-for="item in options3"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
+            </template>
+        </div>
+        <div class="RelayJournal_bottom">
+            <template v-if="type=='99'">
+                <el-table
+                    :data="tableData"
+                    border
+                    stripe
+                    size='small'
+                    tooltip-effect="dark"
+                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                    <el-table-column
+                    type="selection"
+                    align='center'
+                    min-width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="nickName"
+                    align='center'
+                    label="继电器名称"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="relayNumber"
+                    align='center'
+                    label="继电器编号"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="concentratorSn"
+                    align='center'
+                    label="集中器序列号"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    align='center'
+                    label="操作模块"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.operatModule=='1'">继电器</span>
+                            <span v-if="scope.row.operatModule=='2'">通道</span>
+                            <span v-if="scope.row.operatModule=='3'">场景</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    align='center'
+                    label="操作类型"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.operatType=='0'">添加</span>
+                            <span v-if="scope.row.operatType=='1'">编辑</span>
+                            <span v-if="scope.row.operatType=='2'">删除</span>
+                            <span v-if="scope.row.operatType=='3'">启用</span>
+                            <span v-if="scope.row.operatType=='4'">禁用</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="createUser"
+                    align='center'
+                    label="操作人员"
+                    min-width="145">
+                    </el-table-column>
+                    <el-table-column
+                    prop="createTime"
+                    label="操作时间"
+                    align='center'
+                    show-overflow-tooltip>
+                    </el-table-column>
+                </el-table>                   
+                <div class="block">
+                    <el-pagination
+                    background
+                    @size-change="sizechange"
+                    @current-change="currentchange"
+                    :current-page="pageIndex"
+                    :page-sizes="[10, 20, 30, 50]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+                    </el-pagination>
+                </div>
+            </template>
+            <template v-if="type=='100'">
+                <el-table
+                    :data="tableData"
+                    border
+                    stripe
+                    size='small'
+                    tooltip-effect="dark"
+                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                    <el-table-column
+                    type="selection"
+                    align='center'
+                    min-width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="nickName"
+                    align='center'
+                    label="继电器名称"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="relayNumber"
+                    align='center'
+                    label="继电器编号"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="concentratorSn"
+                    align='center'
+                    label="集中器序列号"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    align='center'
+                    label="控制类型"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.controlType=='3'">多控开启</span>
+                            <span v-if="scope.row.controlType=='4'">多控关闭</span>
+                            <span v-if="scope.row.controlType=='7'">切换正常工作模式</span>
+                            <span v-if="scope.row.controlType=='8'">切换联动模式</span>
+                            <span v-if="scope.row.controlType=='9'">场景控制</span>
+                            <span v-if="scope.row.controlType=='10'">清空场景控制</span>
+                            <span v-if="scope.row.controlType=='11'">状态查询</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    align='center'
+                    label="控制状态"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.controlStatus=='0'">成功</span>
+                            <span v-if="scope.row.controlStatus=='1'">失败</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="createUser"
+                    align='center'
+                    label="操作人员"
+                    min-width="145">
+                    </el-table-column>
+                    <el-table-column
+                    prop="createTime"
+                    label="操作时间"
+                    align='center'
+                    show-overflow-tooltip>
+                    </el-table-column>
+                </el-table>                   
+                <div class="block">
+                    <el-pagination
+                    background
+                    @size-change="sizechange"
+                    @current-change="currentchange"
+                    :current-page="pageIndex"
+                    :page-sizes="[10, 20, 30, 50]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+                    </el-pagination>
+                </div>
+            </template>
+        </div>    
     </div>
 </template>
 <script>
@@ -230,10 +228,8 @@ export default {
     name: 'lamppost',
     data () {
         return {
-            viewRelayOperatLog:false,
-            viewRelayControlLog:false,
             serverurl:localStorage.serverurl,
-            activeName:'0',
+            type:'',
             tableData:[],
             pageIndex:1,
             pageSize:10,
@@ -312,11 +308,6 @@ export default {
         
     },
     methods:{
-        handleClick(){
-            this.pageIndex = 1,
-            this.pageSize = 10,
-            this.ready()
-        },
         ready(){
             var that = this;
             var url = ''
@@ -328,12 +319,12 @@ export default {
             }
             data.concentratorSn = ''
             data.relayNumber = ''
-            if(this.activeName=='0'){
+            if(this.type=='99'){
                 url='/v1/solin/relay/log/operation'
                 data.operatModule = that.value
                 data.operatType = that.value1
             }
-            if(this.activeName=='1'){
+            if(this.type=='100'){
                 url='/v1/solin/relay/log/control'
                 data.controlType = that.value2
                 data.controlStatus = that.value3
@@ -360,45 +351,20 @@ export default {
         },
         sizechange(val){this.pageSize=val;this.ready();},
         currentchange(val){this.pageIndex=val;this.ready();},
-        //权限请求
-        Jurisdiction(){
-            var that = this
-            $.ajax({
-                type:'get',
-                async:true,
-                dataType:'json',
-                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
-                contentType:'application/json;charset=UTF-8',
-                data:{
-                    menuId:sessionStorage.menuId3
-                },
-                success:function(data){
-                    if(data.errorCode=='0'){
-                        for(var i = 0;i<data.result.operats.length;i++){
-                            if(data.result.operats[i].code=='viewRelayOperatLog'){
-                                that.viewRelayOperatLog = true
-                            }
-                            if(data.result.operats[i].code=='viewRelayControlLog'){
-                                that.viewRelayControlLog = true
-                            }
-                        }
-                    }else{
-                        that.errorCode(data)
-                    }
-                }
-            })
-        },
     },
     created(){
-        this.Jurisdiction()
+        this.type = this.$route.query.id
         this.ready()
     }
 }
 </script>
 <style scoped>
-.RelayJournal{position: absolute;top:10px;left: 10px;right: 10px;bottom: 10px;width:auto;height: auto;border-radius: 4px;}
-.RelayJournal_top{width: 100%;height: 46px;display: flex;justify-content: center;line-height: 45px;}
-.RelayJournal_bottom{width: 100%;height:auto;position: absolute;top:46px;bottom:10px;}
+.RelayJournal{width: 100%;height: 100%;}
+.RelayJournal>div{width: 100%;position:absolute;}
+.RelayJournal_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;line-height: 46px;padding-left: 15px;}
+.RelayJournal_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
+
+
 .search{display: flex;margin-left:10px;}
 .search>span{line-height: 30px;line-height: 45px;}
 .search>input{height: 30px;width: 135px;margin-top: 6px;height: 33px;}

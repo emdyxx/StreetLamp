@@ -151,23 +151,23 @@
                             <div class="tab-pane fade in active" id="a" style='padding-left: 70px;'>
                                 <div class="form-group" v-if="type=='0'">
                                     <label for="username"><span class="Required">*</span>用户名:</label>
-                                    <input type="text" v-model="data.username" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="username" placeholder="请输入名称">
+                                    <input type="text" v-model="data.username" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="username" placeholder="请输入用户名">
                                 </div>
                                 <div class="form-group" v-if="type=='0'">
-                                    <label for="userPwd"><span class="Required">*</span>密码:</label>
-                                    <input type="password" v-model="data.userPwd" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="userPwd" placeholder="请输入名称">
+                                    <label for="userPwd"><span class="Required">*</span>c:</label>
+                                    <input type="password" v-model="data.userPwd" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="userPwd" placeholder="请输入用户名">
                                 </div>
                                 <div class="form-group">
                                     <label for="fullName"><span class="Required">*</span>用户姓名:</label>
-                                    <input type="text" v-model="data.fullName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入名称">
+                                    <input type="text" v-model="data.fullName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户姓名">
                                 </div> 
                                 <div class="form-group">
                                     <label for="mobile"><span class="Required">*</span>电话:</label>
-                                    <input type="text" v-model="data.mobile" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="mobile" placeholder="请输入名称">
+                                    <input type="text" v-model="data.mobile" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="mobile" placeholder="请输入电话">
                                 </div> 
                                 <div class="form-group">
                                     <label for="email">邮箱:</label>
-                                    <input type="email" v-model="data.email" class="form-control" id="email" placeholder="请输入名称">
+                                    <input type="email" v-model="data.email" class="form-control" id="email" placeholder="请输入邮箱">
                                 </div> 
                                 <div class="form-group">
                                     <label for="phone">性别:</label>
@@ -593,7 +593,7 @@ export default {
             //中文验证
             var result = /[\u4E00-\u9FA5\uF900-\uFA2D]/;
             //手机号码验证
-            var phone = /^((0[0-9]{1,3}-\d{5,8})|(1[3584]\d{9}))$/;
+            var phone = /^((0[0-9]{1,3}-\d{5,8})|(1[35784]\d{9}))$/;
             //字母与数字组合
             var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/;
             for(var i=0;i<that.site2.length;i++){
@@ -682,6 +682,7 @@ export default {
             }
             formdate.append("username", this.data.username)
             formdate.append("userPwd", md5(this.data.userPwd))
+            formdate.append("mqttPassword", this.data.userPwd)
             formdate.append("fullName", this.data.fullName)
             formdate.append("mobile", this.data.mobile)
             formdate.append("email", this.data.email)
@@ -971,7 +972,6 @@ export default {
         setTimeout(function(){
             that.Jurisdiction()
         },500)
-       
     },
 }
 </script>

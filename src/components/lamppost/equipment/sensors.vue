@@ -1,34 +1,56 @@
 <template>
-    <!-- 传感器管理 -->
+    <!-- 气象站管理 -->
     <div class="cameras">
         <div class="cameras_top">
-            <el-button v-if="envControl" @click="details" type="primary" icon='el-icon-search' size='small'>获取数据</el-button>
-        </div>
-        <div class="cameras_bottom">
-            <div class="cameras_bottom_top">
-                <div class="search">
-                    <label style="width:100px;">集中器标识:</label>
-                    <input type="text" v-model="concentratorSn" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入集中器标识">
+            <el-dropdown v-if="envControl" trigger='click'>
+                <el-button type="primary" size='small' style="width:115px;">
+                    操作<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item @click.native="details">获取数据</el-dropdown-item>
+                    <el-dropdown-item @click.native="historicalData">历史数据</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+            <div class="search">
+                <el-dropdown size="small" split-button>
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='序列号';type='2';">型号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='类型';type='3';">状态</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="type=='1'">
+                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="type=='2'">
+                        <el-select v-model="modelId" size='small' clearable style='width:195px;' placeholder="请选择">
+                            <el-option
+                            v-for="item in options"
+                            :key="item.id"
+                            :label="item.modelName"
+                            :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </template>
+                    <template v-if="type=='3'">
+                        <el-select v-model="value1" clearable placeholder="请选择" size='small'>
+                            <el-option
+                            v-for="item in options1"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </template>
                 </div>
-                <div class="search">
-                    <label style="width:90px;">气象站名称:</label>
-                    <input type="text" v-model="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入气象站名称">
-                </div>
-                <div class="search">
-                    <label>型号:</label>
-                    <el-select v-model="modelId" size='small' clearable style='width:146px;' placeholder="请选择">
-                        <el-option
-                        v-for="item in options"
-                        :key="item.id"
-                        :label="item.modelName"
-                        :value="item.id">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div style="margin-left:15px;">
+                <div>
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
             </div>
+        </div>
+        <div class="cameras_bottom">
             <div class="cameras_bottom_bottom">
                 <el-table
                     :data="tableData"
@@ -48,26 +70,8 @@
                     <el-table-column
                     prop="nickName"
                     align='center'
-                    label="气象站名称"
+                    label="名称"
                     min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    prop="concentratorName"
-                    align='center'
-                    label="集中器名字"
-                    min-width="100">
-                    </el-table-column>
-                    <el-table-column
-                    prop="concentratorSn"
-                    align='center'
-                    label="集中器序列号"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="modelName"
-                    align='center'
-                    label="型号标识"
-                    min-width="100">
                     </el-table-column>
                     <el-table-column
                     align='center'
@@ -79,32 +83,38 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                    prop="windDirectionAverage"
+                    prop="modelName"
                     align='center'
-                    label="风向"
-                    min-width="80"
-                    :formatter="formatRole">
+                    label="型号"
+                    min-width="100">
+                    </el-table-column>
+                    <!-- <el-table-column
+                    prop="concentratorName"
+                    align='center'
+                    label="集中器名字"
+                    min-width="100">
+                    </el-table-column> -->
+                    <!-- <el-table-column
+                    prop="concentratorSn"
+                    align='center'
+                    label="集中器序列号"
+                    min-width="120">
+                    </el-table-column> -->
+                    <el-table-column
+                    align='center'
+                    label="风向/风速"
+                    min-width="90">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.windDirectionAverage}}/{{scope.row.windSpeedAverage}}</span>
+                        </template>
                     </el-table-column>
                     <el-table-column
-                    prop="windSpeedAverage"
                     align='center'
-                    label="风速"
-                    min-width="80"
-                    :formatter="formatRole">
-                    </el-table-column>
-                    <el-table-column
-                    prop="temperature"
-                    align='center'
-                    label="温度"
-                    min-width="80"
-                    :formatter="formatRole">
-                    </el-table-column>
-                    <el-table-column
-                    prop="humidity"
-                    align='center'
-                    label="湿度"
-                    min-width="80"
-                    :formatter="formatRole">
+                    label="温度/湿度"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.temperature}}/{{scope.row.humidity}}</span>
+                        </template>
                     </el-table-column>
                     <el-table-column
                     prop="pressure"
@@ -120,27 +130,27 @@
                     min-width="80">
                     </el-table-column>
                     <el-table-column
-                    prop="PM2"
                     align='center'
-                    label="PM2.5"
-                    min-width="80"
-                    :formatter="formatRole">
+                    label="PM2.5/PM10"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.PM2}}/{{scope.row.PM10}}</span>
+                        </template>
                     </el-table-column>
                     <el-table-column
-                    prop="PM10"
-                    label="PM10"
+                    prop="latestTime"
+                    label="更新时间"
                     align='center'
-                    min-width="80"
-                    :formatter="formatRole">
+                    min-width="120">
                     </el-table-column>
-                    <el-table-column
+                    <!-- <el-table-column
                     label="操作"
                     align='center'
                     min-width="120">
                         <template slot-scope="scope">
                             <el-button @click="historicalData(scope.row.concentratorSn)" type="primary" size='small'>历史数据</el-button>
                         </template>
-                    </el-table-column>
+                    </el-table-column> -->
                 </el-table>
                 <div class="block">
                     <el-pagination
@@ -163,6 +173,8 @@ export default {
     name: 'chargingPile',
     data () {
         return {
+            name:'名称',
+            type:'1',
             serverurl:localStorage.serverurl,
             envControl:false,
             tableData:[],
@@ -174,6 +186,8 @@ export default {
             nickName:'',
             options:[],
             modelId:'',
+            options1:[{label:'离线',value:'0'},{label:'在线',value:'1'}],
+            value1:'',
         }
     },
     mounted(){
@@ -215,7 +229,7 @@ export default {
             var arr = [];
             if(this.site.length==0){
                 this.$message({
-                    message: '请选择传感器进行查询!',
+                    message: '请选择气象站进行查询!',
                     type: 'warning'
                 });
                 return;
@@ -249,9 +263,15 @@ export default {
             })
         },
         //查看历史数据
-        historicalData(val){
-            console.log(val)
-            sessionStorage.concentratorSn = val
+        historicalData(){
+            if(this.site.length==0){
+                this.$message({
+                    message: '请选择气象站进行查询!',
+                    type: 'warning'
+                });
+                return;
+            }
+            sessionStorage.concentratorSn = this.site[0].concentratorSn
             this.$router.push({'path':'/historicalData'})
         },
         ready(){
@@ -264,6 +284,7 @@ export default {
                 concentratorSn:that.concentratorSn,
                 nickName:that.nickName,
                 modelId:that.modelId,
+                online:that.value1,
                 dataType:1,
             }
             $.ajax({
@@ -327,10 +348,9 @@ export default {
 .cameras>div{width: 100%;border: 1px solid #E4E4F1;position: absolute;}
 .cameras_top{height: 46px;border-bottom: none !important;display: flex;align-items: center;font-size: 16px;padding-left: 20px;}
 .cameras_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;}
-.cameras_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.cameras_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
+.cameras_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
 .cameras{text-align: center;}
-.search{display: flex;}
-.search>label{width: 60px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
 </style>

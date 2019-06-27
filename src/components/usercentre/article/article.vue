@@ -26,7 +26,7 @@
                             size='small'
                             style="margin-top:6px;width:126px"
                             :props='optionspros'
-                            :options="options4"
+                            :options="options"
                             clearable
                             :change-on-select=true
                             :show-all-levels="false"
@@ -424,14 +424,9 @@ export default {
                 data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
-                        if(val=='0'){
-                            that.options4 = data.result
-                        }
-                        if(val=='1'){
-                            that.options = data.result
-                            if(that.type=='0'){
-                                that.value.push(data.result[0].id)
-                            }
+                        that.options = data.result
+                        if(that.type=='0'){
+                            that.value.push(data.result[0].id)
                         }
                     }else{
                         that.errorCode(data)

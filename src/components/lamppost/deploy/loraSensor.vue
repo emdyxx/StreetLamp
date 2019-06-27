@@ -85,6 +85,13 @@
                         </template>
                     </el-table-column>
                     <el-table-column
+                    prop="sensorsTypeDesc"
+                    align='center'
+                    :formatter="formatRole"
+                    label="类型"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
                     prop="modelName"
                     align='center'
                     :formatter="formatRole"
@@ -445,7 +452,7 @@ export default {
             $('#map').modal('hide')
             this.data.coord = this.referencePosition
         },
-        //添加,编辑loar传感器 按钮
+        //添加,编辑lora传感器 按钮
         addloraSensor(val){
             if(val=='0'){
                 this.type = '0';
@@ -811,7 +818,7 @@ export default {
                 }
             }
         },
-        //请求loar传感器类型/型号
+        //请求lora传感器类型/型号
         modal(){
             var that = this;
             $.ajax({
@@ -829,7 +836,7 @@ export default {
                 },
             })
         },
-        //请求loar列表数据
+        //请求lora列表数据
         ready(){
             var that = this;
             $.ajax({

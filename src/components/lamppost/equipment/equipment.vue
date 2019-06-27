@@ -85,6 +85,7 @@ export default {
                                         datas[0].children.push(arr)
                                     }
                                     sessionStorage.menuId3 = data.result.menus[0].id
+                                    //lora下侧菜单请求
                                     $.ajax({
                                         type:"GET",
                                         url:that.serverurl+'/v1/manage/menu/54',
@@ -105,6 +106,29 @@ export default {
                                                     datas[0].children[j].children = array
                                                 }
                                             }
+                                        },
+                                    })
+                                    //485设备下侧菜单请求
+                                    $.ajax({
+                                        type:"GET",
+                                        url:that.serverurl+'/v1/manage/menu/89',
+                                        dataType:"json",
+                                        async: false,
+                                        data:{},
+                                        success:function(data){
+                                            let array = [];
+                                            let data2 = {}
+                                            for(let i=0;i<data.result.menus.length;i++){
+                                                data2 = {}
+                                                data2.text = data.result.menus[i].menuName
+                                                data2.id = data.result.menus[i].id
+                                                array.push(data2)
+                                            }
+                                            for(let j=0;j<datas[0].children.length;j++){
+                                                if(datas[0].children[j].id=='89'){
+                                                    datas[0].children[j].children = array
+                                                }
+                                            }
                                             jsonarray= datas;
                                         },
                                     })
@@ -117,7 +141,7 @@ export default {
                                     if(sessionStorage.menuId3=='53'){
                                         that.$router.push({'path':'sensors'})
                                     }
-                                    if(sessionStorage.menuId3=='54'){
+                                    if(data.node.id=='54'||data.node.id=='64'||data.node.id=='65'||data.node.id=='66'||data.node.id=='67'||data.node.id=='68'||data.node.id=='69'||data.node.id=='70'){
                                         that.$router.push({'path':'loraQuery'})
                                     }
                                     if(sessionStorage.menuId3=='55'){
