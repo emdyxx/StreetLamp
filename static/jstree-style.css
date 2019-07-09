@@ -1,3 +1,22 @@
+.equipment{background-image: url(img/equipment.png) !important;}
+.solinPoleDeploy{background-image: url(img/solinPoleDeploy.png) !important;}
+.solinLampDeploy{background-image: url(img/solinLampDeploy.png) !important;}
+.solinScreenDeploy{background-image: url(img/solinScreenDeploy.png) !important;}
+.solinLoraSensorsDeploy{background-image: url(img/solinLoraSensorsDeploy.png) !important;}
+.solinConcentratorDeploy{background-image: url(img/solinConcentratorDeploy.png) !important;}
+.solin485Device{background-image: url(img/solin485Device.png) !important;}
+.solinEnvDeploy{background-image: url(img/solinEnvDeploy.png) !important;}
+.solinRelayDeploy{background-image: url(img/solinRelayDeploy.png) !important;}
+.solinIlluminance{background-image: url(img/solinIlluminance.png) !important;}
+.solinCameraDeploy{background-image: url(img/solinCameraDeploy.png) !important;}
+.solinLoraSmoke{background-image: url(img/solinLoraSmoke.png) !important;}
+.solinLoraHumiture{background-image: url(img/solinLoraHumiture.png) !important;}
+.solinLoraGeomagnetism{background-image: url(img/solinLoraGeomagnetism.png) !important;}
+.solinLoraManholeCover{background-image: url(img/solinLoraManholeCover.png) !important;}
+.solinLoraPressure{background-image: url(img/solinLoraPressure.png) !important;}
+.solinLoraMagneticDoor{background-image: url(img/solinLoraMagneticDoor.png) !important;}
+.solinLoraInfrared{background-image: url(img/solinLoraInfrared.png) !important;}
+
 .jstree_mechanism1 {
     background-image: url(img/mechanism1.png) !important;
 }
@@ -13,25 +32,7 @@
 .jstree_mechanism5 {
     background-image: url(img/mechanism5.png) !important;
 }
-.jstree_icon1{
-    background-image: url(img/icon1.png) !important;
-}
-.jstree_icon2{
-    background-image: url(img/icon2.png) !important;
-}
-.jstree_icon3{
-    background-image: url(img/icon3.png) !important;
-}
-.jstree_icon4{
-    background-image: url(img/icon4.png) !important;
-}
-.jstree_icon5{
-    background-image: url(img/icon5.png) !important;
-}
-.jstree_Journal{
-    background-image: url(img/Journal.png) !important;
-}
-
+.jstree_Journal{background-image: url(img/Journal.png) !important;} 
 .jstree_Inspection1{background-image: url(img/login.png) !important;background-size: 100% 100%;}
 .jstree_Inspection2{background-image: url(img/jktj.png) !important;background-size: 100% 100%;}
 .jstree_Inspection3{background-image: url(img/type.png) !important;background-size: 100% 100%;}

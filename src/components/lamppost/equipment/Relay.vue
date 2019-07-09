@@ -14,7 +14,7 @@
             </el-dropdown>  
             <el-button @click="sceneRouter" type="primary" size='small'>场景管理</el-button>
             <div class="search">
-                <el-dropdown size="small" split-button>
+                <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
@@ -360,6 +360,11 @@ export default {
         
     },
     methods:{
+        handleCommand(){
+            this.nickName=''
+            this.relayNumber=''
+            this.value=''
+        },
         formatRole:function(val, column, cellValue, index){
             if(cellValue == null||cellValue == undefined||cellValue == ''){
                 return '----'

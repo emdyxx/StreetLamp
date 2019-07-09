@@ -18,10 +18,8 @@ import journal from '@/components/usercentre/journal/journal'
 import lamppost from '@/components/lamppost/lamppost'
 import Refresh from '@/components/lamppost/Refresh'
 import equipment from '@/components/lamppost/equipment/equipment'
-import homepage from '@/components/lamppost/equipment/homepage'
 import lampslanterns from '@/components/lamppost/equipment/lampslanterns'
 import deploy from '@/components/lamppost/deploy/deploy'
-import deployhomepage from '@/components/lamppost/deploy/deployhomepage'
 import concentrator from '@/components/lamppost/deploy/concentrator'
 import LampPole from '@/components/lamppost/deploy/LampPole'
 import Lampsandlanterns from '@/components/lamppost/deploy/Lampsandlanterns'
@@ -29,6 +27,7 @@ import advertisingscreen from '@/components/lamppost/deploy/advertisingscreen'
 import sensor from '@/components/lamppost/deploy/sensor'
 import loraSensor from '@/components/lamppost/deploy/loraSensor'
 import solinRelayDeploy from '@/components/lamppost/deploy/solinRelayDeploy'
+import solinCameraDeploy from '@/components/lamppost/deploy/solinCameraDeploy'
 
 
 import chargingPiles from '@/components/lamppost/equipment/chargingPiles'
@@ -39,11 +38,11 @@ import loraQuery from '@/components/lamppost/equipment/loraQuery'
 import loading from '@/components/lamppost/equipment/loading'
 import Relay from '@/components/lamppost/equipment/Relay'
 import scene from '@/components/lamppost/equipment/scene'
+import CameraManage from '@/components/lamppost/equipment/CameraManage'
 
 
 
 import pandect from '@/components/lamppost/pandect/pandect'
-import pandectone from '@/components/lamppost/pandect/pandectone'
 import pandecttwo from '@/components/lamppost/pandect/pandecttwo'
 
 import DeviceLog from '@/components/lamppost/DeviceLog/DeviceLog' //设备日志
@@ -51,13 +50,22 @@ import LampPoleJournal from '@/components/lamppost/DeviceLog/LampPoleJournal' //
 import lampJournal from '@/components/lamppost/DeviceLog/lampJournal' //灯具日志
 import screenJournal from '@/components/lamppost/DeviceLog/screenJournal' //广告屏日志
 import sensorJournal from '@/components/lamppost/DeviceLog/sensorJournal' //气象站日志
-import loraJournal from '@/components/lamppost/DeviceLog/loraJournal' //lora传感器日志
 import RelayJournal from '@/components/lamppost/DeviceLog/RelayJournal' //继电器日志
-import loadingLog from '@/components/lamppost/DeviceLog/loading' //继电器日志
+import loraJournal from '@/components/lamppost/DeviceLog/loraJournal' //lora传感器日志
+import loadingLog from '@/components/lamppost/DeviceLog/loading' 
 import ConcentratorLog from '@/components/lamppost/DeviceLog/ConcentratorLog' //继电器日志
+import CameraLog from '@/components/lamppost/DeviceLog/CameraLog' //摄像头日志
 
-import mapHomgPage from '@/components/map/mapHomgPage' //地图主页
-import mapDetails from '@/components/map/mapDetails' //地图主页
+
+// import mapHomgPage from '@/components/map/mapHomgPage' //地图主页
+// import mapDetails from '@/components/map/mapDetails' //地图主页
+import mapHomg from '@/components/map/mapHomg' //地图主页
+import GIS from '@/components/map/DTmap/GIS' //地图主页
+import SingleLamp from '@/components/map/DTmap/SingleLamp' //单灯地图
+import Camera from '@/components/map/DTmap/Camera' //摄像头地图
+import LED from '@/components/map/DTmap/LED' //led地图
+
+
 
 import video from '@/components/video/video' //视频管理主页
 import wifi from '@/components/wifi/wifi' //WIFI管理主页
@@ -86,37 +94,43 @@ Vue.use(Router)
 Vue.use(ElementUI);
 var error = {}
 $.ajax({
-  type:'get',
-  async:false,
-  url:'../static/error.json',
-  // url:'../solin-platform/static/error.json',
-  dataType: "text",
-  success:function(data){
-    error = eval('(' + data + ')');
-  }
+	type:'get',
+	async:false,
+	url:'../static/error.json',
+	// url:'../solin-platform/static/error.json',
+	dataType: "text",
+	success:function(data){
+		error = eval('(' + data + ')');
+	}
 })
 Vue.prototype.errorCode = function(data){
-  if(data.errorCode=='11009'){
-    this.$message({
-        message: '会话过期',
-        type: 'error',
-        showClose: true,
-    });
-    this.$router.push({'path':'/'})
-  }else if(data.errorCode=='10002'){
-    this.$message({
-        message: data.result.errorMessage,
-        type: 'error',
-        showClose: true,
-    });
-  }else{
-    var messageData = error[data.errorCode]
-    this.$message({
-        message: messageData,
-        type: 'error',
-        showClose: true,
-    });
-  }
+  	if(data.errorCode=='11009'){
+		localStorage.messageNumber = Number(localStorage.messageNumber) + 1
+		console.log(localStorage.messageNumber)
+		if(localStorage.messageNumber>1){
+			return
+		}else{
+			this.$message({
+				message: '会话过期',
+				type: 'error',
+				showClose: true,
+			});
+			this.$router.push({'path':'/'})
+		}
+	}else if(data.errorCode=='10002'){
+		this.$message({
+			message: data.result.errorMessage,
+			type: 'error',
+			showClose: true,
+		});
+	}else{
+		var messageData = error[data.errorCode]
+		this.$message({
+			message: messageData,
+			type: 'error',
+			showClose: true,
+		});
+	}
 }
 Vue.prototype.Verification = function(val,type){
   var that = this
@@ -246,6 +260,11 @@ export default new Router({
               name: 'scene',
               component: scene,
             },
+            {
+              path: '/CameraManage',
+              name: 'CameraManage',
+              component: CameraManage,
+            },
           ]
         },
         {
@@ -287,6 +306,11 @@ export default new Router({
               path: '/solinRelayDeploy',
               name: 'solinRelayDeploy',
               component: solinRelayDeploy,
+            },
+            {
+              path: '/solinCameraDeploy',
+              name: 'solinCameraDeploy',
+              component: solinCameraDeploy,
             },
           ]
         },
@@ -335,6 +359,11 @@ export default new Router({
               name: 'loadingLog',
               component: loadingLog,
             },
+            {
+              path: '/CameraLog',
+              name: 'CameraLog',
+              component: CameraLog,
+            },
           ]
         }
       ]
@@ -372,15 +401,37 @@ export default new Router({
       ]
     },
     {
-      path: '/mapHomgPage',
-      name: 'mapHomgPage',
-      component: mapHomgPage,
+      path: '/mapHomg',
+      name: 'mapHomg',
+      component: mapHomg,
+      children:[
+        {
+          path: '/',
+          name: 'GIS',
+          component: GIS,
+        },
+        {
+          path: '/SingleLamp',
+          name: 'SingleLamp',
+          component: SingleLamp,
+        },
+        {
+          path: '/Camera',
+          name: 'Camera',
+          component: Camera,
+        },
+        {
+          path: '/LED',
+          name: 'LED',
+          component: LED,
+        },
+      ]
     },
-    {
-      path: '/mapDetails',
-      name: 'mapDetails',
-      component: mapDetails,
-    },
+    // {
+    //   path: '/mapDetails',
+    //   name: 'mapDetails',
+    //   component: mapDetails,
+    // },
     {
       path: '/video',
       name: 'video',

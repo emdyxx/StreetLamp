@@ -31,20 +31,38 @@ export default {
             $('#jstree').jstree("destroy");
             $('#jstree').jstree({
                 "types" : {
-                    "1" : {
-                        "icon" : 'jstree_icon1',
+                    "equipment" : {
+                        "icon" : 'equipment',
                     },
-                    "2" : {
-                        "icon" : 'jstree_icon2',
+                    "solinPoleDeploy" : {
+                        "icon" : 'solinPoleDeploy',
                     },
-                    "3" : {
-                        "icon" : 'jstree_icon3',
+                    "solinLampDeploy" : {
+                        "icon" : 'solinLampDeploy',
                     },
-                    "4" : {
-                        "icon" : 'jstree_icon4',
+                    "solinScreenDeploy" : {
+                        "icon" : 'solinScreenDeploy',
                     },
-                    "5" : {
-                        "icon" : 'jstree_icon5',
+                    "solinLoraSensorsDeploy" : {
+                        "icon" : 'solinLoraSensorsDeploy',
+                    },
+                    "solinConcentratorDeploy" : {
+                        "icon" : 'solinConcentratorDeploy',
+                    },
+                    "solin485Device" : {
+                        "icon" : 'solin485Device',
+                    },
+                    "solinEnvDeploy" : {
+                        "icon" : 'solinEnvDeploy',
+                    },
+                    "solinRelayDeploy" : {
+                        "icon" : 'solinRelayDeploy',
+                    },
+                    "solinIlluminance" : {
+                        "icon" : 'solinIlluminance',
+                    },
+                    "solinCameraDeploy" : {
+                        "icon" : 'solinCameraDeploy',
                     }
                 },
                 // "state" : { "key" : that.sizeType.text },
@@ -63,7 +81,7 @@ export default {
                                 var datas = [{
                                     text:'设备管理',
                                     id:'03',
-                                    type:'1',
+                                    type:'equipment',
                                     "state": {"opened" : true},
                                     children:[]
                                 }]
@@ -71,21 +89,22 @@ export default {
                                     var arr = {}
                                     for(var i=0;i<data.result.menus.length;i++){
                                         arr = {}
-                                        if(data.result.menus[i].code=='solinPoleDeploy'){
-                                            arr.type = '2'
-                                        }
-                                        if(data.result.menus[i].code=='solinLampDeploy'){
-                                            arr.type = '3'
-                                        }
-                                        if(data.result.menus[i].code=='solinScreenDeploy'){
-                                            arr.type = '4'
-                                        }
-                                        if(data.result.menus[i].code=='solinEnvDeploy'){
-                                            arr.type = '5'
-                                        }
-                                        if(data.result.menus[i].code=='solinLoraSensorsDeploy'){
-                                            arr.type = '5'
-                                        }
+                                        // if(data.result.menus[i].code=='solinPoleDeploy'){
+                                        //     arr.type = '2'
+                                        // }
+                                        // if(data.result.menus[i].code=='solinLampDeploy'){
+                                        //     arr.type = '3'
+                                        // }
+                                        // if(data.result.menus[i].code=='solinScreenDeploy'){
+                                        //     arr.type = '4'
+                                        // }
+                                        // if(data.result.menus[i].code=='solinEnvDeploy'){
+                                        //     arr.type = '5'
+                                        // }
+                                        // if(data.result.menus[i].code=='solinLoraSensorsDeploy'){
+                                        //     arr.type = '5'
+                                        // }
+                                        arr.type = data.result.menus[i].code
                                         arr.text = data.result.menus[i].menuName
                                         arr.id = data.result.menus[i].id
                                         datas[0].children.push(arr)
@@ -136,6 +155,9 @@ export default {
                                     if(sessionStorage.menuId3=='80'){
                                         that.$router.push({'path':'/concentrator'})
                                     }
+                                    if(sessionStorage.menuId3=='106'){
+                                        that.$router.push({'path':'/solinCameraDeploy'})
+                                    }
                                 }else{
                                     that.errorCode(data)
                                 }
@@ -169,6 +191,9 @@ export default {
                     }
                     if(data.node.id=='80'){
                         that.$router.push({'path':'/concentrator'})
+                    }
+                    if(data.node.id=='106'){
+                        that.$router.push({'path':'/solinCameraDeploy'})
                     }
                 }
             });

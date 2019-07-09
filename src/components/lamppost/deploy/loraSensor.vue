@@ -13,7 +13,7 @@
                 </el-dropdown-menu>
             </el-dropdown>
             <div class="search">
-                <el-dropdown size="small" split-button>
+                <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="name='名称';type1='1';">名称</el-dropdown-item>
@@ -419,6 +419,11 @@ export default {
     mounted(){
     },
     methods:{
+        handleCommand(){
+            this.nickName=''
+            this.serialNumber=''
+            this.value=''
+        },
         formatRole:function(val, column, cellValue, index){
             if(cellValue == null||cellValue == undefined||cellValue == ''){
                 return '----'

@@ -387,7 +387,6 @@ export default {
             }
         });
         this.time=setInterval(function(){
-            
             var myDate = new Date();//获取系统当前时间
             that.FullYear = myDate.getFullYear(); //获取完整的年份
             that.Month = myDate.getMonth()+1; //获取当前月份
@@ -755,6 +754,7 @@ export default {
                                     marker.setTitle(data.result.list[i].nickName); //这里设置maker的title 
                                     marker.id=data.result.list[i].id
                                     marker.type=that.value1
+                                    
                                     marker.addEventListener('click',function(e){
                                         console.log(e.target.id)
                                         $('.rightfloat').css({
@@ -1166,7 +1166,7 @@ export default {
 .allmap,#allmap,.plane{width: 100%;height: 100%;}
 .plane{display: flex;justify-content: center;align-items: center;background: linear-gradient(to right, #050913, #0a235c, #2161d6, #0a235c, #010920);overflow: hidden;position: relative;}
 .plane_div{position: relative;}
-.plane_div_bgimg{}
+/* .plane_div_bgimg{} */
 .plane_div_icon{position: absolute;}
 .map_left{border-radius: 5px;position: absolute;top: 15px;left: 15px;background: white;width:450px;height: 38px;line-height: 38px;    box-shadow: 1px 2px 1px rgba(0,0,0,.15);}
 .map_left_left{position: absolute;left: 0;right: 50px;height: 100%;display: flex;}

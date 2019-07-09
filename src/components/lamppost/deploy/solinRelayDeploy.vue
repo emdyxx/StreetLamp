@@ -6,7 +6,7 @@
             <el-button v-if="editRelay" @click="solinRelayDeployOpreat(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="delRelay" @click="solinRelayDeployOpreat(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
             <div class="search">
-                <el-dropdown size="small" split-button>
+                <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="name='名称';type1='1';">名称</el-dropdown-item>
@@ -262,6 +262,11 @@ export default {
         
     },
     methods:{
+        handleCommand(){
+            this.nickName=''
+            this.relayNumber=''
+            this.value=''
+        },
         formatRole:function(val, column, cellValue, index){
             if(cellValue == null||cellValue == undefined||cellValue == ''){
                 return '----'

@@ -12,7 +12,7 @@
                 </el-dropdown-menu>
             </el-dropdown>
             <div class="search">
-                <el-dropdown size="small" split-button>
+                <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
@@ -375,6 +375,11 @@ export default {
         // 
     },
     methods:{
+        handleCommand(){
+            this.nickName=''
+            this.serialNumber=''
+            this.value4=''
+        },
         formatRole:function(val, column, cellValue, index){
             if(cellValue == null||cellValue == undefined||cellValue == ''){
                 return '----'
@@ -531,7 +536,7 @@ export default {
                     }
                 })
             }).catch(() => {
-                this.$message({
+                that.$message({
                     type: 'info',
                     message: '已取消删除'
                 });          
@@ -759,7 +764,7 @@ export default {
                         }
                         if(that.addType=='1'){
                             that.$message({
-                                message: '修改成功',
+                                message: '编辑成功',
                                 type: 'success',
                                 showClose: true,
                             });

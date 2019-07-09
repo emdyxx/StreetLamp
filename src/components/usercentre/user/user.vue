@@ -154,8 +154,8 @@
                                     <input type="text" v-model="data.username" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="username" placeholder="请输入用户名">
                                 </div>
                                 <div class="form-group" v-if="type=='0'">
-                                    <label for="userPwd"><span class="Required">*</span>c:</label>
-                                    <input type="password" v-model="data.userPwd" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="userPwd" placeholder="请输入用户名">
+                                    <label for="userPwd"><span class="Required">*</span>密码:</label>
+                                    <input type="password" v-model="data.userPwd" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="userPwd" placeholder="请输入密码">
                                 </div>
                                 <div class="form-group">
                                     <label for="fullName"><span class="Required">*</span>用户姓名:</label>

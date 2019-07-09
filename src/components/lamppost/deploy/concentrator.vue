@@ -6,7 +6,7 @@
             <el-button @click="myModalOperation(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button @click="myModalOperation(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
             <div class="search">
-                <el-dropdown size="small" split-button>
+                <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="name='名称';type1='1';">名称</el-dropdown-item>
@@ -56,15 +56,11 @@
                 min-width="100">
                 </el-table-column>
                 <el-table-column
-                prop=""
+                prop="deviceCount"
                 align='center'
                 label="关联设备数量"
                 :formatter="formatRole"
                 min-width="100">
-                    <!-- <template slot-scope="scope">
-                        <span v-if="scope.row.online=='0'">离线</span>
-                        <span v-if="scope.row.online=='1'">在线</span>
-                    </template> -->
                 </el-table-column>
                 <el-table-column
                 prop="remark"
@@ -158,6 +154,10 @@ export default {
         // 
     },
     methods:{
+        handleCommand(){
+            this.concentratorName=''
+            this.concentratorSn=''
+        },
         formatRole:function(val, column, cellValue, index){
             if(cellValue == null||cellValue == undefined||cellValue == ''){
                 return '----'

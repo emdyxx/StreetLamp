@@ -8,14 +8,16 @@
 			<p>登录</p>
 			<label for="user">
 				<img src="../assets/img/username.png" alt="">
-				<input type="text" id="user" placeholder="账号/手机号">
+				<input type="text" v-model="username" id="user" placeholder="账号">
 			</label>
 			<label for="password" style="margin-top:65px;">
 				<img style="padding-left:4px;" src="../assets/img/password.png" alt="">
-				<input type="password" id="password" placeholder="密码">
+				<input type="password" v-model="password" id="password" placeholder="密码">
 			</label>
+			<el-checkbox v-model="checked">记住密码</el-checkbox>
+			<el-button type="primary" @click="login" :loading="loading">登录</el-button>
 		</div>
-      <!-- <el-button type="success" @click="login" size='small' :loading="loading">登录</el-button> -->
+      
   </div>
 </template>
 
@@ -25,7 +27,10 @@ export default {
   data () {
     return {
 		serverurl:'',
-		loading: false
+		loading: false,
+		checked:false,
+		username:'',
+		password:'',
     }
   },
   mounted(){
@@ -48,20 +53,24 @@ export default {
 				return
 			}
 		}
-		var user = $('#user').val()
-		var password = md5($('#password').val())
-		if(user==''||password==''){
+		if(this.username==''||this.password==''){
 			that.$message({
 				message: '账号密码不能为空!',
 				type: 'error'
 			});
 			return;
 		}
+
 		that.loading = true
 		var data = {
-			username:user,
-			userPwd:password
+			username:this.username,
+			userPwd:''
 		};
+		if(this.password.length>=32){
+			data.userPwd = this.password
+		}else{
+			data.userPwd = md5(this.password)
+		}
 		$.ajax({
 			type:'post',
 			async:true,
@@ -70,20 +79,42 @@ export default {
 			contentType:'application/json;charset=UTF-8',
 			data:JSON.stringify(data),
 			success:function(data){
-			that.loading = false
-			if(data.errorCode=='0'){
-				sessionStorage.token = data.result.token
-				// that.$router.push({'path':'/program'})
-				that.$router.push({'path':'/index'})
-			}else{
-				that.errorCode(data)
-			}
+				that.loading = false
+				if(data.errorCode=='0'){
+					if(that.checked==true){
+						localStorage.checked = true
+						localStorage.username = $('#user').val()
+						if(localStorage.password==''||localStorage.password==undefined||localStorage.password==null){
+							localStorage.password = md5(that.password)
+						}else{
+							if(that.password.length>30){
+								localStorage.password = that.password
+							}else{
+								localStorage.password = md5(that.password)
+							}
+						}
+					}else{
+						localStorage.removeItem('username');
+						localStorage.removeItem('password');
+						localStorage.checked = false
+					}
+					sessionStorage.token = data.result.token
+					localStorage.messageNumber = 0
+					that.$router.push({'path':'/index'})
+				}else{
+					that.errorCode(data)
+				}
 			},
 		})
 	},
   },
   created(){
-    var that = this
+		var that = this
+		if(localStorage.checked=='true'){
+			this.username = localStorage.username
+			this.password = localStorage.password
+			this.checked = true
+		}
     sessionStorage.clear() 
     var theUA = window.navigator.userAgent.toLowerCase();
     if ((theUA.match(/msie\s\d+/) && theUA.match(/msie\s\d+/)[0]) || (theUA.match(/trident\s?\d+/) && theUA.match(/trident\s?\d+/)[0])) {
@@ -125,5 +156,7 @@ input{background:none;outline:none;}
 
 .login_right>label{width: 100%;display: flex;padding: 0 0 0 0;border-bottom: 1px solid #e4e4e4;}
 .login_right>label>img{padding-bottom: 10px;}
-.login_right>label>input{margin-left: 10px;border: none;font-size: 18px;}
+.login_right>label>input{margin-left: 25px;border: none;font-size: 18px;}
+.login_right>label:nth-of-type(3){border: none;margin:30px 0 65px 0;padding: 0;color: #9d9d9d;}
+.login_right>button{width: 100%;height: 70px;font-size: 22px;font-weight: 600;}
 </style>

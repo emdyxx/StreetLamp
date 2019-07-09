@@ -171,6 +171,27 @@ export default {
                                                 },
                                             })
                                         }
+                                        if(data.result.menus[i].code=='solinCameraLog'){
+                                            $.ajax({
+                                                type:"GET",
+                                                url:that.serverurl+'/v1/manage/menu/'+data.result.menus[i].id,
+                                                dataType:"json",
+                                                async: false,
+                                                data:{},
+                                                success:function(data){
+                                                    let array = [];
+                                                    let data2 = {}
+                                                    for(let i=0;i<data.result.menus.length;i++){
+                                                        data2 = {}
+                                                        data2.text = data.result.menus[i].menuName
+                                                        data2.type = '1'
+                                                        data2.id = data.result.menus[i].id
+                                                        array.push(data2)
+                                                    }
+                                                    arr.children=array
+                                                },
+                                            })
+                                        }
                                         datas[0].children.push(arr)
                                     }
                                     jsonarray= datas;
@@ -254,6 +275,17 @@ export default {
                         setTimeout(function(){
                             that.$router.push({
                                 'path':'/ConcentratorLog',
+                                query:{
+                                    id:data.node.id
+                                }
+                            })
+                        },200)
+                    }
+                    if(data.node.id=='115'||data.node.id=='116'){
+                        that.$router.push({'path':'loadingLog'})
+                        setTimeout(function(){
+                            that.$router.push({
+                                'path':'/CameraLog',
                                 query:{
                                     id:data.node.id
                                 }

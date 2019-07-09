@@ -215,7 +215,6 @@ export default {
             serverurl:localStorage.serverurl,
             type:'',
             tableData:[],
-            tableData2:[],
             pageIndex:1,
             pageSize:10,
             total:10,

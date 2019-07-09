@@ -1,6 +1,337 @@
 <template>
   <div class="index">
     <div class="index_top">
+        <img src="../assets/img/biaoti.png" alt="">
+        <div class="index_top_right">
+            <span>欢迎您 !</span>
+            <span>{{data.username}}</span>
+            <img :src=data.icon alt="">
+            <span>V3.1.0</span>
+        </div>
+        <div class="index_top_psd">
+            <div>
+                <img :src=data.icon alt="">
+                <div>
+                    <p v-if="data.userType=='1'" style="font-size:16px;color:black;">管理员</p>
+                    <p v-else>普通用户</p>
+                    <p style="font-size:14px;color:#7e7e7e;">{{data.username}}</p>
+                </div>
+            </div>
+            <hr style="margin-top:10px;margin-bottom:30px;">
+            <el-button @click="removePassword" type="text">修改密码</el-button>
+            <el-button @click="dropout" type="text">退出登录</el-button>
+            <hr style="margin-top:30px;margin-bottom:13px;">
+            <p style="font-size:12px;">登录时间:{{data.ts}}</p>
+        </div>
+    </div>
+    <div class="index_bottom">
+        <div v-if="menu.length<3">
+            
+        </div>
+        <div v-if="menu.length==3">
+            <div class="div_01" style="width:1165px">
+                <div class="div_02">
+                    <template v-for="item in menu">
+                        <!-- 系统管理 -->
+                        <template v-if="item.code=='managementService'">
+                            <div @click="usermanage(item.id)" :id=item.id :key=item.id :style="'margin-left:'+item.left+'px'">
+                                <template v-if="item.type=='right'&&item.size=='1'">
+                                    <img src="../assets/img/managementService01.png" alt="">
+                                </template>
+                                <template v-if="item.type=='right'&&item.size=='2'">
+                                    <img src="../assets/img/managementService02.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='2'">
+                                    <img src="../assets/img/managementService03.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='1'">
+                                    <img src="../assets/img/managementService04.png" alt="">
+                                </template>
+                                <template v-if="item.type=='center'">
+                                    <img src="../assets/img/managementService05.png" alt="" style="padding-top:53px;">
+                                </template>
+                            </div>
+                        </template>
+                        <!-- 设备管理 -->
+                        <template v-if="item.code=='solinDeviceService'">
+                            <div @click="lamppost(item.id)" :id=item.id :key=item.id :style="'margin-left:'+item.left+'px'">
+                                <template v-if="item.type=='right'&&item.size=='1'">
+                                    <img src="../assets/img/solinDeviceService01.png" alt="">
+                                </template>
+                                <template v-if="item.type=='right'&&item.size=='2'">
+                                    <img src="../assets/img/solinDeviceService02.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='2'">
+                                    <img src="../assets/img/solinDeviceService03.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='1'">
+                                    <img src="../assets/img/solinDeviceService04.png" alt="">
+                                </template>
+                                <template v-if="item.type=='center'">
+                                    <img src="../assets/img/solinDeviceService05.png" alt="" style="padding-top:53px;">
+                                </template>
+                            </div>  
+                        </template>
+                        <!-- GIS地图 -->
+                        <template v-if="item.code=='solinMapService'">
+                            <div @click="map(item.id)" :id=item.id :key=item.id :style="'margin-left:'+item.left+'px'">
+                                <template v-if="item.type=='right'&&item.size=='1'">
+                                    <img src="../assets/img/solinMapService01.png" alt="">
+                                </template>
+                                <template v-if="item.type=='right'&&item.size=='2'">
+                                    <img src="../assets/img/solinMapService02.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='2'">
+                                    <img src="../assets/img/solinMapService03.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='1'">
+                                    <img src="../assets/img/solinMapService04.png" alt="">
+                                </template>
+                                <template v-if="item.type=='center'">
+                                    <img src="../assets/img/solinMapService05.png" alt="" style="padding-top:53px;">
+                                </template>
+                            </div>  
+                        </template>
+                        <!-- 智能巡检 -->
+                        <template v-if="item.code=='patrolService'">
+                            <div @click="Inspection(item.id)" :id=item.id :key=item.id :style="'margin-left:'+item.left+'px'">
+                                <template v-if="item.type=='right'&&item.size=='1'">
+                                    <img src="../assets/img/patrolService01.png" alt="">
+                                </template>
+                                <template v-if="item.type=='right'&&item.size=='2'">
+                                    <img src="../assets/img/patrolService02.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='2'">
+                                    <img src="../assets/img/patrolService03.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='1'">
+                                    <img src="../assets/img/patrolService04.png" alt="">
+                                </template>
+                                <template v-if="item.type=='center'">
+                                    <img src="../assets/img/patrolService05.png" alt="" style="padding-top:53px;">
+                                </template>
+                            </div>
+                        </template>
+                        <!-- 灯具 -->
+                        <template v-if="item.code=='solinLampMap'">
+                            <div @click="Lamp(item.id)" :id=item.id :key=item.id :style="'margin-left:'+item.left+'px'">
+                                <template v-if="item.type=='right'&&item.size=='1'">
+                                    <img src="../assets/img/solinLampMap01.png" alt="">
+                                </template>
+                                <template v-if="item.type=='right'&&item.size=='2'">
+                                    <img src="../assets/img/solinLampMap02.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='2'">
+                                    <img src="../assets/img/solinLampMap03.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='1'">
+                                    <img src="../assets/img/solinLampMap04.png" alt="">
+                                </template>
+                                <template v-if="item.type=='center'">
+                                    <img src="../assets/img/solinLampMap05.png" alt="" style="padding-top:53px;">
+                                </template>
+                            </div>
+                        </template>
+                        <!-- 摄像头 -->
+                        <template v-if="item.code=='solinCameraMap'">
+                            <div @click="Camera(item.id)" :id=item.id :key=item.id :style="'margin-left:'+item.left+'px'">
+                                <template v-if="item.type=='right'&&item.size=='1'">
+                                    <img src="../assets/img/solinCameraMap01.png" alt="">
+                                </template>
+                                <template v-if="item.type=='right'&&item.size=='2'">
+                                    <img src="../assets/img/solinCameraMap02.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='2'">
+                                    <img src="../assets/img/solinCameraMap03.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='1'">
+                                    <img src="../assets/img/solinCameraMap04.png" alt="">
+                                </template>
+                                <template v-if="item.type=='center'">
+                                    <img src="../assets/img/solinCameraMap05.png" alt="" style="padding-top:53px;">
+                                </template>
+                            </div>
+                        </template>
+                        <!-- LED屏幕 -->
+                        <template v-if="item.code=='solinScreenMap'">
+                            <div @click="LED(item.id)" :id=item.id :key=item.id :style="'margin-left:'+item.left+'px'">
+                                <template v-if="item.type=='right'&&item.size=='1'">
+                                    <img src="../assets/img/solinScreenMap01.png" alt="">
+                                </template>
+                                <template v-if="item.type=='right'&&item.size=='2'">
+                                    <img src="../assets/img/solinScreenMap02.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='2'">
+                                    <img src="../assets/img/solinScreenMap03.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='1'">
+                                    <img src="../assets/img/solinScreenMap04.png" alt="">
+                                </template>
+                                <template v-if="item.type=='center'">
+                                    <img src="../assets/img/solinScreenMap05.png" alt="" style="padding-top:53px;">
+                                </template>
+                            </div>
+                        </template>
+                    </template>
+                </div>
+            </div>
+        </div>
+        <div v-if="menu.length>=4">
+            <p v-if="menu.length>4">
+                <img @click="LeftShift" src="../assets/img/TurnLeft.png" alt="">
+            </p>
+            <div class="div_01">
+                <div class="div_02">
+                    <template v-for="item in menu">
+                        <!-- 系统管理 -->
+                        <template v-if="item.code=='managementService'">
+                            <div @click="usermanage(item.id)" :id=item.id :key=item.id :style="'margin-left:'+item.left+'px'">
+                                <template v-if="item.type=='right'&&item.size=='1'">
+                                    <img src="../assets/img/managementService01.png" alt="">
+                                </template>
+                                <template v-if="item.type=='right'&&item.size=='2'">
+                                    <img src="../assets/img/managementService02.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='2'">
+                                    <img src="../assets/img/managementService03.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='1'">
+                                    <img src="../assets/img/managementService04.png" alt="">
+                                </template>
+                                <template v-if="item.type=='center'">
+                                    <img src="../assets/img/managementService05.png" alt="" style="padding-top:53px;">
+                                </template>
+                            </div>
+                        </template>
+                        <!-- 设备管理 -->
+                        <template v-if="item.code=='solinDeviceService'">
+                            <div @click="lamppost(item.id)" :id=item.id :key=item.id :style="'margin-left:'+item.left+'px'">
+                                <template v-if="item.type=='right'&&item.size=='1'">
+                                    <img src="../assets/img/solinDeviceService01.png" alt="">
+                                </template>
+                                <template v-if="item.type=='right'&&item.size=='2'">
+                                    <img src="../assets/img/solinDeviceService02.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='2'">
+                                    <img src="../assets/img/solinDeviceService03.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='1'">
+                                    <img src="../assets/img/solinDeviceService04.png" alt="">
+                                </template>
+                                <template v-if="item.type=='center'">
+                                    <img src="../assets/img/solinDeviceService05.png" alt="" style="padding-top:53px;">
+                                </template>
+                            </div>  
+                        </template>
+                        <!-- GIS地图 -->
+                        <template v-if="item.code=='solinMapService'">
+                            <div @click="map(item.id)" :id=item.id :key=item.id :style="'margin-left:'+item.left+'px'">
+                                <template v-if="item.type=='right'&&item.size=='1'">
+                                    <img src="../assets/img/solinMapService01.png" alt="">
+                                </template>
+                                <template v-if="item.type=='right'&&item.size=='2'">
+                                    <img src="../assets/img/solinMapService02.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='2'">
+                                    <img src="../assets/img/solinMapService03.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='1'">
+                                    <img src="../assets/img/solinMapService04.png" alt="">
+                                </template>
+                                <template v-if="item.type=='center'">
+                                    <img src="../assets/img/solinMapService05.png" alt="" style="padding-top:53px;">
+                                </template>
+                            </div>  
+                        </template>
+                        <!-- 智能巡检 -->
+                        <template v-if="item.code=='patrolService'">
+                            <div @click="Inspection(item.id)" :id=item.id :key=item.id :style="'margin-left:'+item.left+'px'">
+                                <template v-if="item.type=='right'&&item.size=='1'">
+                                    <img src="../assets/img/patrolService01.png" alt="">
+                                </template>
+                                <template v-if="item.type=='right'&&item.size=='2'">
+                                    <img src="../assets/img/patrolService02.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='2'">
+                                    <img src="../assets/img/patrolService03.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='1'">
+                                    <img src="../assets/img/patrolService04.png" alt="">
+                                </template>
+                                <template v-if="item.type=='center'">
+                                    <img src="../assets/img/patrolService05.png" alt="" style="padding-top:53px;">
+                                </template>
+                            </div>
+                        </template>
+                        <!-- 灯具 -->
+                        <template v-if="item.code=='solinLampMap'">
+                            <div @click="Lamp(item.id)" :id=item.id :key=item.id :style="'margin-left:'+item.left+'px'">
+                                <template v-if="item.type=='right'&&item.size=='1'">
+                                    <img src="../assets/img/solinLampMap01.png" alt="">
+                                </template>
+                                <template v-if="item.type=='right'&&item.size=='2'">
+                                    <img src="../assets/img/solinLampMap02.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='2'">
+                                    <img src="../assets/img/solinLampMap03.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='1'">
+                                    <img src="../assets/img/solinLampMap04.png" alt="">
+                                </template>
+                                <template v-if="item.type=='center'">
+                                    <img src="../assets/img/solinLampMap05.png" alt="" style="padding-top:53px;">
+                                </template>
+                            </div>
+                        </template>
+                        <!-- 摄像头 -->
+                        <template v-if="item.code=='solinCameraMap'">
+                            <div @click="Camera(item.id)" :id=item.id :key=item.id :style="'margin-left:'+item.left+'px'">
+                                <template v-if="item.type=='right'&&item.size=='1'">
+                                    <img src="../assets/img/solinCameraMap01.png" alt="">
+                                </template>
+                                <template v-if="item.type=='right'&&item.size=='2'">
+                                    <img src="../assets/img/solinCameraMap02.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='2'">
+                                    <img src="../assets/img/solinCameraMap03.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='1'">
+                                    <img src="../assets/img/solinCameraMap04.png" alt="">
+                                </template>
+                                <template v-if="item.type=='center'">
+                                    <img src="../assets/img/solinCameraMap05.png" alt="" style="padding-top:53px;">
+                                </template>
+                            </div>
+                        </template>
+                        <!-- LED屏幕 -->
+                        <template v-if="item.code=='solinScreenMap'">
+                            <div @click="LED(item.id)" :id=item.id :key=item.id :style="'margin-left:'+item.left+'px'">
+                                <template v-if="item.type=='right'&&item.size=='1'">
+                                    <img src="../assets/img/solinScreenMap01.png" alt="">
+                                </template>
+                                <template v-if="item.type=='right'&&item.size=='2'">
+                                    <img src="../assets/img/solinScreenMap02.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='2'">
+                                    <img src="../assets/img/solinScreenMap03.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='1'">
+                                    <img src="../assets/img/solinScreenMap04.png" alt="">
+                                </template>
+                                <template v-if="item.type=='center'">
+                                    <img src="../assets/img/solinScreenMap05.png" alt="" style="padding-top:53px;">
+                                </template>
+                            </div>
+                        </template>
+                    </template>
+                </div>
+            </div>
+            <p v-if="menu.length>4">
+                <img @click="RightShift" src="../assets/img/TurnRight.png" alt="">
+            </p>
+        </div>
+    </div>
+    <!-- <div class="index_top">
         <div class="index_top_right">
             <div class="index_top_right_text">
                 <p style="padding-top:10px;margin:0;">{{data.username}}</p>
@@ -12,7 +343,6 @@
             </div>
         </div>
     </div>
-    <!-- 点击图片模态框（Modal） -->
     <div class="modal fade" id="MyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -50,7 +380,7 @@
                                     <div>邮箱:{{data.email}}</div>
                                 </td>
                                 <td>
-                                    <div>归属组织:{{data.org.orgName}}</div>
+                                    <div>归属机构:{{data.org.orgName}}</div>
                                 </td>
                             </tr>
                         </tbody>
@@ -105,7 +435,7 @@
             </template>
         </template>
     </div>
-    <!-- 修改密码模态框 -->
+    -->
     <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="width:270px;">
             <div class="modal-content">
@@ -131,9 +461,9 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                     <button type="button" @click="addSubmit" class="btn btn-primary">保存</button>
                 </div>
-            </div><!-- /.modal-content -->
+            </div>
         </div>
-    </div><!-- /.modal -->
+    </div> 
   </div>
 </template>
 <script>
@@ -224,13 +554,121 @@ export default {
         imagemanage(){
             $('#MyModal').modal('show')
         },
-        //用户管理系统(用户中心)
+        //菜单左侧移动
+        LeftShift(){
+            var that = this
+            var step = -1530
+            var width = $('.div_02').width()
+            var left = $('.div_02').position().left
+            if(left+step<step){
+                return;
+            }
+            $('.div_02').css('left',left+step+'px')
+
+            // var data = that.menu.shift()
+            // that.menu.push(data)
+            // that.manageChange()
+        },
+        //菜单右侧移动
+        RightShift(){
+            var that = this
+            var step = 1530
+            var width = $('.div_02').width()
+            var left = $('.div_02').position().left
+            if(left+step>0){
+                return;
+            }
+            $('.div_02').css('left',left+step+'px')
+
+            // var data = that.menu.pop()
+            // that.menu.unshift(data)
+            // that.manageChange()
+        },
+        //菜单数据位置变化  //让vue重新渲染,造成菜单切换假象
+        manageChange(){
+            var that = this;
+            var length = that.menu.length
+            that.menu[0].type = 'right';
+            that.menu[0].size = '1';
+            for(var i=0;i<that.menu.length;i++){
+                if(i==0||i==4||i==8){
+                    that.menu[i].left = '25';
+                }else{
+                   that.menu[i].left = '0'; 
+                }
+            }
+            //小于2的菜单朝向以及大小
+            if(length==2){
+                that.menu[1].type = 'left';
+                that.menu[1].size = '1';
+            }
+            if(length==3){
+                that.menu[1].type = 'center';
+                that.menu[1].size = '';
+                that.menu[2].type = 'left';
+                that.menu[2].size = '1';
+            }
+            if(length>=4){
+                that.menu[1].type = 'right';
+                that.menu[1].size = '2';
+                that.menu[2].type = 'left';
+                that.menu[2].size = '2';
+                that.menu[3].type = 'left';
+                that.menu[3].size = '1';
+            }
+            if(length>=5){
+                that.menu[4].type = 'right';
+                that.menu[4].size = '1';
+            }
+            //菜单大于6第二页的朝向
+            if(length==6){
+                that.menu[5].type = 'left';
+                that.menu[5].size = '1';
+            }
+            if(length==7){
+                that.menu[5].type = 'center';
+                that.menu[5].size = '';
+                that.menu[6].type = 'left';
+                that.menu[6].size = '1';
+            }
+            if(length>=8){
+                that.menu[5].type = 'right';
+                that.menu[5].size = '2';
+                that.menu[6].type = 'left';
+                that.menu[6].size = '2';
+                that.menu[7].type = 'left';
+                that.menu[7].size = '1';
+            }
+            if(length>=9){
+                that.menu[8].type = 'right';
+                that.menu[8].size = '1';
+            }
+            if(length==10){
+                that.menu[9].type = 'left';
+                that.menu[9].size = '1';
+            }
+            if(length==11){
+                that.menu[9].type = 'center';
+                that.menu[9].size = '';
+                that.menu[10].type = 'left';
+                that.menu[10].size = '1';
+            }
+            if(length==12){
+                that.menu[9].type = 'right';
+                that.menu[9].size = '2';
+                that.menu[10].type = 'left';
+                that.menu[10].size = '2';
+                that.menu[11].type = 'left';
+                that.menu[11].size = '1';
+            } 
+        },
+        //系统管理
         usermanage(val){
             sessionStorage.menuId = val
             sessionStorage.headercolorType = '1'
             this.$router.push({'path':'/usercenter'})
         },
-        //智慧灯杆系统
+        //设备管理
         lamppost(val){
             sessionStorage.menuId = val
             sessionStorage.headercolorType = '2'
@@ -240,7 +678,25 @@ export default {
         map(val){
             sessionStorage.menuId = val
             sessionStorage.headercolorType = '1'
-            this.$router.push({'path':'/mapHomgPage'})
+            this.$router.push({'path':'/mapHomg',query:{id:val}})
+        },
+        //灯具地图系统
+        Lamp(val){
+            sessionStorage.menuId = val
+            sessionStorage.headercolorType = '2'
+            this.$router.push({'path':'/SingleLamp',query:{id:val}})
+        },
+        //摄像头地图系统
+        Camera(val){
+            sessionStorage.menuId = val
+            sessionStorage.headercolorType = '2'
+            this.$router.push({'path':'/Camera',query:{id:val}})
+        },
+        //LED地图系统
+        LED(val){
+            sessionStorage.menuId = val
+            sessionStorage.headercolorType = '2'
+            this.$router.push({'path':'/LED',query:{id:val}})
         },
         //视频管理
         video(val){
@@ -286,6 +742,8 @@ export default {
                             success:function(data){
                                 if(data.errorCode==0){
                                     that.menu.unshift(data.result.menus[0])
+                                    console.log(that.menu)
+                                    that.manageChange()
                                 }else{
                                     that.errorCode(data)
                                 }
@@ -296,7 +754,6 @@ export default {
                     }
                 },
             })
-            
         },
         //请求用户基本信息
         ready(){
@@ -338,53 +795,30 @@ export default {
 <style scoped>
 /* /StreetLamp */
 .index{width: 100%;height: 100%;}
-.index_top{width: 100%;position: relative;height: 115px;}
-.index_top_left{padding:20px 25px;border: 2px solid white;border-radius: 10px;position: absolute;top:20px;left: 100px;display: flex;justify-content: center;align-items: center;}
-.index_top_left>i{color: white;font-size: 36px;margin-top:-10px;margin-bottom: 10px;}
-.index_top_left>p{color: white;font-size: 18px;position: absolute;bottom: 0;left: 24px;margin-bottom: 5px;}
-.index_top_right{position: absolute;top:25px;right: 25px;}
-.index_top_right{display: flex;flex-wrap: nowrap;}
-.index_top_right_text{width: 100px;height: 100%;text-align: center;}
-.index_top_right_text>p{color:white;font-size: 16px;}
-.index_top_right_img>img{width:90px;height: 90px;border-radius: 50%;}
+.index_top{width: 100%;height: 360px;display: flex;justify-content: center;align-items: center;}
+.index_top_right{position: absolute;top: 30px;right: 10px;display: flex;color: white;font-size: 17px;line-height: 60px;}
+.index_top_right>img{width: 60px;height:60px;border-radius: 60px;}
+.index_top_right>span{padding: 0 10px 0 10px;}
+.index_top_psd{position: absolute;top: 105px;right: 80px;width: 212px;height: 220px;padding:15px 10px 20px 10px;background: white;border-radius: 5px;box-shadow: 1px 0px 5px -2px black;}
+.index_top_psd>div>img{width: 40px;height:40px;border-radius: 40px;}
+.index_top_psd>div{display: flex;}
+.index_top_psd>div>div{padding-left: 10px;}
+.index_top_psd>div>div>p{margin: 0;}
+.index_top_psd>button{display: block;}
+.index_top_psd>button:nth-of-type(1){padding: 0 0 0 20px;}
+.index_top_psd>button:nth-of-type(2){padding: 20px 0 0 20px;margin:0;}
 
-.index_center{position: absolute;top: 25%;left: 25%;width: 140px;height: 125px;}
-.index_center>div{width:140px;height: 125px;background-size:100% 100%;text-align: center;color: white;cursor: pointer;background-repeat: no-repeat;position: absolute;}
-.index_center>div:hover{width:140px;height: 125px;background-size:100% 100%;text-align: center;color: white;cursor: pointer;background-repeat: no-repeat;position: absolute;}
-.index_center>div>span{position: absolute;bottom:5px;width: 100%;left: 0;}
-.index_center>div>img{width: 100px;height: 100px;}
-.index_center_top_usercentre{background: url('../assets/images/L-1-1.png');}
-.index_center_top_usercentre:hover{background: url('../assets/images/L-1-2.png');}
-.index_center_top_lampost{background: url('../assets/images/L-2-1.png');}
-.index_center_top_lampost:hover{background: url('../assets/images/L-2-2.png');}
-.index_center_top_coordinate{background: url('../assets/images/L-3-1.png');}
-.index_center_top_coordinate:hover{background: url('../assets/images/L-3-2.png');}
-.index_center_top_coordinate>img{width: 90px !important;height: 90px !important;margin-top: 5px;}
-.index_center_bottom_video{background: url('../assets/images/L-4-1.png');}
-.index_center_bottom_video:hover{background: url('../assets/images/L-4-2.png');}
-.index_center_bottom_video>img{width: 75px !important;height: 75px !important;margin-top: 15px;margin-left: 3px;}
-.index_center_bottom_wifi{background: url('../assets/images/L-5-1.png');}
-.index_center_bottom_wifi:hover{background: url('../assets/images/L-5-2.png');}
-.index_center_bottom_wifi>img{width: 95px !important;height: 95px !important;margin-top: 5px;}
-.index_center_bottom_broadcast{background: url('../assets/images/L-6-1.png');}
-.index_center_bottom_broadcast:hover{background: url('../assets/images/L-6-2.png');}
-.index_center_bottom_broadcast>img{width: 77px !important;height: 77px !important;margin-top: 15px;margin-left: 10px;}
-.index_center_bottom_Inspection{background: url('../assets/images/L-7-1.png');}
-.index_center_bottom_Inspection:hover{background: url('../assets/images/L-7-2.png');}
-.index_center_bottom_Inspection>img{width: 77px !important;height: 77px !important;margin-top: 15px;margin-left: 0px;}
-.index_center>div:nth-of-type(2){top: -65px;left: 110px;}
-.index_center>div:nth-of-type(3){top: 65px;left: 110px;}
-.index_center>div:nth-of-type(4){top: 0;left: 220px;}
-.index_center>div:nth-of-type(5){top: -65px;left: 330px;}
-.index_center>div:nth-of-type(6){top: 65px;left: 330px;}
-.index_center>div:nth-of-type(7){top: 0px;left: 440px;}
-
-.header_img{text-align: left;margin-left: 30px;}
-.header_img>img{width: 80px;height: 80px;border-radius: 50%;}
-.header_right{height: 40px;margin-left: 30px;margin-top: 20px;text-align: left;font-size: 13px;}
-.header_right>button{position: absolute;top: 40px;right: 15px;}
-.table_body>tr>td{padding-bottom: 15px;padding-top: 5px;}
-.form-group{display:flex;}
-.form-group>label{width: 65px;line-height: 34px;text-align: center;}
-.form-group>input{width: 156px;}
+.index_bottom{width:100%;position: absolute;top:360px;bottom: 0;display: flex;justify-content: center;}
+.index_bottom>div{display: flex;width: 100%;justify-content: center;}
+.index_bottom>div>p{margin: 0;cursor: pointer;padding: 200px 15px 0 15px;}
+.div_01{width: 1544px;overflow: hidden;position: relative;padding:35px 0 0 0;}
+.div_02{display: flex;position: absolute;transition: all .5s;-webkit-transition: all .5s;}
+.div_02>div,.index_bottom>div>p>img{transition: all .5s;-webkit-transition: all .5s;}
+.div_02>div:hover,.index_bottom>div>p>img:hover{
+    transform: scale(1.1);
+    -ms-transform:scale(1.1);     /* IE 9 */
+    -moz-transform:scale(1.1);     /* Firefox */
+    -webkit-transform:scale(1.1); /* Safari 和 Chrome */
+    -o-transform:scale(1.1);
+}
 </style>

@@ -88,6 +88,10 @@ export default {
         if(sessionStorage.menuId3=='80'){
             that.$router.push({'path':'/concentrator'})
         }
+        if(sessionStorage.menuId3=='106'){
+            that.$router.push({'path':'/solinCameraDeploy'})
+        }
+        
       }
       if(val=='3'){
         this.$router.push({'path':'/equipment'})
@@ -105,6 +109,9 @@ export default {
         }
         if(sessionStorage.menuId3=='55'){
             that.$router.push({'path':'Relay'})
+        }
+        if(sessionStorage.menuId3=='107'){
+            that.$router.push({'path':'CameraManage'})
         }
       }
       if(val=='4'){
@@ -161,7 +168,9 @@ export default {
         var that = this;
         for(var i=0;i<this.options2.length;i++){
             if(this.options2[i].id==val){
-                sessionStorage.areaname = this.options2[i].area.name
+                if(this.options2[i].area.name!=null){
+                    sessionStorage.areaname = this.options2[i].area.name
+                }
             }
         }
         sessionStorage.projectId = this.value2
@@ -223,6 +232,12 @@ export default {
             }
             if(sessionStorage.menuId3=='80'){
                 that.$router.push({'path':'/concentrator'})
+            }
+            if(sessionStorage.menuId3=='106'){
+                that.$router.push({'path':'/solinCameraDeploy'})
+            }
+            if(sessionStorage.menuId3=='107'){
+                that.$router.push({'path':'CameraManage'})
             }
         },200)
     },

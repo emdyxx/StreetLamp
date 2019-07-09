@@ -13,7 +13,7 @@
                 </el-dropdown-menu>
             </el-dropdown>
             <div class="search">
-                <el-dropdown size="small" split-button>
+                <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
@@ -532,10 +532,10 @@ export default {
             PowerfailuretimeDataSite2:[],
             Time_pageIndex:1,
             Time_pageSize:10,
-            Time_total:30,
+            Time_total:10,
             Time_pageIndex2:1,
             Time_pageSize2:10,
-            Time_total2:30,
+            Time_total2:10,
             myModaltableData:[],//集中器
         }
     },
@@ -543,6 +543,11 @@ export default {
         // 
     },
     methods:{
+        handleCommand(){
+            this.nickName=''
+            this.serialNumber=''
+            this.online=''
+        },
         formatRole:function(val, column, cellValue, index){
             if(cellValue == null||cellValue == undefined||cellValue == ''){
                 return '----'
@@ -1065,7 +1070,7 @@ export default {
                 datas.poleId = this.site2[0].id
             }
             if(this.addType=='1'){datas.id=that.site[0].id}
-            data.coord = that.data.coord
+            datas.coord = that.data.coord
             $.ajax({
                 type:type,
                 async:true,

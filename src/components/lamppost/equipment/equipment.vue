@@ -141,11 +141,14 @@ export default {
                                     if(sessionStorage.menuId3=='53'){
                                         that.$router.push({'path':'sensors'})
                                     }
-                                    if(data.node.id=='54'||data.node.id=='64'||data.node.id=='65'||data.node.id=='66'||data.node.id=='67'||data.node.id=='68'||data.node.id=='69'||data.node.id=='70'){
+                                    if(sessionStorage.menuId3=='54'||sessionStorage.menuId3=='64'||sessionStorage.menuId3=='65'||sessionStorage.menuId3=='66'||sessionStorage.menuId3=='67'||sessionStorage.menuId3=='68'||sessionStorage.menuId3=='69'||sessionStorage.menuId3=='70'){
                                         that.$router.push({'path':'loraQuery'})
                                     }
                                     if(sessionStorage.menuId3=='55'){
                                         that.$router.push({'path':'Relay'})
+                                    }
+                                    if(sessionStorage.menuId3=='107'){
+                                        that.$router.push({'path':'CameraManage'})
                                     }
                                 }else{
                                     that.errorCode(data)
@@ -159,7 +162,6 @@ export default {
             $('#jstree').bind("activate_node.jstree.jstree", function (e, data) {
                 if(data.node.id==''||data.node.id==undefined){
                 }else{
-                    console.log(data.node.id)
                     sessionStorage.menuId3 = data.node.id
                     if(data.node.id=='51'){
                         that.$router.push({'path':'lampslanterns'})
@@ -178,6 +180,9 @@ export default {
                     }
                     if(data.node.id=='55'){
                         that.$router.push({'path':'Relay'})
+                    }
+                    if(data.node.id=='107'){
+                        that.$router.push({'path':'CameraManage'})
                     }
                 }
             });

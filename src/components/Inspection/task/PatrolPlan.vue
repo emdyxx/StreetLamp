@@ -154,7 +154,7 @@
                                 </el-option>
                             </el-select>
                         </div>
-                        <div class="form-group" v-if="data.planPeriod=='2'">
+                        <div class="form-group_s" v-if="data.planPeriod=='2'">
                             <el-checkbox-group v-model="checkList">
                                 <el-checkbox label="1">周一</el-checkbox>
                                 <el-checkbox label="2">周二</el-checkbox>
