@@ -89,21 +89,6 @@ export default {
                                     var arr = {}
                                     for(var i=0;i<data.result.menus.length;i++){
                                         arr = {}
-                                        // if(data.result.menus[i].code=='solinPoleDeploy'){
-                                        //     arr.type = '2'
-                                        // }
-                                        // if(data.result.menus[i].code=='solinLampDeploy'){
-                                        //     arr.type = '3'
-                                        // }
-                                        // if(data.result.menus[i].code=='solinScreenDeploy'){
-                                        //     arr.type = '4'
-                                        // }
-                                        // if(data.result.menus[i].code=='solinEnvDeploy'){
-                                        //     arr.type = '5'
-                                        // }
-                                        // if(data.result.menus[i].code=='solinLoraSensorsDeploy'){
-                                        //     arr.type = '5'
-                                        // }
                                         arr.type = data.result.menus[i].code
                                         arr.text = data.result.menus[i].menuName
                                         arr.id = data.result.menus[i].id
@@ -121,6 +106,7 @@ export default {
                                             let data2 = {}
                                             for(let i=0;i<data.result.menus.length;i++){
                                                 data2 = {}
+                                                data2.type = data.result.menus[i].code
                                                 data2.text = data.result.menus[i].menuName
                                                 data2.id = data.result.menus[i].id
                                                 array.push(data2)

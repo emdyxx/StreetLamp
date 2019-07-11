@@ -1,21 +1,21 @@
-.equipment{background-image: url(img/equipment.png) !important;}
-.solinPoleDeploy{background-image: url(img/solinPoleDeploy.png) !important;}
-.solinLampDeploy{background-image: url(img/solinLampDeploy.png) !important;}
-.solinScreenDeploy{background-image: url(img/solinScreenDeploy.png) !important;}
-.solinLoraSensorsDeploy{background-image: url(img/solinLoraSensorsDeploy.png) !important;}
-.solinConcentratorDeploy{background-image: url(img/solinConcentratorDeploy.png) !important;}
-.solin485Device{background-image: url(img/solin485Device.png) !important;}
-.solinEnvDeploy{background-image: url(img/solinEnvDeploy.png) !important;}
-.solinRelayDeploy{background-image: url(img/solinRelayDeploy.png) !important;}
-.solinIlluminance{background-image: url(img/solinIlluminance.png) !important;}
-.solinCameraDeploy{background-image: url(img/solinCameraDeploy.png) !important;}
-.solinLoraSmoke{background-image: url(img/solinLoraSmoke.png) !important;}
-.solinLoraHumiture{background-image: url(img/solinLoraHumiture.png) !important;}
-.solinLoraGeomagnetism{background-image: url(img/solinLoraGeomagnetism.png) !important;}
-.solinLoraManholeCover{background-image: url(img/solinLoraManholeCover.png) !important;}
-.solinLoraPressure{background-image: url(img/solinLoraPressure.png) !important;}
-.solinLoraMagneticDoor{background-image: url(img/solinLoraMagneticDoor.png) !important;}
-.solinLoraInfrared{background-image: url(img/solinLoraInfrared.png) !important;}
+.equipment{background-image: url(img/equipment.png) !important;background-repeat: no-repeat !important;}
+.solinPoleDeploy{background-image: url(img/solinPoleDeploy.png) !important;background-repeat: no-repeat !important;}
+.solinLampDeploy,.solinLampManage{background-image: url(img/solinLampDeploy.png) !important;background-repeat: no-repeat !important ;}
+.solinScreenDeploy,.solinScreenManage{background-image: url(img/solinScreenDeploy.png) !important;background-repeat: no-repeat !important;}
+.solinLoraSensorsDeploy,.solinLoraSensorsManage{background-image: url(img/solinLoraSensorsDeploy.png) !important;background-repeat: no-repeat !important;}
+.solinConcentratorDeploy{background-image: url(img/solinConcentratorDeploy.png) !important;background-repeat: no-repeat !important;}
+.solin485Device,.solin485DeviceManage{background-image: url(img/solin485Device.png) !important;background-repeat: no-repeat !important;}
+.solinEnvDeploy,.solinEnvManage{background-image: url(img/solinEnvDeploy.png) !important;background-repeat: no-repeat !important;}
+.solinRelayDeploy,.solinRelayManage{background-image: url(img/solinRelayDeploy.png) !important;background-repeat: no-repeat !important;}
+.solinIlluminance,.solinIlluminanceManage{background-image: url(img/solinIlluminance.png) !important;background-repeat: no-repeat !important;}
+.solinCameraDeploy,.solinCameraManage{background-image: url(img/solinCameraDeploy.png) !important;background-repeat: no-repeat !important;}
+.solinLoraSmoke{background-image: url(img/solinLoraSmoke.png) !important;background-repeat: no-repeat !important;}
+.solinLoraHumiture{background-image: url(img/solinLoraHumiture.png) !important;background-repeat: no-repeat !important;}
+.solinLoraGeomagnetism{background-image: url(img/solinLoraGeomagnetism.png) !important;background-repeat: no-repeat !important;}
+.solinLoraManholeCover{background-image: url(img/solinLoraManholeCover.png) !important;background-repeat: no-repeat !important;}
+.solinLoraPressure{background-image: url(img/solinLoraPressure.png) !important;background-repeat: no-repeat !important;}
+.solinLoraMagneticDoor{background-image: url(img/solinLoraMagneticDoor.png) !important;background-repeat: no-repeat !important;}
+.solinLoraInfrared{background-image: url(img/solinLoraInfrared.png) !important;background-repeat: no-repeat !important;}
 
 .jstree_mechanism1 {
     background-image: url(img/mechanism1.png) !important;
@@ -493,7 +493,8 @@
 .jstree-default .jstree-icon {
     width: 24px;
     height: 24px;
-    line-height: 24px
+    line-height: 24px;
+    background-position-x: 50%;
 }
 
 .jstree-default .jstree-icon:empty {

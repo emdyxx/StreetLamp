@@ -93,7 +93,7 @@
                 </div>
                 <div>
                     <span>设备数量:</span>
-                    <span></span>
+                    <span>{{informationData.deviceCount}}</span>
                 </div>
                 <div>
                     <span>类&nbsp;&nbsp;&nbsp;型:</span>
@@ -107,7 +107,7 @@
                     <span style="letter-spacing:0;">{{informationData.createTime}}</span>
                 </div>
                 <div style="text-align: right;">
-                    <el-button type="primary" size="small">查看详情</el-button>
+                    <el-button @click="mapdetails" type="primary" size="small">查看详情</el-button>
                 </div>
             </div>
         </div>
@@ -435,6 +435,10 @@ export default {
                 }
             })
         },
+        //点击查看详情
+        mapdetails(){
+            this.$router.push({'path':'/GISdetails',query:{id:this.informationData.id}})
+        },
         //初始化 百度地图/平面图
         ready(){
             var that = this;
@@ -548,6 +552,7 @@ export default {
                                             that.informationData = that.readyData[i]
                                         }
                                     }
+                                    console.log(that.informationData)
                                     that.information_type = true
                                 }
                             });

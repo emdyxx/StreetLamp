@@ -166,13 +166,16 @@ export default {
     },
     projectChange(val){
         var that = this;
-        for(var i=0;i<this.options2.length;i++){
-            if(this.options2[i].id==val){
-                if(this.options2[i].area.name!=null){
-                    sessionStorage.areaname = this.options2[i].area.name
+        if(val!='0'){
+            for(var i=0;i<this.options2.length;i++){
+                if(this.options2[i].id==val){
+                    if(this.options2[i].area.name!=null){
+                        sessionStorage.areaname = this.options2[i].area.name
+                    }
                 }
             }
         }
+        
         sessionStorage.projectId = this.value2
         this.$router.push({'path':'/Refresh'})
         setTimeout(function(){

@@ -214,7 +214,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                        prop="voltage"
+                        prop="battery"
                         align='center'
                         label="电压值V"
                         min-width="80"
@@ -487,7 +487,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                    prop="voltage"
+                    prop="battery"
                     align='center'
                     label="电压值V"
                     min-width="80"

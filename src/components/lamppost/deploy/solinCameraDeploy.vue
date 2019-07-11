@@ -1,6 +1,6 @@
 <template>
     <!-- 摄像头 -->
-    <div class="solinCameraDeploy">
+    <div class="SolinCameraDeploy">
         <div class="solinCameraDeploy_top">
             <el-button @click="CameraDeploy(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button @click="CameraDeploy(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
@@ -323,7 +323,7 @@
 </template>
 <script>
 export default {
-    name: 'solinCameraDeploy',
+    name: 'SolinCameraDeploy',
     data () {
         return {
             serverurl:localStorage.serverurl,
@@ -797,8 +797,8 @@ export default {
 </script>
 <style scoped>
 .Required{color: red;font-size: 17px;}
-.solinCameraDeploy{width: 100%;height: 100%;}
-.solinCameraDeploy>div{width: 100%;position: absolute;}
+.SolinCameraDeploy{width: 100%;height: 100%;}
+.SolinCameraDeploy>div{width: 100%;position: absolute;}
 .solinCameraDeploy_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
 .solinCameraDeploy_top>button,.solinCameraDeploy_top>div{height:33px;margin:8px 0 0 10px;}
 .solinCameraDeploy_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}

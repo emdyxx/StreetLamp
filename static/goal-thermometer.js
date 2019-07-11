@@ -152,11 +152,11 @@ canvasPanel.prototype.paintNowValue = function (num){
     $this.paintSplit();
 
     //设置字体样式
-    var fontStyle = $this.fontWeight+' '+Math.round($this.fontSize*$this.times)+'px '+$this.fontFamily;
+    var fontStyle = $this.fontWeight+' '+'16px '+$this.fontFamily;
     $this.context.font = fontStyle;
     //设置字体填充颜色
-    $this.fontColor = $this.bgColor;
+    $this.fontColor = 'white';
     $this.context.fillStyle = $this.fontColor;
     //从坐标点(50,50)开始绘制文字
-    $this.context.fillText(num,38*$this.times,215*$this.times);
+    $this.context.fillText(num,50*$this.times,215*$this.times);
 }

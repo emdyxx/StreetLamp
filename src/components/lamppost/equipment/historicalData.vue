@@ -34,33 +34,6 @@
                         width="55">
                         </el-table-column>
                         <el-table-column
-                        prop="nickName"
-                        align='center'
-                        label="名称"
-                        min-width="110">
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="状态"
-                        min-width="80">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.online=='0'">离线</span>
-                                <span v-if="scope.row.online=='1'">在线</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="modelName"
-                        align='center'
-                        label="型号"
-                        min-width="100">
-                        </el-table-column>
-                        <!-- <el-table-column
-                        prop="concentratorSn"
-                        align='center'
-                        label="集中器标识"
-                        min-width="120">
-                        </el-table-column> -->
-                        <el-table-column
                         align='center'
                         label="风向/风速"
                         min-width="90">
@@ -94,7 +67,7 @@
                         label="PM2.5/PM10"
                         min-width="80">
                             <template slot-scope="scope">
-                                <span>{{scope.row.PM2}}/{{scope.row.PM10}}</span>
+                                <span>{{scope.row.pM2}}/{{scope.row.pM10}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column

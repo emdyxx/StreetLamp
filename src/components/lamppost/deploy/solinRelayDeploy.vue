@@ -1,6 +1,6 @@
 <template>
     <!-- 继电器部署 -->
-    <div class="solinRelayDeploy">
+    <div class="SolinRelayDeploy">
         <div class="solinRelayDeploy_top">
             <el-button v-if="addRelay" @click="solinRelayDeployOpreat(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="editRelay" @click="solinRelayDeployOpreat(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
@@ -217,7 +217,7 @@
 </template>
 <script>
 export default {
-    name: 'solinRelayDeploy',
+    name: 'SolinRelayDeploy',
     data () {
         return {
             name:'名称',
@@ -573,8 +573,8 @@ export default {
 </script>
 <style scoped>
 .Required{color: red;font-size: 17px;}
-.solinRelayDeploy{width: 100%;height: 100%;}
-.solinRelayDeploy>div{width: 100%;position: absolute;}
+.SolinRelayDeploy{width: 100%;height: 100%;}
+.SolinRelayDeploy>div{width: 100%;position: absolute;}
 .solinRelayDeploy_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
 .solinRelayDeploy_top>button,.solinRelayDeploy_top>div{height:33px;margin:8px 0 0 10px;}
 .solinRelayDeploy_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}

@@ -81,6 +81,7 @@
                     prop="serialNumber"
                     align='center'
                     label="屏幕序列号"
+                    :formatter="formatRole"
                     min-width="130">
                     </el-table-column>
                     <el-table-column
@@ -157,6 +158,7 @@
                     prop="serialNumber"
                     align='center'
                     label="屏幕序列号"
+                    :formatter="formatRole"
                     min-width="130">
                     </el-table-column>
                     <el-table-column
@@ -325,6 +327,13 @@ export default {
         
     },
     methods:{
+        formatRole:function(val, column, cellValue, index){
+            if(cellValue == null||cellValue == undefined||cellValue == ''){
+                return '----'
+            }else{
+                return cellValue
+            }
+        },
         ready(){
             var that = this;
             var url = ''

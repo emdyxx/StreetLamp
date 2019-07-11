@@ -1,5 +1,5 @@
 <template>
-    <div class="equipment">
+    <div class="equipments">
         <div class="equipment_left">
             <div id="jstree"></div>
         </div>
@@ -29,21 +29,54 @@ export default {
             var that = this;
             $('#jstree').jstree({
                 "types" : {
-                    "1" : {
-                        "icon" : 'jstree_icon1',
+                    "solinPoleDeploy" : {
+                        "icon" : 'solinPoleDeploy',
                     },
-                    "2" : {
-                        "icon" : 'jstree_icon2',
+                    "solinLampManage" : {
+                        "icon" : 'solinLampManage',
                     },
-                    "3" : {
-                        "icon" : 'jstree_icon3',
+                    "solinScreenManage" : {
+                        "icon" : 'solinScreenManage',
                     },
-                    "4" : {
-                        "icon" : 'jstree_icon4',
+                    "solinLoraSensorsManage" : {
+                        "icon" : 'solinLoraSensorsManage',
                     },
-                    "5" : {
-                        "icon" : 'jstree_icon5',
-                    }
+                    "solin485DeviceManage" : {
+                        "icon" : 'solin485DeviceManage',
+                    },
+                    "solinCameraManage" : {
+                        "icon" : 'solinCameraManage',
+                    },
+                    "solinEnvManage" : {
+                        "icon" : 'solinEnvManage',
+                    },
+                    "solinRelayManage" : {
+                        "icon" : 'solinRelayManage',
+                    },
+                    "solinIlluminanceManage" : {
+                        "icon" : 'solinIlluminanceManage',
+                    },
+                    "solinLoraSmoke" : {
+                        "icon" : 'solinLoraSmoke',
+                    },
+                    "solinLoraHumiture" : {
+                        "icon" : 'solinLoraHumiture',
+                    },
+                    "solinLoraGeomagnetism" : {
+                        "icon" : 'solinLoraGeomagnetism',
+                    },
+                    "solinLoraManholeCover" : {
+                        "icon" : 'solinLoraManholeCover',
+                    },
+                    "solinLoraPressure" : {
+                        "icon" : 'solinLoraPressure',
+                    },
+                    "solinLoraMagneticDoor" : {
+                        "icon" : 'solinLoraMagneticDoor',
+                    },
+                    "solinLoraInfrared" : {
+                        "icon" : 'solinLoraInfrared',
+                    },
                 },
                 "plugins" : ['types'],
                 'core' : {
@@ -61,25 +94,14 @@ export default {
                                     var datas = [{
                                         text:'智慧灯杆',
                                         id:'02',
-                                        type:'1',
+                                        type:'solinPoleDeploy',
                                         "state": {"opened" : true},
                                         children:[]
                                     }]
                                     var arr = {}
                                     for(var i=0;i<data.result.menus.length;i++){
                                         arr = {}
-                                        if(data.result.menus[i].code=='solinLampManage'){
-                                            arr.type = '3'
-                                        }
-                                        if(data.result.menus[i].code=='solinScreenManage'){
-                                            arr.type = '4'
-                                        }
-                                        if(data.result.menus[i].code=='solinEnvManage'){
-                                            arr.type = '5'
-                                        }
-                                        if(data.result.menus[i].code=='solinLoraSensorsManage'){
-                                            arr.type = '5'
-                                        }
+                                        arr.type = data.result.menus[i].code
                                         arr.text = data.result.menus[i].menuName
                                         arr.id = data.result.menus[i].id
                                         datas[0].children.push(arr)
@@ -97,6 +119,7 @@ export default {
                                             let data2 = {}
                                             for(let i=0;i<data.result.menus.length;i++){
                                                 data2 = {}
+                                                data2.type = data.result.menus[i].code
                                                 data2.text = data.result.menus[i].menuName
                                                 data2.id = data.result.menus[i].id
                                                 array.push(data2)
@@ -120,6 +143,7 @@ export default {
                                             let data2 = {}
                                             for(let i=0;i<data.result.menus.length;i++){
                                                 data2 = {}
+                                                data2.type = data.result.menus[i].code
                                                 data2.text = data.result.menus[i].menuName
                                                 data2.id = data.result.menus[i].id
                                                 array.push(data2)
@@ -141,7 +165,7 @@ export default {
                                     if(sessionStorage.menuId3=='53'){
                                         that.$router.push({'path':'sensors'})
                                     }
-                                    if(sessionStorage.menuId3=='54'||sessionStorage.menuId3=='64'||sessionStorage.menuId3=='65'||sessionStorage.menuId3=='66'||sessionStorage.menuId3=='67'||sessionStorage.menuId3=='68'||sessionStorage.menuId3=='69'||sessionStorage.menuId3=='70'){
+                                    if(sessionStorage.menuId3=='64'||sessionStorage.menuId3=='65'||sessionStorage.menuId3=='66'||sessionStorage.menuId3=='67'||sessionStorage.menuId3=='68'||sessionStorage.menuId3=='69'||sessionStorage.menuId3=='70'){
                                         that.$router.push({'path':'loraQuery'})
                                     }
                                     if(sessionStorage.menuId3=='55'){
@@ -172,7 +196,7 @@ export default {
                     if(data.node.id=='53'){
                         that.$router.push({'path':'sensors'})
                     }
-                    if(data.node.id=='54'||data.node.id=='64'||data.node.id=='65'||data.node.id=='66'||data.node.id=='67'||data.node.id=='68'||data.node.id=='69'||data.node.id=='70'){
+                    if(data.node.id=='64'||data.node.id=='65'||data.node.id=='66'||data.node.id=='67'||data.node.id=='68'||data.node.id=='69'||data.node.id=='70'){
                         that.$router.push({'path':'loading'})
                         setTimeout(function(){
                             that.$router.push({'path':'loraQuery'})
@@ -194,7 +218,7 @@ export default {
 }
 </script>
 <style scoped>
-.equipment{width: 100%;height: 100%;padding: 5px;}
+.equipments{width: 100%;height: 100%;padding: 5px;}
 .equipment_left{width: 200px;height: 100%;border: 1px solid #E4E4F1;overflow: auto;}
 .equipment_right{position: absolute;left: 210px;right: 5px;top:5px;bottom:5px;}
 </style>

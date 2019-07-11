@@ -64,6 +64,8 @@ import GIS from '@/components/map/DTmap/GIS' //地图主页
 import SingleLamp from '@/components/map/DTmap/SingleLamp' //单灯地图
 import Camera from '@/components/map/DTmap/Camera' //摄像头地图
 import LED from '@/components/map/DTmap/LED' //led地图
+import GISdetails from '@/components/map/DTmap/GISdetails' //GIS详情
+
 
 
 
@@ -426,6 +428,11 @@ export default new Router({
           component: LED,
         },
       ]
+    },
+    {
+      path: '/GISdetails',
+      name: 'GISdetails',
+      component: GISdetails,
     },
     // {
     //   path: '/mapDetails',

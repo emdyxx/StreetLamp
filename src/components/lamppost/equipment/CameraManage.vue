@@ -256,6 +256,9 @@ export default {
             name:'',
             id:'',
             url:'',
+
+            time:null,
+            timeValue:0,
         }
     },
     mounted(){
@@ -280,7 +283,6 @@ export default {
         //预览
         preview(val){
             var that = this;
-            $('#myModal').modal('show')
             var flag = false;
             if(window.ActiveXObject){
                 try{
@@ -320,6 +322,8 @@ export default {
                 ),
                 success:function(data){
                     if(data.errorCode=='0'){
+                        $('#myModal').modal('show')
+                        that.timeValue = 0
                         var url = localStorage.serverurl.split('/')
                         url = url[2].split(':')
                         that.url ='rtmp://' + url[0]+':8072'+ data.result.camera.rtmpStream
@@ -332,6 +336,13 @@ export default {
                         )
                         that.player = VideoJs('my-video');
                         that.player.play();
+                        that.time  = setInterval(function(){
+                            that.timeValue++
+                            if(that.timeValue==480){
+                                that.timeValue = 0
+                                that.preview2(val.id)
+                            }
+                        },1000)
                     }else{
                         that.errorCode(data)
                     }
@@ -339,6 +350,25 @@ export default {
             })
             $('#myModal').on('hide.bs.modal', function () {
                 that.player.dispose()
+                clearInterval(that.time)
+                that.time = null
+            })
+        },
+        //预览时间延长
+        preview2(val){
+            var that = this;
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/camera/device/preview/extend/'+val,
+                contentType:'application/json;charset=UTF-8',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){}else{
+                        that.errorCode(data)
+                    }
+                },
             })
         },
         //操作

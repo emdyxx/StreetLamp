@@ -153,7 +153,7 @@
                                             </div>
                                             <div class="humidity">
                                                 <div id='humidity_div'>
-
+                                                    
                                                 </div>
                                             </div>
                                             <div class="pressure">

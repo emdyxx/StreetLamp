@@ -92,7 +92,30 @@
                 </div>
             </div>
         </div>
-        <el-dialog
+        <!-- 摄像头模态框（Modal） -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width:470px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">{{informationData.nickName}}</h4>
+                    </div>
+                    <div class="modal-body Modal">
+                        <a href="https://get.adobe.com/cn/flashplayer/" class="flashLoadMsg" target="_blank">请点击安装或者启用FLASH播放器</a>
+                        <div id="engage_view" style="display: block;">
+                            <div id="engage_content">
+                                <div id="engage_resize_container">
+                                    <div id="engage_video" style="width: 100%;height: 270px;">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- <el-dialog
         :visible.sync="dialogVisible"
         width="30%"
         :before-close="handleClose">
@@ -108,7 +131,7 @@
                     </div>
                 </div>
             </div>
-        </el-dialog>
+        </el-dialog> -->
         <div class="allmap" v-if="locationType=='1'">
             <div id="allmap"></div>
         </div>
@@ -119,6 +142,7 @@ import VideoJs from 'video.js'
 import 'video.js/dist/video-js.css'
 import 'vue-video-player/src/custom-theme.css'
 import 'videojs-flash'
+// import func from './vue-temp/vue-editor-bridge';
 export default {
     name: 'SingleLamp',
     data () {
@@ -139,7 +163,6 @@ export default {
             locationType:'',
             radio1:'1',
             time:null,
-            dialogVisible:false,
             timeData:{
                 City:'',
                 temperature:'',
@@ -154,6 +177,14 @@ export default {
                 Seconds:'',
                 getDay:'',
             },
+
+            player:'',
+            name:'',
+            id:'',
+            url:'',
+
+            time2:null,
+            timeValue:0,
         }
     },
     mounted(){
@@ -292,7 +323,6 @@ export default {
         //预览
         preview(){
             var that = this;
-            that.dialogVisible = true;
             var flag = false;
             if(window.ActiveXObject){
                 try{
@@ -330,26 +360,53 @@ export default {
                 ),
                 success:function(data){
                     if(data.errorCode=='0'){
+                        $('#myModal').modal('show')
+                        that.timeValue = 0
                         var url = localStorage.serverurl.split('/')
                         url = url[2].split(':')
                         that.url ='rtmp://' + url[0]+':8072'+ data.result.camera.rtmpStream
-                        var id = 'my-video'
+                        var id = 'video-my'
                         $('#engage_video').append(
-                            '<video id="'+id+'" class="video-js vjs-default-skin vjs-big-play-centered flex-grid" poster="" width="358" height="270">'+
+                            '<video id="'+id+'" class="video-js vjs-default-skin vjs-big-play-centered flex-grid" poster="" width="438" height="270">'+
                                 '<source src="'+that.url+'" type="rtmp/flv"/>'+
                             '</video>'
                         )
-                        that.player = VideoJs('my-video');
+                        that.player = VideoJs('video-my');
                         that.player.play();
+                        that.time2  = setInterval(function(){
+                            that.timeValue++
+                            if(that.timeValue==480){
+                                that.timeValue = 0
+                                that.preview2(val.id)
+                            }
+                        },1000)
+                        $('#myModal').on('hide.bs.modal', function () {
+                            that.player.dispose()
+                            clearInterval(that.time2)
+                            that.time2 = null
+                        })
                     }else{
                         that.errorCode(data)
                     }
                 }
             })
         },
-        handleClose(){
-            this.player.dispose()
-            this.dialogVisible = false;
+        //预览时间延长
+        preview2(val){
+            var that = this;
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/camera/device/preview/extend/'+that.informationData.id,
+                contentType:'application/json;charset=UTF-8',
+                data:{},
+                success:function(data){
+                    if(data.errorCode=='0'){}else{
+                        that.errorCode(data)
+                    }
+                },
+            })
         },
         //初始化 百度地图/平面图
         ready(){
@@ -406,7 +463,7 @@ export default {
                                     if(data.result.cameras[i].online=='1'){
                                         var marker = new BMap.Marker(point,{icon:online});
                                     }else{
-                                        var marker = new BMap.Marker(point,{icon:Unknown});
+                                        var marker = new BMap.Marker(point,{icon:offline});
                                     }
                                     marker.id=data.result.cameras[i].id
                                     marker.type=that.value1
@@ -541,7 +598,7 @@ hr{margin: 0;}
 .information_bottom>div{padding-top: 25px;font-size: 17px;}
 .information_bottom>div>span:nth-of-type(1){display: inline-block;width: 90px;text-align: right;}
 .information_bottom>div>span:nth-of-type(2){padding-left: 20px;letter-spacing:1px;}
-.flashLoadMsg{width: 100%;height: 100%;background: black;display: flex;justify-content: center;align-items: center;font-size: 16px;display: none;position: absolute;z-index: 9;}
+.flashLoadMsg{width: 90%;height: 90%;background: black;display: flex;justify-content: center;align-items: center;font-size: 16px;display: none;position: absolute;z-index: 9;}
 .video-js{width: 100% !important;height: 270px !important;}
 .allmap{width: 100%;height: 100%;}
 .allmap>div{width: 100%;height: 100%;}

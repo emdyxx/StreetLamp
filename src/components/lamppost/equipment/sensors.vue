@@ -88,18 +88,6 @@
                     label="型号"
                     min-width="100">
                     </el-table-column>
-                    <!-- <el-table-column
-                    prop="concentratorName"
-                    align='center'
-                    label="集中器名字"
-                    min-width="100">
-                    </el-table-column> -->
-                    <!-- <el-table-column
-                    prop="concentratorSn"
-                    align='center'
-                    label="集中器序列号"
-                    min-width="120">
-                    </el-table-column> -->
                     <el-table-column
                     align='center'
                     label="风向/风速"
@@ -143,14 +131,6 @@
                     align='center'
                     min-width="120">
                     </el-table-column>
-                    <!-- <el-table-column
-                    label="操作"
-                    align='center'
-                    min-width="120">
-                        <template slot-scope="scope">
-                            <el-button @click="historicalData(scope.row.concentratorSn)" type="primary" size='small'>历史数据</el-button>
-                        </template>
-                    </el-table-column> -->
                 </el-table>
                 <div class="block">
                     <el-pagination

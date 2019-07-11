@@ -3,12 +3,12 @@
     <div class="CameraLog">
         <div class="CameraLog_top">
             <div class="search">
-                <span>摄像头名称:</span>
-                <input type="text" v-model="nickName" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入摄像头名称">
+                <span>名称:</span>
+                <input type="text" v-model="nickName" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
             </div>
             <div class="search">
-                <span>摄像头IP:</span>
-                <input type="text" v-model="ipAddress" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入摄像头IP">
+                <span>IP:</span>
+                <input type="text" v-model="ipAddress" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入IP">
             </div>
             <template v-if="type=='115'">
                 <div class="search">
@@ -25,7 +25,7 @@
             </template>
             <template v-if="type=='116'">
                 <div class="search">
-                    <span>操作状态:</span>
+                    <span>操作类型:</span>
                     <el-select v-model="value1" clearable size='small' placeholder="请选择">
                         <el-option
                         v-for="item in options1"
