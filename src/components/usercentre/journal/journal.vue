@@ -247,9 +247,7 @@ export default {
         }
     },
     mounted(){
-        setTimeout(function(){
-            console.log($('.el-tabs__content'))
-        },200)
+        
     },
     methods:{
         clickRow(row){

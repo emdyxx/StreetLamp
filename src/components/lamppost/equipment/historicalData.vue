@@ -210,10 +210,21 @@ export default {
                             var binData = new Uint8Array(charData);
                             // 解压
                             var datas = pako.inflate(binData);
+                            
                             // 将GunZip ByTAREAR转换回ASCII字符串
-                            var key2 = String.fromCharCode.apply(null, new Uint16Array(datas));
+                            var array = new Uint16Array(datas)
+                            var res = '';
+                            var chunk = 8 * 1024;
+                            var i;
+                            for (i = 0; i < array.length / chunk; i++) {
+                                res += String.fromCharCode.apply(null, array.slice(i * chunk, (i + 1) * chunk)); 
+                            }
+                            res += String.fromCharCode.apply(null, array.slice(i * chunk));
+
+                            var key2 = res
                             //  解压后解码，防止中文乱码
                             key2 = unescape(key2)
+                            //  解压后解码，防止中文乱码
                             //将string对象转化为json对象并重新赋值
                             data.result = $.parseJSON(key2)
                             var myChart = that.$echarts.init(document.getElementById('myChart'))

@@ -203,10 +203,10 @@
             </div>
         </div><!-- /.modal -->
         <!-- 地图选点 -->
-        <div class="modal fade" id="map" tabindex="-1" role="dialog" style="margin-top:15%;" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:350px;">
+        <div class="modal fade" id="map" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width:700px;">
                 <div class="modal-content">
-                    <div class="modal-body map_Z" style='height:300px'>
+                    <div class="modal-body map_Z" style='height:550px'>
                         <div>点击地图选取坐标--坐标:{{referencePosition}}</div>
                         <div>
                             <div style="width:100%;height:100%;" id="allmap"></div>
@@ -416,6 +416,7 @@ export default {
                 this.data.serverPort = '9005'
                 this.data.coord = ''
                 this.data.remark = ''
+                this.referencePosition = ''
                 this.producer()
                 $('#addModal').modal('show')
             }
@@ -608,7 +609,6 @@ export default {
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
-                        console.log(data.result.list)
                         that.tableData = data.result.list
                         that.total = data.result.total
                     }else{
@@ -644,16 +644,33 @@ export default {
         mapClick(){
             var that = this
             $('#map').modal('show')
-            var map = new BMap.Map("allmap");    // 创建Map实例
-            map.centerAndZoom(sessionStorage.areaname, 12);  // 初始化地图,设置中心点坐标和地图级别
-            map.addEventListener("click", function(e){
-                map.clearOverlays();
-                var point = new BMap.Point(e.point.lng,e.point.lat);
-                var marker = new BMap.Marker(point);  // 创建标注
-                map.addOverlay(marker);              // 将标注添加到地图中  
-                that.referencePosition = e.point.lng+','+e.point.lat
-            });
-            map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+            $('#map').on('shown.bs.modal', function (e) {
+                var map = new BMap.Map("allmap",{enableMapClick:false});    // 创建Map实例
+                var coord = ''
+                if(that.data.coord!=''){
+                    coord = that.data.coord
+                    coord = coord.split(',')
+                    var point = new BMap.Point(coord[0],coord[1]);
+                    map.centerAndZoom(point, 12);  // 初始化地图,设置中心点坐标和地图级别
+                    var marker = new BMap.Marker(point);  // 创建标注
+                    map.addOverlay(marker);              // 将标注添加到地图中  
+                }else{
+                    map.centerAndZoom(sessionStorage.areaname, 12);  // 初始化地图,设置中心点坐标和地图级别
+                }
+                map.addEventListener("click", function(e){
+                    map.clearOverlays();
+                    var point = new BMap.Point(e.point.lng,e.point.lat);
+                    var marker = new BMap.Marker(point);  // 创建标注
+                    map.addOverlay(marker);              // 将标注添加到地图中  
+                    that.referencePosition = e.point.lng+','+e.point.lat
+                });
+                map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+                var size = new BMap.Size(10, 20);
+                map.addControl(new BMap.CityListControl({
+                    anchor: BMAP_ANCHOR_TOP_LEFT,
+                    offset: size,
+                }));
+            })
         },
         //地图确定
         mapSubmit(){

@@ -81,7 +81,6 @@ export default {
             success:function(data){
                 if(data.errorCode==0){
                     that.menu = data.result.menus
-                    console.log(data.result.menus[0].id)
                     if(sessionStorage.menuId2==''||sessionStorage.menuId2==undefined){
                       sessionStorage.menuId2 = data.result.menus[0].id
                     }

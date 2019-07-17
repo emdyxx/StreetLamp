@@ -85,7 +85,8 @@
                         :formatter="formatRole">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                                <span v-if="scope.row.businessAlarmType=='1'">火灾告警</span>
+                                <span v-else-if="scope.row.businessAlarmType=='1'">火灾告警</span>
+                                <span v-else>----</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -118,7 +119,8 @@
                         :formatter="formatRole">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                                <span v-if="scope.row.businessAlarmType=='1'">告警</span>
+                                <span v-else-if="scope.row.businessAlarmType=='1'">告警</span>
+                                <span v-else>----</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -128,7 +130,18 @@
                         min-width="100"
                         :formatter="formatRole">
                             <template slot-scope="scope">
-                                {{scope.row.temperature}}/{{scope.row.humidity}}
+                                <template v-if="scope.row.temperature==null">
+                                    --
+                                </template>
+                                <template v-if="scope.row.temperature!=null">
+                                    {{scope.row.temperature}}
+                                </template>/
+                                <template v-if="scope.row.humidity==null">
+                                    --
+                                </template>
+                                <template v-if="scope.row.humidity!=null">
+                                    {{scope.row.humidity}}
+                                </template>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -154,8 +167,9 @@
                         :formatter="formatRole">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                                <span v-if="scope.row.businessAlarmType=='1'">车位空</span>
-                                <span v-if="scope.row.businessAlarmType=='2'">车位被占</span>
+                                <span v-else-if="scope.row.businessAlarmType=='1'">车位空</span>
+                                <span v-else-if="scope.row.businessAlarmType=='2'">车位被占</span>
+                                <span v-else>----</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -181,9 +195,10 @@
                         :formatter="formatRole">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                                <span v-if="scope.row.businessAlarmType=='1'">井盖异常</span>
-                                <span v-if="scope.row.businessAlarmType=='2'">水位异常</span>
-                                <span v-if="scope.row.businessAlarmType=='3'">井盖，水位异常</span>
+                                <span v-else-if="scope.row.businessAlarmType=='1'">井盖异常</span>
+                                <span v-else-if="scope.row.businessAlarmType=='2'">水位异常</span>
+                                <span v-else-if="scope.row.businessAlarmType=='3'">井盖，水位异常</span>
+                                <span v-else>----</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -209,8 +224,9 @@
                         :formatter="formatRole">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                                <span v-if="scope.row.businessAlarmType=='1'">压力过高</span>
-                                <span v-if="scope.row.businessAlarmType=='2'">压力过低</span>
+                                <span v-else-if="scope.row.businessAlarmType=='1'">压力过高</span>
+                                <span v-else-if="scope.row.businessAlarmType=='2'">压力过低</span>
+                                <span v-else>----</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -243,7 +259,8 @@
                         :formatter="formatRole">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                                <span v-if="scope.row.businessAlarmType=='1'">门磁告警</span>
+                                <span v-else-if="scope.row.businessAlarmType=='1'">门磁告警</span>
+                                <span v-else>----</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -269,7 +286,8 @@
                         :formatter="formatRole">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                                <span v-if="scope.row.businessAlarmType=='1'">障碍物告警</span>
+                                <span v-else-if="scope.row.businessAlarmType=='1'">障碍物告警</span>
+                                <span v-else>----</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -358,7 +376,8 @@
                     :formatter="formatRole">
                         <template slot-scope="scope">
                             <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                            <span v-if="scope.row.businessAlarmType=='1'">火灾告警</span>
+                            <span v-else-if="scope.row.businessAlarmType=='1'">火灾告警</span>
+                            <span v-else>----</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -391,7 +410,8 @@
                     :formatter="formatRole">
                         <template slot-scope="scope">
                             <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                            <span v-if="scope.row.businessAlarmType=='1'">告警</span>
+                            <span v-else-if="scope.row.businessAlarmType=='1'">告警</span>
+                            <span v-else>----</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -401,7 +421,18 @@
                     min-width="100"
                     :formatter="formatRole">
                         <template slot-scope="scope">
-                            {{scope.row.temperature}}/{{scope.row.humidity}}
+                            <template v-if="scope.row.temperature==null">
+                                --
+                            </template>
+                            <template v-if="scope.row.temperature!=null">
+                                {{scope.row.temperature}}
+                            </template>/
+                            <template v-if="scope.row.humidity==null">
+                                --
+                            </template>
+                            <template v-if="scope.row.humidity!=null">
+                                {{scope.row.humidity}}
+                            </template>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -427,8 +458,9 @@
                     :formatter="formatRole">
                         <template slot-scope="scope">
                             <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                            <span v-if="scope.row.businessAlarmType=='1'">车位空</span>
-                            <span v-if="scope.row.businessAlarmType=='2'">车位被占</span>
+                            <span v-else-if="scope.row.businessAlarmType=='1'">车位空</span>
+                            <span v-else-if="scope.row.businessAlarmType=='2'">车位被占</span>
+                            <span v-else>----</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -454,9 +486,10 @@
                     :formatter="formatRole">
                         <template slot-scope="scope">
                             <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                            <span v-if="scope.row.businessAlarmType=='1'">井盖异常</span>
-                            <span v-if="scope.row.businessAlarmType=='2'">水位异常</span>
-                            <span v-if="scope.row.businessAlarmType=='3'">井盖，水位异常</span>
+                            <span v-else-if="scope.row.businessAlarmType=='1'">井盖异常</span>
+                            <span v-else-if="scope.row.businessAlarmType=='2'">水位异常</span>
+                            <span v-else-if="scope.row.businessAlarmType=='3'">井盖，水位异常</span>
+                            <span v-else>----</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -482,8 +515,9 @@
                     :formatter="formatRole">
                         <template slot-scope="scope">
                             <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                            <span v-if="scope.row.businessAlarmType=='1'">压力过高</span>
-                            <span v-if="scope.row.businessAlarmType=='2'">压力过低</span>
+                            <span v-else-if="scope.row.businessAlarmType=='1'">压力过高</span>
+                            <span v-else-if="scope.row.businessAlarmType=='2'">压力过低</span>
+                            <span v-else>----</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -516,7 +550,8 @@
                     :formatter="formatRole">
                         <template slot-scope="scope">
                             <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                            <span v-if="scope.row.businessAlarmType=='1'">门磁告警</span>
+                            <span v-else-if="scope.row.businessAlarmType=='1'">门磁告警</span>
+                            <span v-else>----</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -542,7 +577,8 @@
                     :formatter="formatRole">
                         <template slot-scope="scope">
                             <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                            <span v-if="scope.row.businessAlarmType=='1'">障碍物告警</span>
+                            <span v-else-if="scope.row.businessAlarmType=='1'">障碍物告警</span>
+                            <span v-else>----</span>
                         </template>
                     </el-table-column>
                     <el-table-column

@@ -61,7 +61,7 @@
                     <el-table-column
                     prop="nickName"
                     align='center'
-                    label="名称"
+                    label="设备名称"
                     min-width="130">
                     </el-table-column>
                     <el-table-column
@@ -78,9 +78,6 @@
                             <span v-if="scope.row.operatType=='0'">添加</span>
                             <span v-if="scope.row.operatType=='1'">编辑</span>
                             <span v-if="scope.row.operatType=='2'">删除</span>
-                            <span v-if="scope.row.operatType=='3'">绑定灯杆</span>
-                            <span v-if="scope.row.operatType=='4'">解绑灯杆</span>
-                            <span v-if="scope.row.operatType=='5'">绑定项目</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -93,15 +90,15 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                    prop="content"
-                    align='center'
-                    label="操作内容"
-                    min-width="130">
-                    </el-table-column>
-                    <el-table-column
                     prop="createTime"
                     align='center'
                     label="操作时间"
+                    min-width="150">
+                    </el-table-column>
+                    <el-table-column
+                    prop="content"
+                    label="操作明细"
+                    align='center'
                     show-overflow-tooltip>
                     </el-table-column>
                 </el-table>
@@ -140,7 +137,7 @@
                     <el-table-column
                     prop="nickName"
                     align='center'
-                    label="名称"
+                    label="设备名称"
                     min-width="120">
                     </el-table-column>
                     <el-table-column
@@ -151,7 +148,7 @@
                     </el-table-column>
                     <el-table-column
                     align='center'
-                    label="操控类别"
+                    label="控制类别"
                     min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.controlType=='1'">预览</span>
@@ -175,7 +172,7 @@
                     </el-table-column>
                     <el-table-column
                     align='center'
-                    label="操控状态"
+                    label="控制状态"
                     min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.controlStatus=='0'">成功</span>
@@ -185,7 +182,13 @@
                     <el-table-column
                     prop="createTime"
                     align='center'
-                    label="操作时间"
+                    label="控制时间"
+                    min-width="150">
+                    </el-table-column>
+                    <el-table-column
+                    prop="content"
+                    label="控制明细"
+                    align='center'
                     show-overflow-tooltip>
                     </el-table-column>
                 </el-table>
@@ -228,12 +231,6 @@ export default {
                 },{
                 value: '2',
                 label: '删除'
-                },{
-                value: '3',
-                label: '启用/禁用'
-                },{
-                value: '4',
-                label: '审核'
                 }
             ],
             value:'',

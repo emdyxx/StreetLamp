@@ -373,7 +373,6 @@ export default {
         },
         //操作
         operation(val){
-            console.log(val)
             var that = this;
             $.ajax({
                 type:'post',
@@ -433,7 +432,6 @@ export default {
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
-                        console.log(data.result.list)
                         that.tableData = data.result.list
                         that.total = data.result.total
                     }else{

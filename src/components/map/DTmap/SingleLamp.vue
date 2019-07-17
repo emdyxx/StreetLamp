@@ -2,7 +2,7 @@
     <!-- 单灯地图页面 -->
     <div class="SingleLamp">
         <div class="project_top_left">
-            <el-select v-model="value" @change="projectChange" placeholder="请选择" id="borderRadiu40">
+            <el-select v-model="value" size="small" @change="projectChange" placeholder="请选择" id="borderRadiu40">
                 <el-option
                 v-for="item in options"
                 :key="item.id"
@@ -43,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <div class="weather" :id="timeData.type2=='1' ? 'weather1':''||timeData.type2=='2' ? 'weather2':''||timeData.type2=='3' ? 'weather3':''">
+        <!-- <div class="weather" :id="timeData.type2=='1' ? 'weather1':''||timeData.type2=='2' ? 'weather2':''||timeData.type2=='3' ? 'weather3':''">
             <div>
                 <span>
                     {{timeData.temperature}}℃
@@ -57,7 +57,7 @@
                 <p>{{timeData.Hours}}:{{timeData.Minutes}}:{{timeData.Seconds}}</p>
                 <p>{{timeData.FullYear}}/{{timeData.Month}}/{{timeData.Dates}} 星期{{timeData.getDay}}</p>
             </div>
-        </div>
+        </div> -->
         <div class="allmap" v-if="locationType=='1'">
             <div id="allmap"></div>
         </div>
@@ -71,7 +71,7 @@
                     开关控制:
                     <el-switch
                     v-model="switchs"
-                    style="height:50px;"
+                    style="height:30px;"
                     @change='switchsChange'>
                     </el-switch>
                 </div>
@@ -111,6 +111,12 @@
                                    <span style="padding-right:25px;">创建时间:</span>
                                    {{informationData.createTime}}
                                 </th>
+                            </tr>
+                            <tr v-if="informationData.lampStatus=='2'">
+                               <th colspan="4">
+                                   <span style="padding-right:25px;">告警信息:</span>
+                                   {{informationData.jsonContent}}
+                                </th> 
                             </tr>
                         </tbody>
                     </table>
@@ -199,7 +205,7 @@ export default {
         }
     },
     mounted(){
-       this.times()
+    //    this.times()
     },
     methods:{
         //获取有权限的项目
@@ -216,9 +222,19 @@ export default {
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
+                        for(var i = 0;i<data.result.projects.length;i++){
+                            if(data.result.projects[i].id==0){
+                                data.result.projects.splice(i,1)
+                                i--
+                            }
+                        }
                         that.options = data.result.projects
                         that.locationType = that.options[0].locationType
-                        that.value = that.options[0].id
+                        if(sessionStorage.projectId==''||sessionStorage.projectId==null||sessionStorage.projectId==undefined){
+                            that.value = that.options[0].id
+                        }else{
+                            that.value = Number(sessionStorage.projectId)
+                        }
                         var name = that.options[0].area.mergerName
                         var area = name.split(',')
                         that.timeData.City = area[2]
@@ -241,7 +257,8 @@ export default {
                     this.locationType = this.options[i].locationType
                 }
             }
-            this.weatherRequest()
+            sessionStorage.projectId = id;
+            // this.weatherRequest()
             this.Statistics()
             this.ready()
         },
@@ -273,7 +290,7 @@ export default {
                     {
                         name:'类型',
                         type:'pie',
-                        radius: ['72%', '88%'],
+                        radius: ['80%', '95%'],
                         avoidLabelOverlap: false,
                         label: {
                             normal: {
@@ -285,7 +302,7 @@ export default {
                                     return html;
                                 },
                                 textStyle:{
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     color:'#000001'
                                 }
                             },
@@ -360,6 +377,7 @@ export default {
             var data = {
                 page:1,
                 size:500,
+                dataType:'1',
                 projectIds:that.value
             }
             $.ajax({
@@ -380,7 +398,7 @@ export default {
                         that.readyData = data.result.list
                         if(that.locationType=='1'){
                             // 百度地图API功能
-                            var map = new BMap.Map("allmap");    // 创建Map实例
+                            var map = new BMap.Map("allmap",{enableMapClick:false});    // 创建Map实例
                             if(data.result.list.length==0){
                                 map.centerAndZoom(that.timeData.City, 16); 
                             }else{
@@ -415,6 +433,9 @@ export default {
                                     map.addOverlay(marker);
                                 } 
                             }
+                            map.setMapStyleV2({     
+                                styleId: '7ff9f4f543ec7f2704516df1a246f110'
+                            });
                             //鼠标左键请求基本信息
                             map.addEventListener("click", function (e) {
                                 if(e.overlay){
@@ -431,9 +452,10 @@ export default {
                                     if(that.informationData.brightness==null||that.informationData.brightness==''||that.informationData.brightness==undefined){
                                         that.brightness = 0
                                     }else{
-                                        that.brightness = that.informationData.brightness
+                                        that.brightness = Number(that.informationData.brightness)
                                     }
                                     that.information_type = true
+                                    console.log(that.informationData)
                                 }
                             });
                         }
@@ -569,7 +591,7 @@ export default {
                             if(that.informationData.brightness==null||that.informationData.brightness==''||that.informationData.brightness==undefined){
                                 that.brightness = 0
                             }else{
-                                that.brightness = that.informationData.brightness
+                                that.brightness = Number(that.informationData.brightness)
                             }
                             that.errorCode(data)
                         }
@@ -579,7 +601,7 @@ export default {
                 if(that.informationData.brightness==null||that.informationData.brightness==''||that.informationData.brightness==undefined){
                     that.brightness = 0
                 }else{
-                    that.brightness = that.informationData.brightness
+                    that.brightness = Number(that.informationData.brightness)
                 }
                 that.$message({
                     type: 'info',
@@ -595,25 +617,25 @@ export default {
         this.project()
     },
     beforeDestroy(){
-        clearInterval(this.time)
-        this.time = null
+        // clearInterval(this.time)
+        // this.time = null
     }
 }
 </script>
 <style scoped>
 hr{margin: 0;}
 .SingleLamp{width: 100%;height: 100%;position: relative;}
-.project_top_left{position: absolute;top: 0;left: 0;width: 450px;height: 81px;background: #303e60;border-top-right-radius: 40px;border-bottom-right-radius: 40px;display: flex;justify-content: center;align-items: center;z-index: 2;}
-.project_top_left>div{width: 350px;}
-.statistical{width: 410px;height: 285px;border-radius: 10px;box-shadow: 2px 2px 8px 1px #303e60;position: absolute;top: 110px;left: 35px;padding: 0 15px 0 15px;z-index: 2;background: white;}
-.statistical_top{height: 67px;display: flex;align-items: center;font-size: 20px;color: #333333;}
-.statistical_top>img{padding-right: 15px;}
-.statistical_equipment{width: 100%;padding: 15px 20px;height: 215px;display: flex;}
-.statistical_equipment_left{width: 200px;height: 100%;}
-.statistical_equipment_right{width: 150px;height: 100%;padding: 15px 0 20px 10px;}
-.statistical_equipment_right>div{padding-top: 5px;padding-left: 15px;}
-.statistical_equipment_right>div>span:nth-of-type(1){font-size: 18px;margin: 0 20px 0 5px;;}
-.weather{position: absolute;top:35px;right:35px;width: 355px;height: 193px;border-radius: 27px;box-shadow: 2px 2px 8px 1px #303e60;color: white;z-index: 2;}
+.project_top_left{position: absolute;top: 0;left: 0;width: 403px;height: 48px;background: #303e60;border-top-right-radius: 40px;border-bottom-right-radius: 40px;display: flex;justify-content: center;align-items: center;z-index: 2;}
+.project_top_left>div{width: 348px;}
+.statistical{width: 350px;height: 190px;border-radius: 10px;box-shadow: 3px 3px 5px #999;position: absolute;top: 75px;left: 10px;padding: 0 15px 0 15px;z-index: 2;background: white;}
+.statistical_top{height: 40px;display: flex;align-items: center;font-size: 15px;color: #333333;}
+.statistical_top>img{padding-right: 15px;width: 40px;}
+.statistical_equipment{width: 100%;padding: 5px 20px;display: flex;}
+.statistical_equipment_left{width:170px;height:115px;margin-top: 10px;}
+.statistical_equipment_right{height: 100%;}
+.statistical_equipment_right>div{padding-top: 2px;padding-left: 15px;}
+.statistical_equipment_right>div>span:nth-of-type(1){font-size: 14px;}
+/* .weather{position: absolute;top:35px;right:35px;width: 355px;height: 193px;border-radius: 27px;box-shadow: 2px 2px 8px 1px #303e60;color: white;z-index: 2;}
 #weather1{background: url('../../../assets/img/tq3.png') 100% 100%;}
 #weather2{background: url('../../../assets/img/tq4.png') 100% 100%;}
 #weather3{background: url('../../../assets/img/tq1.png') 100% 100%;}
@@ -625,19 +647,19 @@ hr{margin: 0;}
 .weather>div:nth-of-type(2){width: 100%;padding:0 20px 0 0;text-align: right;}
 .weather>div:nth-of-type(2)>p{margin: 0;}
 .weather>div:nth-of-type(2)>p:nth-of-type(1){font-size: 44px;height: 55px;font-weight: 600;}
-.weather>div:nth-of-type(2)>p:nth-of-type(2){font-size: 22px;}
+.weather>div:nth-of-type(2)>p:nth-of-type(2){font-size: 22px;} */
 .allmap{width: 100%;height: 100%;}
 .allmap>div{width: 100%;height: 100%;}
-.information{width: 600px;position: absolute;bottom: 150px;;right: 0;background: #768197;border-radius: 8px;padding: 0 20px 20px 20px;opacity: 0.91;}
-.information_top{width: 100%;color: white;height: 60px;line-height: 60px;padding-left: 10px;font-size: 20px;}
-.information_top>span{position: absolute;right: 30px;font-size: 22px;cursor: pointer;}
+.information{width: 500px;position: absolute;bottom: 150px;;right: 50px;background: #768197;border-radius: 8px;padding: 0 20px 20px 20px;opacity: 0.91;}
+.information_top{width: 100%;color: white;height: 45px;line-height: 45px;padding-left: 10px;font-size: 18px;}
+.information_top>span{position: absolute;right: 30px;font-size: 18px;cursor: pointer;}
 .information_bottom{width: 100%;padding: 10px;background: white;border-radius: 5px;color: #494949;}
-.information_bottom_top{width: 100%;height: 50px;text-align: right;}
-.information_bottom_bttom>table td{height: 30px;line-height: 30px;font-size: 17px;}
-.information_bottom_bttom>table td:nth-of-type(1),.information_bottom_bttom>table td:nth-of-type(3){width: 20%;letter-spacing:3px;text-align: center;background: #f2f4f9;}
+.information_bottom_top{width: 100%;height: 30px;line-height: 30px;text-align: right;}
+.information_bottom_bttom>table td{height: 25px;line-height: 25px;font-size: 14px;}
+.information_bottom_bttom>table td:nth-of-type(1),.information_bottom_bttom>table td:nth-of-type(3){width: 20%;letter-spacing:2px;text-align: center;background: #f2f4f9;}
 .information_bottom_bttom>table th{padding-left: 20px;}
 
-.information_two{width: 600px;position: absolute;right: 0;bottom: 70px;height: 60px;line-height: 60px;border-radius: 30px;background: linear-gradient(to right, #687694 , #313f61);opacity: 0.96;display: flex;justify-content: center;align-items: center;}
+.information_two{width: 500px;position: absolute;right: 50px;bottom: 70px;height: 60px;line-height: 60px;border-radius: 30px;background: linear-gradient(to right, #687694 , #313f61);opacity: 0.96;display: flex;justify-content: center;align-items: center;}
 .information_two>span{color: white;font-size: 18px;padding-left: 15px;}
 </style>
 <style lang='less'>

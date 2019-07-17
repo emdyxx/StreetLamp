@@ -16,8 +16,8 @@
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='序列号';type='2';">型号</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='类型';type='3';">状态</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='状态';type='3';">状态</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <div>
@@ -25,19 +25,12 @@
                         <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='2'">
-                        <el-select v-model="modelId" size='small' clearable style='width:195px;' placeholder="请选择">
-                            <el-option
-                            v-for="item in options"
-                            :key="item.id"
-                            :label="item.modelName"
-                            :value="item.id">
-                            </el-option>
-                        </el-select>
+                        <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='3'">
-                        <el-select v-model="value1" clearable placeholder="请选择" size='small'>
+                        <el-select v-model="value" clearable placeholder="请选择" size='small'>
                             <el-option
-                            v-for="item in options1"
+                            v-for="item in options"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -71,6 +64,12 @@
                     prop="nickName"
                     align='center'
                     label="名称"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    prop="serialNumber"
+                    align='center'
+                    label="序列号"
                     min-width="110">
                     </el-table-column>
                     <el-table-column
@@ -162,12 +161,10 @@ export default {
             pageSize:10,
             pageIndex:1,
             total:50,
-            concentratorSn:'',
             nickName:'',
-            options:[],
-            modelId:'',
-            options1:[{label:'离线',value:'0'},{label:'在线',value:'1'}],
-            value1:'',
+            serialNumber:'',
+            options:[{label:'离线',value:'0'},{label:'在线',value:'1'}],
+            value:'',
         }
     },
     mounted(){
@@ -176,8 +173,8 @@ export default {
     methods:{
         handleCommand(){
             this.nickName=''
-            this.modelId=''
-            this.value1=''
+            this.serialNumber=''
+            this.value=''
         },
         formatRole:function(val, column, cellValue, index){
             if(cellValue == null||cellValue == undefined||cellValue == ''){
@@ -266,10 +263,9 @@ export default {
                 size:that.pageSize,
                 poleId:'',
                 projectIds:sessionStorage.projectId,
-                concentratorSn:that.concentratorSn,
                 nickName:that.nickName,
-                modelId:that.modelId,
-                online:that.value1,
+                serialNumber:that.serialNumber,
+                online:that.value,
                 dataType:1,
             }
             $.ajax({

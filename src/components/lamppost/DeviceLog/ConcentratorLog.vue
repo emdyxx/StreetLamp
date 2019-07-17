@@ -72,9 +72,15 @@
                     min-width="55">
                     </el-table-column>
                     <el-table-column
+                    prop="createUser"
+                    align='center'
+                    label="操作用户"
+                    min-width="145">
+                    </el-table-column>
+                    <el-table-column
                     prop="nickName"
                     align='center'
-                    label="名称"
+                    label="设备名称"
                     min-width="100">
                     </el-table-column>
                     <el-table-column
@@ -102,14 +108,14 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                    prop="createUser"
+                    prop="createTime"
                     align='center'
-                    label="操作人员"
-                    min-width="145">
+                    label="操作时间"
+                    min-width="150">
                     </el-table-column>
                     <el-table-column
-                    prop="createTime"
-                    label="操作时间"
+                    prop="content"
+                    label="操作明细"
                     align='center'
                     show-overflow-tooltip>
                     </el-table-column>
@@ -141,9 +147,15 @@
                     min-width="55">
                     </el-table-column>
                     <el-table-column
+                    prop="createUser"
+                    align='center'
+                    label="操作用户"
+                    min-width="145">
+                    </el-table-column>
+                    <el-table-column
                     prop="nickName"
                     align='center'
-                    label="名称"
+                    label="设备名称"
                     min-width="100">
                     </el-table-column>
                     <el-table-column
@@ -171,14 +183,14 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                    prop="createUser"
+                    prop="createTime"
                     align='center'
-                    label="操作人员"
-                    min-width="145">
+                    label="控制时间"
+                    min-width="150">
                     </el-table-column>
                     <el-table-column
-                    prop="createTime"
-                    label="操作时间"
+                    prop="content"
+                    label="控制明细"
                     align='center'
                     show-overflow-tooltip>
                     </el-table-column>

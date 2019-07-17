@@ -6,20 +6,8 @@
             </div>
             <div class="mapHome_left_bottom">
                 <div v-for="item in menu" :id=item.id :key=item.id :class="item.id==type? 'background':''" @click="Jump(item)">
-                    <template v-if="item.code=='managementService'">
-                        <img src="../../assets/img/system.png" alt="">
-                        <p>{{item.menuName}}</p>
-                    </template>
-                    <template v-if="item.code=='solinDeviceService'">
-                        <img src="../../assets/img/Setup.png" alt="">
-                        <p>{{item.menuName}}</p>
-                    </template>
                     <template v-if="item.code=='solinMapService'">
                         <img src="../../assets/img/GIS.png" alt="">
-                        <p>{{item.menuName}}</p>
-                    </template>
-                    <template v-if="item.code=='patrolService'">
-                        <img src="../../assets/img/patrolService.png" alt="">
                         <p>{{item.menuName}}</p>
                     </template>
                     <template v-if="item.code=='solinLampMap'">
@@ -107,21 +95,12 @@ export default {
                 success:function(data){
                     if(data.errorCode==0){
                         that.menu = data.result.menus
-                        $.ajax({
-                            type:'get',
-                            async:true,
-                            dataType:'json',
-                            url:that.serverurl+'/v1/manage/menu/0',
-                            contentType:'application/json;charset=UTF-8',
-                            data:{},
-                            success:function(data){
-                                if(data.errorCode==0){
-                                    that.menu.unshift(data.result.menus[0])
-                                }else{
-                                    that.errorCode(data)
-                                }
-                            },
-                        })
+                        for(var i = 0;i<that.menu.length;i++){
+                            if(that.menu[i].code=='solinDeviceService'||that.menu[i].code=='patrolService'){
+                                that.menu.splice(i,1)
+                                i--
+                            }
+                        }
                     }else{
                         that.errorCode(data)
                     }
@@ -141,14 +120,22 @@ export default {
 </script>
 <style scoped>
 .mapHome{width: 100%;height: 100%;}
-.mapHome_left{width: 90px;height: 100%;background: #303e60;}
-.mapHome_left_top{width: 100%;height: 80px;display: flex;justify-content: center;align-items: center;}
-.mapHome_left_top>img{cursor: pointer;}
-.mapHome_left_bottom{padding-top: 20px;}
-.mapHome_left_bottom>div{padding: 15px 10px 15px 10px;cursor: pointer;text-align: center;}
-.mapHome_left_bottom>div>img:hover{transition: all .5s;transform: scale(1.1);}
-.mapHome_left_bottom>div>p{margin: 0;padding:10px 0 0 0;color: #b2bdca;}
+.mapHome_left{width: 77px;height: 100%;background: #303e60;}
+.mapHome_left_top{width: 100%;height: 48px;display: flex;justify-content: center;align-items: center;}
+.mapHome_left_top>img{cursor: pointer;width: 30px;}
+.mapHome_left_bottom{padding-top: 30px;}
+.mapHome_left_bottom>div{padding: 10px 10px 10px 10px;cursor: pointer;text-align: center;}
+.mapHome_left_bottom>div>img{transform: scale(0.8);}
+.mapHome_left_bottom>div>img:hover{transition: all .5s;transform: scale(0.9);}
+.mapHome_left_bottom>div>p{margin: 0;padding:5px 0 0 0;color: #b2bdca;}
 .background{background: #1f293d;}
-
-.mapHome_right{position: absolute;top: 0;left: 90px;right: 0;bottom:0;}
+.mapHome_right{position: absolute;top: 0;left:77px;right: 0;bottom:0;}
+</style>
+<style lang='less'>
+#borderRadiu40{border-radius:40px !important;}
+#Pattern{
+    .el-radio-button__inner{
+        width:136px !important;height: 60px;line-height: 35px;font-size: 18px;
+    }
+}
 </style>

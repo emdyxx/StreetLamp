@@ -43,6 +43,18 @@
                 min-width="100">
                 </el-table-column>
                 <el-table-column
+                prop="nickName"
+                align='center'
+                label="设备名称"
+                min-width="100">
+                </el-table-column>
+                <el-table-column
+                prop="serialNumber"
+                align='center'
+                label="序列号"
+                min-width="130">
+                </el-table-column>
+                <el-table-column
                 align='center'
                 label="操作类别"
                 min-width="80">

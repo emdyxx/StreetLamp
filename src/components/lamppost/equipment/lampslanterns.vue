@@ -895,7 +895,6 @@ export default {
         // 群组策略标签页切换
         GroupStrategyClick(){
             var that = this;
-            console.log(that.GroupStrategyType)
             if(that.GroupStrategyType=='0'){
                 //请求集中器列表信息
                 that.ConcentratorManagement()

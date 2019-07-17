@@ -840,7 +840,6 @@ export default {
             });
             
             $('#jstree').bind("activate_node.jstree.jstree", function (e, data) {
-                console.log(data.node);
                 if(data.node.id==''||data.node.id==undefined){
                 }else{
                     that.sizeType = data.node.original

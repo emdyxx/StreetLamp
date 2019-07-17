@@ -217,7 +217,7 @@
                 <el-button @click="addControl" type="primary">确 定</el-button>
             </span>
         </el-dialog>
-        <!-- 输出控制模态框 -->
+        <!-- 工作模式模态框 -->
         <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:650px;">
                 <div class="modal-content">

@@ -39,6 +39,18 @@
                 min-width="100">
                 </el-table-column>
                 <el-table-column
+                prop="nickName"
+                align='center'
+                label="设备名称"
+                min-width="100">
+                </el-table-column>
+                <el-table-column
+                prop="serialNumber"
+                align='center'
+                label="序列号"
+                min-width="130">
+                </el-table-column>
+                <el-table-column
                 align='center'
                 label="操作类别"
                 min-width="80">
@@ -46,15 +58,9 @@
                         <span v-if="scope.row.operatType=='0'">添加</span>
                         <span v-if="scope.row.operatType=='1'">编辑</span>
                         <span v-if="scope.row.operatType=='2'">删除</span>
-                        <span v-if="scope.row.operatType=='3'">启用/禁用</span>
-                        <span v-if="scope.row.operatType=='4'">审核</span>
+                        <span v-if="scope.row.operatType=='3'">绑定项目</span>
+                        <span v-if="scope.row.operatType=='4'">设置位置</span>
                     </template>
-                </el-table-column>
-                <el-table-column
-                prop="serialNumber"
-                align='center'
-                label="灯杆编号"
-                min-width="80">
                 </el-table-column>
                 <el-table-column
                 prop="createTime"
@@ -90,16 +96,23 @@ export default {
     data () {
         return {
             serverurl:localStorage.serverurl,
-            options:[{
-                value: '0',
-                label: '添加'
+            options:[
+                {
+                    value: '0',
+                    label: '添加'
                 },{
-                value: '1',
-                label: '编辑'
+                    value: '1',
+                    label: '编辑'
                 },{
                     value: '2',
                     label: '删除'
-                }
+                },{
+                    value: '3',
+                    label: '绑定项目'
+                },{
+                    value: '4',
+                    label: '设置位置'
+                },
             ],
             value:'',
             serialNumber:'',

@@ -237,8 +237,8 @@
                             速度(像素)
                             <el-input v-model="timeData[i].site[j].speed" @change="timeChange" placeholder="速度(像素)" size="small" style="width:146px;"></el-input>
                         </div>
-                        <div v-if="timeData[i].site[j].mediaType=='2'" style='height:130px;'>
-                            <div id="editor_content" ref="editor" style="text-align:left;width:100%;height:200px;margin-left: 0 !important;"></div>
+                        <div v-if="timeData[i].site[j].mediaType=='2'" style='height:330px;'>
+                            <div id="editor_content" ref="editor" style="text-align:left;width:100%;height:300px;margin-left: 0 !important;"></div>
                         </div>
                         <!-- <div>
                             入场特效
@@ -443,7 +443,6 @@ export default {
                 this.timeData.push({site:[]})
             }
             if(val=='1'){
-                console.log(index,this.timeData)
                 if(this.timeData[index].site.length>0){
                     this.$message({
                         message: '请先移除时间轴所有媒体',
@@ -613,7 +612,6 @@ export default {
         },
         //视图放大缩小
         scale(val){
-            console.log(123)
             var that = this
             if(val=='0'){
                 this.scaleLevel = this.scaleLevel+0.5
@@ -635,7 +633,6 @@ export default {
         },
         //判断指针所在的的时间,显示对应时间段的媒体
         time(){
-            console.log(456)
             var that = this;
             var left = $('.axis').css('left').split('px')
             left = Number(left[0])/10
@@ -702,7 +699,6 @@ export default {
                 },50)
             }, 20);
             if(that.i==''||that.j==''){return}
-            console.log(that.timeData[that.i])
             if(that.timeData[that.i].site[that.j].mediaType=='2'){
                 $('#editor_content').html('')
                 setTimeout(function(){
@@ -805,7 +801,6 @@ export default {
         //保存高级节目
         mediaSave(val){
             var that = this;
-            console.log(that.programName)
             if(that.programName==''){
                 that.$message({
                     message: '节目名称不能为空',

@@ -356,7 +356,6 @@ export default {
         clickRow(row){this.$refs.moviesTable.toggleRowSelection(row)},   
         //图片发生变化事件
         handleRemove(file, fileList) {
-            console.log(file, fileList);
             if(this.type=='1'){
                 if(file.id==''||file.id==undefined||file.id==null){
 
@@ -556,6 +555,10 @@ export default {
                                 that.details.patrolSiteImgList[i].url = that.serverurl+that.details.patrolSiteImgList[i].imgUrl
                             }
                             that.fileList = that.details.patrolSiteImgList
+                            for(var i=0;i<that.details.patrolItemList.length;i++){
+                                that.details.patrolItemList[i].id = that.details.patrolItemList[i].itemId
+                                that.details.patrolItemList[i].categoryName = that.details.patrolItemList[i].itemCategoryName
+                            }
                             that.termData_left = that.details.patrolItemList
                         }
                     }else{

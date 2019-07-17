@@ -829,7 +829,6 @@ export default {
                 }
                 this.tableData4 = arr
                 this.dialogVisible = true;
-                console.log(this.tableData4)
             }
             if(index=='1'){
                 this.tableData6 = this.tableData3[val.$index].relaySceneOutputDTOs
@@ -1017,7 +1016,6 @@ export default {
     },
     created(){
         this.tableData = []
-        console.log(123456789)
         this.ready()
     }
 }

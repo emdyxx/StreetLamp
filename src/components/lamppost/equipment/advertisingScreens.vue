@@ -1347,11 +1347,11 @@ export default {
             options:[
                 {
                     value:0,
-                    label:'关闭'
+                    label:'离线'
                 },
                 {
                     value:1,
-                    label:'开启'
+                    label:'在线'
                 }
             ],
             value:'',
@@ -1888,7 +1888,6 @@ export default {
                 for(var i=0;i<that.switchData.checkList.length;i++){
                     that.switchData.checkList[i] = Number(that.switchData.checkList[i])
                 }
-                console.log(that.switchData)
             }
             if(val=='2'){
                 if(that.switchsite.length==0){
@@ -3047,7 +3046,6 @@ export default {
             formdate.append('creatorId',1)
             if(value[0]=='video'){
                 type='1'
-                console.log(value)
                 if(value[1]=='mp4'||value[1]=='3gpp'||value[1]=='MP4'||value[1]=='3GPP'){
                     
                 }else{
@@ -3561,7 +3559,7 @@ export default {
                 data:{
                    page:that.pageIndex,
                    size:that.pageSize,
-                   status:that.value,
+                   online:that.value,
                    nickName:that.nickName,
                    serialNumber:that.serialNumber,
                    poleId:'',

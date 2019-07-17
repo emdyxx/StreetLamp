@@ -1,8 +1,8 @@
 <template>
   <div class="login">
-	  	<div class="login_left">
-			  <img src="../assets/img/logo.png" alt="">
-		  </div>
+		<div class="login_left">
+			<img src="../assets/img/logo.png" alt="">
+		</div>
 		<div class="login_right">
 			<img src="../assets/img/solin.png" alt="">
 			<p>登录</p>
@@ -17,7 +17,6 @@
 			<el-checkbox v-model="checked">记住密码</el-checkbox>
 			<el-button type="primary" @click="login" :loading="loading">登录</el-button>
 		</div>
-      
   </div>
 </template>
 
@@ -151,12 +150,14 @@ input{background:none;outline:none;}
 
 .login{width:100%;height:100%;display: flex;}
 .login_left{width: 60%;background-image:url('../assets/img/beijing.jpg');background-size: 100% 100%;background-repeat: no-repeat;display: flex;justify-content: center;align-items: center;}
-.login_right{width: 40%;background: white;padding: 7% 5% 0 5%;}
-.login_right>p{padding: 50px 0 120px 0;font-size: 28px;font-weight: 600;color: #666666;}
+.login_right{width: 40%;background: white;padding: 170px 5% 0 5%;}
+.login_right>p{padding: 34px 0 50px 0;margin:0;font-size: 24px;font-weight: 600;color: #666666;}
+
+
 
 .login_right>label{width: 100%;display: flex;padding: 0 0 0 0;border-bottom: 1px solid #e4e4e4;}
-.login_right>label>img{padding-bottom: 10px;}
-.login_right>label>input{margin-left: 25px;border: none;font-size: 18px;}
-.login_right>label:nth-of-type(3){border: none;margin:30px 0 65px 0;padding: 0;color: #9d9d9d;}
-.login_right>button{width: 100%;height: 70px;font-size: 22px;font-weight: 600;}
+.login_right>label>img{padding-bottom: 10px;width: 21px;}
+.login_right>label>input{margin-left: 25px;border: none;font-size: 16px;}
+.login_right>label:nth-of-type(3){border: none;margin:10px 0 36px 0;padding: 0;color: #9d9d9d;}
+.login_right>button{width: 100%;height: 48px;font-size: 20px;}
 </style>

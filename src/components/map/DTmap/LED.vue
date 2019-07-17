@@ -2,7 +2,7 @@
     <!-- 单灯地图页面 -->
     <div class="SingleLamp">
         <div class="project_top_left">
-            <el-select v-model="value" @change="projectChange" placeholder="请选择" id="borderRadiu40">
+            <el-select v-model="value" size="small" @change="projectChange" placeholder="请选择" id="borderRadiu40">
                 <el-option
                 v-for="item in options"
                 :key="item.id"
@@ -14,7 +14,7 @@
         <div class="statistical">
             <div class="statistical_top">
                 <img src="../../../assets/img/staticdeng.png" alt="">
-                单灯设备状态
+                LED设备状态
             </div>
             <hr>
             <div class="statistical_equipment">
@@ -43,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <div class="weather" :id="timeData.type2=='1' ? 'weather1':''||timeData.type2=='2' ? 'weather2':''||timeData.type2=='3' ? 'weather3':''">
+        <!-- <div class="weather" :id="timeData.type2=='1' ? 'weather1':''||timeData.type2=='2' ? 'weather2':''||timeData.type2=='3' ? 'weather3':''">
             <div>
                 <span>
                     {{timeData.temperature}}℃
@@ -57,51 +57,52 @@
                 <p>{{timeData.Hours}}:{{timeData.Minutes}}:{{timeData.Seconds}}</p>
                 <p>{{timeData.FullYear}}/{{timeData.Month}}/{{timeData.Dates}} 星期{{timeData.getDay}}</p>
             </div>
-        </div>
+        </div> -->
         <div class="information" v-if="information_type">
             <div class="information_top">
                 <span>设备信息</span>
-                <span @click="information_type=false">X</span>
+                <span style="font-size:14px;" @click="information_type=false">X</span>
             </div>
             <div class="information_bottom">
-                <div>
-                    <span>名&nbsp;&nbsp;&nbsp;称:</span>
-                    <span>{{informationData.nickName}}</span>
-                </div>
-                <div>
-                    <span>序&nbsp;列&nbsp;号:</span>
-                    <span>{{informationData.serialNumber}}</span>
-                </div>
-                <div>
-                    <span>宽 × 高:</span>
-                    <span>{{informationData.width}} × {{informationData.height}}</span>
-                </div>
-                <div>
-                    <span>当前任务:</span>
-                    <span v-if="informationData.taskName==null">-------</span>
-                    <span v-else>{{informationData.taskName}}</span>
-                </div>
-                <div>
-                    <span>在线状态:</span>
-                    <span>
-                        <template v-if="informationData.online=='1'">在线</template>
-                        <template v-else>离线</template>
-                    </span>
-                </div>
-                <div>
-                    <span>屏幕状态:</span>
-                    <span>
-                        <template v-if="informationData.status=='1'">开启</template>
-                        <template v-else>关闭</template>
-                    </span>
-                </div>
-                <div>
-                    <span>创建时间:</span>
-                    <span style="letter-spacing:0;">{{informationData.createTime}}</span>
-                </div>
-                <!-- <div style="text-align: right;">
-                    <el-button type="primary" size="small">预览</el-button>
-                </div> -->
+                <table class="table table-bordered information_bottom_table">
+                    <tr>
+                        <td>名&emsp;&emsp;称:</td>
+                        <td>{{informationData.nickName}}</td>
+                    </tr>
+                    <tr>
+                        <td>序 &nbsp;列 &nbsp;号:</td>
+                        <td>{{informationData.serialNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td>宽&nbsp; × &nbsp;高:</td>
+                        <td>{{informationData.width}} × {{informationData.height}}</td>
+                    </tr>
+                    <tr>
+                        <td>当前任务:</td>
+                        <td>
+                            <template v-if="informationData.taskName==null">-------</template>
+                            <template v-else>{{informationData.taskName}}</template>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>在线状态:</td>
+                        <td>
+                            <template v-if="informationData.online=='1'">在线</template>
+                            <template v-else>离线</template>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>屏幕状态:</td>
+                        <td>
+                            <template v-if="informationData.status=='1'">开启</template>
+                            <template v-else>关闭</template>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>创建时间</td>
+                        <td>{{informationData.createTime}}</td>
+                    </tr>   
+                </table>
             </div>
         </div>
         <div class="allmap" v-if="locationType=='1'">
@@ -151,7 +152,7 @@ export default {
         }
     },
     mounted(){
-       this.times()
+    //    this.times()
     },
     methods:{
         //获取有权限的项目
@@ -168,9 +169,20 @@ export default {
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
+                        for(var i = 0;i<data.result.projects.length;i++){
+                            if(data.result.projects[i].id==0){
+                                data.result.projects.splice(i,1)
+                                i--
+                            }
+                        }
                         that.options = data.result.projects
                         that.locationType = that.options[0].locationType
-                        that.value = that.options[0].id
+                        if(sessionStorage.projectId==''||sessionStorage.projectId==null||sessionStorage.projectId==undefined){
+                            that.value = that.options[0].id
+                        }else{
+                            that.value = Number(sessionStorage.projectId)
+                        }
+                        // that.value = that.options[0].id
                         var name = that.options[0].area.mergerName
                         var area = name.split(',')
                         that.timeData.City = area[2]
@@ -193,7 +205,8 @@ export default {
                     this.locationType = this.options[i].locationType
                 }
             }
-            this.weatherRequest()
+            sessionStorage.projectId = id;
+            // this.weatherRequest()
             this.Statistics()
             this.ready()
         },
@@ -225,7 +238,7 @@ export default {
                     {
                         name:'类型',
                         type:'pie',
-                        radius: ['72%', '88%'],
+                        radius: ['80%', '95%'],
                         avoidLabelOverlap: false,
                         label: {
                             normal: {
@@ -332,7 +345,7 @@ export default {
                         that.readyData = data.result.list
                         if(that.locationType=='1'){
                             // 百度地图API功能
-                            var map = new BMap.Map("allmap");    // 创建Map实例
+                            var map = new BMap.Map("allmap",{enableMapClick:false});    // 创建Map实例
                             if(data.result.list.length==0){
                                 map.centerAndZoom(that.timeData.City, 16); 
                             }else{
@@ -368,6 +381,9 @@ export default {
                                     map.addOverlay(marker);
                                 } 
                             }
+                            map.setMapStyleV2({     
+                                styleId: '7ff9f4f543ec7f2704516df1a246f110'
+                            });
                             //鼠标左键请求基本信息
                             map.addEventListener("click", function (e) {
                                 if(e.overlay){
@@ -432,25 +448,25 @@ export default {
         this.project()
     },
     beforeDestroy(){
-        clearInterval(this.time)
-        this.time = null
+        // clearInterval(this.time)
+        // this.time = null
     }
 }
 </script>
 <style scoped>
 hr{margin: 0;}
 .SingleLamp{width: 100%;height: 100%;position: relative;}
-.project_top_left{position: absolute;top: 0;left: 0;width: 450px;height: 81px;background: #303e60;border-top-right-radius: 40px;border-bottom-right-radius: 40px;display: flex;justify-content: center;align-items: center;z-index: 2;}
-.project_top_left>div{width: 350px;}
-.statistical{width: 410px;height: 285px;border-radius: 10px;box-shadow: 2px 2px 8px 1px #303e60;position: absolute;top: 110px;left: 35px;padding: 0 15px 0 15px;z-index: 2;background: white;}
-.statistical_top{height: 67px;display: flex;align-items: center;font-size: 20px;color: #333333;}
-.statistical_top>img{padding-right: 15px;}
-.statistical_equipment{width: 100%;padding: 15px 20px;height: 215px;display: flex;}
-.statistical_equipment_left{width: 200px;height: 100%;}
-.statistical_equipment_right{width: 150px;height: 100%;padding: 15px 0 20px 10px;}
-.statistical_equipment_right>div{padding-top: 5px;padding-left: 15px;}
-.statistical_equipment_right>div>span:nth-of-type(1){font-size: 18px;margin: 0 20px 0 5px;;}
-.weather{position: absolute;top:35px;right:35px;width: 355px;height: 193px;border-radius: 27px;box-shadow: 2px 2px 8px 1px #303e60;color: white;z-index: 2;}
+.project_top_left{position: absolute;top: 0;left: 0;width: 403px;height: 48px;background: #303e60;border-top-right-radius: 40px;border-bottom-right-radius: 40px;display: flex;justify-content: center;align-items: center;z-index: 2;}
+.project_top_left>div{width: 348px;}
+.statistical{width: 350px;height: 190px;border-radius: 10px;box-shadow: 3px 3px 5px #999;position: absolute;top: 75px;left: 10px;padding: 0 15px 0 15px;z-index: 2;background: white;}
+.statistical_top{height: 40px;display: flex;align-items: center;font-size: 15px;color: #333333;}
+.statistical_top>img{padding-right: 15px;width: 40px;}
+.statistical_equipment{width: 100%;padding: 5px 20px;display: flex;}
+.statistical_equipment_left{width:170px;height:115px;margin-top: 10px;}
+.statistical_equipment_right{height: 100%;}
+.statistical_equipment_right>div{padding-top: 2px;padding-left: 15px;}
+.statistical_equipment_right>div>span:nth-of-type(1){font-size: 14px;}
+/* .weather{position: absolute;top:35px;right:35px;width: 355px;height: 193px;border-radius: 27px;box-shadow: 2px 2px 8px 1px #303e60;color: white;z-index: 2;}
 #weather1{background: url('../../../assets/img/tq3.png') 100% 100%;}
 #weather2{background: url('../../../assets/img/tq4.png') 100% 100%;}
 #weather3{background: url('../../../assets/img/tq1.png') 100% 100%;}
@@ -462,14 +478,15 @@ hr{margin: 0;}
 .weather>div:nth-of-type(2){width: 100%;padding:0 20px 0 0;text-align: right;}
 .weather>div:nth-of-type(2)>p{margin: 0;}
 .weather>div:nth-of-type(2)>p:nth-of-type(1){font-size: 44px;height: 55px;font-weight: 600;}
-.weather>div:nth-of-type(2)>p:nth-of-type(2){font-size: 22px;}
-.information{width: 330px;height: 430px;padding:0 15px 17px 15px;border-radius: 8px;background: #737d93;position: absolute;top:430px;left:120px;z-index: 2;}
-.information_top{width: 100%;height: 65px;line-height: 65px;color: white;font-size: 22px;padding-left: 15px;}
-.information_top>span:nth-of-type(2),.lampData_top>span:nth-of-type(2){position: absolute;right: 25px;font-size: 22px;cursor: pointer;color: #dfe1e8;}
-.information_bottom{width: 100%;height: 340px;;border-radius: 5px;background: white;padding: 5px 5px 10px 5px;}
-.information_bottom>div{padding-top: 20px;font-size: 17px;}
-.information_bottom>div>span:nth-of-type(1){display: inline-block;width: 90px;text-align: right;}
-.information_bottom>div>span:nth-of-type(2){padding-left: 20px;letter-spacing:1px;}
+.weather>div:nth-of-type(2)>p:nth-of-type(2){font-size: 22px;} */
+.information{width: 256px;height: 330px;border-radius:5px;position: absolute;top:350px;left:170px;z-index: 2;box-shadow: 3px 3px 5px #999;}
+.information_top{width: 100%;height: 45px;line-height: 45px;background:white;color: #333333;font-size: 16px;padding-left: 15px;border-bottom: 1px solid #ebeff5;;border-top-left-radius: 5px;border-top-right-radius: 5px;}
+.information_top>span:nth-of-type(2),.lampData_top>span:nth-of-type(2){position: absolute;right: 10px;cursor: pointer;}
+.information_bottom{padding:10px;position: absolute;top: 45px;bottom: 0;background: white;width: 100%;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;}
+.information_bottom_table{font-size: 12px;}
+.information_bottom_table>tr{height: 35px;line-height: 35px;border: 1px solid #ebeff5;}
+.information_bottom_table>tr>td:nth-of-type(1){width: 40%;background: #f3f4f9;text-align: center;}
+.information_bottom_table>tr>td:nth-of-type(2){text-align: left;padding-left: 5px;}
 .allmap{width: 100%;height: 100%;}
 .allmap>div{width: 100%;height: 100%;}
 

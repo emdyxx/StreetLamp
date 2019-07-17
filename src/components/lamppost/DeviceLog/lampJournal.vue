@@ -78,9 +78,15 @@
                     min-width="100">
                     </el-table-column>
                     <el-table-column
+                    prop="nickName"
+                    align='center'
+                    label="设备名称"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
                     prop="serialNumber"
                     align='center'
-                    label="单灯序列号"
+                    label="序列号"
                     min-width="130">
                     </el-table-column>
                     <el-table-column
@@ -151,14 +157,20 @@
                     min-width="100">
                     </el-table-column>
                     <el-table-column
+                    prop="nickName"
+                    align='center'
+                    label="设备名称"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
                     prop="serialNumber"
                     align='center'
-                    label="单灯序列号"
-                    min-width="120">
+                    label="序列号"
+                    min-width="130">
                     </el-table-column>
                     <el-table-column
                     align='center'
-                    label="操控类别"
+                    label="控制类别"
                     min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.controlType=='1'">开启</span>
@@ -171,7 +183,7 @@
                     </el-table-column>
                     <el-table-column
                     align='center'
-                    label="操控状态"
+                    label="控制状态"
                     min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.controlStatus=='0'">成功</span>
@@ -181,7 +193,7 @@
                     <el-table-column
                     prop="createTime"
                     align='center'
-                    label="操作时间"
+                    label="控制时间"
                     min-width="145">
                     </el-table-column>
                     <el-table-column

@@ -50,6 +50,12 @@
                 min-width="100">
                 </el-table-column>
                 <el-table-column
+                prop="serialNumber"
+                align='center'
+                label="序列号"
+                min-width="130">
+                </el-table-column>
+                <el-table-column
                 align='center'
                 label="操作类别"
                 min-width="80">
@@ -58,21 +64,6 @@
                         <span v-if="scope.row.operatType=='1'">编辑</span>
                         <span v-if="scope.row.operatType=='2'">删除</span>
                     </template>
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="操作状态"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.operatStatus=='0'">成功</span>
-                        <span v-if="scope.row.operatStatus=='1'">失败</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="concentratorSn"
-                align='center'
-                label="序列号"
-                min-width="120">
                 </el-table-column>
                 <el-table-column
                 prop="createTime"

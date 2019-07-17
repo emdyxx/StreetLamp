@@ -59,8 +59,8 @@
                                     label="巡检状态"
                                     min-width="50">
                                         <template slot-scope="scope">
-                                            <span v-if="scope.row.recordId=='0'" style="color:#F56C6C;">未巡检</span>
-                                            <span v-if="scope.row.recordId=='1'" style="color:#67C23A;">已巡检</span>
+                                            <span v-if="scope.row.siteExecuteStatus=='0'" style="color:#F56C6C;">未巡检</span>
+                                            <span v-if="scope.row.siteExecuteStatus=='1'" style="color:#67C23A;">已巡检</span>
                                         </template>
                                     </el-table-column>
                                     <el-table-column

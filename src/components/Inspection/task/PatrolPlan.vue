@@ -610,7 +610,6 @@ export default {
                 data.weeks = that.checkList.join(',')
             }
             if(that.data.planPeriod=='3'){
-                console.log(that.value3)
                 data.day = that.value3.join(',')
             }
             if(that.data.planPeriod=='4'){

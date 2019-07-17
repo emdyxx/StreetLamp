@@ -245,7 +245,6 @@ export default {
         },
         //媒体check选择
         checkId(value,e){
-            console.log(value,e.target.defaultValue)
             if(value==true){
                 this.checkKey.push(e.target.defaultValue)
             }

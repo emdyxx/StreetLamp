@@ -1,7 +1,7 @@
 <template>
     <div class="GIS">
         <div class="project_top_left">
-            <el-select v-model="value" @change="projectChange" placeholder="请选择" id="borderRadiu40">
+            <el-select v-model="value" size="small" @change="projectChange" placeholder="请选择" id="borderRadiu40">
                 <el-option
                 v-for="item in options"
                 :key="item.id"
@@ -27,27 +27,27 @@
             </div>
             <hr>
             <div class="statistical_equipment">
-                <span @click="EquipmentType='1'" :class="EquipmentType=='1' ? 'statistical_equipment_background':''">单灯</span>
-                <span @click="EquipmentType='2'" :class="EquipmentType=='2' ? 'statistical_equipment_background':''">显示屏</span>
-                <span @click="EquipmentType='3'" :class="EquipmentType=='3' ? 'statistical_equipment_background':''">摄像头</span>
+                <span @click="Statistics(1)" :class="EquipmentType=='1' ? 'statistical_equipment_background':''">单灯</span>
+                <span @click="Statistics(2)" :class="EquipmentType=='2' ? 'statistical_equipment_background':''">显示屏</span>
+                <span @click="Statistics(3)" :class="EquipmentType=='3' ? 'statistical_equipment_background':''">摄像头</span>
             </div>
             <div class="statistical_bottom">
                  <div>
                     <div>
                         <img src="../../../assets/img/fault.png" alt="">
                         <span>故障</span>
-                        <span style="color:#fe3819;font-size: 22px;"><i>{{statisticalData.alarmCount}}</i></span>
+                        <span style="color:#fe3819;font-size: 14px;"><i>{{statisticalData.alarmCount}}</i></span>
                         <img src="../../../assets/img/Unknown.png" alt="" style="padding-left:30px;">
                         <span>未知</span>
-                        <span style="color:#fe9b08;font-size: 22px;"><i>{{statisticalData.otherCount}}</i></span>
+                        <span style="color:#fe9b08;font-size: 14px;"><i>{{statisticalData.otherCount}}</i></span>
                     </div>
-                    <div style="margin-top:15px;">
+                    <div style="padding-top: 15px;">
                         <img src="../../../assets/img/online.png" alt="">
                         <span>在线</span>
-                        <span style="color:#00e6ac;font-size: 22px;"><i>{{statisticalData.onlineCount}}</i></span>
+                        <span style="color:#00e6ac;font-size: 14px;"><i>{{statisticalData.onlineCount}}</i></span>
                         <img src="../../../assets/img/offline.png" alt="" style="padding-left:30px;">
                         <span>离线</span>
-                        <span style="color:#90a9bb;font-size: 22px;"><i>{{statisticalData.offlineCount}}</i></span>
+                        <span style="color:#90a9bb;font-size: 14px;"><i>{{statisticalData.offlineCount}}</i></span>
                     </div>
                  </div>
                  <div id="Equipment_echarts">
@@ -55,14 +55,14 @@
                  </div>
             </div>
         </div>
-        <div class="Pattern" id='Pattern'>
+        <!-- <div class="Pattern" id='Pattern'>
             <el-radio-group v-model="radio1">
                 <el-radio-button label="1">地图模式</el-radio-button>
                 <el-radio-button label="2">统计模式</el-radio-button>
                 <el-radio-button label="3">操作模式</el-radio-button>
             </el-radio-group>
-        </div>
-        <div class="weather" :id="timeData.type2=='1' ? 'weather1':''||timeData.type2=='2' ? 'weather2':''||timeData.type2=='3' ? 'weather3':''">
+        </div> -->
+        <!-- <div class="weather" :id="timeData.type2=='1' ? 'weather1':''||timeData.type2=='2' ? 'weather2':''||timeData.type2=='3' ? 'weather3':''">
             <div>
                 <span>
                     {{timeData.temperature}}℃
@@ -76,38 +76,40 @@
                 <p>{{timeData.Hours}}:{{timeData.Minutes}}:{{timeData.Seconds}}</p>
                 <p>{{timeData.FullYear}}/{{timeData.Month}}/{{timeData.Dates}} 星期{{timeData.getDay}}</p>
             </div>
-        </div>
+        </div> -->
         <div class="information" v-if="information_type">
             <div class="information_top">
                 <span>设备信息</span>
-                <span @click="information_type=false">X</span>
+                <span style="font-size:14px;" @click="information_type=false">X</span>
             </div>
             <div class="information_bottom">
-                <div>
-                    <span>名&nbsp;&nbsp;&nbsp;称:</span>
-                    <span>{{informationData.nickName}}</span>
-                </div>
-                <div>
-                    <span>序&nbsp;列&nbsp;号:</span>
-                    <span>{{informationData.serialNumber}}</span>
-                </div>
-                <div>
-                    <span>设备数量:</span>
-                    <span>{{informationData.deviceCount}}</span>
-                </div>
-                <div>
-                    <span>类&nbsp;&nbsp;&nbsp;型:</span>
-                    <span>
-                        <template v-if="informationData.poleType=='1'">智慧灯杆</template>
-                        <template v-else>普通灯杆</template>
-                    </span>
-                </div>
-                <div>
-                    <span>创建时间:</span>
-                    <span style="letter-spacing:0;">{{informationData.createTime}}</span>
-                </div>
+                <table class="table table-bordered information_bottom_table">
+                    <tr>
+                        <td>名&emsp;&emsp;称:</td>
+                        <td>{{informationData.nickName}}</td>
+                    </tr>
+                    <tr>
+                        <td>序&nbsp;列&nbsp;号:</td>
+                        <td>{{informationData.serialNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td>设备数量:</td>
+                        <td>{{informationData.deviceCount}}</td>
+                    </tr>
+                    <tr>
+                        <td>类&emsp;&emsp;型</td>
+                        <td>
+                            <template v-if="informationData.poleType=='1'">智慧灯杆</template>
+                            <template v-else>普通灯杆</template>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>创建时间</td>
+                        <td>{{informationData.createTime}}</td>
+                    </tr>   
+                </table>
                 <div style="text-align: right;">
-                    <el-button @click="mapdetails" type="primary" size="small">查看详情</el-button>
+                    <el-button @click="mapdetails" type="primary" size="mini">查看详情</el-button>
                 </div>
             </div>
         </div>
@@ -210,10 +212,1024 @@ export default {
             pageIndex:1,
             total:10,
             lampId:'',
+            myStyleJson:[
+                {
+                    "featureType": "water",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "on",
+                        "color": "#ccd6d7ff"
+                    }
+                }, {
+                    "featureType": "green",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "on",
+                        "color": "#dee5e5ff"
+                    }
+                }, {
+                    "featureType": "building",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "on"
+                    }
+                }, {
+                    "featureType": "building",
+                    "elementType": "geometry.fill",
+                    "stylers": {
+                        "color": "#d1dbdbff"
+                    }
+                }, {
+                    "featureType": "building",
+                    "elementType": "geometry.stroke",
+                    "stylers": {
+                        "color": "#aab6b6ff"
+                    }
+                }, {
+                    "featureType": "subwaystation",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "off",
+                        "color": "#888fa0ff"
+                    }
+                }, {
+                    "featureType": "education",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "on",
+                        "color": "#e1e7e7ff"
+                    }
+                }, {
+                    "featureType": "medical",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "on",
+                        "color": "#d1dbdbff"
+                    }
+                }, {
+                    "featureType": "scenicspots",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "on",
+                        "color": "#d1dbdbff"
+                    }
+                }, {
+                    "featureType": "highway",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "on",
+                        "weight": 4
+                    }
+                }, {
+                    "featureType": "highway",
+                    "elementType": "geometry.fill",
+                    "stylers": {
+                        "color": "#ffffffff"
+                    }
+                }, {
+                    "featureType": "highway",
+                    "elementType": "geometry.stroke",
+                    "stylers": {
+                        "color": "#cacfcfff"
+                    }
+                }, {
+                    "featureType": "highway",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "on"
+                    }
+                }, {
+                    "featureType": "highway",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#999999ff"
+                    }
+                }, {
+                    "featureType": "highway",
+                    "elementType": "labels.text.stroke",
+                    "stylers": {
+                        "color": "#ffffffff"
+                    }
+                }, {
+                    "featureType": "highway",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "on"
+                    }
+                }, {
+                    "featureType": "arterial",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "on",
+                        "weight": 2
+                    }
+                }, {
+                    "featureType": "arterial",
+                    "elementType": "geometry.fill",
+                    "stylers": {
+                        "color": "#fbfffeff"
+                    }
+                }, {
+                    "featureType": "arterial",
+                    "elementType": "geometry.stroke",
+                    "stylers": {
+                        "color": "#cacfcfff"
+                    }
+                }, {
+                    "featureType": "arterial",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "on"
+                    }
+                }, {
+                    "featureType": "arterial",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#999999ff"
+                    }
+                }, {
+                    "featureType": "arterial",
+                    "elementType": "labels.text.stroke",
+                    "stylers": {
+                        "color": "#ffffffff"
+                    }
+                }, {
+                    "featureType": "local",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "on",
+                        "weight": 1
+                    }
+                }, {
+                    "featureType": "local",
+                    "elementType": "geometry.fill",
+                    "stylers": {
+                        "color": "#fbfffeff"
+                    }
+                }, {
+                    "featureType": "local",
+                    "elementType": "geometry.stroke",
+                    "stylers": {
+                        "color": "#cacfcfff"
+                    }
+                }, {
+                    "featureType": "local",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "local",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#999999ff"
+                    }
+                }, {
+                    "featureType": "local",
+                    "elementType": "labels.text.stroke",
+                    "stylers": {
+                        "color": "#ffffffff"
+                    }
+                }, {
+                    "featureType": "railway",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "off",
+                        "weight": 1
+                    }
+                }, {
+                    "featureType": "railway",
+                    "elementType": "geometry.fill",
+                    "stylers": {
+                        "color": "#9494941a"
+                    }
+                }, {
+                    "featureType": "railway",
+                    "elementType": "geometry.stroke",
+                    "stylers": {
+                        "color": "#ffffff1a"
+                    }
+                }, {
+                    "featureType": "subway",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "off",
+                        "weight": 1
+                    }
+                }, {
+                    "featureType": "subway",
+                    "elementType": "geometry.fill",
+                    "stylers": {
+                        "color": "#c3bed433"
+                    }
+                }, {
+                    "featureType": "subway",
+                    "elementType": "geometry.stroke",
+                    "stylers": {
+                        "color": "#ffffff33"
+                    }
+                }, {
+                    "featureType": "subway",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "subway",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#979c9aff"
+                    }
+                }, {
+                    "featureType": "subway",
+                    "elementType": "labels.text.stroke",
+                    "stylers": {
+                        "color": "#ffffffff"
+                    }
+                }, {
+                    "featureType": "continent",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "on"
+                    }
+                }, {
+                    "featureType": "continent",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "on"
+                    }
+                }, {
+                    "featureType": "continent",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#333333ff"
+                    }
+                }, {
+                    "featureType": "continent",
+                    "elementType": "labels.text.stroke",
+                    "stylers": {
+                        "color": "#ffffffff"
+                    }
+                }, {
+                    "featureType": "city",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "on"
+                    }
+                }, {
+                    "featureType": "city",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "on"
+                    }
+                }, {
+                    "featureType": "city",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#454d50ff"
+                    }
+                }, {
+                    "featureType": "city",
+                    "elementType": "labels.text.stroke",
+                    "stylers": {
+                        "color": "#ffffffff"
+                    }
+                }, {
+                    "featureType": "town",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "on"
+                    }
+                }, {
+                    "featureType": "town",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "town",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#454d50ff"
+                    }
+                }, {
+                    "featureType": "town",
+                    "elementType": "labels.text.stroke",
+                    "stylers": {
+                        "color": "#ffffffff"
+                    }
+                }, {
+                    "featureType": "road",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "road",
+                    "elementType": "geometry.fill",
+                    "stylers": {
+                        "color": "#fbfffeff"
+                    }
+                }, {
+                    "featureType": "poilabel",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "districtlabel",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "poilabel",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#999999ff"
+                    }
+                }, {
+                    "featureType": "districtlabel",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#888fa0ff"
+                    }
+                }, {
+                    "featureType": "transportation",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "color": "#d1dbdbff"
+                    }
+                }, {
+                    "featureType": "companylabel",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "restaurantlabel",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "lifeservicelabel",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "carservicelabel",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "financelabel",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "otherlabel",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "village",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "district",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "land",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "color": "#edf3f3ff"
+                    }
+                }, {
+                    "featureType": "nationalway",
+                    "elementType": "geometry.stroke",
+                    "stylers": {
+                        "color": "#cacfcfff"
+                    }
+                }, {
+                    "featureType": "provincialway",
+                    "elementType": "geometry.stroke",
+                    "stylers": {
+                        "color": "#cacfcfff"
+                    }
+                }, {
+                    "featureType": "cityhighway",
+                    "elementType": "geometry.stroke",
+                    "stylers": {
+                        "color": "#cacfcfff"
+                    }
+                }, {
+                    "featureType": "road",
+                    "elementType": "geometry.stroke",
+                    "stylers": {
+                        "color": "#cacfcfff"
+                    }
+                }, {
+                    "featureType": "subwaylabel",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "subwaylabel",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "tertiarywaysign",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "tertiarywaysign",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "provincialwaysign",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "provincialwaysign",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "nationalwaysign",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "nationalwaysign",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "highwaysign",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "highwaysign",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "nationalway",
+                    "elementType": "geometry.fill",
+                    "stylers": {
+                        "color": "#fbfffeff"
+                    }
+                }, {
+                    "featureType": "nationalway",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#999999ff"
+                    }
+                }, {
+                    "featureType": "provincialway",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#999999ff"
+                    }
+                }, {
+                    "featureType": "cityhighway",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#999999ff"
+                    }
+                }, {
+                    "featureType": "cityhighway",
+                    "elementType": "labels.text.stroke",
+                    "stylers": {
+                        "color": "#ffffffff"
+                    }
+                }, {
+                    "featureType": "highway",
+                    "stylers": {
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "6"
+                    }
+                }, {
+                    "featureType": "highway",
+                    "stylers": {
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "7"
+                    }
+                }, {
+                    "featureType": "highway",
+                    "stylers": {
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "8"
+                    }
+                }, {
+                    "featureType": "highway",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "6"
+                    }
+                }, {
+                    "featureType": "highway",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "7"
+                    }
+                }, {
+                    "featureType": "highway",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "8"
+                    }
+                }, {
+                    "featureType": "highway",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "6"
+                    }
+                }, {
+                    "featureType": "highway",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "7"
+                    }
+                }, {
+                    "featureType": "highway",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "8"
+                    }
+                }, {
+                    "featureType": "nationalway",
+                    "stylers": {
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "6"
+                    }
+                }, {
+                    "featureType": "nationalway",
+                    "stylers": {
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "7"
+                    }
+                }, {
+                    "featureType": "nationalway",
+                    "stylers": {
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "8"
+                    }
+                }, {
+                    "featureType": "nationalway",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "6"
+                    }
+                }, {
+                    "featureType": "nationalway",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "7"
+                    }
+                }, {
+                    "featureType": "nationalway",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "8"
+                    }
+                }, {
+                    "featureType": "nationalway",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "6"
+                    }
+                }, {
+                    "featureType": "nationalway",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "7"
+                    }
+                }, {
+                    "featureType": "nationalway",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "8"
+                    }
+                }, {
+                    "featureType": "provincialway",
+                    "stylers": {
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "8,8",
+                        "level": "8"
+                    }
+                }, {
+                    "featureType": "provincialway",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "8,8",
+                        "level": "8"
+                    }
+                }, {
+                    "featureType": "provincialway",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "8,8",
+                        "level": "8"
+                    }
+                }, {
+                    "featureType": "cityhighway",
+                    "stylers": {
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "6"
+                    }
+                }, {
+                    "featureType": "cityhighway",
+                    "stylers": {
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "7"
+                    }
+                }, {
+                    "featureType": "cityhighway",
+                    "stylers": {
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "8"
+                    }
+                }, {
+                    "featureType": "cityhighway",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "6"
+                    }
+                }, {
+                    "featureType": "cityhighway",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "7"
+                    }
+                }, {
+                    "featureType": "cityhighway",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "8"
+                    }
+                }, {
+                    "featureType": "cityhighway",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "6"
+                    }
+                }, {
+                    "featureType": "cityhighway",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "7"
+                    }
+                }, {
+                    "featureType": "cityhighway",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off",
+                        "curZoomRegionId": "0",
+                        "curZoomRegion": "6,8",
+                        "level": "8"
+                    }
+                }, {
+                    "featureType": "cityhighway",
+                    "elementType": "geometry.fill",
+                    "stylers": {
+                        "color": "#fbfffeff"
+                    }
+                }, {
+                    "featureType": "water",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#8f5a33ff"
+                    }
+                }, {
+                    "featureType": "water",
+                    "elementType": "labels.text.stroke",
+                    "stylers": {
+                        "color": "#ffffffff"
+                    }
+                }, {
+                    "featureType": "country",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#8f5a33ff"
+                    }
+                }, {
+                    "featureType": "country",
+                    "elementType": "labels.text.stroke",
+                    "stylers": {
+                        "color": "#ffffffff"
+                    }
+                }, {
+                    "featureType": "country",
+                    "elementType": "labels.text",
+                    "stylers": {
+                        "fontsize": 28
+                    }
+                }, {
+                    "featureType": "manmade",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "color": "#dfe7e7ff"
+                    }
+                }, {
+                    "featureType": "provincialway",
+                    "elementType": "geometry.fill",
+                    "stylers": {
+                        "color": "#fbfffeff"
+                    }
+                }, {
+                    "featureType": "tertiaryway",
+                    "elementType": "geometry.fill",
+                    "stylers": {
+                        "color": "#fbfffeff"
+                    }
+                }, {
+                    "featureType": "manmade",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#999999ff"
+                    }
+                }, {
+                    "featureType": "manmade",
+                    "elementType": "labels.text.stroke",
+                    "stylers": {
+                        "color": "#ffffffff"
+                    }
+                }, {
+                    "featureType": "scenicspots",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#999999ff"
+                    }
+                }, {
+                    "featureType": "scenicspots",
+                    "elementType": "labels.text.stroke",
+                    "stylers": {
+                        "color": "#ffffffff"
+                    }
+                }, {
+                    "featureType": "airportlabel",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#999999ff"
+                    }
+                }, {
+                    "featureType": "airportlabel",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "scenicspotslabel",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#999999ff"
+                    }
+                }, {
+                    "featureType": "scenicspotslabel",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "educationlabel",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#999999ff"
+                    }
+                }, {
+                    "featureType": "educationlabel",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "medicallabel",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#999999ff"
+                    }
+                }, {
+                    "featureType": "medicallabel",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "companylabel",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "restaurantlabel",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "hotellabel",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "hotellabel",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "shoppinglabel",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "shoppinglabel",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "lifeservicelabel",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "carservicelabel",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "transportationlabel",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "transportationlabel",
+                    "elementType": "labels",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "financelabel",
+                    "elementType": "labels.icon",
+                    "stylers": {
+                        "visibility": "off"
+                    }
+                }, {
+                    "featureType": "entertainment",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "color": "#d1dbdbff"
+                    }
+                }, {
+                    "featureType": "estate",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "color": "#d1dbdbff"
+                    }
+                }, {
+                    "featureType": "shopping",
+                    "elementType": "geometry",
+                    "stylers": {
+                        "color": "#d1dbdbff"
+                    }
+                }, {
+                    "featureType": "education",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#999999ff"
+                    }
+                }, {
+                    "featureType": "education",
+                    "elementType": "labels.text.stroke",
+                    "stylers": {
+                        "color": "#ffffffff"
+                    }
+                }, {
+                    "featureType": "medical",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#999999ff"
+                    }
+                }, {
+                    "featureType": "medical",
+                    "elementType": "labels.text.stroke",
+                    "stylers": {
+                        "color": "#ffffffff"
+                    }
+                }, {
+                    "featureType": "transportation",
+                    "elementType": "labels.text.fill",
+                    "stylers": {
+                        "color": "#999999ff"
+                    }
+                }, {
+                    "featureType": "transportation",
+                    "elementType": "labels.text.stroke",
+                    "stylers": {
+                        "color": "#ffffffff"
+                    }
+                }
+            ],
         }
     },
     mounted(){
-        this.times()
+        // this.times()
     },
     methods:{
         //获取有权限的项目
@@ -230,14 +1246,24 @@ export default {
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
+                        for(var i = 0;i<data.result.projects.length;i++){
+                            if(data.result.projects[i].id==0){
+                                data.result.projects.splice(i,1)
+                                i--
+                            }
+                        }
                         that.options = data.result.projects
                         that.locationType = that.options[0].locationType
-                        that.value = that.options[0].id
+                        if(sessionStorage.projectId==''||sessionStorage.projectId==null||sessionStorage.projectId==undefined){
+                            that.value = that.options[0].id
+                        }else{
+                            that.value = Number(sessionStorage.projectId)
+                        }
                         var name = that.options[0].area.mergerName
                         var area = name.split(',')
                         that.timeData.City = area[2]
                         that.weatherRequest()
-                        that.Statistics()
+                        that.Statistics('1')
                         that.ready()
                     }else{
                         that.errorCode(data)
@@ -255,21 +1281,31 @@ export default {
                     this.locationType = this.options[i].locationType
                 }
             }
-            this.weatherRequest()
-            this.Statistics()
+            sessionStorage.projectId = id;
+            // this.weatherRequest()
+            this.Statistics('1')
             this.ready()
         },
         //获取项目下的统计数据
-        Statistics(){
+        Statistics(val){
             var that = this;
+            that.EquipmentType = val
+            var url = ''
+            if(val=='1'){url='/v1/solin/lighting/map/lamp/count'}
+            if(val=='2'){url='/v1/solin/screen/map/count'}
+            if(val=='3'){url='/v1/solin/camera/map/status'}
             $.ajax({
                 type:"get",
-                url:that.serverurl+'/v1/solin/lighting/map/lamp/count',
+                url:that.serverurl+url,
                 dataType:"json",
                 async: false,
                 data:{projectIds:that.value},
                 success:function(data){
                     if(data.errorCode=='0'){
+                        if(val=='3'){
+                            data.result.alarmCount = 0
+                            data.result.otherCount = 0
+                        }
                         that.statisticalData = data.result
                     }else{
                         that.errorCode(data)
@@ -287,7 +1323,7 @@ export default {
                     {
                         name:'类型',
                         type:'pie',
-                        radius: ['70%', '85%'],
+                        radius: ['75%', '90%'],
                         avoidLabelOverlap: false,
                         label: {
                             normal: {
@@ -299,8 +1335,8 @@ export default {
                                     return html;
                                 },
                                 textStyle:{
-                                    fontSize: 18,
-                                    color:'#000001'
+                                    fontSize: 14,
+                                    color:'#333333'
                                 }
                             },
                         },
@@ -466,7 +1502,7 @@ export default {
                         that.readyData = data.result.list
                         if(that.locationType=='1'){
                             // 百度地图API功能
-                            var map = new BMap.Map("allmap");    // 创建Map实例
+                            var map = new BMap.Map("allmap",{enableMapClick:false});    // 创建Map实例
                             if(data.result.list.length==0){
                                 map.centerAndZoom(that.timeData.City, 16); 
                             }else{
@@ -544,6 +1580,9 @@ export default {
                                 })
                                 map.addOverlay(marker);
                             }
+                            map.setMapStyleV2({     
+                                styleId: '7ff9f4f543ec7f2704516df1a246f110'
+                            });
                             //鼠标左键请求灯杆基本信息
                             map.addEventListener("click", function (e) {
                                 if(e.overlay){
@@ -552,7 +1591,6 @@ export default {
                                             that.informationData = that.readyData[i]
                                         }
                                     }
-                                    console.log(that.informationData)
                                     that.information_type = true
                                 }
                             });
@@ -565,16 +1603,13 @@ export default {
                                         that.LampPole();
                                         that.lampData_type = true;
                                         that.lampSite = null
-                                        console.log(that.RightClickCoord)
                                     }
                                 },
                             ];
                             for(var i=0; i < txtMenuItem.length; i++){
                                 menu.addItem(new BMap.MenuItem(txtMenuItem[i].text,txtMenuItem[i].callback,100));
                             }
-                            map.addContextMenu(menu);
-
-                            
+                            map.addContextMenu(menu);                         
                         }
                         if(that.locationType=='0'){
                        
@@ -628,29 +1663,29 @@ export default {
         this.project()
     },
     beforeDestroy(){
-        clearInterval(this.time)
-        this.time = null
+        // clearInterval(this.time)
+        // this.time = null
     }
 }
 </script>
 <style scoped>
 hr{margin: 0;}
 .GIS{width: 100%;height: 100%;position: relative;}
-.project_top_left{position: absolute;top: 0;left: 0;width: 490px;height: 81px;background: #303e60;border-top-right-radius: 40px;border-bottom-right-radius: 40px;display: flex;justify-content: center;align-items: center;z-index: 2;}
-.project_top_left>div{width: 400px;}
-.statistical{width: 515px;height: 285px;border-radius: 10px;box-shadow: 2px 2px 8px 1px #303e60;position: absolute;top: 110px;left: 35px;padding: 0 15px 0 15px;z-index: 2;background: white;}
-.statistical_top{height: 67px;display: flex;align-items: center;font-size: 20px;color: #333333;}
-.statistical_top>img{padding-right: 15px;}
+.project_top_left{position: absolute;top: 0;left: 0;width: 403px;height: 48px;background: #303e60;border-top-right-radius: 40px;border-bottom-right-radius: 40px;display: flex;justify-content: center;align-items: center;z-index: 2;}
+.project_top_left>div{width: 348px;}
+.statistical{width: 350px;height: 190px;border-radius: 10px;box-shadow: 3px 3px 5px #999;position: absolute;top: 75px;left: 10px;padding: 0 15px 0 15px;z-index: 2;background: white;}
+.statistical_top{height: 40px;display: flex;align-items: center;font-size: 15px;color: #333333;}
+.statistical_top>img{padding-right: 15px;width: 40px;}
 .statistical_equipment{width: 100%;padding: 15px 0;}
-.statistical_equipment>span{background: #d6dae0;padding: 5px 10px;border-radius: 3px;margin-left: 10px;cursor: pointer;color: #333333;}
+.statistical_equipment>span{font-size:12px;background: #d6dae0;padding: 5px 10px;border-radius: 3px;margin-left: 10px;cursor: pointer;color: #333333;}
 .statistical_equipment_background{background: #0097ff !important;color: white !important;}
-.statistical_bottom{width: 100%;height: 170px;padding:5px 35px;display: flex;}
-.statistical_bottom>div:nth-of-type(1){width: 270px;padding:40px 0;}
-.statistical_bottom>div:nth-of-type(2){width: 180px;}
+.statistical_bottom{width: 100%;display: flex;}
+.statistical_bottom>div:nth-of-type(1){padding-top: 15px;}
+#Equipment_echarts{width: 120px;position: absolute;right: 5px;bottom: 15px;height: 100px;}
 .statistical_bottom>div>div{display: flex;align-items: center;}
-.statistical_bottom>div>div>span{padding-left: 15px;font-size: 18px;}
+.statistical_bottom>div>div>span{padding-left: 15px;font-size: 14px;color: #333333;}
 .Pattern{position: absolute;top: 50px;right: 50px;z-index: 2;}
-.weather{position: absolute;top:135px;right:50px;width: 355px;height: 193px;border-radius: 27px;box-shadow: 2px 2px 8px 1px #303e60;color: white;z-index: 2;}
+/* .weather{position: absolute;top:135px;right:50px;width: 355px;height: 193px;border-radius: 27px;box-shadow: 2px 2px 8px 1px #303e60;color: white;z-index: 2;}
 #weather1{background: url('../../../assets/img/tq3.png') 100% 100%;}
 #weather2{background: url('../../../assets/img/tq4.png') 100% 100%;}
 #weather3{background: url('../../../assets/img/tq1.png') 100% 100%;}
@@ -662,27 +1697,21 @@ hr{margin: 0;}
 .weather>div:nth-of-type(2){width: 100%;padding:0 20px 0 0;text-align: right;}
 .weather>div:nth-of-type(2)>p{margin: 0;}
 .weather>div:nth-of-type(2)>p:nth-of-type(1){font-size: 44px;height: 55px;font-weight: 600;}
-.weather>div:nth-of-type(2)>p:nth-of-type(2){font-size: 22px;}
-.information{width: 330px;height: 420px;padding:0 15px 17px 15px;border-radius: 8px;background: #737d93;position: absolute;top:430px;left:220px;z-index: 2;}
-.information_top{width: 100%;height: 65px;line-height: 65px;color: white;font-size: 22px;padding-left: 15px;}
-.information_top>span:nth-of-type(2),.lampData_top>span:nth-of-type(2){position: absolute;right: 25px;font-size: 22px;cursor: pointer;color: #dfe1e8;}
-.information_bottom{width: 100%;height: 330px;;border-radius: 5px;background: white;padding: 5px 5px 10px 5px;}
-.information_bottom>div{padding-top: 25px;font-size: 17px;}
-.information_bottom>div>span:nth-of-type(1){display: inline-block;width: 90px;text-align: right;}
-.information_bottom>div>span:nth-of-type(2){padding-left: 20px;letter-spacing:1px;}
+.weather>div:nth-of-type(2)>p:nth-of-type(2){font-size: 22px;} */
+
+.information{width: 256px;height: 300px;border-radius:5px;position: absolute;top:350px;left:170px;z-index: 2;box-shadow: 3px 3px 5px #999;}
+.information_top{width: 100%;height: 45px;line-height: 45px;background:white;color: #333333;font-size: 16px;padding-left: 15px;border-bottom: 1px solid #ebeff5;;border-top-left-radius: 5px;border-top-right-radius: 5px;}
+.information_top>span:nth-of-type(2),.lampData_top>span:nth-of-type(2){position: absolute;right: 10px;cursor: pointer;}
+.information_bottom{padding:10px;position: absolute;top: 45px;bottom: 0;background: white;width: 100%;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;}
+.information_bottom_table{font-size: 12px;}
+.information_bottom_table>tr{height: 35px;line-height: 35px;border: 1px solid #ebeff5;}
+.information_bottom_table>tr>td:nth-of-type(1){width: 40%;background: #f3f4f9;text-align: center;}
+.information_bottom_table>tr>td:nth-of-type(2){text-align: left;padding-left: 5px;}
+
 .allmap{width: 100%;height: 100%;}
 .allmap>div{width: 100%;height: 100%;}
 .lampData{position: absolute;right: 0;bottom:40px;;width: 520px;padding: 0 15px 25px 15px;border-radius: 5px;z-index: 2;background: #727c92;opacity: .9;}
-.lampData_top{width: 100%;height: 70px;line-height: 70px;font-size: 22px;padding-left: 15px;color: white;}
+.lampData_top{width: 100%;height: 45px;line-height: 45px;font-size: 22px;padding-left: 15px;color: white;}
 .lampData_bottom{width: 100%;background: white;border-radius: 5px;padding: 8px;}
-
-
 </style>
-<style lang='less'>
-#borderRadiu40{border-radius:40px !important;}
-#Pattern{
-    .el-radio-button__inner{
-        width:136px !important;height: 60px;line-height: 35px;font-size: 18px;
-    }
-}
-</style>
+

@@ -82,7 +82,6 @@ export default {
                 if(data.node.type=='3'){
                     var inst = data.instance;
                     var selectedNode = inst.get_node(data.selected);
-                    console.log(data.node.id)
                     $.ajax({
                         url :that.serverurl+'/pole/getPoleTrueListByAreaId',
                         async:true,

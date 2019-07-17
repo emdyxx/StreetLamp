@@ -75,21 +75,21 @@
                     min-width="55">
                     </el-table-column>
                     <el-table-column
-                    prop="nickName"
+                    prop="createUser"
                     align='center'
-                    label="继电器名称"
-                    min-width="100">
+                    label="操作用户"
+                    min-width="145">
                     </el-table-column>
                     <el-table-column
-                    prop="relayNumber"
+                    prop="nickName"
                     align='center'
-                    label="继电器编号"
+                    label="设备名称"
                     min-width="100">
                     </el-table-column>
                     <el-table-column
                     prop="concentratorSn"
                     align='center'
-                    label="集中器序列号"
+                    label="序列号"
                     min-width="100">
                     </el-table-column>
                     <el-table-column
@@ -115,14 +115,14 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                    prop="createUser"
+                    prop="createTime"
                     align='center'
-                    label="操作人员"
-                    min-width="145">
+                    label="操作时间"
+                    min-width="150">
                     </el-table-column>
                     <el-table-column
-                    prop="createTime"
-                    label="操作时间"
+                    prop="content"
+                    label="操作明细"
                     align='center'
                     show-overflow-tooltip>
                     </el-table-column>
@@ -154,15 +154,15 @@
                     min-width="55">
                     </el-table-column>
                     <el-table-column
-                    prop="nickName"
+                    prop="createUser"
                     align='center'
-                    label="继电器名称"
-                    min-width="100">
+                    label="操作用户"
+                    min-width="145">
                     </el-table-column>
                     <el-table-column
-                    prop="relayNumber"
+                    prop="nickName"
                     align='center'
-                    label="继电器编号"
+                    label="设备名称"
                     min-width="100">
                     </el-table-column>
                     <el-table-column
@@ -186,23 +186,14 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                    align='center'
-                    label="控制状态"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.controlStatus=='0'">成功</span>
-                            <span v-if="scope.row.controlStatus=='1'">失败</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="createUser"
-                    align='center'
-                    label="操作人员"
-                    min-width="145">
-                    </el-table-column>
-                    <el-table-column
                     prop="createTime"
-                    label="操作时间"
+                    align='center'
+                    label="控制时间"
+                    min-width="150">
+                    </el-table-column>
+                    <el-table-column
+                    prop="content"
+                    label="控制明细"
                     align='center'
                     show-overflow-tooltip>
                     </el-table-column>

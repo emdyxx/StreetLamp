@@ -92,13 +92,6 @@
                     min-width="110">
                     </el-table-column>
                     <el-table-column
-                    prop="concentratorSn"
-                    align='center'
-                    :formatter="formatRole"
-                    label="集中器序列号"
-                    min-width="110">
-                    </el-table-column>
-                    <el-table-column
                     prop="remark"
                     align='center'
                     :formatter="formatRole"

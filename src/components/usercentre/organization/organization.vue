@@ -443,7 +443,6 @@ export default {
         addorganization(val){
             var that = this;
             // 0位添加 1为编辑
-            console.log(val)
             this.type = val
             if(val=='0'){
                 that.OrgTree(0);
@@ -604,7 +603,6 @@ export default {
                         that.options = data.result
                         if(val=='0'){
                             setTimeout(function(){
-                                console.log(data.result[0].id)
                                 that.data.optionsValue=[data.result[0].id]   //所属机构
                             },200)
                         }

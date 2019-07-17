@@ -108,11 +108,12 @@
                         </div>
                         <div class="form-group">
                             <label><span class="Required">*</span>密码:</label>
-                            <input v-model="data.loginPwd" type="password" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入密码">
+                            <input v-model="data.loginPwd" type="password" class="form-control password" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入密码">
+                            <el-button @click="Password" type="warning" size="small" icon="el-icon-edit" circle style="position:absolute;right:35px;"></el-button>
                         </div>
                         <div class="form-group">
                             <label><span class="Required">*</span>确认密码:</label>
-                            <input v-model="data.loginPwd2" type="password" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入确认密码">
+                            <input v-model="data.loginPwd2" type="password" class="form-control password" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入确认密码">
                         </div>
                         <div class="form-group">
                             <label><span class="Required">*</span>巡检员姓名:</label>
@@ -221,6 +222,8 @@ export default {
                 that.data.inspectorNumber = that.site[0].inspectorNumber
                 that.data.sex = Number(that.site[0].sex)
                 that.data.inspectorType = Number(that.site[0].inspectorType)
+                that.PasswordType = '0'
+                $(".password").attr("disabled","disabled");
                 $('#addUserSettings').modal('show')
             }
             if(val=='2'){
@@ -269,26 +272,44 @@ export default {
                 });
             }
         },
+        Password(){
+            this.PasswordType = '1'
+            $(".password").removeAttr("disabled");
+            this.data.loginPwd = ''
+            this.data.loginPwd2 = ''
+        },
         //添加,编辑保存
         Submit(){
             var that = this;
-            if(that.data.loginPwd!=that.data.loginPwd2){
-                that.$message({
-                    message: '两次密码不一致!',
-                    type: 'error'
-                });
-                return;
-            }
             var type = ''
             var data = {}
             if(that.type=='0'){
+                if(that.data.loginPwd!=that.data.loginPwd2){
+                    that.$message({
+                        message: '两次密码不一致!',
+                        type: 'error'
+                    });
+                    return;
+                }
                 type='post';
                 data.loginPwd = md5(that.data.loginPwd);
             }
             if(that.type=='1'){
                 type='put';
                 data.id = that.site[0].id;
-                data.loginPwd = that.data.loginPwd;
+                if(that.PasswordType=='1'){
+                    if(that.data.loginPwd!=that.data.loginPwd2){
+                        that.$message({
+                            message: '两次密码不一致!',
+                            type: 'error'
+                        });
+                        return;
+                    }else{
+                        data.loginPwd = md5(that.data.loginPwd);
+                    }
+                }else{
+                   data.loginPwd = '' 
+                }
             }
             data.mobile = that.data.mobile;
             data.inspectorName = that.data.inspectorName;
