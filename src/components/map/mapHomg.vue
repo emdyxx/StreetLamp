@@ -22,6 +22,10 @@
                         <img src="../../assets/img/LED.png" alt="">
                         <p>{{item.menuName}}</p>
                     </template>
+                    <template v-if="item.code=='solinSceneryControllerMap'">
+                        <img src="../../assets/img/Scenery.png" alt="">
+                        <p>{{item.menuName}}</p>
+                    </template>
                 </div>
             </div>
         </div>
@@ -79,6 +83,11 @@ export default {
                 sessionStorage.menuId = val.id
                 sessionStorage.headercolorType = '1'
                 this.$router.push({'path':'/LED',query:{id:val.id}})
+            }
+            if(val.code=='solinSceneryControllerMap'){
+                sessionStorage.menuId = val.id
+                sessionStorage.headercolorType = '1'
+                this.$router.push({'path':'/SceneryMap',query:{id:val.id}})
             }
             this.type = val.id
         },

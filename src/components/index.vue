@@ -518,6 +518,26 @@
                                 </template>
                             </div>
                         </template>
+                        <!-- 风光 -->
+                        <template v-if="item.code=='solinSceneryControllerMap'">
+                            <div @click="Scenery(item.id)" :id=item.id :key=item.id :style="'margin-left:'+item.left+'px'">
+                                <template v-if="item.type=='right'&&item.size=='1'">
+                                    <img src="../assets/img/Scenery01.png" alt="">
+                                </template>
+                                <template v-if="item.type=='right'&&item.size=='2'">
+                                    <img src="../assets/img/Scenery02.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='2'">
+                                    <img src="../assets/img/Scenery03.png" alt="" style="padding-top:53px;">
+                                </template>
+                                <template v-if="item.type=='left'&&item.size=='1'">
+                                    <img src="../assets/img/Scenery04.png" alt="">
+                                </template>
+                                <template v-if="item.type=='center'">
+                                    <img src="../assets/img/Scenery05.png" alt="" style="padding-top:53px;">
+                                </template>
+                            </div>
+                        </template>
                     </template>
                 </div>
             </div>
@@ -525,112 +545,12 @@
                 <img @click="RightShift" src="../assets/img/TurnRight.png" alt="">
             </p>
         </div>
-    </div>
-    <!-- <div class="index_top">
-        <div class="index_top_right">
-            <div class="index_top_right_text">
-                <p style="padding-top:10px;margin:0;">{{data.username}}</p>
-                <p @click="dropout" style="padding-top:7px;margin:0;cursor: pointer;">退出登录</p>
-                <p @click="dropout" style="padding-top:7px;margin:0;">{{versionNumber}}</p>
-            </div>
-            <div class="index_top_right_img" @click="imagemanage">
-                <img :src=data.icon alt="">
-            </div>
+        <div class="paging" v-if="menu.length>=4">
+            <template v-for="(item,key) in length">
+                <span :key=key :class="index==key ? 'active' : ''"></span>
+            </template>
         </div>
     </div>
-    <div class="modal fade" id="MyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header" style="display:flex;">
-                    <div class="header_img">
-                        <img :src=data.icon alt="">
-                    </div>
-                    <div class="header_right">
-                        <p>
-                            <span v-if="data.userType=='1'">管理员</span>
-                            <span v-else>普通用户</span>
-                        </p>
-                        <p>
-                            <span>登录时间 : {{data.ts}}</span>
-                        </p>
-                        <button type="button" @click="removePassword" class="btn btn-success">修改密码</button>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <table style="width:100%;">
-                        <tbody class="table_body">
-                            <tr>
-                                <td>
-                                    <div>账号:{{data.username}}</div>
-                                </td>
-                                <td>
-                                    <div>姓名:{{data.fullName}}</div>
-                                </td>
-                                <td>
-                                    <div>手机:{{data.mobile}}</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div>邮箱:{{data.email}}</div>
-                                </td>
-                                <td>
-                                    <div>归属机构:{{data.org.orgName}}</div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="index_center">
-        <template v-for="item in menu">
-            <template v-if="item.code=='managementService'">
-                <div class=index_center_top_usercentre @click="usermanage(item.id)" :id=item.id :key=item.id>
-                    <img src="../assets/user.png" alt="">
-                    <span>{{item.menuName}}</span>
-                </div>
-            </template>
-            <template v-if="item.code=='solinDeviceService'">
-                <div class='index_center_top_lampost' @click="lamppost(item.id)" :id=item.id :key=item.id>
-                    <img src="../assets/smartpole.png" alt="">
-                    <span>{{item.menuName}}</span>
-                </div>  
-            </template>
-            <template v-if="item.code=='solinMapService'">
-                <div class='index_center_top_coordinate' @click="map(item.id)" :id=item.id :key=item.id>
-                    <img src="../assets/coordinate.png" alt="">
-                    <span>{{item.menuName}}</span>
-                </div>  
-            </template>
-            <template v-if="item.code=='videoService'">
-                <div class='index_center_bottom_video' @click="video(item.id)" :id=item.id :key=item.id>
-                    <img src="../assets/video.png" alt="">
-                    <span>{{item.menuName}}</span>
-                </div>  
-            </template>
-            <template v-if="item.code=='wifiService'">
-                <div class='index_center_bottom_wifi' @click="wifi(item.id)" :id=item.id :key=item.id>
-                    <img src="../assets/wifi.png" alt="">
-                    <span>{{item.menuName}}</span>
-                </div>  
-            </template>
-            <template v-if="item.code=='broadcastService'">
-                <div class='index_center_bottom_broadcast' @click="wifi(item.id)" :id=item.id :key=item.id>
-                    <img src="../assets/broadcast.png" alt="">
-                    <span>{{item.menuName}}</span>
-                </div>  
-            </template>
-            <template v-if="item.code=='patrolService'">
-                <div class="index_center_bottom_Inspection" @click="Inspection(item.id)" :id=item.id :key=item.id>
-                    <img src="../assets/Inspection.png" alt="">
-                    <span>{{item.menuName}}</span>
-                </div>
-            </template>
-        </template>
-    </div>
-    -->
     <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="width:270px;">
             <div class="modal-content">
@@ -677,6 +597,8 @@ export default {
             password2:"",
             password3:'',
             mediaUrl:'',
+            length:'',
+            index:0,
         }
     },
     mounted(){
@@ -776,7 +698,7 @@ export default {
                 return;
             }
             $('.div_02').css('left',left+step+'px')
-
+            this.index = this.index + 1
             // var data = that.menu.shift()
             // that.menu.push(data)
             // that.manageChange()
@@ -791,7 +713,7 @@ export default {
                 return;
             }
             $('.div_02').css('left',left+step+'px')
-
+            this.index = this.index - 1
             // var data = that.menu.pop()
             // that.menu.unshift(data)
             // that.manageChange()
@@ -910,20 +832,11 @@ export default {
             sessionStorage.headercolorType = '2'
             this.$router.push({'path':'/LED',query:{id:val}})
         },
-        //视频管理
-        video(val){
+        //风光
+        Scenery(val){
             sessionStorage.menuId = val
-            this.$router.push({'path':'/video'})
-        },
-        //wifi管理
-        wifi(val){
-            sessionStorage.menuId = val
-            this.$router.push({'path':'/wifi'})
-        },
-        //广播管理
-        broadcast(val){
-            sessionStorage.menuId = val
-            this.$router.push({'path':'/broadcast'})
+            sessionStorage.headercolorType = '2'
+            this.$router.push({'path':'/SceneryMap',query:{id:val}})
         },
         //巡检管理
         Inspection(val){
@@ -955,6 +868,7 @@ export default {
                                 if(data.errorCode==0){
                                     that.menu.unshift(data.result.menus[0])
                                     that.manageChange()
+                                    that.length = that.menu.length/4
                                 }else{
                                     that.errorCode(data)
                                 }
@@ -1038,4 +952,8 @@ export default {
     -webkit-transform:scale(1.1); /* Safari 和 Chrome */
     -o-transform:scale(1.1);
 }
+
+.paging{position: absolute;top:0px;width: 100%;height: 5px;display: flex;justify-content: center;}
+.paging>span{display: inline-block;background: #7c7c7c77;width: 222px;height: 1px;margin:0 5px 0 5px;}
+.active{background: white !important;}
 </style>

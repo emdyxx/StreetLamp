@@ -13,7 +13,7 @@
         </div>
         <div class="statistical">
             <div class="statistical_top">
-                <img src="../../../assets/img/staticdeng.png" alt="">
+                <img src="../../../assets/img/statictou.png" alt="">
                 摄像头设备状态
             </div>
             <hr>

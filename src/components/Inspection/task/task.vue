@@ -1,18 +1,30 @@
 <template>
     <div class="task">
         <div class="task_top">
-            <div @click="actives(1)" :class='active==1 ? "background" : ""'>
-                <span>巡检项</span>
-            </div>
-            <div @click="actives(2)" :class='active==2 ? "background" : ""'>
-                <span>巡检点</span>
-            </div>
-            <div @click="actives(3)" :class='active==3 ? "background" : ""'>
-                <span>巡检线路</span>
-            </div>
-            <div @click="actives(4)" :class='active==4 ? "background" : ""'>
-                <span>巡检计划</span>
-            </div>
+            <template v-if="active==1">
+                <img @click="actives(1)" src="../../../assets/img/task-1-2.png" alt="">
+            </template>
+            <template v-else>
+                <img @click="actives(1)" src="../../../assets/img/task-1-1.png" alt="">
+            </template>
+            <template v-if="active==2">
+                <img @click="actives(2)" src="../../../assets/img/task-2-2.png" alt="">
+            </template>
+            <template v-else>
+                <img @click="actives(2)" src="../../../assets/img/task-2-1.png" alt="">
+            </template>
+            <template v-if="active==3">
+                <img @click="actives(3)" src="../../../assets/img/task-3-2.png" alt="">
+            </template>
+            <template v-else>
+                <img @click="actives(3)" src="../../../assets/img/task-3-1.png" alt="">
+            </template>
+            <template v-if="active==4">
+                <img @click="actives(4)" src="../../../assets/img/task-4-2.png" alt="">
+            </template>
+            <template v-else>
+                <img @click="actives(4)" src="../../../assets/img/task-4-1.png" alt="">
+            </template>
         </div>
         <div class="task_bottom">
             <router-view></router-view>
@@ -47,7 +59,6 @@ export default {
 <style scoped>
 .task{width: 100%;height:100%;}
 .task_top{width: 100%;height: 40px;background: #f5f7fa;position: relative;display: flex;justify-content: center;align-items: center;}
-.task_top>div{position:relative;width: 25%;height: 100%;text-align: center;line-height: 40px;font-size: 14px;font-weight: 600;cursor: pointer;}
-.background{background: #409eff;color: white;font-size: 15px;}
+.task_top>img{width: 175px;margin-right: 20px;}
 .task_bottom{width: 100%;width: 100%;position: absolute;top: 45px;bottom: 0;}
 </style>

@@ -3,9 +3,9 @@
       <header class="header">
         <i @click="backtrack" class="iconfont icon-fanhui2"></i>
         <div class="lamppost-header-left">
-          智慧灯杆系统
+            设备管理
         </div>
-        <el-select size='small' v-model="value2" @change='projectChange' style="margin-left:20px;" placeholder="请选择">
+        <el-select size='small' v-model="value2" @change='projectChange' style="margin-left:55px;" placeholder="请选择">
           <el-option
             v-for="item in options2"
             style="height:30px;"
@@ -88,10 +88,15 @@ export default {
         if(sessionStorage.menuId3=='80'){
             that.$router.push({'path':'/concentrator'})
         }
+        if(sessionStorage.menuId3=='87'){
+            that.$router.push({'path':'/solinIlluminance'})
+        }
         if(sessionStorage.menuId3=='106'){
             that.$router.push({'path':'/solinCameraDeploy'})
         }
-        
+        if(sessionStorage.menuId3=='118'){
+            that.$router.push({'path':'/SceneryDeploy'})
+        }
       }
       if(val=='3'){
         this.$router.push({'path':'/equipment'})
@@ -112,6 +117,12 @@ export default {
         }
         if(sessionStorage.menuId3=='107'){
             that.$router.push({'path':'CameraManage'})
+        }
+        if(sessionStorage.menuId3=='88'){
+            that.$router.push({'path':'IlluminanceManage'})
+        }
+        if(sessionStorage.menuId3=='119'){
+            that.$router.push({'path':'Scenery'})
         }
       }
       if(val=='4'){
@@ -211,25 +222,7 @@ export default {
             if(sessionStorage.menuId3=='55'){
                 that.$router.push({'path':'Relay'})
             }
-            // if(sessionStorage.menuId3=='56'){
-            //     that.$router.push({'path':'/LampPoleJournal'})
-            // }
-            // if(sessionStorage.menuId3=='57'){
-            //     that.$router.push({'path':'/lampJournal'})
-            // }
-            // if(sessionStorage.menuId3=='58'){
-            //     that.$router.push({'path':'/screenJournal'})
-            // }
-            // if(sessionStorage.menuId3=='59'){
-            //     that.$router.push({'path':'/sensorJournal'})
-            // }
-            // if(sessionStorage.menuId3=='60'){
-            //     that.$router.push({'path':'/loraJournal'})
-            // }
-            // if(sessionStorage.menuId3=='61'){
-            //     that.$router.push({'path':'/RelayJournal'})
-            // }
-            if(sessionStorage.menuId3=='54'||sessionStorage.menuId3=='64'||sessionStorage.menuId3=='65'||sessionStorage.menuId3=='66'||sessionStorage.menuId3=='67'||sessionStorage.menuId3=='68'||sessionStorage.menuId3=='69'||sessionStorage.menuId3=='70'){
+            if(sessionStorage.menuId3=='54'||sessionStorage.menuId3=='64'||sessionStorage.menuId3=='65'||sessionStorage.menuId3=='66'||sessionStorage.menuId3=='67'||sessionStorage.menuId3=='68'||sessionStorage.menuId3=='69'||sessionStorage.menuId3=='70'||sessionStorage.menuId3=='117'){
                 that.$router.push({'path':'loading'})
                 setTimeout(function(){
                     that.$router.push({'path':'loraQuery'})
@@ -238,11 +231,23 @@ export default {
             if(sessionStorage.menuId3=='80'){
                 that.$router.push({'path':'/concentrator'})
             }
+            if(sessionStorage.menuId3=='87'){
+                that.$router.push({'path':'/solinIlluminance'})
+            }
             if(sessionStorage.menuId3=='106'){
                 that.$router.push({'path':'/solinCameraDeploy'})
             }
             if(sessionStorage.menuId3=='107'){
                 that.$router.push({'path':'CameraManage'})
+            }
+            if(sessionStorage.menuId3=='88'){
+                that.$router.push({'path':'IlluminanceManage'})
+            }
+            if(sessionStorage.menuId3=='118'){
+                that.$router.push({'path':'/SceneryDeploy'})
+            }
+            if(sessionStorage.menuId3=='119'){
+                that.$router.push({'path':'Scenery'})
             }
         },200)
     },
@@ -290,7 +295,7 @@ export default {
 <style scoped>
 .lamppost{width: 100%;height: 100%;}
 .header{width:100%;height: 60px;background: #409EFF;display: flex;align-items: center;}
-.header>i{font-size: 32px;color: white;cursor: pointer;position: absolute;left: 20px;top:10px;}
+.header>i{font-size: 32px;color: white;cursor: pointer;position: absolute;left: 20px;top:8px;}
 .header>i:hover{color: aquamarine;}
 .lamppost-header-left{height: 100%;display: inline-block;margin-left: 70px;color: white;font-size: 22px;line-height: 60px;}
 .lamppost_bottom{width: 100%;position: absolute;top: 60px;bottom: 0;}

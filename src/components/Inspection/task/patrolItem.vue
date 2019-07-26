@@ -6,9 +6,36 @@
             <el-button v-if="editPatrolItem" @click="operationPatrolItem(1)" type="primary" icon='el-icon-edit' size='small'>编辑</el-button>
             <el-button v-if="delPatrolItem" @click="operationPatrolItem(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
             <el-button v-if="patrolCategoryManagement" @click="operationPatrolItem(3)" type="primary" icon='el-icon-setting' size='small'>分类管理</el-button>
+            <div class="search">
+                <el-dropdown size="small" split-button @command="handleCommand">
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='名称';types='1';">名称</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='分类';types='2';">分类</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="types=='1'">
+                        <el-input v-model="itemName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="types=='2'">
+                        <el-select v-model='categoryId' clearable size='small' style="width:176px;" placeholder="请选择分类">
+                            <el-option
+                            v-for="item in options"
+                            :key="item.id"
+                            :label="item.categoryName"
+                            :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </template>
+                </div>
+                <div>
+                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                </div>
+            </div>
         </div>
         <div class="patrolItem_bottom">
-            <div class="patrolItem_bottom_top">
+            <!-- <div class="patrolItem_bottom_top">
                 <div class="search">
                     <label>检查项名称:</label>
                     <input v-model="itemName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
@@ -27,7 +54,7 @@
                 <div style="margin-left:15px;">
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
-            </div>
+            </div> -->
             <div class="patrolItem_bottom_bottom">
                 <el-table
                     :data="tableData"
@@ -174,6 +201,8 @@ export default {
     name: 'UserSettings',
     data () {
         return {
+            name:'名称',
+            types:'1',
             serverurl:localStorage.serverurl,
             addPatrolItem:false,
             editPatrolItem:false,
@@ -203,6 +232,10 @@ export default {
         
     },
     methods:{
+        handleCommand(){
+            this.itemName=''
+            this.categoryId=''
+        },
         clickRow(row){
             this.$refs.moviesTable.toggleRowSelection(row)
         },
@@ -517,8 +550,8 @@ export default {
 .patrolItem_top{height: 46px;border-bottom: none !important;display: flex;border: 1px solid #E4E4F1;}
 .patrolItem_top>button{height:33px;margin:6px 0 0 10px;}
 .patrolItem_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
-.patrolItem_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.patrolItem_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
+/* .patrolItem_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;} */
+.patrolItem_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
 .search{display: flex;margin-left:10px;}
 .search>label{width: 80px;}
 .search>input{width: 176px;margin-top:7px;height: 32px;}
@@ -528,4 +561,8 @@ export default {
 .form-group>label{width: 95px;line-height: 34px;text-align: center;}
 .form-group>input{width: 156px;}
 .form-group>div{width: 156px;display: flex;justify-content: center;align-items: center;}
+
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
 </style>

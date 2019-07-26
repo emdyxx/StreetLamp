@@ -28,6 +28,10 @@ import sensor from '@/components/lamppost/deploy/sensor'
 import loraSensor from '@/components/lamppost/deploy/loraSensor'
 import solinRelayDeploy from '@/components/lamppost/deploy/solinRelayDeploy'
 import solinCameraDeploy from '@/components/lamppost/deploy/solinCameraDeploy'
+import solinIlluminance from '@/components/lamppost/deploy/solinIlluminance'
+import SceneryDeploy from '@/components/lamppost/deploy/SceneryDeploy'
+
+
 
 
 import chargingPiles from '@/components/lamppost/equipment/chargingPiles'
@@ -39,7 +43,9 @@ import loading from '@/components/lamppost/equipment/loading'
 import Relay from '@/components/lamppost/equipment/Relay'
 import scene from '@/components/lamppost/equipment/scene'
 import CameraManage from '@/components/lamppost/equipment/CameraManage'
-
+import IlluminanceManage from '@/components/lamppost/equipment/IlluminanceManage'
+import Scenery from '@/components/lamppost/equipment/Scenery'
+import SceneryHistory from '@/components/lamppost/equipment/SceneryHistory'
 
 
 import pandect from '@/components/lamppost/pandect/pandect'
@@ -55,6 +61,8 @@ import loraJournal from '@/components/lamppost/DeviceLog/loraJournal' //lora传�
 import loadingLog from '@/components/lamppost/DeviceLog/loading' 
 import ConcentratorLog from '@/components/lamppost/DeviceLog/ConcentratorLog' //继电器日志
 import CameraLog from '@/components/lamppost/DeviceLog/CameraLog' //摄像头日志
+import IlluminanceLog from '@/components/lamppost/DeviceLog/IlluminanceLog' //光照度日志
+import SceneryLog from '@/components/lamppost/DeviceLog/SceneryLog' //光照度日志
 
 
 // import mapHomgPage from '@/components/map/mapHomgPage' //地图主页
@@ -65,6 +73,8 @@ import SingleLamp from '@/components/map/DTmap/SingleLamp' //单灯地图
 import Camera from '@/components/map/DTmap/Camera' //摄像头地图
 import LED from '@/components/map/DTmap/LED' //led地图
 import GISdetails from '@/components/map/DTmap/GISdetails' //GIS详情
+import SceneryMap from '@/components/map/DTmap/SceneryMap' //风光控制器地图
+import SceneryDetails from '@/components/map/DTmap/SceneryDetails' //风光控制器详情
 
 
 
@@ -154,7 +164,6 @@ Vue.prototype.Verification = function(val,type){
     });
     return;
   }
-  
   //1为手机号验证
   if(!phone.test(val)){
     that.$message({
@@ -164,7 +173,6 @@ Vue.prototype.Verification = function(val,type){
     });
     return false;
   }
-
   if(!email.test(val)){
       that.$message({
           message: '邮箱不符合格式',
@@ -221,7 +229,6 @@ export default new Router({
               name: 'programSenior',
               component: programSenior
             },
-            
             {
               path: '/chargingPiles',
               name: 'chargingPiles',
@@ -266,6 +273,21 @@ export default new Router({
               path: '/CameraManage',
               name: 'CameraManage',
               component: CameraManage,
+            },
+            {
+              path: '/IlluminanceManage',
+              name: 'IlluminanceManage',
+              component: IlluminanceManage,
+            },
+            {
+              path: '/Scenery',
+              name: 'Scenery',
+              component: Scenery,
+            },
+            {
+              path: '/SceneryHistory',
+              name: 'SceneryHistory',
+              component: SceneryHistory,
             },
           ]
         },
@@ -313,6 +335,16 @@ export default new Router({
               path: '/solinCameraDeploy',
               name: 'solinCameraDeploy',
               component: solinCameraDeploy,
+            },
+            {
+              path: '/solinIlluminance',
+              name: 'solinIlluminance',
+              component: solinIlluminance,
+            },
+            {
+              path: '/SceneryDeploy',
+              name: 'SceneryDeploy',
+              component: SceneryDeploy,
             },
           ]
         },
@@ -365,6 +397,16 @@ export default new Router({
               path: '/CameraLog',
               name: 'CameraLog',
               component: CameraLog,
+            },
+            {
+              path: '/IlluminanceLog',
+              name: 'IlluminanceLog',
+              component: IlluminanceLog,
+            },
+            {
+              path: '/SceneryLog',
+              name: 'SceneryLog',
+              component: SceneryLog,
             },
           ]
         }
@@ -427,12 +469,22 @@ export default new Router({
           name: 'LED',
           component: LED,
         },
+        {
+          path: '/SceneryMap',
+          name: 'SceneryMap',
+          component: SceneryMap,
+        },
       ]
     },
     {
       path: '/GISdetails',
       name: 'GISdetails',
       component: GISdetails,
+    },
+    {
+      path: '/SceneryDetails',
+      name: 'SceneryDetails',
+      component: SceneryDetails,
     },
     // {
     //   path: '/mapDetails',

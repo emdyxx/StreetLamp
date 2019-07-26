@@ -11,9 +11,33 @@
                     <el-button v-if="addUser" @click="adduser(0)" type="primary" icon='el-icon-plus' size='small'>添加用户</el-button>
                     <el-button v-if="editUser" @click="adduser(1)" type="primary" icon="el-icon-edit" size='small'>编辑用户</el-button>
                     <el-button v-if="delUser" @click="deleteuser" type="primary" icon='el-icon-delete' size='small'>删除用户</el-button>
+                    <div class="search">
+                        <el-dropdown size="small" split-button @command="handleCommand">
+                            {{name}}
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item @click.native="name='用户名';types='1';">用户名</el-dropdown-item>
+                                <el-dropdown-item @click.native="name='姓名';types='2';">姓名</el-dropdown-item>
+                                <el-dropdown-item @click.native="name='电话';types='3';">电话</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <div>
+                            <template v-if="types=='1'">
+                                <el-input v-model="username" size="small" placeholder="请输入用户名" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                            </template>
+                            <template v-if="types=='2'">
+                                <el-input v-model="fullname" size="small" placeholder="请输入姓名" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                            </template>
+                            <template v-if="types=='3'">
+                                <el-input v-model="mobile" size="small" placeholder="请输入电话" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                            </template>
+                        </div>
+                        <div>
+                            <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                        </div>
+                    </div>
                 </div>
                 <div class="usermanage_bottom">
-                    <div class="usermanage_bottom_top">
+                    <!-- <div class="usermanage_bottom_top">
                         <div class="search">
                             <label>用户名:</label>
                             <input type="text" v-model="username" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
@@ -29,7 +53,7 @@
                         <div style="margin-left:15px;">
                             <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="usermanage_bottom_bottom">
                         <el-table
                             :data="tableData"
@@ -288,6 +312,8 @@ export default {
     name: 'user',
     data () {
         return {
+            name:'用户名',
+            types:'1',
             serverurl:localStorage.serverurl,
             addUser:false,
             editUser:false,
@@ -341,6 +367,11 @@ export default {
         this.readyLeft()
     },
     methods:{
+        handleCommand(){
+            this.username=''
+            this.fullname=''
+            this.mobile=''
+        },
         clickRow(row){
             this.$refs.moviesTable.toggleRowSelection(row)
         },    
@@ -985,8 +1016,7 @@ export default {
 .usermanage_top{height: 46px;border-bottom: none !important;display: flex;}
 .usermanage_top>button{height:33px;margin:6px 0 0 10px;}
 .usermanage_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;}
-.usermanage_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.usermanage_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
+.usermanage_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
 .block{text-align: center;}
 .images{text-align: center;position: relative;}
 .images>label{width: 150px;height: 100px;border: 1px dashed #d9d9d9;border-radius: 6px; cursor: pointer;text-align: center;line-height: 35px;position: relative;}
@@ -1000,7 +1030,7 @@ export default {
 .form-group>label{width: 75px;line-height: 34px;text-align: center;}
 .form-group>input{width: 196px;}
 
-.search{display: flex;}
-.search>label{width: 60px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
 </style>

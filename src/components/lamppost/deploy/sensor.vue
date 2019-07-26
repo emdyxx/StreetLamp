@@ -778,9 +778,7 @@ export default {
         },
         search(){this.ready()},
         // 列表数据选中事件  进行编辑,删除操作
-        SelectionChange(val){
-            this.site = val;
-        },
+        SelectionChange(val){this.site = val;},
         sizechange(val){this.pageSize = val;this.ready()},
         currentchange(val){this.pageIndex = val;this.ready();},
         //权限请求
@@ -832,7 +830,7 @@ export default {
 .sensor{width: 100%;height: 100%;}
 .sensor>div{width: 100%;position: absolute;}
 .sensor_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.sensor_top>button,.sensor_top>div{height:33px;margin:8px 0 0 10px;}
+.sensor_top>button,.sensor_top>div{height:33px;margin:6px 0 0 10px;}
 .sensor_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
 .sensor_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
 .block{text-align: center;}

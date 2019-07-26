@@ -17,6 +17,10 @@
 .solinLoraMagneticDoor{background-image: url(img/solinLoraMagneticDoor.png) !important;background-repeat: no-repeat !important;}
 .solinLoraInfrared{background-image: url(img/solinLoraInfrared.png) !important;background-repeat: no-repeat !important;}
 
+.solinSceneryControllerDeploy{background-image: url(img/SceneryS.png) !important;background-repeat: no-repeat !important;}
+.solinLoraWaterLevel{background-image: url(img/waterlevelS.png) !important;background-repeat: no-repeat !important;}
+
+
 .jstree_mechanism1 {
     background-image: url(img/mechanism1.png) !important;
 }

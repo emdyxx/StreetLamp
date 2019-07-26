@@ -5,9 +5,25 @@
             <el-button @click="PatrolPlan(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button @click="PatrolPlan(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button @click="PatrolPlan(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <div class="search">
+                <el-dropdown size="small" split-button @command="handleCommand">
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='计划名称';types='1';">计划名称</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="types=='1'">
+                        <el-input v-model="planName" size="small" placeholder="请输入计划名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                </div>
+                <div>
+                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                </div>
+            </div>
         </div>
         <div class="PatrolPlan_bottom">
-            <div class="PatrolPlan_bottom_top">
+            <!-- <div class="PatrolPlan_bottom_top">
                 <div class="search">
                     <label>计划名称:</label>
                     <input v-model="planName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入巡检计划名称">
@@ -15,7 +31,7 @@
                 <div style="margin-left:15px;">
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
-            </div>
+            </div> -->
             <div class="PatrolPlan_bottom_bottom">
                 <el-table
                     :data="tableData"
@@ -390,6 +406,8 @@ export default {
     name: 'PatrolPlan',
     data () {
         return {
+            name:'计划名称',
+            types:'1',
             addPatrolPlan:false,
             editPatrolPlan:false,
             delPatrolPlan:false,
@@ -472,6 +490,9 @@ export default {
         
     },
     methods:{
+        handleCommand(){
+            this.planName=''
+        },
         clickRow(row){
             this.$refs.moviesTable.toggleRowSelection(row)
         },   
@@ -880,8 +901,8 @@ export default {
 .PatrolPlan_top{height: 46px;border-bottom: none !important;display: flex;border: 1px solid #E4E4F1;}
 .PatrolPlan_top>button{height:33px;margin:6px 0 0 10px;}
 .PatrolPlan_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
-.PatrolPlan_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.PatrolPlan_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
+/* .PatrolPlan_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;} */
+.PatrolPlan_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
 .search{display: flex;}
 .search>label{width: 70px;}
 .search>input{width: 146px;margin-top:7px;height: 34px;}
@@ -891,4 +912,8 @@ export default {
 .form-group>input{width: 156px;}
 .form-group>div{width: 156px;display: flex;justify-content: center;align-items: center;}
 .form-group>div>label,.form-group_s>div>label{margin-left:10px !important;}
+
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
 </style>

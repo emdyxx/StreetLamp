@@ -5,9 +5,33 @@
             <el-button @click="operationUserSettings(0)" v-if="addPatrolInspector" type="primary" icon='el-icon-plus' size='small'>添加用户</el-button>
             <el-button @click="operationUserSettings(1)" v-if="editPatrolInspector" type="primary" icon="el-icon-edit" size='small'>编辑用户</el-button>
             <el-button @click="operationUserSettings(2)" v-if="delPatrolInspector" type="primary" icon='el-icon-delete' size='small'>删除用户</el-button>
+            <div class="search">
+                <el-dropdown size="small" split-button @command="handleCommand">
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='姓名';types='1';">姓名</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='编号';types='2';">编号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='手机号';types='3';">手机号</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="types=='1'">
+                        <el-input v-model="inspectorName" size="small" placeholder="请输入姓名" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="types=='2'">
+                        <el-input v-model="inspectorNumber" size="small" placeholder="请输入编号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                    <template v-if="types=='3'">
+                        <el-input v-model="mobile" size="small" placeholder="请输入手机号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                </div>
+                <div>
+                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                </div>
+            </div>
         </div>
         <div class="UserSettings_bottom">
-            <div class="UserSettings_bottom_top">
+            <!-- <div class="UserSettings_bottom_top">
                 <div class="search">
                     <label>巡检员姓名:</label>
                     <input v-model="inspectorName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
@@ -23,7 +47,7 @@
                 <div style="margin-left:15px;">
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
-            </div>
+            </div> -->
             <div class="UserSettings_bottom_bottom">
                 <el-table
                     :data="tableData"
@@ -152,6 +176,8 @@ export default {
     name: 'UserSettings',
     data () {
         return {
+            name:'姓名',
+            types:'1',
             addPatrolInspector:false,
             editPatrolInspector:false,
             delPatrolInspector:false,
@@ -181,6 +207,11 @@ export default {
         
     },
     methods:{
+        handleCommand(){
+            this.inspectorName=''
+            this.inspectorNumber=''
+            this.mobile=''
+        },
         formatRole:function(val, column, cellValue, index){
             if(cellValue == null||cellValue == undefined||cellValue == ''){
                 return '----'
@@ -414,8 +445,8 @@ export default {
 .UserSettings_top{height: 46px;border-bottom: none !important;display: flex;border: 1px solid #E4E4F1;}
 .UserSettings_top>button{height:33px;margin:6px 0 0 10px;}
 .UserSettings_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
-.UserSettings_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.UserSettings_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
+/* .UserSettings_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;} */
+.UserSettings_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
 .search{display: flex;}
 .search>label{width: 80px;}
 .search>input{width: 146px;margin-top:7px;height: 34px;}
@@ -424,4 +455,8 @@ export default {
 .form-group>label{width: 95px;line-height: 34px;text-align: center;}
 .form-group>input{width: 156px;}
 .form-group>div{width: 156px;display: flex;justify-content: center;align-items: center;}
+
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
 </style>

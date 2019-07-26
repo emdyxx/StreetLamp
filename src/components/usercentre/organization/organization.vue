@@ -9,9 +9,33 @@
                 <el-button v-if="addOrg" @click="addorganization(0)" type="primary" icon='el-icon-plus' size='small'>添加机构</el-button>
                 <el-button v-if="editOrg" @click="addorganization(1)" type="primary" icon="el-icon-edit" size='small'>编辑机构</el-button>
                 <el-button v-if="delOrg" @click="deleteorganization" type="primary" icon='el-icon-delete' size='small'>删除机构</el-button>
+                <div class="search">
+                        <el-dropdown size="small" split-button @command="handleCommand">
+                            {{name}}
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item @click.native="name='机构名称';types='1';">机构名称</el-dropdown-item>
+                                <el-dropdown-item @click.native="name='负责人';types='2';">负责人</el-dropdown-item>
+                                <el-dropdown-item @click.native="name='电话';types='3';">电话</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <div>
+                            <template v-if="types=='1'">
+                                <el-input v-model="orgName" size="small" placeholder="请输入机构名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                            </template>
+                            <template v-if="types=='2'">
+                                <el-input v-model="principal" size="small" placeholder="请输入负责人" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                            </template>
+                            <template v-if="types=='3'">
+                                <el-input v-model="mobile" size="small" placeholder="请输入电话" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                            </template>
+                        </div>
+                        <div>
+                            <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                        </div>
+                    </div>
             </div>
             <div class="organization_right_bottom">
-                <div class="organization_right_bottom_top">
+                <!-- <div class="organization_right_bottom_top">
                     <div class="search">
                         <label>机构名称:</label>
                         <input type="text" v-model="orgName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入机构名称">
@@ -27,7 +51,7 @@
                     <div style="margin-left:15px;">
                         <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                     </div>
-                </div>
+                </div> -->
                 <div class="organization_right_bottom_bottom">
                     <el-table
                         :data="tableData"
@@ -293,6 +317,8 @@ export default {
     name: 'user',
     data () {
         return {
+            name:'机构名称',
+            types:'1',
             serverurl:localStorage.serverurl,
             addOrg:false,
             editOrg:false,
@@ -357,6 +383,11 @@ export default {
         this.readyLeft()
     },
     methods:{
+        handleCommand(){
+            this.orgName=''
+            this.principal=''
+            this.mobile=''
+        },
         clickRow(row){
             this.$refs.moviesTable.toggleRowSelection(row)
         },
@@ -984,8 +1015,8 @@ export default {
 .organization_right_top{height: 46px;border-bottom: none !important;display: flex;}
 .organization_right_top>button{height:33px;margin:8px 0 0 10px;}
 .organization_right_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;}
-.organization_right_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.organization_right_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
+/* .organization_right_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;} */
+.organization_right_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
 .organization_little{width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;}
 .organization_little>table{box-shadow: 0 0 3px gray;border-radius: 8px;}
 .organization_little>table tr{width: 500px;}
@@ -1004,7 +1035,7 @@ export default {
 .form-group>label{width: 75px;line-height: 34px;text-align: center;}
 .form-group>input{width: 196px;}
 
-.search{display: flex;}
-.search>label{width: 70px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
 </style>

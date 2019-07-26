@@ -63,6 +63,9 @@ export default {
                     },
                     "solinCameraDeploy" : {
                         "icon" : 'solinCameraDeploy',
+                    },
+                    "solinSceneryControllerDeploy" : {
+                        "icon" : 'solinSceneryControllerDeploy',
                     }
                 },
                 // "state" : { "key" : that.sizeType.text },
@@ -92,6 +95,7 @@ export default {
                                         arr.type = data.result.menus[i].code
                                         arr.text = data.result.menus[i].menuName
                                         arr.id = data.result.menus[i].id
+                                        arr.state = {"opened" : true}
                                         datas[0].children.push(arr)
                                     }
                                     //485设备下侧菜单请求
@@ -141,8 +145,14 @@ export default {
                                     if(sessionStorage.menuId3=='80'){
                                         that.$router.push({'path':'/concentrator'})
                                     }
+                                    if(sessionStorage.menuId3=='87'){
+                                        that.$router.push({'path':'/solinIlluminance'})
+                                    }
                                     if(sessionStorage.menuId3=='106'){
                                         that.$router.push({'path':'/solinCameraDeploy'})
+                                    }
+                                    if(sessionStorage.menuId3=='118'){
+                                        that.$router.push({'path':'/SceneryDeploy'})
                                     }
                                 }else{
                                     that.errorCode(data)
@@ -178,8 +188,14 @@ export default {
                     if(data.node.id=='80'){
                         that.$router.push({'path':'/concentrator'})
                     }
+                    if(data.node.id=='87'){
+                        that.$router.push({'path':'/solinIlluminance'})
+                    }
                     if(data.node.id=='106'){
                         that.$router.push({'path':'/solinCameraDeploy'})
+                    }
+                    if(data.node.id=='118'){
+                        that.$router.push({'path':'/SceneryDeploy'})
                     }
                 }
             });

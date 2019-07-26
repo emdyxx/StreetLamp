@@ -5,9 +5,25 @@
             <el-button v-if="addPatrolRoute" @click="InspectionRoute(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="editPatrolRoute" @click="InspectionRoute(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="delPatrolRoute" @click="InspectionRoute(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <div class="search">
+                <el-dropdown size="small" split-button @command="handleCommand">
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='路线名称';types='1';">路线名称</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="types=='1'">
+                        <el-input v-model="routeName" size="small" placeholder="请输入路线名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                </div>
+                <div>
+                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                </div>
+            </div>
         </div>
         <div class="InspectionRoute_bottom">
-            <div class="UserSettings_bottom_top">
+            <!-- <div class="UserSettings_bottom_top">
                 <div class="search">
                     <label>路线名称:</label>
                     <input v-model="routeName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入路线名称">
@@ -15,7 +31,7 @@
                 <div style="margin-left:15px;">
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
-            </div>
+            </div> -->
             <div class="UserSettings_bottom_bottom">
                 <el-table
                     :data="tableData"
@@ -180,6 +196,8 @@ export default {
     name: 'InspectionRoute',
     data () {
         return {
+            name:'路线名称',
+            types:'1',
             addPatrolRoute:false,
             editPatrolRoute:false,
             delPatrolRoute:false,
@@ -209,6 +227,9 @@ export default {
         
     },
     methods:{
+        handleCommand(){
+            this.routeName=''
+        },
         clickRow(row){
             this.$refs.moviesTable.toggleRowSelection(row)
         },   
@@ -501,8 +522,8 @@ export default {
 .InspectionRoute_top{height: 46px;border-bottom: none !important;display: flex;border: 1px solid #E4E4F1;}
 .InspectionRoute_top>button{height:33px;margin:6px 0 0 10px;}
 .InspectionRoute_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
-.UserSettings_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.UserSettings_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
+/* .UserSettings_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;} */
+.UserSettings_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
 .search{display: flex;}
 .search>label{width: 70px;}
 .search>input{width: 146px;margin-top:7px;height: 34px;}
@@ -516,4 +537,8 @@ export default {
 .spot>div:nth-of-type(1){width: 46%;}
 .spot>div:nth-of-type(2){width: 8%;display: flex;align-items: center;justify-content: center;}
 .spot>div:nth-of-type(3){width: 46%;}
+
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
 </style>

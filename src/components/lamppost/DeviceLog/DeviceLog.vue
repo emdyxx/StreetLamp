@@ -214,6 +214,12 @@ export default {
                                     if(sessionStorage.menuId3=='61'){
                                         that.$router.push({'path':'/RelayJournal'})
                                     }
+                                    if(sessionStorage.menuId3=='91'){
+                                        that.$router.push({'path':'/IlluminanceLog'})
+                                    }
+                                    if(sessionStorage.menuId3=='123'){
+                                        that.$router.push({'path':'/SceneryLog'})
+                                    }
                                 }else{
                                     that.errorCode(data)
                                 }
@@ -291,6 +297,12 @@ export default {
                                 }
                             })
                         },200)
+                    }
+                    if(data.node.id=='91'){
+                        that.$router.push({'path':'/IlluminanceLog'})
+                    }
+                    if(data.node.id=='123'){
+                        that.$router.push({'path':'/SceneryLog'})
                     }
                 }
             });

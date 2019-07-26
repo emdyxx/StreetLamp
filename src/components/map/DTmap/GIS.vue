@@ -21,7 +21,7 @@
                     显示屏设备状态
                 </template>
                 <template v-if="EquipmentType=='3'">
-                    <img src="../../../assets/img/staticdeng.png" alt="">
+                    <img src="../../../assets/img/statictou.png" alt="">
                     摄像头设备状态
                 </template>
             </div>
@@ -1512,6 +1512,7 @@ export default {
                                 map.centerAndZoom(new BMap.Point(coord[0],coord[1]), 16);  // 初始化地图,设置中心点坐标和地图级别
                             }
                             map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+                            
                             //添加灯杆坐标
                             var online = new BMap.Icon(that.imgserverurl+"image/img/online.png", new BMap.Size(45,45));
                             var offline = new BMap.Icon(that.imgserverurl+"image/img/offline.png", new BMap.Size(45,45));
@@ -1580,6 +1581,7 @@ export default {
                                 })
                                 map.addOverlay(marker);
                             }
+                            // map.setMapStyle({style:'grayscale'});
                             map.setMapStyleV2({     
                                 styleId: '7ff9f4f543ec7f2704516df1a246f110'
                             });
@@ -1715,3 +1717,17 @@ hr{margin: 0;}
 .lampData_bottom{width: 100%;background: white;border-radius: 5px;padding: 8px;}
 </style>
 
+<style lang='less'>
+.BMap_contextMenu{
+    background: #727c92 !important;
+    opacity: .9;
+    border-radius: 5px !important;
+    padding: 8px 15px !important;
+    border:none !important;
+    text-align: center;
+    div{
+        color:white !important;
+        // span{color:red !important;}
+    }
+}
+</style>

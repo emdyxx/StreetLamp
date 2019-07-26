@@ -1,7 +1,7 @@
 <template>
     <!-- 气象站历史数据 -->
     <div class="historicalData">
-        <el-button @click="backtrack" type="warning" size='small' icon="el-icon-arrow-left" style="position:absolute;top:5px;left:220px;z-index:9999;">返回</el-button>
+        <el-button @click="backtrack" type="warning" size='small' icon="el-icon-arrow-left" style="position:absolute;top:5px;right:30px;z-index:9999;">返回</el-button>
         <el-tabs v-model="activeName" @tab-click="activeName_change" type="border-card" style="height:100%;">
             <el-tab-pane label="列表展示" name="0">
                 <div class="historicalData_top">

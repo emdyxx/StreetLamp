@@ -13,7 +13,7 @@
         </div>
         <div class="statistical">
             <div class="statistical_top">
-                <img src="../../../assets/img/staticdeng.png" alt="">
+                <img src="../../../assets/img/staticping.png" alt="">
                 LED设备状态
             </div>
             <hr>
@@ -186,7 +186,7 @@ export default {
                         var name = that.options[0].area.mergerName
                         var area = name.split(',')
                         that.timeData.City = area[2]
-                        that.weatherRequest()
+                        // that.weatherRequest()
                         that.Statistics()
                         that.ready()
                     }else{

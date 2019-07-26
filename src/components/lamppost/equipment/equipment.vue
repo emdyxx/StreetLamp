@@ -77,6 +77,12 @@ export default {
                     "solinLoraInfrared" : {
                         "icon" : 'solinLoraInfrared',
                     },
+                    "solinLoraWaterLevel" : {
+                        "icon" : 'solinLoraWaterLevel',
+                    },
+                    "solinSceneryControllerManage" : {
+                        "icon" : 'solinSceneryControllerDeploy',
+                    }
                 },
                 "plugins" : ['types'],
                 'core' : {
@@ -104,6 +110,7 @@ export default {
                                         arr.type = data.result.menus[i].code
                                         arr.text = data.result.menus[i].menuName
                                         arr.id = data.result.menus[i].id
+                                        arr.state = {"opened" : true}
                                         datas[0].children.push(arr)
                                     }
                                     sessionStorage.menuId3 = data.result.menus[0].id
@@ -165,7 +172,7 @@ export default {
                                     if(sessionStorage.menuId3=='53'){
                                         that.$router.push({'path':'sensors'})
                                     }
-                                    if(sessionStorage.menuId3=='64'||sessionStorage.menuId3=='65'||sessionStorage.menuId3=='66'||sessionStorage.menuId3=='67'||sessionStorage.menuId3=='68'||sessionStorage.menuId3=='69'||sessionStorage.menuId3=='70'){
+                                    if(sessionStorage.menuId3=='64'||sessionStorage.menuId3=='65'||sessionStorage.menuId3=='66'||sessionStorage.menuId3=='67'||sessionStorage.menuId3=='68'||sessionStorage.menuId3=='69'||sessionStorage.menuId3=='70'||sessionStorage.menuId3=='117'){
                                         that.$router.push({'path':'loraQuery'})
                                     }
                                     if(sessionStorage.menuId3=='55'){
@@ -173,6 +180,12 @@ export default {
                                     }
                                     if(sessionStorage.menuId3=='107'){
                                         that.$router.push({'path':'CameraManage'})
+                                    }
+                                    if(sessionStorage.menuId3=='88'){
+                                        that.$router.push({'path':'IlluminanceManage'})
+                                    }
+                                    if(sessionStorage.menuId3=='119'){
+                                        that.$router.push({'path':'Scenery'})
                                     }
                                 }else{
                                     that.errorCode(data)
@@ -196,7 +209,7 @@ export default {
                     if(data.node.id=='53'){
                         that.$router.push({'path':'sensors'})
                     }
-                    if(data.node.id=='64'||data.node.id=='65'||data.node.id=='66'||data.node.id=='67'||data.node.id=='68'||data.node.id=='69'||data.node.id=='70'){
+                    if(data.node.id=='64'||data.node.id=='65'||data.node.id=='66'||data.node.id=='67'||data.node.id=='68'||data.node.id=='69'||data.node.id=='70'||data.node.id=='117'){
                         that.$router.push({'path':'loading'})
                         setTimeout(function(){
                             that.$router.push({'path':'loraQuery'})
@@ -207,6 +220,12 @@ export default {
                     }
                     if(data.node.id=='107'){
                         that.$router.push({'path':'CameraManage'})
+                    }
+                    if(data.node.id=='88'){
+                        that.$router.push({'path':'IlluminanceManage'})
+                    }
+                    if(data.node.id=='119'){
+                        that.$router.push({'path':'Scenery'})
                     }
                 }
             });

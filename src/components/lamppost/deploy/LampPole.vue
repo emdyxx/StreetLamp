@@ -122,6 +122,14 @@
                     </template>
                 </el-table-column>
                 <el-table-column
+                label="风光控制器"
+                align='center'
+                min-width="80">
+                    <template slot-scope="scope">
+                        <button @click="Scenery(scope.row.id)" style="height:20px;line-height:15px;">...</button>
+                    </template>
+                </el-table-column>
+                <el-table-column
                 prop="remark"
                 label="备注"
                 align='center'
@@ -904,6 +912,129 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
+        <!-- 关联风光传感器 -->
+        <div class="modal fade" id="SceneryDeploy"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <div>
+                            <el-button @click="SceneryDeploy(0)" type="primary" size='small'>关联风光控制器</el-button>
+                            <el-button @click="SceneryDeploy(1)" type="primary" size='small'>解除关联</el-button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <el-table
+                            :data="tableData12" 
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            @selection-change="SelectionChange12"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="nickName"
+                            align='center'
+                            label="名称"
+                            min-width="100">
+                            </el-table-column>
+                            <el-table-column
+                            prop="serialNumber"
+                            align='center'
+                            label="序列号"
+                            min-width="110">
+                            </el-table-column>
+                            <el-table-column
+                            prop="remark"
+                            align='center'
+                            label="备注"
+                            min-width="120"
+                            :formatter="formatRole">
+                            </el-table-column>
+                            <el-table-column
+                            prop="createTime"
+                            align='center'
+                            label="创建时间"
+                            show-overflow-tooltip>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+        <!-- 点击关联风光传感器 -->
+        <div class="modal fade" id="SceneryDeployTwo"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        请选择风光控制器进行关联
+                    </div>
+                    <div class="modal-body">
+                        <el-table
+                            :data="tableData13" 
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            @selection-change="SelectionChange13"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="nickName"
+                            align='center'
+                            label="名称"
+                            min-width="100">
+                            </el-table-column>
+                            <el-table-column
+                            prop="serialNumber"
+                            align='center'
+                            label="序列号"
+                            min-width="110">
+                            </el-table-column>
+                            <el-table-column
+                            prop="remark"
+                            align='center'
+                            label="备注"
+                            min-width="120"
+                            :formatter="formatRole">
+                            </el-table-column>
+                            <el-table-column
+                            prop="createTime"
+                            align='center'
+                            label="创建时间"
+                            show-overflow-tooltip>
+                            </el-table-column>
+                        </el-table>
+                        <div class="block">
+                            <el-pagination
+                            background
+                            @size-change="sizechange13"
+                            @current-change="currentchange13"
+                            :current-page="pageIndex13"
+                            :page-sizes="[10, 20, 30, 50]"
+                            :page-size="pageSize13"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="total13">
+                            </el-pagination>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button @click="RelationSix" type="button" class="btn btn-primary">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
         <!-- 绑定项目 -->
         <div class="modal fade" id="poleBindProjectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:350px;">
@@ -1042,6 +1173,13 @@ export default {
             pageIndex11:1,
             pageSize11:10,
             total11:10,
+            tableData12:[],//风光
+            site12:[],
+            tableData13:[],
+            site13:[],
+            pageIndex13:1,
+            pageSize13:10,
+            total13:10,
         }
     },
     mounted(){
@@ -2267,6 +2405,167 @@ export default {
                 }
             })
         },
+
+        //关联风光
+        Scenery(val){
+            if(sessionStorage.projectId=='0'){
+                this.$message({
+                    message: '此操作请选择具体项目!',
+                    type: 'warning'
+                });
+                return;
+            }
+            this.poleId = val
+            this.SceneryData();
+            $('#SceneryDeploy').modal('show')
+            /* 完成拖拽 */
+            $('#SceneryDeploy').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#SceneryDeploy').css("overflow", "hidden")
+        },
+        //获取已关联风光控制器
+        SceneryData(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/windSolarSensors/pole',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    page:1,
+                    size:10,
+                    poleId:that.poleId,
+                    command :'1',
+                    projectIds:sessionStorage.projectId,
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tableData12 = data.result.list
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
+        //获取未关联风光控制器
+        SceneryData2(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/windSolarSensors/pole',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    page:that.pageIndex13,
+                    size:that.pageSize13,
+                    poleId:that.poleId,
+                    command :'2',
+                    projectIds:sessionStorage.projectId,
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tableData13 = data.result.list
+                        that.total13 = data.result.total
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
+        SelectionChange12(val){this.site12=val;},
+        SelectionChange13(val){this.site13=val;},
+        sizechange13(val){this.pageSize13=val;this.SceneryData2()},
+        currentchange13(val){this.pageIndex13=val;this.SceneryData2()},
+        //关联  解除关联  风光传感器
+        SceneryDeploy(val){
+            var that = this;
+            if(val=='0'){
+                this.SceneryData2()
+                $('#SceneryDeployTwo').modal('show')
+            }
+            if(val=='1'){
+                if(this.site12.length==0){
+                    this.$message({
+                        message: '请选择风光设备进行操作!',
+                        type: 'error'
+                    });
+                    return;
+                }
+                var data = {};
+                var arr = [];
+                for(var i = 0;i<that.site12.length;i++){
+                    arr.push(that.site12[i].id)
+                }
+                data.windSolars  = arr
+                data.poleId = that.poleId;
+                data.projectId = sessionStorage.projectId
+                data.command = '2'
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/windSolarSensors/device/pole',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data), 
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '解除关联成功!',
+                                type: 'success'
+                            });
+                            that.SceneryData()
+                        }else{
+                            that.errorCode(data)
+                        }
+                    }
+                })
+            }
+        },
+        //关联确认
+        RelationSix(){
+            var that = this
+            if(this.site13.length==0){
+                this.$message({
+                    message: '请选择风光设备进行操作!',
+                    type: 'error'
+                });
+                return;
+            }
+            var data = {};
+            var arr = [];
+            for(var i = 0;i<that.site13.length;i++){
+                arr.push(that.site13[i].id)
+            }
+            data.windSolars  = arr
+            data.poleId = that.poleId;
+            data.projectId = sessionStorage.projectId
+            data.command = '1'
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/windSolarSensors/device/pole',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data), 
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '关联成功!',
+                            type: 'success'
+                        });
+                        $('#SceneryDeployTwo').modal('hide')
+                        that.SceneryData()
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
+
 
         //获取灯杆列表
         ready(){

@@ -5,9 +5,25 @@
             <el-button v-if="addPatrolSite" @click="addInspectionSite(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="editPatrolSite" @click="addInspectionSite(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="delPatrolSite" @click="addInspectionSite(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <div class="search">
+                <el-dropdown size="small" split-button @command="handleCommand">
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='点名称';types='1';">点名称</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="types=='1'">
+                        <el-input v-model="siteName" size="small" placeholder="请输入点名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
+                </div>
+                <div>
+                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                </div>
+            </div>
         </div>
         <div class="InspectionSite_bottom">
-            <div class="InspectionSite_bottom_top">
+            <!-- <div class="InspectionSite_bottom_top">
                 <div class="search">
                     <label>点名称:</label>
                     <input v-model="siteName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入点名称">
@@ -15,7 +31,7 @@
                 <div style="margin-left:15px;">
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
-            </div>
+            </div> -->
             <div class="InspectionSite_bottom_bottom">
                 <el-table
                     :data="tableData"
@@ -303,6 +319,8 @@ export default {
     name: 'InspectionSite',
     data () {
         return {
+            name:'点名称',
+            types:'1',
             addPatrolSite:false,  
             editPatrolSite:false,
             delPatrolSite:false,
@@ -346,6 +364,9 @@ export default {
         
     },
     methods:{
+        handleCommand(){
+            this.siteName=''
+        },
         formatRole:function(val, column, cellValue, index){
             if(cellValue == null||cellValue == undefined||cellValue == ''){
                 return '----'
@@ -788,8 +809,8 @@ export default {
 .InspectionSite_top{height: 46px;border-bottom: none !important;display: flex;border: 1px solid #E4E4F1;}
 .InspectionSite_top>button{height:33px;margin:6px 0 0 10px;}
 .InspectionSite_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
-.InspectionSite_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.InspectionSite_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
+/* .InspectionSite_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;} */
+.InspectionSite_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
 .search{display: flex;}
 .search>label{width: 60px;}
 .search>input{width: 146px;margin-top:7px;height: 34px;}
@@ -811,4 +832,8 @@ export default {
 .map_Z>div:nth-of-type(1){width: 100%;height: 30px;line-height: 30px;}
 .map_Z>div:nth-of-type(2){width: 100%;position: absolute;top: 30px;bottom: 30px;}
 .map_Z>div:nth-of-type(3){width: 100%;height: 30px;line-height: 30px;position: absolute;bottom: 1px;text-align: center;}
+
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div{margin-left: 5px;}
+.search>input{width: 146px;}
 </style>

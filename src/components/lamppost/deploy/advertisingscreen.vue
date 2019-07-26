@@ -482,6 +482,7 @@ export default {
                 that.form.remark = ''
                 that.form.coord = ''
                 this.referencePosition = ''
+                that.site2 = []
                 $('#addModal').modal('show')
             }
             if(val=='1'){

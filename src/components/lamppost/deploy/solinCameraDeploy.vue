@@ -2,10 +2,10 @@
     <!-- 摄像头 -->
     <div class="SolinCameraDeploy">
         <div class="solinCameraDeploy_top">
-            <el-button @click="CameraDeploy(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button @click="CameraDeploy(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button @click="CameraDeploy(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <el-dropdown size="small" split-button type="primary">
+            <el-button v-if="addCameraDeploy" @click="CameraDeploy(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="editCameraDeploy" @click="CameraDeploy(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="delCameraDeploy" @click="CameraDeploy(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <el-dropdown v-if="setCameraProject" size="small" split-button type="primary">
                 <i class="el-icon-setting el-icon--left"></i>设置
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item @click.native="BindProjectss">绑定项目</el-dropdown-item>
@@ -326,6 +326,10 @@ export default {
     name: 'SolinCameraDeploy',
     data () {
         return {
+            addCameraDeploy:false,
+            editCameraDeploy:false,
+            delCameraDeploy:false,
+            setCameraProject:false,
             serverurl:localStorage.serverurl,
             name:'名称',
             type1:'1',
@@ -341,7 +345,6 @@ export default {
                     label:'在线'
                 }
             ],
-            
             value:'',
             tableData:[],
             site:[],
@@ -806,8 +809,43 @@ export default {
                 },
             })
         },
+        //权限请求
+        Jurisdiction(){
+            var that = this
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    menuId:sessionStorage.menuId3
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='addCameraDeploy'){
+                                that.addCameraDeploy = true
+                            }
+                            if(data.result.operats[i].code=='editCameraDeploy'){
+                                that.editCameraDeploy = true
+                            }
+                            if(data.result.operats[i].code=='delCameraDeploy'){
+                                that.delCameraDeploy = true
+                            }
+                            if(data.result.operats[i].code=='setCameraProject'){
+                                that.setCameraProject = true
+                            }
+                        }
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
     },
     created(){
+        this.Jurisdiction()
         this.ready()
     },
 }

@@ -3,12 +3,12 @@
     <div class="loraJournal">
         <div class="loraJournal_top">
             <div class="search">
-                <span>序列号:</span>
-                <input type="text" v-model="serialNumber" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
-            </div>
-            <div class="search">
                 <span>名称:</span>
                 <input type="text" v-model="nickName" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
+            </div>
+            <div class="search">
+                <span>序列号:</span>
+                <input type="text" v-model="serialNumber" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
             </div>
             <div class="search">
                 <span>操作类型:</span>
