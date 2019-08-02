@@ -2,10 +2,10 @@
     <!-- 巡检计划 -->
     <div class="PatrolPlan">
         <div class="PatrolPlan_top">
-            <el-button @click="PatrolPlan(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button @click="PatrolPlan(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button @click="PatrolPlan(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search">
+            <el-button v-if="addPatrolPlan" @click="PatrolPlan(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="editPatrolPlan" @click="PatrolPlan(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="delPatrolPlan" @click="PatrolPlan(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <div class="search" v-if="viewPatrolPlan">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -408,6 +408,7 @@ export default {
         return {
             name:'计划名称',
             types:'1',
+            viewPatrolPlan:false,
             addPatrolPlan:false,
             editPatrolPlan:false,
             delPatrolPlan:false,
@@ -864,6 +865,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewPatrolPlan'){
+                                that.viewPatrolPlan = true
+                            }
                             if(data.result.operats[i].code=='addPatrolPlan'){
                                 that.addPatrolPlan = true
                             }

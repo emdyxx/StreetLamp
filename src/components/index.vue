@@ -24,7 +24,16 @@
             <p style="font-size:12px;">登录时间:{{data.ts}}</p>
         </div>
     </div>
-    <div class="index_bottom">
+    <!-- <div class="Carousel">
+        <el-carousel :interval="100000" type="card">
+            <el-carousel-item v-for="item in menu" :key="item">
+                <template>
+                    <img class="medium" src="../assets/img/managementService05.png" alt="">
+                </template>
+            </el-carousel-item>
+        </el-carousel>
+    </div> -->
+    <div class="index_bottom"> 
         <div v-if="menu.length==1">
             <div class="div_01" style="width:450px;">
                 <div class="div_02">
@@ -540,15 +549,15 @@
                         </template>
                     </template>
                 </div>
+                <div class="paging" v-if="menu.length>=4">
+                    <template v-for="(item,key) in length">
+                        <span :key=key :class="index==key ? 'active' : ''"></span>
+                    </template>
+                </div>
             </div>
             <p v-if="menu.length>4">
                 <img @click="RightShift" src="../assets/img/TurnRight.png" alt="">
             </p>
-        </div>
-        <div class="paging" v-if="menu.length>=4">
-            <template v-for="(item,key) in length">
-                <span :key=key :class="index==key ? 'active' : ''"></span>
-            </template>
         </div>
     </div>
     <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -920,6 +929,10 @@ export default {
     created() {
         this.Jurisdiction();
         this.ready();
+        var urls = window.location.href
+        var url = urls.split(':')
+        url = url[2].split('/')
+        sessionStorage.serverPort =':'+(Number(url[0])+1)
     },
 }
 </script>
@@ -939,10 +952,13 @@ export default {
 .index_top_psd>button:nth-of-type(1){padding: 0 0 0 20px;}
 .index_top_psd>button:nth-of-type(2){padding: 20px 0 0 20px;margin:0;}
 
+/* .Carousel{width: 80%;position: absolute;top: 380px;left: 10%;right: 0;bottom: 0;} */
+
+
 .index_bottom{width:100%;position: absolute;top:360px;bottom: 0;display: flex;justify-content: center;}
 .index_bottom>div{display: flex;width: 100%;justify-content: center;}
 .index_bottom>div>p{margin: 0;cursor: pointer;padding: 200px 15px 0 15px;}
-.div_01{width: 1544px;overflow: hidden;position: relative;padding:35px 0 0 0;}
+.div_01{width: 1544px;height:451px;overflow: hidden;position: relative;padding:35px 0 0 0;}
 .div_02{display: flex;position: absolute;transition: all .5s;-webkit-transition: all .5s;}
 .div_02>div,.index_bottom>div>p>img{transition: all .5s;-webkit-transition: all .5s;}
 .div_02>div:hover,.index_bottom>div>p>img:hover{
@@ -953,7 +969,23 @@ export default {
     -o-transform:scale(1.1);
 }
 
-.paging{position: absolute;top:0px;width: 100%;height: 5px;display: flex;justify-content: center;}
-.paging>span{display: inline-block;background: #7c7c7c77;width: 222px;height: 1px;margin:0 5px 0 5px;}
+.paging{position: absolute;bottom:0;width: 100%;height: 5px;display: flex;justify-content: center;}
+.paging>span{display: inline-block;background: #7c7c7c77;width: 180px;height: 1px;margin:0 5px 0 5px;}
 .active{background: white !important;}
+</style>
+<style lang='less'>
+// .Carousel{
+//     .el-carousel__item img{
+//        width: 100%; 
+//        height: 380px;
+//     }
+//     .el-carousel__item:nth-child(2n) {
+//         background-color: #99a9bf;
+//     }
+    
+//     .el-carousel__item:nth-child(2n+1) {
+//         background-color: #d3dce6;
+//     }
+// }
+  
 </style>

@@ -9,30 +9,30 @@
                 <el-button v-if="addOrg" @click="addorganization(0)" type="primary" icon='el-icon-plus' size='small'>添加机构</el-button>
                 <el-button v-if="editOrg" @click="addorganization(1)" type="primary" icon="el-icon-edit" size='small'>编辑机构</el-button>
                 <el-button v-if="delOrg" @click="deleteorganization" type="primary" icon='el-icon-delete' size='small'>删除机构</el-button>
-                <div class="search">
-                        <el-dropdown size="small" split-button @command="handleCommand">
-                            {{name}}
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item @click.native="name='机构名称';types='1';">机构名称</el-dropdown-item>
-                                <el-dropdown-item @click.native="name='负责人';types='2';">负责人</el-dropdown-item>
-                                <el-dropdown-item @click.native="name='电话';types='3';">电话</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                        <div>
-                            <template v-if="types=='1'">
-                                <el-input v-model="orgName" size="small" placeholder="请输入机构名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                            </template>
-                            <template v-if="types=='2'">
-                                <el-input v-model="principal" size="small" placeholder="请输入负责人" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                            </template>
-                            <template v-if="types=='3'">
-                                <el-input v-model="mobile" size="small" placeholder="请输入电话" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                            </template>
-                        </div>
-                        <div>
-                            <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                        </div>
+                <div class="search" v-if="viewOrg">
+                    <el-dropdown size="small" split-button @command="handleCommand">
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='机构名称';types='1';">机构名称</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='负责人';types='2';">负责人</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='电话';types='3';">电话</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="types=='1'">
+                            <el-input v-model="orgName" size="small" placeholder="请输入机构名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="types=='2'">
+                            <el-input v-model="principal" size="small" placeholder="请输入负责人" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="types=='3'">
+                            <el-input v-model="mobile" size="small" placeholder="请输入电话" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
                     </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
+                </div>
             </div>
             <div class="organization_right_bottom">
                 <!-- <div class="organization_right_bottom_top">
@@ -320,6 +320,7 @@ export default {
             name:'机构名称',
             types:'1',
             serverurl:localStorage.serverurl,
+            viewOrg:false,
             addOrg:false,
             editOrg:false,
             delOrg:false,
@@ -494,9 +495,9 @@ export default {
                 this.radio2 = false
                 $('#addorganizations').modal('show');
                 $('#myTab a:first').tab('show')
-                var file = document.getElementById('img1');
+                // var file = document.getElementById('img1');
                 var file1 = document.getElementById('img2');
-                file.value = ''; //虽然file的value不能设为有字符的值，但是可以设置为空值
+                // file.value = ''; //虽然file的value不能设为有字符的值，但是可以设置为空值
                 file1.value = '';
                 this.$refs.tree.setCheckedKeys([]);
             }
@@ -518,9 +519,9 @@ export default {
                 this.data.email = this.site[0].email
                 this.imageUrl1 = that.serverurl+this.site[0].backdrop
                 this.icon = this.site[0].backdrop
-                var file = document.getElementById('img1');
+                // var file = document.getElementById('img1');
                 var file1 = document.getElementById('img2');
-                file.value = ''; //虽然file的value不能设为有字符的值，但是可以设置为空值
+                // file.value = ''; //虽然file的value不能设为有字符的值，但是可以设置为空值
                 file1.value = '';
 
                 that.data.fullName = ''
@@ -771,7 +772,7 @@ export default {
                 }
             }
             formdate.append("backdropFile", this.$refs.img1.files[0])
-            // formdate.append("file", this.$refs.img1.files[0])
+            formdate.append("file", this.$refs.img1.files[0])
             formdate.append("orgName", this.data.orgName)
             formdate.append("principal", this.data.principal)
             formdate.append("orgMobile", this.data.orgMobile)
@@ -984,6 +985,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewOrg'){
+                                that.viewOrg = true
+                            }
                             if(data.result.operats[i].code=='addOrg'){
                                 that.addOrg = true
                             }

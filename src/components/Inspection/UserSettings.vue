@@ -5,7 +5,7 @@
             <el-button @click="operationUserSettings(0)" v-if="addPatrolInspector" type="primary" icon='el-icon-plus' size='small'>添加用户</el-button>
             <el-button @click="operationUserSettings(1)" v-if="editPatrolInspector" type="primary" icon="el-icon-edit" size='small'>编辑用户</el-button>
             <el-button @click="operationUserSettings(2)" v-if="delPatrolInspector" type="primary" icon='el-icon-delete' size='small'>删除用户</el-button>
-            <div class="search">
+            <div class="search" v-if="viewPatrolInspector">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -178,6 +178,7 @@ export default {
         return {
             name:'姓名',
             types:'1',
+            viewPatrolInspector:false,
             addPatrolInspector:false,
             editPatrolInspector:false,
             delPatrolInspector:false,
@@ -415,6 +416,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewPatrolInspector'){
+                                that.viewPatrolInspector = true
+                            }
                             if(data.result.operats[i].code=='addPatrolInspector'){
                                 that.addPatrolInspector = true
                             }

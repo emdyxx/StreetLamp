@@ -11,7 +11,7 @@
                     <el-button v-if="addUser" @click="adduser(0)" type="primary" icon='el-icon-plus' size='small'>添加用户</el-button>
                     <el-button v-if="editUser" @click="adduser(1)" type="primary" icon="el-icon-edit" size='small'>编辑用户</el-button>
                     <el-button v-if="delUser" @click="deleteuser" type="primary" icon='el-icon-delete' size='small'>删除用户</el-button>
-                    <div class="search">
+                    <div class="search" v-if="viewUser">
                         <el-dropdown size="small" split-button @command="handleCommand">
                             {{name}}
                             <el-dropdown-menu slot="dropdown">
@@ -109,8 +109,7 @@
                             <el-table-column
                             align='center'
                             label="状态"
-                            min-width="80"
-                            v-if="enabledUser">
+                            min-width="80">
                                 <template slot-scope="scope">
                                     <span v-if="scope.row.status=='0'">启用</span>
                                     <span v-if="scope.row.status=='1'">禁用</span>
@@ -128,8 +127,8 @@
                             min-width="180"
                             show-overflow-tooltip>
                                 <template slot-scope="scope">
-                                    <el-button v-if="scope.row.status=='0'" @click="userStatus(scope.row.id,scope.row.status)" type="danger" size='mini'>禁用</el-button>
-                                    <el-button v-if="scope.row.status=='1'" @click="userStatus(scope.row.id,scope.row.status)" type="primary" size='mini'>启用</el-button>
+                                    <el-button v-if="scope.row.status=='0'&&enabledUser" @click="userStatus(scope.row.id,scope.row.status)" type="danger" size='mini'>禁用</el-button>
+                                    <el-button v-if="scope.row.status=='1'&&enabledUser" @click="userStatus(scope.row.id,scope.row.status)" type="primary" size='mini'>启用</el-button>
                                     <el-button v-if="resetPassword" @click="resetPasswords(scope.row.id)" type="primary" size='mini'>重置密码</el-button>
                                 </template>
                             </el-table-column>
@@ -315,6 +314,7 @@ export default {
             name:'用户名',
             types:'1',
             serverurl:localStorage.serverurl,
+            viewUser:false,
             addUser:false,
             editUser:false,
             delUser:false,
@@ -974,6 +974,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewUser'){
+                                that.viewUser = true
+                            }
                             if(data.result.operats[i].code=='addUser'){
                                 that.addUser = true
                             }

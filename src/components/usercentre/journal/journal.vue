@@ -348,7 +348,7 @@ export default {
 <style scoped>
 .journal{position: absolute;top:10px;left: 10px;right: 10px;bottom: 10px;width:auto;height: auto;border-radius: 4px;}
 .journal>div{width: 100%;height: 100%;}
-.journal_top{height: 46px;border-bottom: none !important;display: flex;align-items: center;}
+.journal_top{height: 46px;border-bottom: none !important;display: flex;align-items: center;margin-top: -8px;}
 .journal_top>div{margin-left: 15px;}
 .journal_top>button{height:33px;margin-left: 15px;}
 .journal_bottom{top: 56px;left:5px;right: 5px;bottom: 5px;position: absolute;}

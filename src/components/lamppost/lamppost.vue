@@ -294,7 +294,7 @@ export default {
 </script>
 <style scoped>
 .lamppost{width: 100%;height: 100%;}
-.header{width:100%;height: 60px;background: #409EFF;display: flex;align-items: center;}
+.header{width:100%;height: 60px;background: #409eff;display: flex;align-items: center;}
 .header>i{font-size: 32px;color: white;cursor: pointer;position: absolute;left: 20px;top:8px;}
 .header>i:hover{color: aquamarine;}
 .lamppost-header-left{height: 100%;display: inline-block;margin-left: 70px;color: white;font-size: 22px;line-height: 60px;}

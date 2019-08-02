@@ -96,21 +96,87 @@
         </div>
         <!-- 摄像头模态框（Modal） -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:470px;">
+            <div class="modal-dialog" style="width:620px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="myModalLabel">{{informationData.nickName}}</h4>
                     </div>
-                    <div class="modal-body Modal">
-                        <!-- <a href="https://get.adobe.com/cn/flashplayer/" class="flashLoadMsg" target="_blank">请点击安装或者启用FLASH播放器</a> -->
-                        <div id="engage_view" style="display: block;">
+                    <div class="modal-body Modal" style='position:relative;'>
+                        <!-- <div style="position:absolute;top:0;left:0;">
+                            <el-button round @click="requestFullScreen">圆角按钮</el-button>
+                        </div> -->
+                        <div id="engage_view" style="display: block;width:400px;height:270px;">
                             <div id="engage_content">
                                 <div id="engage_resize_container">
-                                    <div id="engage_video" style="width: 100%;height: 270px;">
+                                    <div id="engage_video">
                                         
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="myModal_right">
+                            <span class="el-upload__tip" style="font-size:18px;">控制台</span>
+                            <div>
+                                <p>
+                                    <el-button @click="operation(25)" type="primary" style="padding:5px;">
+                                        <img src="../../../assets/img/top.png" alt="" style="transform:rotate(-45deg);">
+                                    </el-button>
+                                    <el-button @click="operation(21)" type="primary" style="padding:5px;">
+                                        <img src="../../../assets/img/top.png" alt="">
+                                    </el-button>
+                                    <el-button @click="operation(26)" type="primary" style="padding:5px;">
+                                        <img src="../../../assets/img/top.png" alt="" style="transform:rotate(45deg);">
+                                    </el-button>
+                                </p>
+                                <p>
+                                    <el-button @click="operation(23)" type="primary" style="padding:5px;">
+                                        <img src="../../../assets/img/top.png" alt="" style="transform:rotate(-90deg);">
+                                    </el-button>
+                                    <el-button @click="operation(29)" type="primary" style="padding:5px;">
+                                        <img src="../../../assets/img/load.png" alt="">
+                                    </el-button>
+                                    <el-button @click="operation(24)" type="primary" style="padding:5px;">
+                                        <img src="../../../assets/img/top.png" alt="" style="transform:rotate(90deg);">
+                                    </el-button>
+                                </p>
+                                <p>
+                                    <el-button @click="operation(27)" type="primary" style="padding:5px;">
+                                        <img src="../../../assets/img/top.png" alt="" style="transform:rotate(-135deg);">
+                                    </el-button>
+                                    <el-button @click="operation(22)" type="primary" style="padding:5px;">
+                                        <img src="../../../assets/img/top.png" alt="" style="transform:rotate(180deg);">
+                                    </el-button>
+                                    <el-button @click="operation(28)" type="primary" style="padding:5px;">
+                                        <img src="../../../assets/img/top.png" alt="" style="transform:rotate(135deg);">
+                                    </el-button>
+                                </p>
+                            </div>
+                            <div style="margin-left:20px;">
+                                <p>
+                                    <el-button @click="operation(11)" type="primary" title="焦距变大" style="padding:5px;">
+                                        <img src="../../../assets/img/enlarge.png" alt="">
+                                    </el-button>
+                                    <el-button @click="operation(12)" type="primary" title="焦距变小" style="padding:5px;">
+                                        <img src="../../../assets/img/narrow.png" alt="">
+                                    </el-button>
+                                </p>
+                                <p>
+                                    <el-button @click="operation(13)" type="primary" title="焦点前调" style="padding:5px;">
+                                        <img src="../../../assets/img/distance1.png" alt="">
+                                    </el-button>
+                                    <el-button @click="operation(14)" type="primary" title="焦点后调" style="padding:5px;">
+                                        <img src="../../../assets/img/distance2.png" alt="">
+                                    </el-button>
+                                </p>
+                                <p>
+                                    <el-button @click="operation(15)" type="primary" title="光圈扩大" style="padding:5px;width: 30px;">
+                                        <img src="../../../assets/img/spot1.png" alt="">
+                                    </el-button>
+                                    <el-button @click="operation(16)" type="primary" title="光圈缩小" style="padding:5px;width: 30px;">
+                                        <img src="../../../assets/img/spot2.png" alt="">
+                                    </el-button>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -360,13 +426,15 @@ export default {
                         that.timeValue = 0
                         var url = localStorage.serverurl.split('/')
                         url = url[2].split(':')
-                        that.url ='rtmp://' + url[0]+':8072'+ data.result.camera.rtmpStream
+                        // that.url ='rtmp://' + url[0]+sessionStorage.serverPort+ data.result.camera.rtmpStream
+                        that.url ='rtmp://' + url[0]+':8072'+ '/live/5'
                         var id = 'video-my'
                         $('#engage_video').append(
-                            '<video id="'+id+'" class="video-js vjs-default-skin vjs-big-play-centered flex-grid" poster="" width="438" height="270">'+
+                            '<video id="'+id+'" controls="controls" class="video-js vjs-default-skin vjs-big-play-centered flex-grid" poster="" width="400" height="270">'+
                                 '<source src="'+that.url+'" type="rtmp/flv"/>'+
                             '</video>'
                         )
+                        console.log(that.url)
                         that.player = VideoJs('video-my');
                         that.player.play();
                         that.time2  = setInterval(function(){
@@ -403,6 +471,61 @@ export default {
                     }
                 },
             })
+        },
+        //操作
+        operation(val){
+            var that = this;
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/camera/device/control',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify({
+                    action:'0',
+                    command:val,
+                    id:that.informationData.id
+                }),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        $.ajax({
+                            type:'post',
+                            async:true,
+                            dataType:'json',
+                            url:that.serverurl+'/v1/solin/camera/device/control',
+                            contentType:'application/json;charset=UTF-8',
+                            data:JSON.stringify(
+                                {
+                                    action:'1',
+                                    command:val,
+                                    id:that.id
+                                }
+                            ),
+                            success:function(data){
+                                if(data.errorCode=='0'){
+                                    
+                                }else{
+                                    that.errorCode(data)
+                                }
+                            }
+                        })
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
+        //进入全屏
+        requestFullScreen() {  
+            console.log(123)
+            var de = this.$refs.baseVideoBox; 
+            if (de.requestFullscreen) {  
+                de.requestFullscreen();  
+            } else if (de.mozRequestFullScreen) {  
+                de.mozRequestFullScreen();  
+            } else if (de.webkitRequestFullScreen) {  
+                de.webkitRequestFullScreen();  
+            }  
         },
         //初始化 百度地图/平面图
         ready(){
@@ -445,6 +568,7 @@ export default {
                             var offline = new BMap.Icon(that.imgserverurl+"image/img/Camera03.png", new BMap.Size(45,45));
                             var Unknown = new BMap.Icon(that.imgserverurl+"image/img/Camera04.png", new BMap.Size(45,45));
                             var abnormal = new BMap.Icon(that.imgserverurl+"image/img/Camera01.gif", new BMap.Size(210,210));
+                            var markers = []
                             for(var i=0;i<data.result.cameras.length;i++){
                                 if(data.result.cameras[i].coord==''||data.result.cameras[i].coord==undefined||data.result.cameras[i].coord==null){
 
@@ -463,12 +587,16 @@ export default {
                                     }
                                     marker.id=data.result.cameras[i].id
                                     marker.type=that.value1
-                                    map.addOverlay(marker);
+                                    markers.push(marker)
+                                    // map.addOverlay(marker);
                                 } 
                             }
-                            map.setMapStyleV2({     
-                                styleId: '7ff9f4f543ec7f2704516df1a246f110'
-                            });
+                            var markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markers});
+                            markerClusterer.setMinClusterSize(3)
+                            map.setMapStyle({style:'light'});
+                            // map.setMapStyleV2({     
+                            //     styleId: '7ff9f4f543ec7f2704516df1a246f110'
+                            // });
                             //鼠标左键请求基本信息
                             map.addEventListener("click", function (e) {
                                 if(e.overlay){
@@ -478,6 +606,8 @@ export default {
                                         }
                                     }
                                     that.information_type = true
+                                }else{
+                                    that.information_type = false
                                 }
                             });
                         }
@@ -567,7 +697,7 @@ export default {
 <style scoped>
 hr{margin: 0;}
 .SingleLamp{width: 100%;height: 100%;position: relative;}
-.project_top_left{position: absolute;top: 0;left: 0;width: 403px;height: 48px;background: #303e60;border-top-right-radius: 40px;border-bottom-right-radius: 40px;display: flex;justify-content: center;align-items: center;z-index: 2;}
+.project_top_left{position: absolute;top: 0;left: 0;width: 403px;height: 48px;background: #409eff;border-top-right-radius: 40px;border-bottom-right-radius: 40px;display: flex;justify-content: center;align-items: center;z-index: 2;}
 .project_top_left>div{width: 348px;}
 .statistical{width: 350px;height: 190px;border-radius: 10px;box-shadow: 3px 3px 5px #999;position: absolute;top: 75px;left: 10px;padding: 0 15px 0 15px;z-index: 2;background: white;}
 .statistical_top{height: 40px;display: flex;align-items: center;font-size: 15px;color: #333333;}
@@ -590,16 +720,19 @@ hr{margin: 0;}
 .weather>div:nth-of-type(2)>p{margin: 0;}
 .weather>div:nth-of-type(2)>p:nth-of-type(1){font-size: 44px;height: 55px;font-weight: 600;}
 .weather>div:nth-of-type(2)>p:nth-of-type(2){font-size: 22px;} */
-.information{width: 256px;height: 300px;border-radius:5px;position: absolute;top:350px;left:170px;z-index: 2;box-shadow: 3px 3px 5px #999;}
+.information{width: 256px;height: 300px;border-radius:5px;position: absolute;top:300px;left:105px;z-index: 2;box-shadow: 3px 3px 5px #999;}
 .information_top{width: 100%;height: 45px;line-height: 45px;background:white;color: #333333;font-size: 16px;padding-left: 15px;border-bottom: 1px solid #ebeff5;;border-top-left-radius: 5px;border-top-right-radius: 5px;}
 .information_top>span:nth-of-type(2),.lampData_top>span:nth-of-type(2){position: absolute;right: 10px;cursor: pointer;}
 .information_bottom{padding:10px;position: absolute;top: 45px;bottom: 0;background: white;width: 100%;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;}
-.information_bottom_table{font-size: 12px;}
-.information_bottom_table>tr{height: 35px;line-height: 35px;border: 1px solid #ebeff5;}
-.information_bottom_table>tr>td:nth-of-type(1){width: 40%;background: #f3f4f9;text-align: center;}
-.information_bottom_table>tr>td:nth-of-type(2){text-align: left;padding-left: 5px;}
-/* .flashLoadMsg{width: 90%;height: 90%;background: black;display: flex;justify-content: center;align-items: center;font-size: 16px;display: none;position: absolute;z-index: 9;} */
+.information_bottom_table{font-size: 12px;table-layout:fixed;}
+.information_bottom_table>tr{width: 235px;height: 35px;line-height: 35px;border: 1px solid #ebeff5;}
+.information_bottom_table>tr>td:nth-of-type(1){width: 94px;background: #f3f4f9;text-align: center;}
+.information_bottom_table>tr>td:nth-of-type(2){width:141px;text-align: left;padding-left: 5px;
+word-break:keep-all;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;-moz-text-overflow: ellipsis;}
 .video-js{width: 100% !important;height: 270px !important;}
 .allmap{width: 100%;height: 100%;}
 .allmap>div{width: 100%;height: 100%;}
+.myModal_right{width: 180px;height: 270px;position: absolute;top: 15px;right:15px;padding-left: 33px;}
+.myModal_right>div{margin-top: 10px;}
+.myModal_right button{padding:5px;}
 </style>

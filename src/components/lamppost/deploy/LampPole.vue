@@ -5,13 +5,13 @@
             <el-button v-if="addPole" @click="addLampPole(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="editPole" @click="addLampPole(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="delPole" @click="deleteLampPole" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <el-dropdown v-if="poleBindProject" size="small" split-button type="primary">
-                <i class="el-icon-setting el-icon--left"></i>设置
-                <el-dropdown-menu slot="dropdown">
+            <el-dropdown v-if="poleBindProject" size="small" split-button  type="primary">
+                <i class="el-icon-setting el-icon--left" type="primary"></i>设置
+                <el-dropdown-menu slot="dropdown" type="primary">
                     <el-dropdown-item @click.native="poleBindProjects">绑定项目</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="search">
+            <div class="search" v-if="viewPoleDeploy">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -111,6 +111,14 @@
                 min-width="80">
                     <template slot-scope="scope">
                         <button @click="sensor(scope.row.id)" style="height:20px;line-height:15px;">...</button>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                label="光照度"
+                align='center'
+                min-width="80">
+                    <template slot-scope="scope">
+                        <button @click="Illumination(scope.row.id)" style="height:20px;line-height:15px;">...</button>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -1035,6 +1043,129 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
+        <!-- 关联光照度 -->
+        <div class="modal fade" id="IlluminationModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <div>
+                            <el-button @click="IlluminationType(0)" type="primary" size='small'>关联光照度</el-button>
+                            <el-button @click="IlluminationType(1)" type="primary" size='small'>解除关联</el-button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <el-table
+                            :data="tableData14" 
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            @selection-change="SelectionChange14"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="nickName"
+                            align='center'
+                            label="名称"
+                            min-width="100">
+                            </el-table-column>
+                            <el-table-column
+                            prop="lightNumber"
+                            align='center'
+                            label="序列号"
+                            min-width="110">
+                            </el-table-column>
+                            <el-table-column
+                            prop="remark"
+                            align='center'
+                            label="备注"
+                            min-width="120"
+                            :formatter="formatRole">
+                            </el-table-column>
+                            <el-table-column
+                            prop="createTime"
+                            align='center'
+                            label="创建时间"
+                            show-overflow-tooltip>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+         <!-- 点击关联光照度 -->
+        <div class="modal fade" id="IlluminationModalTwo"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        请选择设备进行关联
+                    </div>
+                    <div class="modal-body">
+                        <el-table
+                            :data="tableData15" 
+                            border
+                            stripe
+                            size='small'
+                            tooltip-effect="dark"
+                            @selection-change="SelectionChange15"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            type="selection"
+                            align='center'
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="nickName"
+                            align='center'
+                            label="名称"
+                            min-width="100">
+                            </el-table-column>
+                            <el-table-column
+                            prop="lightNumber"
+                            align='center'
+                            label="序列号"
+                            min-width="110">
+                            </el-table-column>
+                            <el-table-column
+                            prop="remark"
+                            align='center'
+                            label="备注"
+                            min-width="120"
+                            :formatter="formatRole">
+                            </el-table-column>
+                            <el-table-column
+                            prop="createTime"
+                            align='center'
+                            label="创建时间"
+                            show-overflow-tooltip>
+                            </el-table-column>
+                        </el-table>
+                        <div class="block">
+                            <el-pagination
+                            background
+                            @size-change="sizechange15"
+                            @current-change="currentchange15"
+                            :current-page="pageIndex15"
+                            :page-sizes="[10, 20, 30, 50]"
+                            :page-size="pageSize15"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="total15">
+                            </el-pagination>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button @click="RelationSeven" type="button" class="btn btn-primary">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
         <!-- 绑定项目 -->
         <div class="modal fade" id="poleBindProjectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" style="width:350px;">
@@ -1093,6 +1224,7 @@ export default {
             type:'1',
             type:'1',
             serverurl:localStorage.serverurl,
+            viewPoleDeploy:false,
             addPole:false,
             editPole:false,
             delPole:false,
@@ -1180,6 +1312,13 @@ export default {
             pageIndex13:1,
             pageSize13:10,
             total13:10,
+            tableData14:[],//光照度
+            site14:[],
+            tableData15:[],
+            site15:[],
+            pageIndex15:1,
+            pageSize15:10,
+            total15:10,
         }
     },
     mounted(){
@@ -1406,6 +1545,7 @@ export default {
                 this.value = this.site[0].poleType
                 this.LampPoleData.remark = this.site[0].remark
                 this.LampPoleData.coord = this.site[0].coord
+                this.referencePosition = this.site[0].coord
                 this.LampPoleData.serialNumber = this.site[0].serialNumber
             }
             /* 完成拖拽 */
@@ -2566,6 +2706,165 @@ export default {
             })
         },
 
+        //关联光照度
+        Illumination(val){
+            if(sessionStorage.projectId=='0'){
+                this.$message({
+                    message: '此操作请选择具体项目!',
+                    type: 'warning'
+                });
+                return;
+            }
+            this.poleId = val
+            this.IlluminationData();
+            $('#IlluminationModal').modal('show')
+            /* 完成拖拽 */
+            $('#IlluminationModal').draggable({
+                cursor: "move",
+                handle: '.modal-header'
+            });
+            $('#IlluminationModal').css("overflow", "hidden")
+        },
+        //获取已关联光照度
+        IlluminationData(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/lightSensors/pole',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    page:1,
+                    size:10,
+                    poleId:that.poleId,
+                    command :'1',
+                    projectIds:sessionStorage.projectId,
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tableData14 = data.result.list
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
+        //获取未关联光照度
+        IlluminationData2(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/lightSensors/pole',
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    page:that.pageIndex15,
+                    size:that.pageSize15,
+                    poleId:that.poleId,
+                    command :'2',
+                    projectIds:sessionStorage.projectId,
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tableData15 = data.result.list
+                        that.total15 = data.result.total
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
+        SelectionChange14(val){this.site14=val;},
+        SelectionChange15(val){this.site15=val;},
+        sizechange15(val){this.pageSize15=val;this.SceneryData2()},
+        currentchange15(val){this.pageIndex15=val;this.SceneryData2()},
+        //关联,解除关联
+        IlluminationType(val){
+            var that = this;
+            if(val=='0'){
+                this.IlluminationData2()
+                $('#IlluminationModalTwo').modal('show')
+            }
+            if(val=='1'){
+                if(this.site14.length==0){
+                    this.$message({
+                        message: '请选择光照度设备进行操作!',
+                        type: 'error'
+                    });
+                    return;
+                }
+                var data = {};
+                var arr = [];
+                for(var i = 0;i<that.site14.length;i++){
+                    arr.push(that.site14[i].id)
+                }
+                data.lights  = arr
+                data.poleId = that.poleId;
+                data.projectId = sessionStorage.projectId
+                data.command = '2'
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/lightSensors/device/pole',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data), 
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '解除关联成功!',
+                                type: 'success'
+                            });
+                            that.IlluminationData()
+                        }else{
+                            that.errorCode(data)
+                        }
+                    }
+                })
+            }
+        },
+        //关联确认
+        RelationSeven(){
+            var that = this
+            if(this.site15.length==0){
+                this.$message({
+                    message: '请选择光照度设备进行操作!',
+                    type: 'error'
+                });
+                return;
+            }
+            var data = {};
+            var arr = [];
+            for(var i = 0;i<that.site15.length;i++){
+                arr.push(that.site15[i].id)
+            }
+            data.lights  = arr
+            data.poleId = that.poleId;
+            data.projectId = sessionStorage.projectId
+            data.command = '1'
+            $.ajax({
+                type:'post',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/lightSensors/device/pole',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data), 
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.$message({
+                            message: '关联成功!',
+                            type: 'success'
+                        });
+                        $('#IlluminationModalTwo').modal('hide')
+                        that.IlluminationData()
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
 
         //获取灯杆列表
         ready(){
@@ -2614,6 +2913,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewPoleDeploy'){
+                                that.viewPoleDeploy = true
+                            }
                             if(data.result.operats[i].code=='addPole'){
                                 that.addPole = true
                             }
@@ -2623,7 +2925,6 @@ export default {
                             if(data.result.operats[i].code=='delPole'){
                                 that.delPole = true
                             }
-
                             if(data.result.operats[i].code=='poleAssociateLamp'){
                                 that.relationLamp = true
                             }
@@ -2632,9 +2933,6 @@ export default {
                             }
                             if(data.result.operats[i].code=='poleAssociateEnv'){
                                 that.relationSensor = true
-                            }
-                            if(data.result.operats[i].code=='addPoleLamp'){
-                                that.addLamp = true
                             }
                             if(data.result.operats[i].code=='setPoleProject'){
                                 that.poleBindProject = true

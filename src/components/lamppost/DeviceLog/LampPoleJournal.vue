@@ -3,6 +3,14 @@
     <div class="LampPoleJournal">
         <div class="LampPoleJournal_top">
             <div class="search">
+                <span>名称:</span>
+                <input type="text" v-model="nickName" style="width:126px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入灯杆名称">
+            </div>
+            <div class="search">
+                <span>序列号:</span>
+                <input type="text" v-model="serialNumber" style="width:126px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入灯杆编号">
+            </div>
+            <div class="search">
                 <span>操作类别:</span>
                 <el-select v-model="value" clearable size='small' style="width:126px;" placeholder="请选择">
                     <el-option
@@ -12,10 +20,6 @@
                     :value="item.value">
                     </el-option>
                 </el-select>
-            </div>
-            <div class="search">
-                <label>灯杆编号:</label>
-                <input type="text" v-model="serialNumber" style="width:126px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入灯杆编号">
             </div>
             <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
         </div>
@@ -115,6 +119,7 @@ export default {
                 },
             ],
             value:'',
+            nickName:'',
             serialNumber:'',
             tableData:[],
             pageIndex:1,
@@ -138,8 +143,9 @@ export default {
                 url:that.serverurl+'/v1/solin/lighting/pole/log/operation',
                 contentType:'application/json;charset=UTF-8',
                 data:{
-                    operatType:that.value,
+                    nickName:that.nickName,
                     serialNumber:that.serialNumber,
+                    operatType:that.value,
                     page:that.pageIndex,
                     size:that.pageSize,
                     projectIds:sessionStorage.projectId

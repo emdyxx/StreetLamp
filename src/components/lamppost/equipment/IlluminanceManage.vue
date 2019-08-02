@@ -8,7 +8,7 @@
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='地址';type='2';">地址</el-dropdown-item>
                         <el-dropdown-item @click.native="name='状态';type='3';">状态</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -17,7 +17,7 @@
                         <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='2'">
-                        <el-input v-model="concentratorSn" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        <el-input v-model="concentratorSn" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='3'">
                         <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
@@ -61,7 +61,7 @@
                 <el-table-column
                 prop="lightNumber"
                 align='center'
-                label="序列号"
+                label="地址"
                 min-width="100">
                 </el-table-column>
                 <el-table-column
@@ -74,16 +74,15 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                prop="concentratorName"
+                prop="modelName"
                 align='center'
-                label="集中器"
-                :formatter="formatRole"
+                label="型号"
                 min-width="100">
                 </el-table-column>
                 <el-table-column
-                prop="poleName"
+                prop="lux"
                 align='center'
-                label="归属灯杆"
+                label="光照度"
                 :formatter="formatRole"
                 min-width="100">
                 </el-table-column>
@@ -95,9 +94,9 @@
                 min-width="100">
                 </el-table-column>
                 <el-table-column
-                prop="createTime"
+                prop="timestamp"
                 align='center'
-                label="创建时间"
+                label="采集时间"
                 :formatter="formatRole"
                 xshow-overflow-tooltip>
                 </el-table-column>

@@ -1012,7 +1012,7 @@ export default {
         sizechange(val){this.pageSize = val;this.ready()},
         search(){this.ready();},
         //返回上一级
-        backtrack(){this.$router.go(-1)}
+        backtrack(){this.$router.go(-1)},
     },
     created(){
         this.tableData = []

@@ -96,9 +96,9 @@
                     <el-button @click="mediaSave" type="success" icon="el-icon-plus" size='small' style="margin-left: 5px;">保存</el-button>
                 </div>
                 <div style="display:flex;margin-top:10px;">
-                    <el-input v-model="mediaVlaue" placeholder="节目位置" size='small' style="width:106px;"></el-input>
-                    <el-button type="primary" @click="mediaMove(0)" icon="el-icon-sort" size='small' style="margin-left: 5px;"></el-button>
-                    <el-button type="success" @click="mediaMove(1)" icon="el-icon-arrow-up" size='small' style="margin-left: 35px;"></el-button>
+                    <!-- <el-input v-model="mediaVlaue" placeholder="节目位置" size='small' style="width:106px;"></el-input> -->
+                    <!-- <el-button type="primary" @click="mediaMove(0)" icon="el-icon-sort" size='small' style="margin-left: 5px;"></el-button> -->
+                    <el-button type="success" @click="mediaMove(1)" icon="el-icon-arrow-up" size='small' style="margin-left: 5px;"></el-button>
                     <el-button type="primary" @click="mediaMove(2)" icon="el-icon-arrow-down" size='small' style="margin-left: 5px;"></el-button>
                     <el-button type="warning" @click="mediaMove(3)" icon="el-icon-delete" size='small' style="margin-left: 5px;"></el-button>
                 </div>
@@ -168,7 +168,7 @@ export default {
             mediaIndex2:1,
             mediaSize2:5,
             mediaTotal2:5,
-            mediaVlaue:'1',
+            // mediaVlaue:'1',
             mediadata:[],
             checkKey:[],
             previewData:'',
@@ -241,6 +241,7 @@ export default {
                 }
             }
             if(type==false){return}
+            this.checkKey = []
             this.mediadata.unshift(val)
         },
         //媒体check选择
@@ -268,20 +269,20 @@ export default {
             }
             var data = this.mediadata[this.checkKey[0]]
             //指定移动到某个位置
-            if(val=='0'){
-                var s = ''
-                if(this.mediaVlaue<=0){
-                    s = 0
-                }else{
-                    s=this.mediaVlaue-1
-                }
-                if(this.mediaVlaue>this.mediadata.length){
-                    s=this.mediadata.length-1
-                }
-                this.mediadata.splice(this.checkKey[0],1)
-                this.mediadata.splice(s,0,data)
-                this.checkKey[0] = s
-            }
+            // if(val=='0'){
+            //     var s = ''
+            //     if(this.mediaVlaue<=0){
+            //         s = 0
+            //     }else{
+            //         s=this.mediaVlaue-1
+            //     }
+            //     if(this.mediaVlaue>this.mediadata.length){
+            //         s=this.mediadata.length-1
+            //     }
+            //     this.mediadata.splice(this.checkKey[0],1)
+            //     this.mediadata.splice(s,0,data)
+            //     this.checkKey[0] = s
+            // }
             //上移一级
             if(val=='1'){
                 if(this.checkKey[0]==0){return}

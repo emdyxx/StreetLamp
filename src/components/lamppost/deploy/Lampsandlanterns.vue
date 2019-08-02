@@ -5,14 +5,14 @@
             <el-button v-if="addLanternsDeployment" @click="addchargingpile(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="editLanternsDeployment" @click="addchargingpile(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="delLanternsDeployment" @click="deletechargingpile" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <el-dropdown size="small" split-button type="primary">
+            <el-dropdown v-if="lampBindProject" size="small" split-button type="primary">
                 <i class="el-icon-setting el-icon--left"></i>设置
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-if="lampBindProject" @click.native="lampBindProjects">绑定项目</el-dropdown-item>
+                    <el-dropdown-item @click.native="lampBindProjects">绑定项目</el-dropdown-item>
                     <!-- <el-dropdown-item @click.native="Powerfailuretime">断电时间</el-dropdown-item> -->
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="search">
+            <div class="search" v-if="viewLampDeploy">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -77,7 +77,7 @@
                     </el-table-column>
                     <el-table-column
                     align='center'
-                    label="在线状态"
+                    label="状态"
                     min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.online=='0'">离线</span>
@@ -101,7 +101,7 @@
                     <el-table-column
                     prop="poleName"
                     align='center'
-                    label="归属灯杆"
+                    label="灯杆"
                     :formatter="formatRole"
                     min-width="80">
                     </el-table-column>
@@ -253,14 +253,16 @@
                                 </template>
                             </el-table-column>
                             <el-table-column
-                            prop="location"
+                            prop="coord"
                             align='center'
+                            :formatter="formatRole"
                             label="位置"
                             width="150">
                             </el-table-column>
                             <el-table-column
                             prop="remark"
                             label="备注"
+                            :formatter="formatRole"
                             align='center'
                             width="162">
                             </el-table-column>
@@ -481,6 +483,7 @@ export default {
             name:'名称',
             type:'1',
             serverurl:localStorage.serverurl,
+            viewLampDeploy:false,
             addLanternsDeployment:false,
             editLanternsDeployment:false,
             delLanternsDeployment:false,
@@ -943,13 +946,15 @@ export default {
                 this.addType = val
                 this.ModelData()
                 that.data.serialNumber = ''
-                that.data.concentratorSN = ''
+                that.data.concentratorSn = ''
                 that.data.nickName = ''
                 that.data.mark = ''
                 that.myModalSite = []
                 this.modelType = ''
                 this.data.coord = ''
                 this.referencePosition = ''
+                that.data.remark = ''
+                this.site2 = []
             }
             if(val=='1'){
                 if(this.site.length==0||this.site.length>=2){
@@ -968,7 +973,8 @@ export default {
                 that.data.nickName = that.site[0].nickName
                 that.data.lampNumber = that.site[0].lampNumber
                 that.data.remark = that.site[0].remark
-                this.data.coord = that.site[0].coord
+                that.data.coord = that.site[0].coord
+                that.referencePosition = that.site[0].coord
             }
         },
         //点击关联灯杆
@@ -1271,6 +1277,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewLampDeploy'){
+                                that.viewLampDeploy = true
+                            }
                             if(data.result.operats[i].code=='addLamp'){
                                 that.addLanternsDeployment = true
                             }

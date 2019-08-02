@@ -6,7 +6,7 @@
             <el-button v-if="editPatrolItem" @click="operationPatrolItem(1)" type="primary" icon='el-icon-edit' size='small'>编辑</el-button>
             <el-button v-if="delPatrolItem" @click="operationPatrolItem(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
             <el-button v-if="patrolCategoryManagement" @click="operationPatrolItem(3)" type="primary" icon='el-icon-setting' size='small'>分类管理</el-button>
-            <div class="search">
+            <div class="search" v-if="viewPatrolItem">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -204,6 +204,7 @@ export default {
             name:'名称',
             types:'1',
             serverurl:localStorage.serverurl,
+            viewPatrolItem:false,
             addPatrolItem:false,
             editPatrolItem:false,
             delPatrolItem:false,
@@ -517,6 +518,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewPatrolItem'){
+                                that.viewPatrolItem = true
+                            }
                             if(data.result.operats[i].code=='addPatrolItem'){
                                 that.addPatrolItem = true
                             }

@@ -3,7 +3,7 @@
     <div class="sensorJournal">
         <div class="sensorJournal_top">
             <div class="search">
-                <span>序列号:</span>
+                <span>集中器序列号:</span>
                 <input type="text" v-model="concentratorSn" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
             </div>
             <div class="search">
@@ -52,7 +52,13 @@
                 <el-table-column
                 prop="serialNumber"
                 align='center'
-                label="序列号"
+                label="地址"
+                min-width="130">
+                </el-table-column>
+                <el-table-column
+                prop="concentratorSn"
+                align='center'
+                label="集中器序列号"
                 min-width="130">
                 </el-table-column>
                 <el-table-column

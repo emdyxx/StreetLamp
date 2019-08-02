@@ -3,8 +3,8 @@
         <div class="RelayJournal_top">
             <template v-if="type=='99'">
                 <div class="search">
-                    <span>继电器名称:</span>
-                    <input type="text" v-model="nickName" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入继电器名称">
+                    <span>名称:</span>
+                    <input type="text" v-model="nickName" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                 </div>
                 <div class="search">
                     <span>操作模块:</span>
@@ -87,9 +87,15 @@
                     min-width="100">
                     </el-table-column>
                     <el-table-column
+                    prop="relayNumber"
+                    align='center'
+                    label="地址"
+                    min-width="130">
+                    </el-table-column>
+                    <el-table-column
                     prop="concentratorSn"
                     align='center'
-                    label="序列号"
+                    label="集中器序列号"
                     min-width="100">
                     </el-table-column>
                     <el-table-column
@@ -166,6 +172,12 @@
                     min-width="100">
                     </el-table-column>
                     <el-table-column
+                    prop="relayNumber"
+                    align='center'
+                    label="地址"
+                    min-width="130">
+                    </el-table-column>
+                    <el-table-column
                     prop="concentratorSn"
                     align='center'
                     label="集中器序列号"
@@ -230,9 +242,6 @@ export default {
                 {
                 value: '1',
                 label: '继电器'
-                },{
-                value: '2',
-                label: '通道'
                 },{
                 value: '3',
                 label: '场景'

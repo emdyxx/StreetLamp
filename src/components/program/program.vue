@@ -93,10 +93,10 @@
                         <h4 class="modal-title" id="myModalLabel">创建节目</h4>
                     </div>
                     <div class="modal-body" style="text-align:center;">
-                        <el-input v-model="width" size='small' maxlength="10" style="width:256px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w]/g,'')">
+                        <el-input v-model="width" size='small' maxlength="10" style="width:256px;" oninput="value=value.replace(/[^\d]/g,'')">
                             <template slot="prepend">宽</template>
                         </el-input>
-                        <el-input v-model="height" size='small' maxlength="10" style="width:256px;margin-left:20px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w]/g,'')">
+                        <el-input v-model="height" size='small' maxlength="10" style="width:256px;margin-left:20px;" oninput="value=value.replace(/[^\d]/g,'')">
                             <template slot="prepend">高</template>
                         </el-input>
                     </div>
@@ -116,10 +116,10 @@
                         <h4 class="modal-title" id="myModalLabel">创建节目</h4>
                     </div>
                     <div class="modal-body" style="text-align:center;">
-                        <el-input v-model="width" size='small' style="width:256px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w]/g,'')">
+                        <el-input v-model="width" size='small' style="width:256px;" oninput="value=value.replace(/[^\d]/g,'')">
                             <template slot="prepend" maxlength="10">宽</template>
                         </el-input>
-                        <el-input v-model="height" size='small' style="width:256px;margin-left:20px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w]/g,'')">
+                        <el-input v-model="height" size='small' style="width:256px;margin-left:20px;" oninput="value=value.replace(/[^\d]/g,'')">
                             <template slot="prepend" maxlength="10">高</template>
                         </el-input>
                     </div>
@@ -236,6 +236,8 @@ export default {
         program(val){
             var that = this;
             that.type = '0';
+            that.width = ''
+            that.height = ''
             if(val=='0'){
                 $('#myModal').modal('show')
             }else{

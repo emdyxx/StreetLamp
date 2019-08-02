@@ -9,7 +9,7 @@
                 <el-button v-if="addProject" @click="addarticle(0)" type="primary" icon='el-icon-plus' size='small'>添加项目</el-button>
                 <el-button v-if="editProject" @click="addarticle(1)" type="primary" icon="el-icon-edit" size='small'>编辑项目</el-button>
                 <el-button v-if="delProject" @click="deletearticle" type="primary" icon='el-icon-delete' size='small'>删除项目</el-button>
-                <div class="search">
+                <div class="search" v-if="viewProject">
                     <el-dropdown size="small" split-button @command="handleCommand">
                         {{name}}
                         <el-dropdown-menu slot="dropdown">
@@ -126,6 +126,7 @@
                         prop="remark"
                         align='center'
                         label="备注"
+                        :formatter="formatRole"
                         min-width="120">
                         </el-table-column>
                         <el-table-column
@@ -273,6 +274,7 @@ export default {
             name:'项目名称',
             types:'1',
             serverurl:localStorage.serverurl,
+            viewProject:false,
             addProject:false,
             editProject:false,
             delProject:false,
@@ -332,6 +334,13 @@ export default {
             this.projectName2=''
             this.principal2=''
             this.orgId2=[]
+        },
+        formatRole:function(val, column, cellValue, index){
+            if(cellValue == null||cellValue == undefined||cellValue == ''){
+                return '----'
+            }else{
+                return cellValue
+            }
         },
         clickRow(row){
             this.$refs.moviesTable.toggleRowSelection(row)
@@ -802,6 +811,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewProject'){
+                                that.viewProject = true
+                            }
                             if(data.result.operats[i].code=='addProject'){
                                 that.addProject = true
                             }

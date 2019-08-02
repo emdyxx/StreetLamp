@@ -5,7 +5,7 @@
             <el-button v-if="addPatrolSite" @click="addInspectionSite(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="editPatrolSite" @click="addInspectionSite(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="delPatrolSite" @click="addInspectionSite(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search">
+            <div class="search" v-if="viewPatrolSite">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -321,6 +321,7 @@ export default {
         return {
             name:'点名称',
             types:'1',
+            viewPatrolSite:false,
             addPatrolSite:false,  
             editPatrolSite:false,
             delPatrolSite:false,
@@ -779,6 +780,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewPatrolSite'){
+                                that.viewPatrolSite = true
+                            }
                             if(data.result.operats[i].code=='addPatrolSite'){
                                 that.addPatrolSite = true
                             }

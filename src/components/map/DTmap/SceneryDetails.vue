@@ -4,16 +4,11 @@
             <i class="backtrack el-icon-back"></i>
         </div>
         <div class="SceneryDetails_top">
-            <span>时间检索:</span>
-            <el-date-picker
-            v-model="value1"
-            type="datetimerange"
-            range-separator="至"
-            value-format='yyyy-MM-dd HH:mm:ss'
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            @change="timeChange">
-            </el-date-picker>
+            <span>检索类别:</span>
+            <div @click="SceneryDetails_top_change('0')" :class="type=='0' ? 'SceneryDetails_top_color' : ''">近24小时</div>
+            <div @click="SceneryDetails_top_change('1')" :class="type=='1' ? 'SceneryDetails_top_color' : ''">近一周</div>
+            <div @click="SceneryDetails_top_change('2')" :class="type=='2' ? 'SceneryDetails_top_color' : ''">近一月</div>
+            <div @click="SceneryDetails_top_change('3')" :class="type=='3' ? 'SceneryDetails_top_color' : ''">近一年</div>
         </div>
         <div class="SceneryDetails_bottom">
             <div>
@@ -62,11 +57,7 @@ export default {
         return {
             serverurl:localStorage.serverurl,
             id:'',
-            value1:'',
-            value3:'',
-            value2:'',
-            value4:'',
-            value5:'',
+            type:'2'
         }
     },
     mounted(){
@@ -75,15 +66,6 @@ export default {
     methods:{
         ready(){
             var that = this;
-            var startTime = ''
-            var endTime = ''
-            if(that.value1==null||that.value1.length==0){
-                startTime = ''
-                endTime = ''
-            }else{
-                startTime = that.value1[0]
-                endTime = that.value1[1]
-            }
             $.ajax({
                 type:"get",
                 url:that.serverurl+'/v1/solin/windSolarSensors/log/data',
@@ -91,11 +73,34 @@ export default {
                 async: false,
                 data:{
                     windSolarSensorsId:that.id,
-                    startTime:startTime,
-                    endTime:endTime
+                    command:that.type
                 },
                 success:function(data){
                     if(data.errorCode=='0'){
+                        var key = data.result
+                        // 将二进制字符串转换为字符数组
+                        var charData = key.split('').map(function (x) { return x.charCodeAt(0); });
+                        // 将数字数组转换成字节数组
+                        var binData = new Uint8Array(charData);
+                        // 解压
+                        var datas = pako.inflate(binData);
+                        
+                        // 将GunZip ByTAREAR转换回ASCII字符串
+                        var array = new Uint16Array(datas)
+                        var res = '';
+                        var chunk = 8 * 1024;
+                        var i;
+                        for (i = 0; i < array.length / chunk; i++) {
+                            res += String.fromCharCode.apply(null, array.slice(i * chunk, (i + 1) * chunk)); 
+                        }
+                        res += String.fromCharCode.apply(null, array.slice(i * chunk));
+
+                        var key2 = res
+                        //  解压后解码，防止中文乱码
+                        key2 = unescape(key2)
+                        //  解压后解码，防止中文乱码
+                        //将string对象转化为json对象并重新赋值
+                        data.result = $.parseJSON(key2)
                         setTimeout(() => {
                             var myChart0 = that.$echarts.init(document.getElementById('myCharts1'))
                             var myChart1 = that.$echarts.init(document.getElementById('myCharts2'))
@@ -110,17 +115,18 @@ export default {
                             var batteryVoltage = [] //电池电压
                             var solarEngVoltage = []//太阳能电压
                             var fanVoltage = []//风机电压
-                            for(var i=0;i<data.result.list.length;i++){
-                                time.push(data.result.list[i].createTime)
-                                electricPower.push(data.result.list[i].electricPower)
-                                solarEngIma.push(data.result.list[i].solarEngIma)
-                                fanIma.push(data.result.list[i].fanIma)
-                                solarEngPower.push(data.result.list[i].solarEngPower)
-                                fanPower.push(data.result.list[i].fanPower)
-                                batteryVoltage.push(data.result.list[i].batteryVoltage)
-                                solarEngVoltage.push(data.result.list[i].solarEngVoltage)
-                                fanVoltage.push(data.result.list[i].fanVoltage)
+                            for(var i=0;i<data.result.windSolarSensorsDataVOs.length;i++){
+                                time.push(data.result.windSolarSensorsDataVOs[i].createTime)
+                                electricPower.push(data.result.windSolarSensorsDataVOs[i].electricPower)
+                                solarEngIma.push(data.result.windSolarSensorsDataVOs[i].solarEngIma)
+                                fanIma.push(data.result.windSolarSensorsDataVOs[i].fanIma)
+                                solarEngPower.push(data.result.windSolarSensorsDataVOs[i].solarEngPower)
+                                fanPower.push(data.result.windSolarSensorsDataVOs[i].fanPower)
+                                batteryVoltage.push(data.result.windSolarSensorsDataVOs[i].batteryVoltage)
+                                solarEngVoltage.push(data.result.windSolarSensorsDataVOs[i].solarEngVoltage)
+                                fanVoltage.push(data.result.windSolarSensorsDataVOs[i].fanVoltage)
                             }
+                            time.reverse()
                             //电量
                             myChart0.setOption({
                                 tooltip : {
@@ -131,6 +137,16 @@ export default {
                                             backgroundColor: '#6a7985'
                                         }
                                     }
+                                },
+                                legend: {
+                                    data:[
+                                        {
+                                            name: '电量',
+                                            textStyle: {
+                                                color: '#026B6F'
+                                            }
+                                        },
+                                    ]
                                 },
                                 grid: {
                                     left: '3%',
@@ -143,13 +159,12 @@ export default {
                                     type : 'category',
                                     boundaryGap : false,
                                     data :  time,
-                                    splitNumber:5,
+                                    splitNumber:7,
                                     axisLabel:{
                                         textStyle:{
                                             color:"white", //刻度颜色
                                             fontSize:8  //刻度大小
                                         },
-                                        interval:10
                                     },
                                     axisTick:{show:false},
                                     axisLine:{
@@ -237,7 +252,7 @@ export default {
                                             }
                                         },
                                         symbol:'none',
-                                        data:  electricPower
+                                        data:  electricPower.reverse()
                                     }
                                 ]
                             });
@@ -279,13 +294,12 @@ export default {
                                     type : 'category',
                                     boundaryGap : false,
                                     data :  time,
-                                    splitNumber:5,
+                                    splitNumber:7,
                                     axisLabel:{
                                         textStyle:{
                                             color:"white", //刻度颜色
                                             fontSize:8  //刻度大小
                                         },
-                                        interval:10
                                     },
                                     axisTick:{show:false},
                                     axisLine:{
@@ -373,7 +387,7 @@ export default {
                                             }
                                         },
                                         symbol:'none',
-                                        data:solarEngIma
+                                        data:solarEngIma.reverse()
                                     },
                                     {
                                         name:'风机',
@@ -397,7 +411,7 @@ export default {
                                             }
                                         },
                                         symbol:'none',
-                                        data:fanIma
+                                        data:fanIma.reverse()
                                     }
                                 ]
                             });
@@ -439,13 +453,12 @@ export default {
                                     type : 'category',
                                     boundaryGap : false,
                                     data :  time,
-                                    splitNumber:5,
+                                    splitNumber:7,
                                     axisLabel:{
                                         textStyle:{
                                             color:"white", //刻度颜色
                                             fontSize:8  //刻度大小
                                         },
-                                        interval:10
                                     },
                                     axisTick:{show:false},
                                     axisLine:{
@@ -533,7 +546,7 @@ export default {
                                             }
                                         },
                                         symbol:'none',
-                                        data:solarEngPower
+                                        data:solarEngPower.reverse()
                                     },
                                     {
                                         name:'风机',
@@ -557,7 +570,7 @@ export default {
                                             }
                                         },
                                         symbol:'none',
-                                        data:fanPower
+                                        data:fanPower.reverse()
                                     }
                                 ]
                             });
@@ -605,13 +618,12 @@ export default {
                                     type : 'category',
                                     boundaryGap : false,
                                     data :  time,
-                                    splitNumber:5,
+                                    splitNumber:7,
                                     axisLabel:{
                                         textStyle:{
                                             color:"white", //刻度颜色
                                             fontSize:8  //刻度大小
                                         },
-                                        interval:10
                                     },
                                     axisTick:{show:false},
                                     axisLine:{
@@ -699,7 +711,7 @@ export default {
                                             }
                                         },
                                         symbol:'none',
-                                        data:batteryVoltage
+                                        data:batteryVoltage.reverse()
                                     },
                                     {
                                         name:'太阳能',
@@ -729,7 +741,7 @@ export default {
                                             }
                                         },
                                         symbol:'none',
-                                        data:solarEngVoltage
+                                        data:solarEngVoltage.reverse()
                                     },
                                     {
                                         name:'风机',
@@ -753,7 +765,7 @@ export default {
                                             }
                                         },
                                         symbol:'none',
-                                        data:fanVoltage
+                                        data:fanVoltage.reverse()
                                     }
                                 ]
                             });
@@ -764,7 +776,8 @@ export default {
                 }
             })
         },
-        timeChange(val){
+        SceneryDetails_top_change(val){
+            this.type = val;
             this.ready()
         },
         //返回上一级
@@ -783,6 +796,8 @@ export default {
 .backtrack{font-size: 34px;cursor: pointer;padding-top: 5px;}
 .SceneryDetails_top{width: 100%;color: white;font-size: 16px;display: flex;align-items: center;padding: 50px 0 0 50px;}
 .SceneryDetails_top>span{padding-right:15px;}
+.SceneryDetails_top>div{padding-left: 15px;font-size: 14px;color: #909399;cursor: pointer;}
+.SceneryDetails_top_color{color: #409eff !important;}
 .SceneryDetails_bottom{position: absolute;left: 12%;right: 12%;top: 15%;bottom: 10%;}
 .SceneryDetails_bottom>div{width: 100%;height: 45%;display: flex;}
 .SceneryDetails_bottom>div:nth-of-type(2){margin-top: 7%;}

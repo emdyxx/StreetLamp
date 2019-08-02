@@ -11,7 +11,7 @@
                     <el-dropdown-item @click.native="BindProjectss">绑定项目</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="search">
+            <div class="search" v-if="viewCameraDeploy">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -97,7 +97,7 @@
                 <el-table-column
                 prop="poleName"
                 align='center'
-                label="归属灯杆"
+                label="灯杆"
                 :formatter="formatRole"
                 min-width="100">
                 </el-table-column>
@@ -258,13 +258,15 @@
                                 </template>
                             </el-table-column>
                             <el-table-column
-                            prop="location"
+                            prop="coord"
+                            :formatter="formatRole"
                             align='center'
                             label="位置"
                             width="150">
                             </el-table-column>
                             <el-table-column
                             prop="remark"
+                            :formatter="formatRole"
                             label="备注"
                             align='center'
                             width="162">
@@ -326,6 +328,7 @@ export default {
     name: 'SolinCameraDeploy',
     data () {
         return {
+            viewCameraDeploy:false,
             addCameraDeploy:false,
             editCameraDeploy:false,
             delCameraDeploy:false,
@@ -420,6 +423,7 @@ export default {
                 this.data.coord = ''
                 this.data.remark = ''
                 this.referencePosition = ''
+                this.site2 = []
                 this.producer()
                 $('#addModal').modal('show')
             }
@@ -515,6 +519,7 @@ export default {
                             that.data.serverPort = data.result.camera.serverPort
                         }
                         that.data.coord = data.result.camera.coord
+                        that.referencePosition = data.result.camera.coord
                         that.data.remark = data.result.camera.remark
                         
                     }else{
@@ -824,6 +829,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewCameraDeploy'){
+                                that.viewCameraDeploy = true
+                            }
                             if(data.result.operats[i].code=='addCameraDeploy'){
                                 that.addCameraDeploy = true
                             }

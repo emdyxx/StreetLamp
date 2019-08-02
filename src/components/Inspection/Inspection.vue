@@ -60,30 +60,27 @@ export default {
             $('#jstree').jstree("destroy");
             $('#jstree').jstree({
                 "types" : {
-                    "1" : {
-                        "icon" : 'jstree_Inspection1',
+                    "patrolInspector" : {
+                        "icon" : 'patrolInspector',
                     },
-                    "2" : {
-                        "icon" : 'jstree_Inspection2',
+                    "patrolPlan" : {
+                        "icon" : 'patrolPlan',
                     },
-                    "3" : {
-                        "icon" : 'jstree_Inspection3',
+                    "patrolStatistics" : {
+                        "icon" : 'patrolStatistics',
                     },
-                    "4" : {
-                        "icon" : 'jstree_Inspection4',
+                    "todayPatrolPlan" : {
+                        "icon" : 'todayPatrolPlan',
                     },
-                    "5" : {
-                        "icon" : 'jstree_Inspection5',
+                    "historyPatrolRecord" : {
+                        "icon" : 'historyPatrolRecord',
                     },
-                    "6" : {
-                        "icon" : 'jstree_Inspection6',
+                    "patrolRecord" : {
+                        "icon" : 'patrolRecord',
                     },
-                    "7" : {
-                        "icon" : 'jstree_Inspection7',
+                    "patrolApp" : {
+                        "icon" : 'patrolApp',
                     },
-                    "8" : {
-                        "icon" : 'jstree_Inspection8',
-                    }
                 },
                 // "state" : { "key" : that.sizeType.text },
                 "plugins" : ['types'],
@@ -103,50 +100,19 @@ export default {
                             success:function(data) {
                                 if(data.errorCode=='0'){
                                     for(var i=0;i<data.result.menus.length;i++){
-                                        if(data.result.menus[i].code=='patrolInspector'){
-                                            data.result.menus[i].type = '1'
-                                            data.result.menus[i].text = data.result.menus[i].menuName
-                                        }
                                         if(data.result.menus[i].code=='patrolItem'){
                                             data.result.menus.splice(i,1)
-                                            // data.result.menus[i].type = '7'
-                                            // data.result.menus[i].text = data.result.menus[i].menuName
                                         }
                                         if(data.result.menus[i].code=='patrolSite'){
                                             data.result.menus.splice(i,1)
-                                            // data.result.menus[i].type = '4'
-                                            // data.result.menus[i].text = data.result.menus[i].menuName
                                         }
                                         if(data.result.menus[i].code=='patrolRoute'){
                                             data.result.menus.splice(i,1)
-                                            // data.result.menus[i].type = '5'
-                                            // data.result.menus[i].text = data.result.menus[i].menuName
                                         }
-                                        if(data.result.menus[i].code=='patrolPlan'){
-                                            data.result.menus[i].type = '6'
-                                            data.result.menus[i].text = data.result.menus[i].menuName
-                                        }
-                                        if(data.result.menus[i].code=='patrolStatistics'){
-                                            data.result.menus[i].type = '2'
-                                            data.result.menus[i].text = data.result.menus[i].menuName
-                                        }
-                                        if(data.result.menus[i].code=='todayPatrolPlan'){
-                                            data.result.menus[i].type = '6'
-                                            data.result.menus[i].text = data.result.menus[i].menuName
-                                        }
-                                        if(data.result.menus[i].code=='historyPatrolRecord'){
-                                            data.result.menus[i].type = '6'
-                                            data.result.menus[i].text = data.result.menus[i].menuName
-                                        }
-                                        if(data.result.menus[i].code=='patrolRecord'){
-                                            data.result.menus[i].type = '6'
-                                            data.result.menus[i].text = data.result.menus[i].menuName
-                                        }
-                                        if(data.result.menus[i].code=='patrolApp'){
-                                            data.result.menus[i].type = '6'
-                                            data.result.menus[i].text = data.result.menus[i].menuName
-                                        }
+                                        data.result.menus[i].type = data.result.menus[i].code
+                                        data.result.menus[i].text = data.result.menus[i].menuName
                                     }
+
                                     datas = data.result.menus
                                 }else{
                                     that.errorCode(data)

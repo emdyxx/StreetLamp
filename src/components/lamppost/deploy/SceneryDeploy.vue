@@ -5,12 +5,12 @@
             <el-button @click="operation(0)" v-if="addSceneryController" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button @click="operation(1)" v-if="editSceneryController" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button @click="operation(2)" v-if="delSceneryController" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search">
+            <div class="search" v-if="viewSceneryControllerDeploy">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='地址';type='2';">地址</el-dropdown-item>
                         <el-dropdown-item @click.native="name='状态';type='3';">状态</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -19,7 +19,7 @@
                         <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='2'">
-                        <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        <el-input v-model="windSolarNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='3'">
                         <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
@@ -60,9 +60,9 @@
                 min-width="110">
                 </el-table-column>
                 <el-table-column
-                prop="serialNumber"
+                prop="windSolarNumber"
                 align='center'
-                label="序列号"
+                label="地址"
                 min-width="110">
                 </el-table-column>
                 <el-table-column
@@ -81,17 +81,17 @@
                 min-width="120">
                 </el-table-column>
                 <el-table-column
-                prop="concentratorName"
-                align='center'
-                label="集中器名称"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
                 prop="poleName"
                 align='center'
-                label="归属灯杆"
+                label="灯杆"
                 min-width="110"
                 :formatter="formatRole">
+                </el-table-column>
+                <el-table-column
+                prop="concentratorName"
+                align='center'
+                label="集中器"
+                min-width="100">
                 </el-table-column>
                 <el-table-column
                 prop="remark"
@@ -135,8 +135,9 @@
                             <input type="text" v-model="data.nickName" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>序列号:</label>
-                            <input type="text" v-model="data.serialNumber" id="serialNumber" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
+                            <label><span class="Required">*</span>地址:</label>
+                            <!-- <input type="text" v-model="data.serialNumber" id="serialNumber" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号"> -->
+                            <el-input-number v-model.lazy="data.windSolarNumber" :min="1" :max="253" size="small" style="width:196px;" label="地址"></el-input-number>
                         </div>
                         <div class="form-group">
                             <label><span class="Required">*</span>型号:</label>
@@ -228,13 +229,15 @@
                                 </template>
                             </el-table-column>
                             <el-table-column
-                            prop="location"
+                            prop="coord"
+                            :formatter="formatRole"
                             align='center'
                             label="位置"
                             width="150">
                             </el-table-column>
                             <el-table-column
                             prop="remark"
+                            :formatter="formatRole"
                             label="备注"
                             align='center'
                             width="162">
@@ -286,6 +289,7 @@ export default {
             name:'名称',
             type:'1',
             serverurl:localStorage.serverurl,
+            viewSceneryControllerDeploy:false,
             addSceneryController:false,
             editSceneryController:false,
             delSceneryController:false,
@@ -295,7 +299,7 @@ export default {
             pageIndex:1,
             total:10,                                                           
             nickName:'',
-            serialNumber:'',
+            windSolarNumber:'',
             value:'',
             options:[{label:'离线',value:'0'},{label:'在线',value:'1'}],
             addtype:'0',
@@ -304,7 +308,7 @@ export default {
             referencePosition:'',
             data:{
                 nickName:'',
-                serialNumber:'',
+                windSolarNumber:'',
                 modelId:'',
                 concentratorSn:'',
                 coord:'',
@@ -323,7 +327,7 @@ export default {
     methods:{
         handleCommand(){
             this.nickName=''
-            this.serialNumber=''
+            this.windSolarNumber=''
             this.value=''
         },
         formatRole:function(val, column, cellValue, index){
@@ -347,7 +351,7 @@ export default {
                 that.concentrator()
                 that.addtype = '0'
                 that.data.nickName = ''
-                that.data.serialNumber = ''
+                that.data.windSolarNumber = ''
                 that.data.modelId = ''
                 that.data.concentratorSn = ''
                 that.data.coord = ''
@@ -368,10 +372,11 @@ export default {
                 that.ModelData()
                 that.concentrator()
                 that.data.nickName = that.site[0].nickName
-                that.data.serialNumber = that.site[0].serialNumber
+                that.data.windSolarNumber = that.site[0].windSolarNumber
                 that.data.modelId = that.site[0].modelId
                 that.data.concentratorSn = that.site[0].concentratorSn
                 that.data.coord = that.site[0].coord
+                that.referencePosition = that.site[0].coord
                 that.data.remark = that.site[0].remark
                 $('#addModal').modal('show')
             }
@@ -432,7 +437,7 @@ export default {
             var that = this;
             var data = {};
             var type = ''
-            if(this.data.nickName==''||this.data.concentratorSn==''||this.data.modelId==''||this.data.serialNumber==''){
+            if(this.data.nickName==''||this.data.concentratorSn==''||this.data.modelId==''||this.data.windSolarNumber==''){
                 this.$message({
                     message: '必填字段不能为空!',
                     type: 'error'
@@ -482,7 +487,7 @@ export default {
                 poleId:'',
                 projectIds:sessionStorage.projectId,
                 nickName:that.nickName,
-                serialNumber:that.serialNumber,
+                windSolarNumber:that.windSolarNumber,
                 online:that.value
             }
             $.ajax({
@@ -674,6 +679,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewSceneryControllerDeploy'){
+                                that.viewSceneryControllerDeploy = true
+                            }
                             if(data.result.operats[i].code=='addSceneryController'){
                                 that.addSceneryController = true
                             }

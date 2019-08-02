@@ -2,7 +2,7 @@
     <!--广告屏 -->
     <div class="advertisingScreens">
         <div class="advertisingScreens_top">
-            <el-dropdown trigger='click' @command="handleCommand">
+            <el-dropdown v-if="operation" trigger='click' @command="handleCommand">
                 <el-button type="primary" size='small' style="width:115px;">
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
@@ -14,9 +14,10 @@
                     <el-dropdown-item v-if="operation" command="4">屏幕截图</el-dropdown-item>
                     <el-dropdown-item v-if="operation" command="5">屏幕重启</el-dropdown-item>
                     <el-dropdown-item v-if="operation" command="6">状态查询</el-dropdown-item>
+                    <el-dropdown-item v-if="operation" command="7">同步播放</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <el-dropdown trigger='click' style="margin-left:25px;">
+            <el-dropdown v-if="operation" trigger='click' style="margin-left:25px;">
                 <el-button type="primary" size='small' style="width:115px;">
                     管理<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
@@ -27,7 +28,7 @@
                     <el-dropdown-item @click.native="update">在线更新</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="search">
+            <div class="search" v-if="viewScreenManage">
                 <el-dropdown size="small" split-button @command="handleCommand2">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -127,7 +128,7 @@
                     <el-table-column
                     prop="brightness"
                     align='center'
-                    label="亮度"
+                    label="亮度(%)"
                     :formatter="formatRole"
                     min-width="80">
                     </el-table-column>
@@ -148,7 +149,7 @@
                     <el-table-column
                     prop="timestamp"
                     align='center'
-                    label="更新时间"
+                    label="采集时间"
                     :formatter="formatRole"
                     show-overflow-tooltip>
                     </el-table-column>
@@ -540,9 +541,9 @@
                     <div class="modal-body">
                         <el-tabs v-model="DimmingType" type="card" @tab-click="DimmingClick">
                             <el-tab-pane label="手动" name="0">
-                                <el-input-number v-model="brightness" :min="1" :max="64" size='small' label="屏幕亮度"></el-input-number>
+                                <el-input-number v-model="brightness" :min="1" :max="100" size='small' label="屏幕亮度"></el-input-number>
                                 <el-button @click="DimmingSubmit" type="primary" size='small'>发送</el-button>
-                                <p>提示:1（最暗）~ 64（最亮）</p>
+                                <p>提示:1%（最暗）~ 100%（最亮）</p>
                             </el-tab-pane>
                             <el-tab-pane label="定时" name="1">
                                 <el-button @click="DimmingOperation(0)" type="primary" size='small'>添加</el-button>
@@ -555,7 +556,7 @@
                                         <span>定时名称:</span>
                                         <el-input v-model="DimmingDatas.DimmingName" placeholder="请输入定时名称" size='small' style="width:156px;"></el-input>
                                         <span style="margin-left:20px;">默认亮度:</span>
-                                        <el-input-number v-model="DimmingDatas.defaultBrightness" :min="1" :max="64" size='small' label="默认亮度"></el-input-number>
+                                        <el-input-number v-model="DimmingDatas.defaultBrightness" :min="1" :max="100" size='small' label="默认亮度"></el-input-number>
                                     </div>
                                     <div style="margin-top:10px;">
                                         <el-radio-group v-model="DimmingDatas.radio0">
@@ -1325,6 +1326,7 @@ export default {
             type:'1',
             inputColumn:'',
             serverurl:localStorage.serverurl,
+            viewScreenManage:false,
             operation:false,
             viewProgram:false,
             viewMedia:false,
@@ -1635,6 +1637,33 @@ export default {
                             setTimeout(function(){
                                 that.ready()
                             },3000)
+                        }else{
+                            that.errorCode(data)
+                        }
+                    }
+                })
+            }
+            //同步播放
+            if(val=='7'){
+                var data = {}
+                var arr = []
+                for(var i=0;i<that.tableSite1.length;i++){
+                    arr.push(that.tableSite1[i].id)
+                }
+                data.screens = arr
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    dataType:'json',
+                    url:that.serverurl+'/v1/solin/screen/control/playSync',
+                    contentType:'application/json;charset=UTF-8',
+                    data:JSON.stringify(data),
+                    success:function(data){
+                        if(data.errorCode=='0'){
+                            that.$message({
+                                message: '请稍后,节目正在同步中...',
+                                type: 'success'
+                            });
                         }else{
                             that.errorCode(data)
                         }
@@ -3534,18 +3563,18 @@ export default {
                 dataType:'json',
                 processData: false,
                 contentType: false,
-            }).done(function(res){
-                if(res.errorCode=='0'){
+            }).done(function(data){
+                if(data.errorCode=='0'){
                     that.$message({
                         message: '任务正在更新中,请稍后...',
                         type:'success',
                         showClose: true,
                     });
                 }else{
-                    that.errorCode(res.errorCode)
+                    that.errorCode(data)
                 }
-            }).error(function(res){
-                
+            }).error(function(data){
+                that.errorCode(data)
             })
         },
         //获取广告屏列表
@@ -3593,6 +3622,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewScreenManage'){
+                                that.viewScreenManage = true
+                            }
                             if(data.result.operats[i].code=='screenControl'){
                                 that.operation = true
                             }

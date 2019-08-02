@@ -413,6 +413,7 @@ export default {
                             var offline = new BMap.Icon(that.imgserverurl+"image/img/SingleLamp03.png", new BMap.Size(45,45));
                             var Unknown = new BMap.Icon(that.imgserverurl+"image/img/SingleLamp04.png", new BMap.Size(45,45));
                             var abnormal = new BMap.Icon(that.imgserverurl+"image/img/SingleLamp01.gif", new BMap.Size(210,210));
+                            var markers = []
                             for(var i=0;i<data.result.list.length;i++){
                                 if(data.result.list[i].coord==''||data.result.list[i].coord==undefined||data.result.list[i].coord==null){
 
@@ -430,12 +431,16 @@ export default {
                                     }
                                     marker.id=data.result.list[i].id
                                     marker.type=that.value1
+                                    markers.push(marker)
                                     map.addOverlay(marker);
                                 } 
                             }
-                            map.setMapStyleV2({     
-                                styleId: '7ff9f4f543ec7f2704516df1a246f110'
-                            });
+                            var markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markers});
+                            markerClusterer.setMinClusterSize(5)
+                            map.setMapStyle({style:'light'});
+                            // map.setMapStyleV2({     
+                            //     styleId: '7ff9f4f543ec7f2704516df1a246f110'
+                            // });
                             //鼠标左键请求基本信息
                             map.addEventListener("click", function (e) {
                                 if(e.overlay){
@@ -455,7 +460,8 @@ export default {
                                         that.brightness = Number(that.informationData.brightness)
                                     }
                                     that.information_type = true
-                                    console.log(that.informationData)
+                                }else{
+                                    that.information_type = false
                                 }
                             });
                         }
@@ -625,7 +631,7 @@ export default {
 <style scoped>
 hr{margin: 0;}
 .SingleLamp{width: 100%;height: 100%;position: relative;}
-.project_top_left{position: absolute;top: 0;left: 0;width: 403px;height: 48px;background: #303e60;border-top-right-radius: 40px;border-bottom-right-radius: 40px;display: flex;justify-content: center;align-items: center;z-index: 2;}
+.project_top_left{position: absolute;top: 0;left: 0;width: 403px;height: 48px;background: #409eff;border-top-right-radius: 40px;border-bottom-right-radius: 40px;display: flex;justify-content: center;align-items: center;z-index: 2;}
 .project_top_left>div{width: 348px;}
 .statistical{width: 350px;height: 190px;border-radius: 10px;box-shadow: 3px 3px 5px #999;position: absolute;top: 75px;left: 10px;padding: 0 15px 0 15px;z-index: 2;background: white;}
 .statistical_top{height: 40px;display: flex;align-items: center;font-size: 15px;color: #333333;}
@@ -655,7 +661,9 @@ hr{margin: 0;}
 .information_top>span{position: absolute;right: 30px;font-size: 18px;cursor: pointer;}
 .information_bottom{width: 100%;padding: 10px;background: white;border-radius: 5px;color: #494949;}
 .information_bottom_top{width: 100%;height: 30px;line-height: 30px;text-align: right;}
-.information_bottom_bttom>table td{height: 25px;line-height: 25px;font-size: 14px;}
+.information_bottom_bttom>table{table-layout:fixed;}
+.information_bottom_bttom>table td{height: 25px;line-height: 25px;font-size: 14px;
+word-break:keep-all;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;-moz-text-overflow: ellipsis;}
 .information_bottom_bttom>table td:nth-of-type(1),.information_bottom_bttom>table td:nth-of-type(3){width: 20%;letter-spacing:2px;text-align: center;background: #f2f4f9;}
 .information_bottom_bttom>table th{padding-left: 20px;}
 

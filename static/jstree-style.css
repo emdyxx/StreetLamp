@@ -36,15 +36,19 @@
 .jstree_mechanism5 {
     background-image: url(img/mechanism5.png) !important;
 }
-.jstree_Journal{background-image: url(img/Journal.png) !important;} 
-.jstree_Inspection1{background-image: url(img/login.png) !important;background-size: 100% 100%;}
-.jstree_Inspection2{background-image: url(img/jktj.png) !important;background-size: 100% 100%;}
-.jstree_Inspection3{background-image: url(img/type.png) !important;background-size: 100% 100%;}
-.jstree_Inspection4{background-image: url(img/point.png) !important;background-size: 100% 100%;}
-.jstree_Inspection5{background-image: url(img/route.png) !important;background-size: 100% 100%;}
-.jstree_Inspection6{background-image: url(img/plan.png) !important;background-size: 100% 100%;}
-.jstree_Inspection7{background-image: url(img/check.png) !important;background-size: 100% 100%;}
-.jstree_Inspection8{background-image: url(img/user.png) !important;background-size: 100% 100%;}
+
+.jstree_Journal{
+    background-image: url(img/Journal.png) !important;
+}
+
+.patrolInspector{background-image: url(img/patrolInspector.png) !important;background-size: 100% 100%;}
+.patrolPlan{background-image: url(img/patrolPlan.png) !important;background-size: 100% 100%;}
+.patrolStatistics{background-image: url(img/patrolStatistics.png) !important;background-size: 100% 100%;}
+.todayPatrolPlan{background-image: url(img/todayPatrolPlan.png) !important;background-size: 100% 100%;}
+.historyPatrolRecord{background-image: url(img/historyPatrolRecord.png) !important;background-size: 100% 100%;}
+.patrolRecord{background-image: url(img/patrolRecord.png) !important;background-size: 100% 100%;}
+.patrolApp{background-image: url(img/patrolApp.png) !important;background-size: 100% 100%;}
+
 
 
 .jstree-node,

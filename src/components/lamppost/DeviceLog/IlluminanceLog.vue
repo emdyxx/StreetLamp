@@ -6,8 +6,8 @@
                 <input type="text" v-model="nickName" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
             </div>
             <div class="search">
-                <span>序列号:</span>
-                <input type="text" v-model="lightNumber" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
+                <span>集中器序列号:</span>
+                <input type="text" v-model="concentratorSn" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
             </div>
             <div class="search">
                 <span>操作类别:</span>
@@ -50,7 +50,13 @@
                 <el-table-column
                 prop="lightNumber"
                 align='center'
-                label="序列号"
+                label="地址"
+                min-width="130">
+                </el-table-column>
+                <el-table-column
+                prop="concentratorSn"
+                align='center'
+                label="集中器序列号"
                 min-width="130">
                 </el-table-column>
                 <el-table-column
@@ -102,7 +108,7 @@ export default {
             name:'名称',
             type:'1',
             nickName:'',
-            lightNumber:'',
+            concentratorSn:'',
             options:[
                 {
                     value:0,
@@ -152,7 +158,7 @@ export default {
                     page:that.pageIndex,
                     size:that.pageSize,
                     nickName:that.nickName,
-                    lightNumber:that.lightNumber,
+                    concentratorSn:that.concentratorSn,
                     operatType:that.value,
                     projectIds:sessionStorage.projectId
                 },

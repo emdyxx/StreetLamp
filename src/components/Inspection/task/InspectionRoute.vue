@@ -5,7 +5,7 @@
             <el-button v-if="addPatrolRoute" @click="InspectionRoute(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="editPatrolRoute" @click="InspectionRoute(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="delPatrolRoute" @click="InspectionRoute(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search">
+            <div class="search" v-if="viewPatrolRoute">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -198,6 +198,7 @@ export default {
         return {
             name:'路线名称',
             types:'1',
+            viewPatrolRoute:false,
             addPatrolRoute:false,
             editPatrolRoute:false,
             delPatrolRoute:false,
@@ -492,6 +493,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewPatrolRoute'){
+                                that.viewPatrolRoute = true
+                            }
                             if(data.result.operats[i].code=='addPatrolRoute'){
                                 that.addPatrolRoute = true
                             }

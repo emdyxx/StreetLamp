@@ -2,11 +2,11 @@
     <!-- 灯具日志 -->
     <div class="lampJournal">
         <div class="lampJournal_top">
+            <div class="search">
+                <span>序列号:</span>
+                <input type="text" v-model="serialNumber" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入单灯序列号">
+            </div>
             <template v-if="type=='93'">
-                <div class="search">
-                    <span>序列号:</span>
-                    <input type="text" v-model="serialNumber" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入单灯序列号">
-                </div>
                 <div class="search">
                     <span>日志模块:</span>
                     <el-select v-model="value2" clearable size='small' placeholder="请选择">
@@ -327,11 +327,11 @@ export default {
             };
             var url = '';
             data.projectIds = sessionStorage.projectId
+            data.serialNumber = this.serialNumber
             if(this.type=='93'){
                 url='/v1/solin/lighting/lamp/log/operation'
                 data.operatType = this.value
                 data.operatModule = this.value2
-                data.serialNumber = this.serialNumber
             }
             if(this.type=='94'){
                 url='/v1/solin/lighting/lamp/log/control'

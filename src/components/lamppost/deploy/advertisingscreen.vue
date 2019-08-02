@@ -5,13 +5,13 @@
             <el-button v-if="addScreenDeployment" @click="addadvertisingscreen(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="editScreenDeployment" @click="addadvertisingscreen(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="delScreenDeployment" @click="deleteadvertisingscreen" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <el-dropdown size="small" split-button type="primary">
+            <el-dropdown v-if="screenBindProject" size="small" split-button type="primary">
                 <i class="el-icon-setting el-icon--left"></i>设置
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-if="screenBindProject" @click.native="screenBindProjectss">绑定项目</el-dropdown-item>
+                    <el-dropdown-item @click.native="screenBindProjectss">绑定项目</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="search">
+            <div class="search" v-if="viewScreenDeploy">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -74,7 +74,7 @@
                     </el-table-column>
                     <el-table-column
                     align='center'
-                    label="在线状态"
+                    label="状态"
                     min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.online=='0'">离线</span>
@@ -102,7 +102,7 @@
                     <el-table-column
                     prop="poleName"
                     align='center'
-                    label="归属灯杆"
+                    label="灯杆"
                     :formatter="formatRole"
                     min-width="100">
                     </el-table-column>
@@ -237,14 +237,16 @@
                                 </template>
                             </el-table-column>
                             <el-table-column
-                            prop="location"
+                            prop="coord"
                             align='center'
+                            :formatter="formatRole"
                             label="位置"
                             width="150">
                             </el-table-column>
                             <el-table-column
                             prop="remark"
                             label="备注"
+                            :formatter="formatRole"
                             align='center'
                             width="162">
                             </el-table-column>
@@ -324,6 +326,7 @@ export default {
             name:'名称',
             type:'1',
             serverurl:localStorage.serverurl,
+            viewScreenDeploy:false,
             addScreenDeployment:false,
             editScreenDeployment:false,
             delScreenDeployment:false,
@@ -498,11 +501,12 @@ export default {
                 this.ModelData()
                 setTimeout(function(){
                     that.form.nickName = that.site[0].nickName
-                    that.form.width = that.site[0].width
-                    that.form.height = that.site[0].height
+                    that.form.width = String(that.site[0].width)
+                    that.form.height = String(that.site[0].height)
                     that.form.serialNumber = that.site[0].serialNumber
                     that.form.remark = that.site[0].remark
                     that.form.coord = that.site[0].coord
+                    that.referencePosition = that.site[0].coord
                 },400)
                 
                 $('#addModal').modal('show')
@@ -808,6 +812,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewScreenDeploy'){
+                                that.viewScreenDeploy = true
+                            }
                             if(data.result.operats[i].code=='addScreen'){
                                 that.addScreenDeployment = true
                             }

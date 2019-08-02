@@ -5,12 +5,12 @@
             <el-button v-if="addRelay" @click="solinRelayDeployOpreat(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="editRelay" @click="solinRelayDeployOpreat(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="delRelay" @click="solinRelayDeployOpreat(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search">
+            <div class="search" v-if="viewRelayDeploy">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="name='名称';type1='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='序列号';type1='2';">序列号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='地址';type1='2';">地址</el-dropdown-item>
                         <el-dropdown-item @click.native="name='状态';type1='3';">状态</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -19,7 +19,7 @@
                         <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     </template>
                     <template v-if="type1=='2'">
-                        <el-input v-model="relayNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        <el-input v-model="relayNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
                     </template>
                     <template v-if="type1=='3'">
                         <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
@@ -65,7 +65,7 @@
                     prop="relayNumber"
                     align='center'
                     :formatter="formatRole"
-                    label="序列号"
+                    label="地址"
                     min-width="120">
                     </el-table-column>
                     <el-table-column
@@ -88,7 +88,7 @@
                     prop="concentratorName"
                     align='center'
                     :formatter="formatRole"
-                    label="集中器名称"
+                    label="集中器"
                     min-width="110">
                     </el-table-column>
                     <el-table-column
@@ -135,8 +135,8 @@
                             <input type="text" v-model.lazy="data.nickName" maxlength="40" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入继电器名称">
                         </div>
                         <div class="form_input">
-                            <label><span class="Required">*</span>序列号:</label>
-                            <el-input-number v-model.lazy="data.relayNumber" :min="1" :max="253" size="small" style="width:196px;" label="继电器序列号"></el-input-number>
+                            <label><span class="Required">*</span>地址:</label>
+                            <el-input-number v-model.lazy="data.relayNumber" :min="1" :max="253" size="small" style="width:196px;" label="地址"></el-input-number>
                         </div>
                         <div class="form_input">
                             <label><span class="Required">*</span>型号:</label>
@@ -215,6 +215,7 @@ export default {
         return {
             name:'名称',
             type1:'1',
+            viewRelayDeploy:false,
             addRelay:false,
             editRelay:false,
             delRelay:false,
@@ -541,6 +542,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewRelayDeploy'){
+                                that.viewRelayDeploy = true
+                            }
                             if(data.result.operats[i].code=='addRelay'){
                                 that.addRelay = true
                             }

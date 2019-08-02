@@ -2,10 +2,10 @@
     <div class="concentrator">
         <!-- 集中器模式 -->
         <div class="concentrator_top">
-            <el-button @click="myModalOperation(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button @click="myModalOperation(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button @click="myModalOperation(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search">
+            <el-button v-if="addConcentrator" @click="myModalOperation(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="editConcentrator" @click="myModalOperation(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="delConcentrator" @click="myModalOperation(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <div class="search" v-if="viewConcentrator">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -59,7 +59,6 @@
                 prop="deviceCount"
                 align='center'
                 label="关联设备数量"
-                :formatter="formatRole"
                 min-width="100">
                 </el-table-column>
                 <el-table-column
@@ -106,7 +105,7 @@
                         </div>
                         <div class="form-group" v-if="myModal=='0'">
                             <label><span class="Required">*</span>序列号:</label>
-                            <input type="text" v-model="myModaldata.concentratorSn" class="form-control" id="concentratorSN" placeholder="请输入集中器序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')">
+                            <input type="text" v-model="myModaldata.concentratorSn" maxlength="12" class="form-control" id="concentratorSN" placeholder="请输入集中器序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')">
                         </div>
                         <div class="form-group">
                             <label>备注:</label>
@@ -134,6 +133,10 @@ export default {
         return {
             name:'名称',
             type1:'1',
+            viewConcentrator:false,
+            addConcentrator:false,
+            editConcentrator:false,
+            delConcentrator:false,
             concentratorName:'',
             concentratorSn:'',
             serverurl:localStorage.serverurl,
@@ -314,8 +317,43 @@ export default {
         myModalsizechange(val){this.myModalpageSize = val;this.ready();},
         myModalcurrentchange(val){this.myModalpageIndex = val;this.ready();},
         search(){this.ready();},
+        //权限请求
+        Jurisdiction(){
+            var that = this
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    menuId:sessionStorage.menuId3
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewConcentrator'){
+                                that.viewConcentrator = true
+                            }
+                            if(data.result.operats[i].code=='addConcentrator'){
+                                that.addConcentrator = true
+                            }
+                            if(data.result.operats[i].code=='editConcentrator'){
+                                that.editConcentrator = true
+                            }
+                            if(data.result.operats[i].code=='delConcentrator'){
+                                that.delConcentrator = true
+                            }
+                        }
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
     },
     created(){
+        this.Jurisdiction()
         this.ready()
     },
 }

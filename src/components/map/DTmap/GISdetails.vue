@@ -525,7 +525,7 @@ export default {
                             }
                             var url = localStorage.serverurl.split('/')
                             url = url[2].split(':')
-                            that.url ='rtmp://' + url[0]+':8072'+ that.cameraVoList[0].rtmpStream
+                            that.url ='rtmp://' + url[0]+sessionStorage.serverPort+ that.cameraVoList[0].rtmpStream
                             var id = 'video-my'
                             $('#engage_video').append(
                                 '<video id="'+id+'" class="video-js vjs-default-skin vjs-big-play-centered flex-grid" poster="" width="430" height="300" autoplay="autoplay">'+

@@ -32,7 +32,6 @@ export default {
                         "icon" : 'jstree_Journal',
                     },
                 },
-                // "state" : { "key" : that.sizeType.text },
                 "plugins" : ['types'],
                 'core' : {
                     'data':function(obj,callback){

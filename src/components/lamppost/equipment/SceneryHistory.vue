@@ -1,7 +1,7 @@
 <template>
     <div class="SceneryHistory">
         <div class="SceneryHistory_top">
-            <el-select v-model="value" @change="SceneryHistoryChange" clearable size='small' style="width:120px;" placeholder="请选择">
+            <el-select v-model="value" @change="SceneryHistoryChange" size='small' style="width:120px;" placeholder="请选择">
                 <el-option
                 v-for="item in options"
                 :key="item.value"

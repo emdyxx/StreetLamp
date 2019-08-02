@@ -13,7 +13,7 @@
                     <el-dropdown-item v-if="lampControl" command='4'>刷新状态</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>    
-            <el-dropdown style="margin-left:10px;" @command='switchOff' v-if="viewLampStrategy">
+            <el-dropdown v-if="addLampStrategy" style="margin-left:10px;" @command='switchOff'>
                 <el-button type="primary" size='small' style="width:85px;">
                     策略<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
@@ -23,7 +23,7 @@
                     <el-dropdown-item v-if="viewLampStrategy" command='7'>群组策略</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="search">
+            <div class="search" v-if="viewLampManage">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -161,7 +161,7 @@
                     <el-table-column
                     prop="timestamp"
                     :formatter="formatRole"
-                    label="更新时间"
+                    label="采集时间"
                     align='center'
                     min-width="160">
                     </el-table-column>
@@ -529,6 +529,7 @@ export default {
             name:'名称',
             type:'1',
             serverurl:localStorage.serverurl,
+            viewLampManage:false,
             lampControl:false,
             viewLampStrategy:false,
             addLampStrategy:false,
@@ -1029,6 +1030,7 @@ export default {
                 this.type3 ='0'
                 this.data.strategyName = ''
                 this.data.expire = ''
+                this.timer = ''
                 this.tableData3 = []
                 /* 完成拖拽 */
                 $('#myModal').draggable({
@@ -1376,6 +1378,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewLampManage'){
+                                that.viewLampManage = true
+                            }
                             if(data.result.operats[i].code=='lampControl'){
                                 that.lampControl = true
                             }

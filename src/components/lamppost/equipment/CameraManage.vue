@@ -65,7 +65,7 @@
                 </el-table-column>
                 <el-table-column
                 align='center'
-                label="状态"
+                label="在线状态"
                 min-width="100">
                     <template slot-scope="scope">
                         <span v-if="scope.row.online=='0'">离线</span>
@@ -88,7 +88,7 @@
                 <el-table-column
                 prop="poleName"
                 align='center'
-                label="归属灯杆"
+                label="灯杆"
                 :formatter="formatRole"
                 min-width="100">
                 </el-table-column>
@@ -109,7 +109,7 @@
                 <el-table-column
                 prop="createTime"
                 align='center'
-                label="创建时间"
+                label="预览"
                 :formatter="formatRole"
                 min-width="100">
                     <template slot-scope="scope">
@@ -326,7 +326,7 @@ export default {
                         that.timeValue = 0
                         var url = localStorage.serverurl.split('/')
                         url = url[2].split(':')
-                        that.url ='rtmp://' + url[0]+':8072'+ data.result.camera.rtmpStream
+                        that.url ='rtmp://' + url[0]+sessionStorage.serverPort+ data.result.camera.rtmpStream
                         // that.url='rtmp://cyberplayerplay.kaywang.cn/cyberplayer/demo201711-L1'
                         var id = 'my-video'
                         $('#engage_video').append(

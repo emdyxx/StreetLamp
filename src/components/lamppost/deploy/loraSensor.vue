@@ -6,13 +6,13 @@
             <el-button v-if="editLoraSensor" @click="addloraSensor(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="delLoraSensor" @click="deletloraSensor" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
             <!-- <el-button v-if="setLoraSensorProject" @click="loraSensorBindProjects" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button> -->
-            <el-dropdown size="small" split-button type="primary">
+            <el-dropdown v-if="setLoraSensorProject" size="small" split-button type="primary">
                 <i class="el-icon-setting el-icon--left"></i>设置
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-if="setLoraSensorProject" @click.native="loraSensorBindProjects">绑定项目</el-dropdown-item>
+                    <el-dropdown-item @click.native="loraSensorBindProjects">绑定项目</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="search">
+            <div class="search" v-if="viewLoraSensorDeploy">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -108,7 +108,7 @@
                     <el-table-column
                     prop="poleName"
                     align='center'
-                    label="归属灯杆"
+                    label="灯杆"
                     min-width="110"
                     :formatter="formatRole">
                     </el-table-column>
@@ -184,21 +184,21 @@
                         <template v-if="networkType=='0'">
                             <div class="form_input">
                                 <label><span class="Required">*</span>设备地址:</label>
-                                <input type="text" v-model.lazy="data.devAddr" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入设备地址">
+                                <input type="text" v-model.lazy="data.devAddr" maxlength="8" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入设备地址">
                             </div>
                             <div class="form_input">
                                 <label><span class="Required">*</span>网络秘钥:</label>
-                                <input type="text" v-model.lazy="data.nwksKey" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入网络秘钥">
+                                <input type="text" v-model.lazy="data.nwksKey" maxlength="32" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入网络秘钥">
                             </div>
                             <div class="form_input">
                                 <label><span class="Required">*</span>应用秘钥:</label>
-                                <input type="text" v-model.lazy="data.appsKey" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入应用秘钥">
+                                <input type="text" v-model.lazy="data.appsKey" maxlength="32" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入应用秘钥">
                             </div>
                         </template>
                         <template v-if="networkType=='1'">
                             <div class="form_input">
                                 <label><span class="Required">*</span>应用秘钥:</label>
-                                <input type="text" v-model.lazy="data.applicationKey" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入应用秘钥">
+                                <input type="text" v-model.lazy="data.applicationKey" maxlength="32" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入应用秘钥">
                             </div>
                         </template>
                         <div class="form_input">
@@ -278,13 +278,15 @@
                                 </template>
                             </el-table-column>
                             <el-table-column
-                            prop="location"
+                            prop="coord"
+                            :formatter="formatRole"
                             align='center'
                             label="位置"
                             width="150">
                             </el-table-column>
                             <el-table-column
                             prop="remark"
+                            :formatter="formatRole"
                             label="备注"
                             align='center'
                             width="162">
@@ -364,6 +366,7 @@ export default {
         return {
             name:'名称',
             type1:'1',
+            viewLoraSensorDeploy:false,
             addLoraSensor:false,
             editLoraSensor:false,
             delLoraSensor:false,
@@ -474,7 +477,7 @@ export default {
             $('#map').modal('hide')
             this.data.coord = this.referencePosition
         },
-        //添加,编辑lora传感器 按钮
+        //添加,编辑 按钮
         addloraSensor(val){
             if(val=='0'){
                 this.type = '0';
@@ -494,6 +497,7 @@ export default {
                 this.networkType = ''
                 this.data.coord = ''
                 this.referencePosition = ''
+                this.site2 = []
                 $('#myModal').modal('show')
             }
             if(val=='1'){
@@ -521,6 +525,7 @@ export default {
                 this.data.location = this.site[0].location
                 this.data.remark = this.site[0].remark
                 this.data.coord = this.site[0].coord
+                this.referencePosition = this.site[0].coord
                 $('#myModal').modal('show')
             }
         },
@@ -907,6 +912,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewLoraSensorDeploy'){
+                                that.viewLoraSensorDeploy = true
+                            }
                             if(data.result.operats[i].code=='addLoraSensor'){
                                 that.addLoraSensor = true
                             }

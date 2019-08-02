@@ -21,10 +21,8 @@ export default {
 		// 	dataType:'json',
 		// 	success:function(data){
 		// 		if(data.url==''||data.url==undefined||data.url==null){
-		// 			console.log(window.location.href)
 		// 			var url = window.location.href
 		// 			url = url.split('/')
-		// 			console.log(url[0]+'//'+url[2]+'/SD-IOT-API')
 		// 			localStorage.serverurl = url[0]+'//'+url[2]+'/SD-IOT-API';
 		// 		}else{
 		// 			localStorage.serverurl = data.url;
@@ -50,7 +48,7 @@ export default {
 #app {
   width:100%;
   height:100%;
-  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  font-family: "PingFang SC","Helvetica Neue",Helvetica,"Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
   /* -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; */
   color: #2c3e50;

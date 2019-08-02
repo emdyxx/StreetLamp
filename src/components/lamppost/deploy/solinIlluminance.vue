@@ -5,12 +5,12 @@
             <el-button @click="operation(0)" v-if="addIlluminance" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button @click="operation(1)" v-if="editIlluminance" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button @click="operation(2)" v-if="delIlluminance" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search">
+            <div class="search" v-if="viewIlluminance">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='地址';type='2';">地址</el-dropdown-item>
                         <el-dropdown-item @click.native="name='状态';type='3';">状态</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -19,7 +19,7 @@
                         <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='2'">
-                        <el-input v-model="concentratorSn" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        <el-input v-model="lightNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='3'">
                         <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
@@ -63,12 +63,12 @@
                 <el-table-column
                 prop="lightNumber"
                 align='center'
-                label="序列号"
+                label="地址"
                 min-width="100">
                 </el-table-column>
                 <el-table-column
                 align='center'
-                label="在线状态"
+                label="状态"
                 min-width="100">
                     <template slot-scope="scope">
                         <span v-if="scope.row.online=='0'">离线</span>
@@ -76,16 +76,16 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                prop="concentratorName"
+                prop="poleName"
                 align='center'
-                label="集中器"
+                label="灯杆"
                 :formatter="formatRole"
                 min-width="100">
                 </el-table-column>
                 <el-table-column
-                prop="poleName"
+                prop="concentratorName"
                 align='center'
-                label="归属灯杆"
+                label="集中器"
                 :formatter="formatRole"
                 min-width="100">
                 </el-table-column>
@@ -132,8 +132,9 @@
                             <input type="text" v-model="data.nickName" class="form-control" id="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>序列号:</label>
-                            <input type="text" v-model="data.lightNumber" class="form-control" maxlength="16" id="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
+                            <label><span class="Required">*</span>地址:</label>
+                            <!-- <input type="text" v-model="data.lightNumber" class="form-control" maxlength="16" id="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号"> -->
+                            <el-input-number v-model.lazy="data.lightNumber" :min="1" :max="253" size="small" style="width:196px;" label="地址"></el-input-number>
                         </div>
                         <div class="form-group">
                             <label><span class="Required">*</span>型号:</label>
@@ -241,7 +242,7 @@
                                 </template>
                             </el-table-column>
                             <el-table-column
-                            prop="location"
+                            prop="coord"
                             align='center'
                             label="位置"
                             :formatter="formatRole"
@@ -282,6 +283,7 @@ export default {
     name: 'solinIlluminance_',
     data () {
         return {
+            viewIlluminance:false,
             addIlluminance:false,
             editIlluminance:false,
             delIlluminance:false,
@@ -398,7 +400,9 @@ export default {
                 that.data.modelId = ''
                 that.data.concentratorSn = ''
                 that.data.coord = ''
+                that.referencePosition = ''
                 that.data.remark = ''
+                that.site2 = []
                 $('#addModal').modal('show')
             }
             if(val=='1'){
@@ -418,6 +422,7 @@ export default {
                     that.data.modelId = that.site[0].modelId
                     that.data.concentratorSn = that.site[0].concentratorSn
                     that.data.coord = that.site[0].coord
+                    that.referencePosition = that.site[0].coord
                     that.data.remark = that.site[0].remark
                 },50)
                 $('#addModal').modal('show')
@@ -683,6 +688,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewIlluminance'){
+                                that.viewIlluminance = true
+                            }
                             if(data.result.operats[i].code=='addIlluminance'){
                                 that.addIlluminance = true
                             }

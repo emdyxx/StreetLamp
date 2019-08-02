@@ -320,7 +320,7 @@
                         :formatter="formatRole">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                                <span v-else-if="scope.row.businessAlarmType=='1'">门磁告警</span>
+                                <span v-else-if="scope.row.businessAlarmType=='1'">水位告警</span>
                                 <span v-else>----</span>
                             </template>
                         </el-table-column>
@@ -645,7 +645,7 @@
                     :formatter="formatRole">
                         <template slot-scope="scope">
                             <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                            <span v-else-if="scope.row.businessAlarmType=='1'">门磁告警</span>
+                            <span v-else-if="scope.row.businessAlarmType=='1'">水位告警</span>
                             <span v-else>----</span>
                         </template>
                     </el-table-column>

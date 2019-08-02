@@ -2,6 +2,10 @@
     <!-- 广告屏日志 -->
     <div class="screenJournal">
         <div class="screenJournal_top">
+            <div class="search">
+                <span>屏幕序列号:</span>
+                <input type="text" v-model="serialNumber" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入屏幕序列号">
+            </div>
             <template v-if="type=='95'">
                 <div class="search">
                     <span>操作模块:</span>
@@ -28,10 +32,6 @@
                 <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
             </template>
             <template v-if="type=='96'">
-                <div class="search">
-                    <span>屏幕序列号:</span>
-                    <input type="text" v-model="serialNumber" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入屏幕序列号">
-                </div>
                 <div class="search">
                     <span>操作状态:</span>
                     <el-select v-model="value1" clearable size='small' placeholder="请选择">
@@ -308,6 +308,10 @@ export default {
                 {
                 value: '9',
                 label: '清空定时信息'
+                },
+                {
+                value: '11',
+                label: '同步播放'
                 },
             ],
             value2:'',

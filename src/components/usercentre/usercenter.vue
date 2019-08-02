@@ -116,7 +116,7 @@ export default {
 </script>
 <style scoped>
 .usercenter{width: 100%;height: 100%;}
-.header{width:100%;height: 60px;background: #409EFF;display: flex;}
+.header{width:100%;height: 60px;background: #409eff;display: flex;}
 .header>i{font-size: 32px;color: white;cursor: pointer;position: absolute;left: 20px;top:10px;}
 .header>i:hover{color: aquamarine;}
 .user-header-left{height: 100%;display: inline-block;margin-left: 70px;color: white;font-size: 24px;line-height: 50px;}

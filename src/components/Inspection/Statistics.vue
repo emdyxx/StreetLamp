@@ -410,7 +410,7 @@ export default {
 /* .Record_top>button{height:33px;margin:6px 0 0 10px;} */
 .Record_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
 .Record_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.Record_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
+.Record_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
 .search{display: flex;height: 100%;align-items: center;margin-left: 5px;}
 .search>label{padding-top: 5px;}
 .search>div,.search>input{width: 146px;height: 32px;}

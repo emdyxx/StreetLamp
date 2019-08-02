@@ -5,13 +5,12 @@
             <el-button v-if="addSensor" @click="addsensor(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="editSensor" @click="addsensor(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="delSensor" @click="deletesensor" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <!-- <el-button v-if="sensorBindProject" @click="sensorBindProjects" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button> -->
-            <div class="search">
+            <div class="search" v-if="viewEnvDeploy">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='地址';type='2';">地址</el-dropdown-item>
                         <el-dropdown-item @click.native="name='状态';type='3';">状态</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -19,8 +18,8 @@
                     <template v-if="type=='1'">
                         <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     </template>
-                    <template v-if="type=='2'">
-                        <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    <template v-if="type=='2'"> 
+                        <el-input v-model="serialNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='3'">
                         <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
@@ -64,7 +63,7 @@
                     <el-table-column
                     prop="serialNumber"
                     align='center'
-                    label="序列号"
+                    label="地址"
                     min-width="110">
                     </el-table-column>
                     <el-table-column
@@ -83,17 +82,17 @@
                     min-width="120">
                     </el-table-column>
                     <el-table-column
-                    prop="concentratorName"
-                    align='center'
-                    label="集中器名称"
-                    min-width="100">
-                    </el-table-column>
-                    <el-table-column
                     prop="poleName"
                     align='center'
-                    label="归属灯杆"
+                    label="灯杆"
                     min-width="110"
                     :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    prop="concentratorName"
+                    align='center'
+                    label="集中器"
+                    min-width="100">
                     </el-table-column>
                     <el-table-column
                     prop="mark"
@@ -138,8 +137,9 @@
                             <input type="text" v-model="data.nickName" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>序列号:</label>
-                            <input type="text" v-model="data.serialNumber" id="serialNumber" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
+                            <label><span class="Required">*</span>地址:</label>
+                            <el-input-number v-model.lazy="data.serialNumber" :min="1" :max="253" size="small" style="width:196px;" label="地址"></el-input-number>
+                            <!-- <input type="text" v-model="data.serialNumber" id="serialNumber" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号"> -->
                         </div>
                         <div class="form-group">
                             <label><span class="Required">*</span>型号:</label>
@@ -231,13 +231,15 @@
                                 </template>
                             </el-table-column>
                             <el-table-column
-                            prop="location"
+                            prop="coord"
+                            :formatter="formatRole"
                             align='center'
                             label="位置"
                             width="150">
                             </el-table-column>
                             <el-table-column
                             prop="remark"
+                            :formatter="formatRole"
                             label="备注"
                             align='center'
                             width="162">
@@ -318,11 +320,11 @@ export default {
             name:'名称',
             type:'1',
             serverurl:localStorage.serverurl,
+            viewEnvDeploy:false,
             addSensor:false,
             editSensor:false,
             delSensor:false,
             relationPole:false,
-            sensorBindProject:false,
             site:[], //列表选中数据列表
             addtype:'0', //判断是添加还是编辑类型的参数
             options5:[],
@@ -463,6 +465,7 @@ export default {
                 this.value = ''
                 this.data.coord = ''
                 this.referencePosition = ''
+                this.site2 = []
                 $('#addModal').modal('show')
                 $('#serialNumber').removeAttr('disabled')
             }
@@ -484,6 +487,7 @@ export default {
                 this.data.mark = this.site[0].mark
                 this.data.serialNumber = this.site[0].serialNumber
                 this.data.coord = this.site[0].coord
+                this.referencePosition = this.site[0].coord
                 // this.value = ''
                 $('#addModal').modal('show')
                 $('#serialNumber').attr('disabled','disabled')
@@ -796,6 +800,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewEnvDeploy'){
+                                that.viewEnvDeploy = true
+                            }
                             if(data.result.operats[i].code=='addEnv'){
                                 that.addSensor = true
                             }
@@ -807,9 +814,6 @@ export default {
                             }
                             if(data.result.operats[i].code=='envAssociatePole'){
                                 that.relationPole = true
-                            }
-                            if(data.result.operats[i].code=='setEnvProject'){
-                                that.sensorBindProject = true
                             }
                         }
                     }else{

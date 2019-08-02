@@ -8,17 +8,17 @@
                 </el-button>
                 <el-dropdown-menu slot="dropdown"> 
                     <el-dropdown-item command='1'>状态查询</el-dropdown-item>
-                    <el-dropdown-item command='2'>输出控制</el-dropdown-item>
-                    <el-dropdown-item command='3'>工作模式切换</el-dropdown-item>
+                    <el-dropdown-item v-if="relayControl" command='2'>输出控制</el-dropdown-item>
+                    <el-dropdown-item v-if="relayControl" command='3'>工作模式切换</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>  
-            <el-button @click="sceneRouter" type="primary" size='small'>场景管理</el-button>
-            <div class="search">
+            <el-button v-if="relayControl" @click="sceneRouter" type="primary" size='small'>场景管理</el-button>
+            <div class="search" v-if="viewRelayManage">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
+                        <el-dropdown-item @click.native="name='地址';type='2';">地址</el-dropdown-item>
                         <el-dropdown-item @click.native="name='类型';type='3';">状态</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -27,7 +27,7 @@
                         <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='2'">
-                        <el-input v-model="relayNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        <el-input v-model="relayNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='3'">
                         <el-select v-model="value" clearable placeholder="请选择" size='small'>
@@ -73,7 +73,7 @@
                     prop="concentratorSn"
                     align='center'
                     :formatter="formatRole"
-                    label="序列号"
+                    label="地址"
                     min-width="110">
                     </el-table-column>
                     <el-table-column
@@ -119,7 +119,7 @@
                     <el-table-column
                     prop="editTime"
                     align='center'
-                    label="更新时间"
+                    label="采集时间"
                     :formatter="formatRole"
                     show-overflow-tooltip>
                     </el-table-column>
@@ -310,6 +310,8 @@ export default {
             name:'名称',
             type:'1',
             serverurl:localStorage.serverurl, 
+            relayControl:false,
+            viewRelayManage:false,
             tableData:[],
             site:[],
             pageIndex:1,
@@ -617,14 +619,11 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
-                            if(data.result.operats[i].code=='addRelay'){
-                                that.addRelay = true
+                            if(data.result.operats[i].code=='relayControl'){
+                                that.relayControl = true
                             }
-                            if(data.result.operats[i].code=='editRelay'){
-                                that.editRelay = true
-                            }
-                            if(data.result.operats[i].code=='delRelay'){
-                                that.delRelay = true
+                            if(data.result.operats[i].code=='viewRelayManage'){
+                                that.viewRelayManage = true
                             }
                         }
                     }else{

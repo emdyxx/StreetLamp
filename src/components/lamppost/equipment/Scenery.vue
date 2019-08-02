@@ -11,12 +11,12 @@
                     <el-dropdown-item @click.native="SceneryHistory">历史数据</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="search">
+            <div class="search" v-if="viewSceneryControllerManage">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{names}}
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="names='名称';type='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="names='序列号';type='2';">序列号</el-dropdown-item>
+                        <el-dropdown-item @click.native="names='地址';type='2';">地址</el-dropdown-item>
                         <el-dropdown-item @click.native="names='状态';type='3';">状态</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -25,7 +25,7 @@
                         <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='2'">
-                        <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        <el-input v-model="windSolarNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='3'">
                         <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
@@ -66,14 +66,14 @@
                 min-width="110">
                 </el-table-column>
                 <el-table-column
-                prop="serialNumber"
+                prop="windSolarNumber"
                 align='center'
-                label="序列号"
+                label="地址"
                 min-width="110">
                 </el-table-column>
                 <el-table-column
                 align='center'
-                label="状态"
+                label="在线状态"
                 min-width="80">
                     <template slot-scope="scope">
                         <span v-if="scope.row.online=='0'">离线</span>
@@ -89,18 +89,18 @@
                 </el-table-column>
                 <el-table-column
                 align='center'
-                label="太阳能电流/功率/电压"
+                label="太阳能电流/电压/功率"
                 min-width="120">
                     <template slot-scope="scope">
-                        {{scope.row.solarEngIma}}/{{scope.row.solarEngPower}}/{{scope.row.solarEngVoltage}}
+                        {{scope.row.solarEngIma}}/{{scope.row.solarEngVoltage}}/{{scope.row.solarEngPower}}
                     </template>
                 </el-table-column>
                 <el-table-column
                 align='center'
-                label="风机电流/功率/电压"
+                label="风机电流/电压/功率"
                 min-width="120">
                     <template slot-scope="scope">
-                        {{scope.row.fanIma}}/{{scope.row.fanPower}}/{{scope.row.fanVoltage}}
+                        {{scope.row.fanIma}}/{{scope.row.fanVoltage}}/{{scope.row.fanPower}}
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -118,9 +118,9 @@
                 min-width="80">
                 </el-table-column>
                 <el-table-column
-                prop="createTime"
+                prop="timestamp"
                 align='center'
-                label="创建时间"
+                label="采集时间"
                 show-overflow-tooltip>
                 </el-table-column>
             </el-table>
@@ -144,12 +144,13 @@ export default {
     name: 'Scenery',
     data () {
         return {
+            viewSceneryControllerManage:false,
             viewSceneryControllerStatus:false,
             serverurl:localStorage.serverurl,
             names:'名称',
             nickName:'',
             type:'1',
-            serialNumber:'',
+            windSolarNumber:'',
             options:[{
                     value:0,
                     label:'离线'
@@ -172,7 +173,7 @@ export default {
     methods:{
         handleCommand(){
             this.nickName=''
-            this.serialNumber=''
+            this.windSolarNumber=''
             this.value=''
         },
         formatRole:function(val, column, cellValue, index){
@@ -205,7 +206,7 @@ export default {
                 url:that.serverurl+'/v1/solin/windSolarSensors/control/status',
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify({
-                    command:'0',
+                    command:'1',
                     windSolars:arr
                 }),
                 success:function(data){
@@ -244,7 +245,7 @@ export default {
                 poleId:'',
                 projectIds:sessionStorage.projectId,
                 nickName:that.nickName,
-                serialNumber:that.serialNumber,
+                windSolarNumber:that.windSolarNumber,
                 online:that.value,
                 dataType:'1',
             }
@@ -284,6 +285,9 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewSceneryControllerManage'){
+                                that.viewSceneryControllerManage = true
+                            }
                             if(data.result.operats[i].code=='viewSceneryControllerStatus'){
                                 that.viewSceneryControllerStatus = true
                             }
