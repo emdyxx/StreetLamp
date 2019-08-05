@@ -2,16 +2,16 @@
     <!-- 风光 -->
     <div class="Scenery">
         <div class="Scenery_top">
-            <el-dropdown v-if="viewSceneryControllerStatus" trigger='click'>
+            <el-dropdown trigger='click'>
                 <el-button type="primary" size='small' style="width:115px;">
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click.native="details">获取数据</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.viewSceneryControllerStatus" @click.native="details">获取数据</el-dropdown-item>
                     <el-dropdown-item @click.native="SceneryHistory">历史数据</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="search" v-if="viewSceneryControllerManage">
+            <div class="search" v-if="JurisdictionS.viewSceneryControllerManage">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{names}}
                     <el-dropdown-menu slot="dropdown">
@@ -144,8 +144,10 @@ export default {
     name: 'Scenery',
     data () {
         return {
-            viewSceneryControllerManage:false,
-            viewSceneryControllerStatus:false,
+            JurisdictionS:{
+                viewSceneryControllerManage:false,
+                viewSceneryControllerStatus:false,
+            },
             serverurl:localStorage.serverurl,
             names:'名称',
             nickName:'',
@@ -286,10 +288,10 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewSceneryControllerManage'){
-                                that.viewSceneryControllerManage = true
+                                that.JurisdictionS.viewSceneryControllerManage = true
                             }
                             if(data.result.operats[i].code=='viewSceneryControllerStatus'){
-                                that.viewSceneryControllerStatus = true
+                                that.JurisdictionS.viewSceneryControllerStatus = true
                             }
                         }
                     }else{
@@ -312,7 +314,7 @@ export default {
 .Scenery_top{height: 46px;border-bottom: none !important;display: flex;align-items: center;font-size: 16px;padding-left: 20px;}
 .Scenery_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;}
 
-.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search{display: flex;align-items: center;margin-left: 10px !important;}
 .search>div{margin-left: 5px;}
 .search>input{width: 146px;}
 </style>

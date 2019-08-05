@@ -38,7 +38,7 @@ export default {
   data () {
     return {
       serverurl:localStorage.serverurl,
-      headercolorType:'1',
+      headercolorType:'',
       menu:[],
     }
   },
@@ -85,19 +85,19 @@ export default {
                       sessionStorage.menuId2 = data.result.menus[0].id
                     }
                     if(sessionStorage.menuId2=='4'){
-                      sessionStorage.headercolorType = '1'
+                      that.headercolorType = '1'
                       that.$router.push({'path':'/user'})
                     }
                     if(sessionStorage.menuId2=='5'){
-                      sessionStorage.headercolorType = '2'
+                      that.headercolorType = '2'
                       that.$router.push({'path':'/organization'})
                     }
                     if(sessionStorage.menuId2=='6'){
-                      sessionStorage.headercolorType = '3'
+                      that.headercolorType = '3'
                       that.$router.push({'path':'/article'})
                     }
                     if(sessionStorage.menuId2=='7'){
-                      sessionStorage.headercolorType = '4'
+                      that.headercolorType = '4'
                       that.$router.push({'path':'/journal'})
                     }
                 }else{
@@ -109,7 +109,6 @@ export default {
   },
   created(){
     var that = this
-    this.headercolorType = sessionStorage.headercolorType
     that.Jurisdiction()
   },
 }

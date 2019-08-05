@@ -2,10 +2,10 @@
     <!-- 风光传感器 -->
     <div class="SceneryDeploy">
         <div class="SceneryDeploy_top">
-            <el-button @click="operation(0)" v-if="addSceneryController" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button @click="operation(1)" v-if="editSceneryController" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button @click="operation(2)" v-if="delSceneryController" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search" v-if="viewSceneryControllerDeploy">
+            <el-button @click="operation(0)" v-if="JurisdictionS.addSceneryController" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button @click="operation(1)" v-if="JurisdictionS.editSceneryController" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button @click="operation(2)" v-if="JurisdictionS.delSceneryController" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <div class="search" v-if="JurisdictionS.viewSceneryControllerDeploy">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -179,7 +179,7 @@
                             </el-input>
                         </div> 
                         <div class="form-group">
-                            <el-button @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
+                            <el-button v-if="JurisdictionS.sceneryControllerAssociatePole" @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
                         </div> 
                     </div>
                     <div class="modal-footer">
@@ -289,10 +289,13 @@ export default {
             name:'名称',
             type:'1',
             serverurl:localStorage.serverurl,
-            viewSceneryControllerDeploy:false,
-            addSceneryController:false,
-            editSceneryController:false,
-            delSceneryController:false,
+            JurisdictionS:{
+                viewSceneryControllerDeploy:false,//查看风光控制器
+                addSceneryController:false,//添加风光控制
+                editSceneryController:false,//编辑风光控制
+                delSceneryController:false,//删除风光控制
+                sceneryControllerAssociatePole:false,//风光控制关联灯杆
+            },
             tableData:[],
             site:[],
             pageSize:10,
@@ -680,16 +683,19 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewSceneryControllerDeploy'){
-                                that.viewSceneryControllerDeploy = true
+                                that.JurisdictionS.viewSceneryControllerDeploy = true
                             }
                             if(data.result.operats[i].code=='addSceneryController'){
-                                that.addSceneryController = true
+                                that.JurisdictionS.addSceneryController = true
                             }
                             if(data.result.operats[i].code=='editSceneryController'){
-                                that.editSceneryController = true
+                                that.JurisdictionS.editSceneryController = true
                             }
                             if(data.result.operats[i].code=='delSceneryController'){
-                                that.delSceneryController = true
+                                that.JurisdictionS.delSceneryController = true
+                            }
+                            if(data.result.operats[i].code=='sceneryControllerAssociatePole'){
+                                that.JurisdictionS.sceneryControllerAssociatePole = true
                             }
                         }
                     }else{

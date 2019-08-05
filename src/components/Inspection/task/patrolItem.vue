@@ -2,11 +2,11 @@
     <!-- 巡检项 -->
     <div class="patrolItem">
         <div class="patrolItem_top">
-            <el-button v-if="addPatrolItem" @click="operationPatrolItem(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="editPatrolItem" @click="operationPatrolItem(1)" type="primary" icon='el-icon-edit' size='small'>编辑</el-button>
-            <el-button v-if="delPatrolItem" @click="operationPatrolItem(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <el-button v-if="patrolCategoryManagement" @click="operationPatrolItem(3)" type="primary" icon='el-icon-setting' size='small'>分类管理</el-button>
-            <div class="search" v-if="viewPatrolItem">
+            <el-button v-if="JurisdictionS.addPatrolItem" @click="operationPatrolItem(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="JurisdictionS.editPatrolItem" @click="operationPatrolItem(1)" type="primary" icon='el-icon-edit' size='small'>编辑</el-button>
+            <el-button v-if="JurisdictionS.delPatrolItem" @click="operationPatrolItem(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <el-button v-if="JurisdictionS.patrolCategoryManagement" @click="operationPatrolItem(3)" type="primary" icon='el-icon-setting' size='small'>分类管理</el-button>
+            <div class="search" v-if="JurisdictionS.viewPatrolItem">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -204,11 +204,13 @@ export default {
             name:'名称',
             types:'1',
             serverurl:localStorage.serverurl,
-            viewPatrolItem:false,
-            addPatrolItem:false,
-            editPatrolItem:false,
-            delPatrolItem:false,
-            patrolCategoryManagement:false,
+            JurisdictionS:{
+                viewPatrolItem:false,//查看巡检项信息
+                addPatrolItem:false,//添加巡检项
+                editPatrolItem:false,//编辑巡检项
+                delPatrolItem:false,//删除巡检项
+                patrolCategoryManagement:false,//分类管理
+            },
             itemName:'',
             options:[],
             categoryId:'',
@@ -519,19 +521,19 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewPatrolItem'){
-                                that.viewPatrolItem = true
+                                that.JurisdictionS.viewPatrolItem = true
                             }
                             if(data.result.operats[i].code=='addPatrolItem'){
-                                that.addPatrolItem = true
+                                that.JurisdictionS.addPatrolItem = true
                             }
                             if(data.result.operats[i].code=='editPatrolItem'){
-                                that.editPatrolItem = true
+                                that.JurisdictionS.editPatrolItem = true
                             }
                             if(data.result.operats[i].code=='delPatrolItem'){
-                                that.delPatrolItem = true
+                                that.JurisdictionS.delPatrolItem = true
                             }
                             if(data.result.operats[i].code=='patrolCategoryManagement'){
-                                that.patrolCategoryManagement = true
+                                that.JurisdictionS.patrolCategoryManagement = true
                             }
                         }
                     }else{

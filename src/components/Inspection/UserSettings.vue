@@ -2,10 +2,10 @@
     <!-- 用户设置 -->
     <div class="UserSettings">
         <div class="UserSettings_top">
-            <el-button @click="operationUserSettings(0)" v-if="addPatrolInspector" type="primary" icon='el-icon-plus' size='small'>添加用户</el-button>
-            <el-button @click="operationUserSettings(1)" v-if="editPatrolInspector" type="primary" icon="el-icon-edit" size='small'>编辑用户</el-button>
-            <el-button @click="operationUserSettings(2)" v-if="delPatrolInspector" type="primary" icon='el-icon-delete' size='small'>删除用户</el-button>
-            <div class="search" v-if="viewPatrolInspector">
+            <el-button @click="operationUserSettings(0)" v-if="JurisdictionS.addPatrolInspector" type="primary" icon='el-icon-plus' size='small'>添加用户</el-button>
+            <el-button @click="operationUserSettings(1)" v-if="JurisdictionS.editPatrolInspector" type="primary" icon="el-icon-edit" size='small'>编辑用户</el-button>
+            <el-button @click="operationUserSettings(2)" v-if="JurisdictionS.delPatrolInspector" type="primary" icon='el-icon-delete' size='small'>删除用户</el-button>
+            <div class="search" v-if="JurisdictionS.viewPatrolInspector">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -178,10 +178,12 @@ export default {
         return {
             name:'姓名',
             types:'1',
-            viewPatrolInspector:false,
-            addPatrolInspector:false,
-            editPatrolInspector:false,
-            delPatrolInspector:false,
+            JurisdictionS:{
+                viewPatrolInspector:false,//查看巡检员信息
+                addPatrolInspector:false,//添加巡检员
+                editPatrolInspector:false,//编辑巡检员
+                delPatrolInspector:false,//删除巡检员
+            },
             serverurl:localStorage.serverurl,
             tableData:[],
             site:[],
@@ -417,16 +419,16 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewPatrolInspector'){
-                                that.viewPatrolInspector = true
+                                that.JurisdictionS.viewPatrolInspector = true
                             }
                             if(data.result.operats[i].code=='addPatrolInspector'){
-                                that.addPatrolInspector = true
+                                that.JurisdictionS.addPatrolInspector = true
                             }
                             if(data.result.operats[i].code=='editPatrolInspector'){
-                                that.editPatrolInspector = true
+                                that.JurisdictionS.editPatrolInspector = true
                             }
                             if(data.result.operats[i].code=='delPatrolInspector'){
-                                that.delPatrolInspector = true
+                                that.JurisdictionS.delPatrolInspector = true
                             }
                         }
                     }else{

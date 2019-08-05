@@ -2,17 +2,17 @@
     <div class="loraSensor">
         <!-- 传感器部署 -->
         <div class="loraSensor_top">
-            <el-button v-if="addLoraSensor" @click="addloraSensor(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="editLoraSensor" @click="addloraSensor(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="delLoraSensor" @click="deletloraSensor" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <el-button v-if="JurisdictionS.addLoraSensor" @click="addloraSensor(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="JurisdictionS.editLoraSensor" @click="addloraSensor(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="JurisdictionS.delLoraSensor" @click="deletloraSensor" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
             <!-- <el-button v-if="setLoraSensorProject" @click="loraSensorBindProjects" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button> -->
-            <el-dropdown v-if="setLoraSensorProject" size="small" split-button type="primary">
+            <el-dropdown v-if="JurisdictionS.SetUp" size="small" split-button type="primary">
                 <i class="el-icon-setting el-icon--left"></i>设置
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click.native="loraSensorBindProjects">绑定项目</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.setLoraSensorProject" @click.native="loraSensorBindProjects">绑定项目</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="search" v-if="viewLoraSensorDeploy">
+            <div class="search" v-if="JurisdictionS.viewLoraSensorDeploy">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -227,7 +227,7 @@
                                 style="width:196px;">
                             </el-input>
                         </div>
-                        <div v-if="loraSensorAssociatePole" class="form_input" style="margin-top:10px;">
+                        <div v-if="JurisdictionS.loraSensorAssociatePole" class="form_input" style="margin-top:10px;">
                             <el-button @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
                         </div>
                     </div>
@@ -366,12 +366,15 @@ export default {
         return {
             name:'名称',
             type1:'1',
-            viewLoraSensorDeploy:false,
-            addLoraSensor:false,
-            editLoraSensor:false,
-            delLoraSensor:false,
-            loraSensorAssociatePole:false,
-            setLoraSensorProject:false,
+            JurisdictionS:{
+                viewLoraSensorDeploy:false,//查看传感器部署
+                addLoraSensor:false,//添加传感器
+                editLoraSensor:false,//编辑传感器
+                delLoraSensor:false,//删除传感器
+                loraSensorAssociatePole:false,//关联灯杆
+                setLoraSensorProject:false,//传感器绑定项目
+                SetUp:false,//设置按钮
+            },
             serverurl:localStorage.serverurl, 
             tableData:[],
             site:[],
@@ -913,22 +916,23 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewLoraSensorDeploy'){
-                                that.viewLoraSensorDeploy = true
+                                that.JurisdictionS.viewLoraSensorDeploy = true
                             }
                             if(data.result.operats[i].code=='addLoraSensor'){
-                                that.addLoraSensor = true
+                                that.JurisdictionS.addLoraSensor = true
                             }
                             if(data.result.operats[i].code=='editLoraSensor'){
-                                that.editLoraSensor = true
+                                that.JurisdictionS.editLoraSensor = true
                             }
                             if(data.result.operats[i].code=='delLoraSensor'){
-                                that.delLoraSensor = true
+                                that.JurisdictionS.delLoraSensor = true
                             }
                             if(data.result.operats[i].code=='loraSensorAssociatePole'){
-                                that.loraSensorAssociatePole = true
+                                that.JurisdictionS.loraSensorAssociatePole = true
                             }
                             if(data.result.operats[i].code=='setLoraSensorProject'){
-                                that.setLoraSensorProject = true
+                                that.JurisdictionS.setLoraSensorProject = true
+                                that.JurisdictionS.SetUp = true
                             }
                         }
                     }else{

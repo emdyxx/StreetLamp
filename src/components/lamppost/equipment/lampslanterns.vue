@@ -2,28 +2,28 @@
     <div class="lampslanterns">
         <!-- 灯具 -->
         <div class="lampslanterns_top">
-            <el-dropdown v-if="lampControl" style="margin-left:10px;" @command='operation'>
+            <el-dropdown v-if="JurisdictionS.lampControl" style="margin-left:10px;" @command='operation'>
                 <el-button type="primary" size='small' style="width:85px;">
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown"> 
-                    <el-dropdown-item v-if="lampControl" command='1'>开灯</el-dropdown-item>
-                    <el-dropdown-item v-if="lampControl" command='2'>关灯</el-dropdown-item>
-                    <el-dropdown-item v-if="lampControl" command='3'>调光</el-dropdown-item>
-                    <el-dropdown-item v-if="lampControl" command='4'>刷新状态</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.lampControl" command='1'>开灯</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.lampControl" command='2'>关灯</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.lampControl" command='3'>调光</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.lampControl" command='4'>刷新状态</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>    
-            <el-dropdown v-if="addLampStrategy" style="margin-left:10px;" @command='switchOff'>
+            <el-dropdown v-if="JurisdictionS.viewLampStrategy" style="margin-left:10px;" @command='switchOff'>
                 <el-button type="primary" size='small' style="width:85px;">
                     策略<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown"> 
-                    <el-dropdown-item v-if="viewLampStrategy" command='5'>策略管理</el-dropdown-item>
-                    <el-dropdown-item v-if="viewLampStrategy" command='6'>单灯策略</el-dropdown-item>
-                    <el-dropdown-item v-if="viewLampStrategy" command='7'>群组策略</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.viewLampStrategy" command='5'>策略管理</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.viewLampStrategy" command='6'>单灯策略</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.viewLampStrategy" command='7'>群组策略</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="search" v-if="viewLampManage">
+            <div class="search" v-if="JurisdictionS.viewLampManage">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -191,9 +191,9 @@
                     <div class="modal-body">
                         <div class="strategy">
                             <div class="strategy_top">
-                                <el-button v-if="strategyType=='0'&&addLampStrategy==true" @click='strategy(1)' type="primary" size='small'>添加策略</el-button>
-                                <el-button v-if="strategyType=='0'&&editLampStrategy==true" @click='strategy(2)' type="primary" size='small'>修改策略</el-button>
-                                <el-button v-if="strategyType=='0'&&delLampStrategy==true" @click='strategy(3)' type="primary" size='small'>删除策略</el-button>
+                                <el-button v-if="strategyType=='0'&&JurisdictionS.addLampStrategy==true" @click='strategy(1)' type="primary" size='small'>添加策略</el-button>
+                                <el-button v-if="strategyType=='0'&&JurisdictionS.editLampStrategy==true" @click='strategy(2)' type="primary" size='small'>修改策略</el-button>
+                                <el-button v-if="strategyType=='0'&&JurisdictionS.delLampStrategy==true" @click='strategy(3)' type="primary" size='small'>删除策略</el-button>
                                 <el-button v-if="strategyType=='1'" @click='strategy(4)' type="primary" size='small'>下发策略</el-button>
                                 <el-button v-if="strategyType=='1'" @click='strategy(6)' type="primary" size='small'>清空策略</el-button>
                             </div>
@@ -258,8 +258,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel" v-if="type3=='0'">添加策略</h4>
-                        <h4 class="modal-title" id="myModalLabel" v-if="type3=='1'">修改策略</h4>
+                        <h4 class="modal-title" id="myModalLabel" v-if="type3=='0'&&JurisdictionS.addLampStrategy==true">添加策略</h4>
+                        <h4 class="modal-title" id="myModalLabel" v-if="type3=='1'&&JurisdictionS.editLampStrategy==true">修改策略</h4>
                         <h4 class="modal-title" id="myModalLabel" v-if="type3=='5'">详情</h4>
                     </div>
                     <div class="modal-body">
@@ -529,12 +529,15 @@ export default {
             name:'名称',
             type:'1',
             serverurl:localStorage.serverurl,
-            viewLampManage:false,
-            lampControl:false,
-            viewLampStrategy:false,
-            addLampStrategy:false,
-            editLampStrategy:false,
-            delLampStrategy:false,
+            JurisdictionS:{
+                viewLampManage:false,//查看灯具管理
+                lampControl:false,//灯具控制
+                issuedLampStrategy:false,//灯具策略设置
+                viewLampStrategy:false,//策略管理(查看)
+                addLampStrategy:false,//添加策略
+                editLampStrategy:false,//修改策略
+                delLampStrategy:false,//删除策略
+            },
             nickName:'',
             serialNumber:'',
             options:[{value: '1',label: '在线'},{value: '0',label: '离线'}],
@@ -1379,22 +1382,25 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewLampManage'){
-                                that.viewLampManage = true
+                                that.JurisdictionS.viewLampManage = true
                             }
                             if(data.result.operats[i].code=='lampControl'){
-                                that.lampControl = true
+                                that.JurisdictionS.lampControl = true
+                            }
+                            if(data.result.operats[i].code=='issuedLampStrategy'){
+                                that.JurisdictionS.issuedLampStrategy = true
                             }
                             if(data.result.operats[i].code=='viewLampStrategy'){
-                                that.viewLampStrategy = true
+                                that.JurisdictionS.viewLampStrategy = true
                             }
                             if(data.result.operats[i].code=='addLampStrategy'){
-                                that.addLampStrategy = true
+                                that.JurisdictionS.addLampStrategy = true
                             }
                             if(data.result.operats[i].code=='editLampStrategy'){
-                                that.editLampStrategy = true
+                                that.JurisdictionS.editLampStrategy = true
                             }
                             if(data.result.operats[i].code=='delLampStrategy'){
-                                that.delLampStrategy = true
+                                that.JurisdictionS.delLampStrategy = true
                             }
                         }
                     }else{

@@ -2,10 +2,10 @@
     <div class="concentrator">
         <!-- 集中器模式 -->
         <div class="concentrator_top">
-            <el-button v-if="addConcentrator" @click="myModalOperation(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="editConcentrator" @click="myModalOperation(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="delConcentrator" @click="myModalOperation(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search" v-if="viewConcentrator">
+            <el-button v-if="JurisdictionS.addConcentrator" @click="myModalOperation(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="JurisdictionS.editConcentrator" @click="myModalOperation(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="JurisdictionS.delConcentrator" @click="myModalOperation(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <div class="search" v-if="JurisdictionS.viewConcentrator">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -133,10 +133,12 @@ export default {
         return {
             name:'名称',
             type1:'1',
-            viewConcentrator:false,
-            addConcentrator:false,
-            editConcentrator:false,
-            delConcentrator:false,
+            JurisdictionS:{
+                viewConcentrator:false,//查看集中器部署
+                addConcentrator:false,//添加集中器
+                editConcentrator:false,//编辑集中器
+                delConcentrator:false,//删除集中器
+            },
             concentratorName:'',
             concentratorSn:'',
             serverurl:localStorage.serverurl,
@@ -333,16 +335,16 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewConcentrator'){
-                                that.viewConcentrator = true
+                                that.JurisdictionS.viewConcentrator = true
                             }
                             if(data.result.operats[i].code=='addConcentrator'){
-                                that.addConcentrator = true
+                                that.JurisdictionS.addConcentrator = true
                             }
                             if(data.result.operats[i].code=='editConcentrator'){
-                                that.editConcentrator = true
+                                that.JurisdictionS.editConcentrator = true
                             }
                             if(data.result.operats[i].code=='delConcentrator'){
-                                that.delConcentrator = true
+                                that.JurisdictionS.delConcentrator = true
                             }
                         }
                     }else{

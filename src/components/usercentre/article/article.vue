@@ -6,10 +6,10 @@
         </div>
         <div class="article_right">
             <div class="article_right_top">
-                <el-button v-if="addProject" @click="addarticle(0)" type="primary" icon='el-icon-plus' size='small'>添加项目</el-button>
-                <el-button v-if="editProject" @click="addarticle(1)" type="primary" icon="el-icon-edit" size='small'>编辑项目</el-button>
-                <el-button v-if="delProject" @click="deletearticle" type="primary" icon='el-icon-delete' size='small'>删除项目</el-button>
-                <div class="search" v-if="viewProject">
+                <el-button v-if="JurisdictionS.addProject" @click="addarticle(0)" type="primary" icon='el-icon-plus' size='small'>添加项目</el-button>
+                <el-button v-if="JurisdictionS.editProject" @click="addarticle(1)" type="primary" icon="el-icon-edit" size='small'>编辑项目</el-button>
+                <el-button v-if="JurisdictionS.delProject" @click="deletearticle" type="primary" icon='el-icon-delete' size='small'>删除项目</el-button>
+                <div class="search" v-if="JurisdictionS.viewProject">
                     <el-dropdown size="small" split-button @command="handleCommand">
                         {{name}}
                         <el-dropdown-menu slot="dropdown">
@@ -274,10 +274,12 @@ export default {
             name:'项目名称',
             types:'1',
             serverurl:localStorage.serverurl,
-            viewProject:false,
-            addProject:false,
-            editProject:false,
-            delProject:false,
+            JurisdictionS:{
+                viewProject:false,//查看项目
+                addProject:false,//添加项目
+                editProject:false,//编辑项目
+                delProject:false,//删除项目
+            },
             sizeType:{id:0}, //点击树节点ID
             site:[],
             type:'0',//添加编辑判断
@@ -812,16 +814,16 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewProject'){
-                                that.viewProject = true
+                                that.JurisdictionS.viewProject = true
                             }
                             if(data.result.operats[i].code=='addProject'){
-                                that.addProject = true
+                                that.JurisdictionS.addProject = true
                             }
                             if(data.result.operats[i].code=='editProject'){
-                                that.editProject = true
+                                that.JurisdictionS.editProject = true
                             }
                             if(data.result.operats[i].code=='delProject'){
-                                that.delProject = true
+                                that.JurisdictionS.delProject = true
                             }
                         }
                     }else{

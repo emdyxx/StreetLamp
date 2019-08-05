@@ -808,43 +808,36 @@ export default {
         //系统管理
         usermanage(val){
             sessionStorage.menuId = val
-            sessionStorage.headercolorType = '1'
             this.$router.push({'path':'/usercenter'})
         },
         //设备管理
         lamppost(val){
             sessionStorage.menuId = val
-            sessionStorage.headercolorType = '2'
             this.$router.push({'path':'/lamppost'})
         },
         //gis地图系统
         map(val){
             sessionStorage.menuId = val
-            sessionStorage.headercolorType = '1'
             this.$router.push({'path':'/mapHomg',query:{id:val}})
         },
         //灯具地图系统
         Lamp(val){
             sessionStorage.menuId = val
-            sessionStorage.headercolorType = '2'
             this.$router.push({'path':'/SingleLamp',query:{id:val}})
         },
         //摄像头地图系统
         Camera(val){
             sessionStorage.menuId = val
-            sessionStorage.headercolorType = '2'
             this.$router.push({'path':'/Camera',query:{id:val}})
         },
         //LED地图系统
         LED(val){
             sessionStorage.menuId = val
-            sessionStorage.headercolorType = '2'
             this.$router.push({'path':'/LED',query:{id:val}})
         },
         //风光
         Scenery(val){
             sessionStorage.menuId = val
-            sessionStorage.headercolorType = '2'
             this.$router.push({'path':'/SceneryMap',query:{id:val}})
         },
         //巡检管理

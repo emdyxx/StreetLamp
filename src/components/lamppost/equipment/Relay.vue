@@ -2,18 +2,18 @@
     <!-- 继电器管理 -->
     <div class="Relay">
         <div class="Relay_top">
-            <el-dropdown style="margin-left:10px;" @command='operation'> 
+            <el-dropdown v-if="JurisdictionS.relayControl" style="margin-left:10px;" @command='operation'> 
                 <el-button type="primary" size='small' style="margin-top:8px;margin-left:5px;">
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown"> 
-                    <el-dropdown-item command='1'>状态查询</el-dropdown-item>
-                    <el-dropdown-item v-if="relayControl" command='2'>输出控制</el-dropdown-item>
-                    <el-dropdown-item v-if="relayControl" command='3'>工作模式切换</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.relayControl" command='1'>查询最新数据</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.relayControl" command='2'>输出控制</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.relayControl" command='3'>工作模式切换</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>  
-            <el-button v-if="relayControl" @click="sceneRouter" type="primary" size='small'>场景管理</el-button>
-            <div class="search" v-if="viewRelayManage">
+            <el-button v-if="JurisdictionS.viewRelayStrategy" @click="sceneRouter" type="primary" size='small'>场景管理</el-button>
+            <div class="search" v-if="JurisdictionS.viewRelayManage">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -310,8 +310,11 @@ export default {
             name:'名称',
             type:'1',
             serverurl:localStorage.serverurl, 
-            relayControl:false,
-            viewRelayManage:false,
+            JurisdictionS:{
+                viewRelayManage:false,//查看继电器管理
+                relayControl:false,//继电器控制
+                viewRelayStrategy:false,//查看继电器场景
+            },
             tableData:[],
             site:[],
             pageIndex:1,
@@ -619,11 +622,14 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
-                            if(data.result.operats[i].code=='relayControl'){
-                                that.relayControl = true
-                            }
                             if(data.result.operats[i].code=='viewRelayManage'){
-                                that.viewRelayManage = true
+                                that.JurisdictionS.viewRelayManage = true
+                            }
+                            if(data.result.operats[i].code=='relayControl'){
+                                that.JurisdictionS.relayControl = true
+                            }
+                            if(data.result.operats[i].code=='viewRelayStrategy'){
+                                that.JurisdictionS.viewRelayStrategy = true
                             }
                         }
                     }else{
@@ -648,7 +654,7 @@ export default {
 .Relay_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
 .Relay_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
 
-.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search{display: flex;align-items: center;margin-left: 10px !important;}
 .search>div{margin-left: 5px;}
 .search>input{width: 146px;}
 .block{text-align: center;}

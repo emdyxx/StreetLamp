@@ -1,6 +1,6 @@
 <template>
     <!-- 今日巡检计划 -->
-    <div class="todayPatrolPlan">
+    <div class="todayPatrolPlans">
         <div class="todayPatrolPlan_top">
             <div class="search">
                 <el-dropdown size="small" split-button @command="handleCommand">
@@ -331,7 +331,7 @@
 </template>
 <script>
 export default {
-    name: 'todayPatrolPlan',
+    name: 'todayPatrolPlans',
     data () {
         return {
             name:'计划名称',
@@ -469,8 +469,8 @@ export default {
 </script>
 <style scoped>
 .block{text-align: center;}
-.todayPatrolPlan{width: 100%;height: 100%;}
-.todayPatrolPlan>div{width: 100%;position: absolute;}
+.todayPatrolPlans{width: 100%;height: 100%;}
+.todayPatrolPlans>div{width: 100%;position: absolute;}
 .todayPatrolPlan_top{height: 46px;border-bottom: none !important;display: flex;border: 1px solid #E4E4F1;}
 .todayPatrolPlan_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
 .search{display: flex;align-items: center;}

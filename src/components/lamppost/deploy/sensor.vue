@@ -2,10 +2,10 @@
     <div class="sensor">
         <!-- 气象站部署 -->
         <div class="sensor_top">
-            <el-button v-if="addSensor" @click="addsensor(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="editSensor" @click="addsensor(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="delSensor" @click="deletesensor" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search" v-if="viewEnvDeploy">
+            <el-button v-if="JurisdictionS.addEnv" @click="addsensor(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="JurisdictionS.editEnv" @click="addsensor(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="JurisdictionS.delEnv" @click="deletesensor" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <div class="search" v-if="JurisdictionS.viewEnvDeploy">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -181,7 +181,7 @@
                             </el-input>
                         </div> 
                         <div class="form-group">
-                            <el-button v-if='relationPole' @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
+                            <el-button v-if='JurisdictionS.envAssociatePole' @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
                         </div> 
                     </div>
                     <div class="modal-footer">
@@ -320,11 +320,13 @@ export default {
             name:'名称',
             type:'1',
             serverurl:localStorage.serverurl,
-            viewEnvDeploy:false,
-            addSensor:false,
-            editSensor:false,
-            delSensor:false,
-            relationPole:false,
+            JurisdictionS:{
+                viewEnvDeploy:false,//查看气象站部署
+                addEnv:false,//添加气象站
+                editEnv:false,//编辑气象站
+                delEnv:false,//删除气象站
+                envAssociatePole:false,//关联灯杆
+            },
             site:[], //列表选中数据列表
             addtype:'0', //判断是添加还是编辑类型的参数
             options5:[],
@@ -801,19 +803,19 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewEnvDeploy'){
-                                that.viewEnvDeploy = true
+                                that.JurisdictionS.viewEnvDeploy = true
                             }
                             if(data.result.operats[i].code=='addEnv'){
-                                that.addSensor = true
+                                that.JurisdictionS.addEnv = true
                             }
                             if(data.result.operats[i].code=='editEnv'){
-                                that.editSensor = true
+                                that.JurisdictionS.editEnv = true
                             }
                             if(data.result.operats[i].code=='delEnv'){
-                                that.delSensor = true
+                                that.JurisdictionS.delEnv = true
                             }
                             if(data.result.operats[i].code=='envAssociatePole'){
-                                that.relationPole = true
+                                that.JurisdictionS.envAssociatePole = true
                             }
                         }
                     }else{

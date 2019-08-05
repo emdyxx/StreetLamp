@@ -2,33 +2,33 @@
     <!--广告屏 -->
     <div class="advertisingScreens">
         <div class="advertisingScreens_top">
-            <el-dropdown v-if="operation" trigger='click' @command="handleCommand">
+            <el-dropdown v-if="JurisdictionS.operation" trigger='click' @command="handleCommand">
                 <el-button type="primary" size='small' style="width:115px;">
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="0">下发任务</el-dropdown-item>
-                    <el-dropdown-item v-if="operation" command="1">屏幕开关</el-dropdown-item>
-                    <el-dropdown-item v-if="operation" command="2">屏幕调光</el-dropdown-item>
-                    <el-dropdown-item v-if="operation" command="3">屏幕音量</el-dropdown-item>
-                    <el-dropdown-item v-if="operation" command="4">屏幕截图</el-dropdown-item>
-                    <el-dropdown-item v-if="operation" command="5">屏幕重启</el-dropdown-item>
-                    <el-dropdown-item v-if="operation" command="6">状态查询</el-dropdown-item>
-                    <el-dropdown-item v-if="operation" command="7">同步播放</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.screenControl" command="1">屏幕开关</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.screenControl" command="2">屏幕调光</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.screenControl" command="3">屏幕音量</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.screenControl" command="4">屏幕截图</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.screenControl" command="5">屏幕重启</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.screenControl" command="6">状态查询</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.synchronousPlayback" command="7">同步播放</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <el-dropdown v-if="operation" trigger='click' style="margin-left:25px;">
+            <el-dropdown v-if="JurisdictionS.Administration" trigger='click' style="margin-left:25px;">
                 <el-button type="primary" size='small' style="width:115px;">
                     管理<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-if="viewMedia" @click.native="mediaLibrary">媒体库</el-dropdown-item>
-                    <el-dropdown-item v-if="viewProgram" @click.native="notice">节目管理</el-dropdown-item>
-                    <el-dropdown-item v-if="viewTask" @click.native="taskManagement">任务管理</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.viewMedia" @click.native="mediaLibrary">媒体库</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.viewProgram" @click.native="notice">节目管理</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.viewTask" @click.native="taskManagement">任务管理</el-dropdown-item>
                     <el-dropdown-item @click.native="update">在线更新</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="search" v-if="viewScreenManage">
+            <div class="search" v-if="JurisdictionS.viewScreenManage">
                 <el-dropdown size="small" split-button @command="handleCommand2">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -196,8 +196,8 @@
                                 :value="item.value">
                                 </el-option>
                             </el-select>
-                            <el-button v-if="addMedia" @click="upload" type="primary" size='small' style="margin-left:30px;">上传</el-button>
-                            <el-button v-if="delMedia" @click="mediaDelete" type="primary" size='small'>删除</el-button>
+                            <el-button v-if="JurisdictionS.addMedia" @click="upload" type="primary" size='small' style="margin-left:30px;">上传</el-button>
+                            <el-button v-if="JurisdictionS.delMedia" @click="mediaDelete" type="primary" size='small'>删除</el-button>
                         </div>
                         <div class="mediaLibrary_bottom">
                             <el-table
@@ -222,7 +222,7 @@
                                 min-width="200">
                                     <template slot-scope="scope">
                                         <span>{{scope.row.nickName}}</span>
-                                        <span v-if="editMedia=true" @click="handleEdit(scope.row)"><i class="el-icon-edit" style="font-size:18px;color:#409EFF;"></i></span>
+                                        <span v-if="JurisdictionS.editMedia=true" @click="handleEdit(scope.row)"><i class="el-icon-edit" style="font-size:18px;color:#409EFF;"></i></span>
                                         <span v-if="scope.row.isFocus==true" style="display: inline-block;">
                                             <input type="text" v-model="inputColumn" @blur='handleSave(scope.row)' style='width:110px;' class="form-control" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入文件别名">
                                         </span>
@@ -348,7 +348,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button @click="LowerHair" type="button" class="btn btn-primary">下发</button>
+                        <button v-if="JurisdictionS.issuedProgram" @click="LowerHair" type="button" class="btn btn-primary">下发</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div>
@@ -1041,9 +1041,9 @@
                         <h4 class="modal-title" id="myModalLabel">任务管理</h4>
                     </div>
                     <div class="modal-body">
-                        <el-button v-if="addTask" @click="taskoperation(0)" type="primary" size="small">添加</el-button>
-                        <el-button v-if="editTask" @click="taskoperation(1)" type="primary" size="small">编辑</el-button>
-                        <el-button v-if="delTask" @click="taskoperation(2)" type="primary" size="small">删除</el-button>
+                        <el-button v-if="JurisdictionS.addTask" @click="taskoperation(0)" type="primary" size="small">添加</el-button>
+                        <el-button v-if="JurisdictionS.editTask" @click="taskoperation(1)" type="primary" size="small">编辑</el-button>
+                        <el-button v-if="JurisdictionS.delTask" @click="taskoperation(2)" type="primary" size="small">删除</el-button>
                         <el-table
                             :data="tasktableData" 
                             border
@@ -1326,17 +1326,23 @@ export default {
             type:'1',
             inputColumn:'',
             serverurl:localStorage.serverurl,
-            viewScreenManage:false,
-            operation:false,
-            viewProgram:false,
-            viewMedia:false,
-            addMedia:false,
-            editMedia:false,
-            delMedia:false,
-            viewTask:false,
-            addTask:false,
-            editTask:false,
-            delTask:false,
+            JurisdictionS:{
+                viewScreenManage:false,//查看屏幕管理
+                screenControl:false,//屏幕控制
+                issuedProgram:false,//节目任务下发
+                viewMedia:false,//查看媒体
+                addMedia:false,//添加（上传）媒体
+                editMedia:false,//修改媒体名称
+                delMedia:false,//删除媒体
+                viewProgram:false,//查看节目
+                viewTask:false,//查看任务
+                addTask:false,//添加任务
+                editTask:false,//修改任务
+                delTask:false,//删除任务
+                synchronousPlayback:false,//同步播放
+                operation:false,//操作
+                Administration:false,//管理
+            },
             // 屏幕
             tableData:[],
             tableSite1:[],                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
@@ -3623,37 +3629,48 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewScreenManage'){
-                                that.viewScreenManage = true
+                                that.JurisdictionS.viewScreenManage = true
                             }
                             if(data.result.operats[i].code=='screenControl'){
-                                that.operation = true
+                                that.JurisdictionS.screenControl = true
+                                that.JurisdictionS.operation = true
                             }
-                            if(data.result.operats[i].code=='viewProgram'){
-                                that.viewProgram = true
+                            if(data.result.operats[i].code=='issuedProgram'){
+                                that.JurisdictionS.issuedProgram = true
                             }
                             if(data.result.operats[i].code=='viewMedia'){
-                                that.viewMedia = true
+                                that.JurisdictionS.viewMedia = true
+                                that.JurisdictionS.Administration = true
                             }
                             if(data.result.operats[i].code=='addMedia'){
-                                that.addMedia = true
+                                that.JurisdictionS.addMedia = true
                             }
                             if(data.result.operats[i].code=='editMedia'){
-                                that.editMedia = true
+                                that.JurisdictionS.editMedia = true
                             }
                             if(data.result.operats[i].code=='delMedia'){
-                                that.delMedia = true
+                                that.JurisdictionS.delMedia = true
+                            }
+                            if(data.result.operats[i].code=='viewProgram'){
+                                that.JurisdictionS.viewProgram = true
+                                that.JurisdictionS.Administration = true
                             }
                             if(data.result.operats[i].code=='viewTask'){
-                                that.viewTask = true
+                                that.JurisdictionS.viewTask = true
+                                that.JurisdictionS.Administration = true
                             }
                             if(data.result.operats[i].code=='addTask'){
-                                that.addTask = true
+                                that.JurisdictionS.addTask = true
                             }
                             if(data.result.operats[i].code=='editTask'){
-                                that.editTask = true
+                                that.JurisdictionS.editTask = true
                             }
                             if(data.result.operats[i].code=='delTask'){
-                                that.delTask = true
+                                that.JurisdictionS.delTask = true
+                            }
+                            if(data.result.operats[i].code=='synchronousPlayback'){
+                                that.JurisdictionS.synchronousPlayback = true
+                                that.JurisdictionS.operation = true
                             }
                         }
                     }else{

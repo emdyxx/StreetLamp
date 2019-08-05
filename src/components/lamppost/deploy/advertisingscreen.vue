@@ -2,16 +2,16 @@
     <div class="advertisingscreen">
         <!-- 广告屏 -->
         <div class="advertisingscreen_top">
-            <el-button v-if="addScreenDeployment" @click="addadvertisingscreen(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="editScreenDeployment" @click="addadvertisingscreen(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="delScreenDeployment" @click="deleteadvertisingscreen" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <el-dropdown v-if="screenBindProject" size="small" split-button type="primary">
+            <el-button v-if="JurisdictionS.addScreen" @click="addadvertisingscreen(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="JurisdictionS.editScreen" @click="addadvertisingscreen(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="JurisdictionS.delScreen" @click="deleteadvertisingscreen" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <el-dropdown v-if="JurisdictionS.SetUp" size="small" split-button type="primary">
                 <i class="el-icon-setting el-icon--left"></i>设置
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click.native="screenBindProjectss">绑定项目</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.setScreenProject" @click.native="screenBindProjectss">绑定项目</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="search" v-if="viewScreenDeploy">
+            <div class="search" v-if="JurisdictionS.viewScreenDeploy">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -187,7 +187,7 @@
                             </el-input>
                         </div>                                                                                             
                         <div class="form-group">
-                            <el-button v-if="relationPole" @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
+                            <el-button v-if="JurisdictionS.screenAssociatePole" @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
                         </div> 
                     </div>
                     <div class="modal-footer">
@@ -326,12 +326,15 @@ export default {
             name:'名称',
             type:'1',
             serverurl:localStorage.serverurl,
-            viewScreenDeploy:false,
-            addScreenDeployment:false,
-            editScreenDeployment:false,
-            delScreenDeployment:false,
-            relationPole:false,
-            screenBindProject:false,
+            JurisdictionS:{
+                viewScreenDeploy:false,//查看屏幕部署
+                addScreen:false,//添加屏幕
+                editScreen:false,//编辑屏幕
+                delScreen:false,//删除屏幕
+                screenAssociatePole:false,//关联灯杆
+                setScreenProject:false,//屏幕绑定项目
+                SetUp:false,//设置按钮
+            },
             projectId:sessionStorage.projectId,
             site:[], //列表数据选中  进行修改编辑操作
             addType:'0',  //添加编辑类型
@@ -813,22 +816,23 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewScreenDeploy'){
-                                that.viewScreenDeploy = true
+                                that.JurisdictionS.viewScreenDeploy = true
                             }
                             if(data.result.operats[i].code=='addScreen'){
-                                that.addScreenDeployment = true
+                                that.JurisdictionS.addScreen = true
                             }
                             if(data.result.operats[i].code=='editScreen'){
-                                that.editScreenDeployment = true
+                                that.JurisdictionS.editScreen = true
                             }
                             if(data.result.operats[i].code=='delScreen'){
-                                that.delScreenDeployment = true
+                                that.JurisdictionS.delScreen = true
                             }
                             if(data.result.operats[i].code=='screenAssociatePole'){
-                                that.relationPole = true
+                                that.JurisdictionS.screenAssociatePole = true
                             }
                             if(data.result.operats[i].code=='setScreenProject'){
-                                that.screenBindProject = true
+                                that.JurisdictionS.setScreenProject = true
+                                that.JurisdictionS.SetUp = true
                             }
                         }
                     }else{

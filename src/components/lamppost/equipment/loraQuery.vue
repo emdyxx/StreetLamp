@@ -827,7 +827,7 @@ export default {
         SelectionChange(val){this.site = val;},
         sizechange(val){this.pageSize = val;this.ready()},
         currentchange(val){this.pageIndex = val;this.ready();},
-        search(){this.ready();}
+        search(){this.ready();},
     },
     created(){
         this.ready()

@@ -2,8 +2,8 @@
     <!-- APP升级页面 -->
     <div class="AppUpgrade">
         <div class="AppUpgrade_top">
-            <el-button @click="operation(0)" v-if="addPatrolApp" type="primary" icon='el-icon-plus' size='small'>添加升级包</el-button>
-            <el-button @click="operation(1)" v-if="delPatrolApp" type="primary" icon='el-icon-delete' size='small'>删除升级包</el-button>
+            <el-button @click="operation(0)" v-if="JurisdictionS.addPatrolApp" type="primary" icon='el-icon-plus' size='small'>添加升级包</el-button>
+            <el-button @click="operation(1)" v-if="JurisdictionS.delPatrolApp" type="primary" icon='el-icon-delete' size='small'>删除升级包</el-button>
         </div>
         <div class="AppUpgrade_bottom">
             <div class="AppUpgrade_bottom_bottom">
@@ -123,8 +123,10 @@ export default {
     name: 'AppUpgrade',
     data () {
         return {
-            addPatrolApp:false,
-            delPatrolApp:false,
+            JurisdictionS:{
+                addPatrolApp:false,//添加升级包
+                delPatrolApp:false,//删除升级包
+            },
             serverurl:localStorage.serverurl,
             tableData:[],
             pageIndex:1,
@@ -274,10 +276,10 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='addPatrolApp'){
-                                that.addPatrolApp = true
+                                that.JurisdictionS.addPatrolApp = true
                             }
                             if(data.result.operats[i].code=='delPatrolApp'){
-                                that.delPatrolApp = true
+                                that.JurisdictionS.delPatrolApp = true
                             }
                         }
                     }else{

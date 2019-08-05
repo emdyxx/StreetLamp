@@ -48,7 +48,7 @@ export default {
       serverurl:localStorage.serverurl,
       options2: [],
       value2: '',
-      headercolorType:'1',
+      headercolorType:'',
       menu:[],
     }
   },
@@ -266,18 +266,18 @@ export default {
                     that.menu = data.result.menus
                     if(sessionStorage.menuId2==''||sessionStorage.menuId2==undefined||sessionStorage.menuId2==null){
                       sessionStorage.menuId2 = data.result.menus[0].id
-                      if(data.result.menus[0].id=='34'){
-                        sessionStorage.headercolorType = '2'
+                    }  
+                    if(data.result.menus[0].id=='34'){
+                        that.headercolorType = '2'
                         that.$router.push({'path':'/deploy'})
-                      }
-                      if(data.result.menus[0].id=='35'){
-                        sessionStorage.headercolorType = '3'
+                    }
+                    if(data.result.menus[0].id=='35'){
+                        that.headercolorType = '3'
                         that.$router.push({'path':'/equipment'})
-                      }
-                      if(data.result.menus[0].id=='36'){
-                        sessionStorage.headercolorType = '4'
+                    }
+                    if(data.result.menus[0].id=='36'){
+                        that.headercolorType = '4'
                         that.$router.push({'path':'/DeviceLog'})
-                      }
                     }
                 }else{
                     that.errorCode(data)
@@ -287,7 +287,6 @@ export default {
     },
   },
   created(){
-    this.headercolorType = sessionStorage.headercolorType
     this.project()
   },
 }

@@ -8,10 +8,10 @@
             <div class="usermanage">
                 <!-- 用户详细信息 -->
                 <div class="usermanage_top">
-                    <el-button v-if="addUser" @click="adduser(0)" type="primary" icon='el-icon-plus' size='small'>添加用户</el-button>
-                    <el-button v-if="editUser" @click="adduser(1)" type="primary" icon="el-icon-edit" size='small'>编辑用户</el-button>
-                    <el-button v-if="delUser" @click="deleteuser" type="primary" icon='el-icon-delete' size='small'>删除用户</el-button>
-                    <div class="search" v-if="viewUser">
+                    <el-button v-if="JurisdictionS.addUser" @click="adduser(0)" type="primary" icon='el-icon-plus' size='small'>添加用户</el-button>
+                    <el-button v-if="JurisdictionS.editUser" @click="adduser(1)" type="primary" icon="el-icon-edit" size='small'>编辑用户</el-button>
+                    <el-button v-if="JurisdictionS.delUser" @click="deleteuser" type="primary" icon='el-icon-delete' size='small'>删除用户</el-button>
+                    <div class="search" v-if="JurisdictionS.viewUser">
                         <el-dropdown size="small" split-button @command="handleCommand">
                             {{name}}
                             <el-dropdown-menu slot="dropdown">
@@ -127,9 +127,9 @@
                             min-width="180"
                             show-overflow-tooltip>
                                 <template slot-scope="scope">
-                                    <el-button v-if="scope.row.status=='0'&&enabledUser" @click="userStatus(scope.row.id,scope.row.status)" type="danger" size='mini'>禁用</el-button>
-                                    <el-button v-if="scope.row.status=='1'&&enabledUser" @click="userStatus(scope.row.id,scope.row.status)" type="primary" size='mini'>启用</el-button>
-                                    <el-button v-if="resetPassword" @click="resetPasswords(scope.row.id)" type="primary" size='mini'>重置密码</el-button>
+                                    <el-button v-if="scope.row.status=='0'&&JurisdictionS.enabledUser" @click="userStatus(scope.row.id,scope.row.status)" type="danger" size='mini'>禁用</el-button>
+                                    <el-button v-if="scope.row.status=='1'&&JurisdictionS.enabledUser" @click="userStatus(scope.row.id,scope.row.status)" type="primary" size='mini'>启用</el-button>
+                                    <el-button v-if="JurisdictionS.resetPassword" @click="resetPasswords(scope.row.id)" type="primary" size='mini'>重置密码</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -314,12 +314,14 @@ export default {
             name:'用户名',
             types:'1',
             serverurl:localStorage.serverurl,
-            viewUser:false,
-            addUser:false,
-            editUser:false,
-            delUser:false,
-            enabledUser:false,
-            resetPassword:false,
+            JurisdictionS:{
+                viewUser:false,//查看用户
+                addUser:false,//添加用户
+                editUser:false,//编辑用户
+                delUser:false,//删除用户
+                resetPassword:false,//重置用户密码
+                enabledUser:false,//启用/禁用用户
+            },
             sizeType:{id:1}, //点击树节点ID
             site:[],
             type:'0',//添加编辑判断
@@ -975,22 +977,22 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewUser'){
-                                that.viewUser = true
+                                that.JurisdictionS.viewUser = true
                             }
                             if(data.result.operats[i].code=='addUser'){
-                                that.addUser = true
+                                that.JurisdictionS.addUser = true
                             }
                             if(data.result.operats[i].code=='editUser'){
-                                that.editUser = true
+                                that.JurisdictionS.editUser = true
                             }
                             if(data.result.operats[i].code=='delUser'){
-                                that.delUser = true
+                                that.JurisdictionS.delUser = true
                             }
                             if(data.result.operats[i].code=='enabledUser'){
-                                that.enabledUser = true
+                                that.JurisdictionS.enabledUser = true
                             }
                             if(data.result.operats[i].code=='resetPassword'){
-                                that.resetPassword = true
+                                that.JurisdictionS.resetPassword = true
                             }
                         }
                     }else{

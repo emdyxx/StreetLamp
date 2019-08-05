@@ -2,16 +2,16 @@
     <div class="LampPole">
         <!-- 灯杆模式 -->
         <div class="LampPole_top">
-            <el-button v-if="addPole" @click="addLampPole(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="editPole" @click="addLampPole(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="delPole" @click="deleteLampPole" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <el-dropdown v-if="poleBindProject" size="small" split-button  type="primary">
+            <el-button v-if="JurisdictionS.addPole" @click="addLampPole(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="JurisdictionS.editPole" @click="addLampPole(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="JurisdictionS.delPole" @click="deleteLampPole" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <el-dropdown v-if="JurisdictionS.SetUp" size="small" split-button  type="primary">
                 <i class="el-icon-setting el-icon--left" type="primary"></i>设置
                 <el-dropdown-menu slot="dropdown" type="primary">
-                    <el-dropdown-item @click.native="poleBindProjects">绑定项目</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.setPoleProject" @click.native="poleBindProjects">绑定项目</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="search" v-if="viewPoleDeploy">
+            <div class="search" v-if="JurisdictionS.viewPoleDeploy">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -84,7 +84,8 @@
                 <el-table-column
                 align='center'
                 label="灯具"
-                min-width="80">
+                min-width="80"
+                v-if="JurisdictionS.poleAssociateLamp">
                     <template slot-scope="scope">
                         <button @click="LampPole_click(scope.row.id)" style="height:20px;line-height:15px;">...</button>
                     </template>
@@ -92,7 +93,8 @@
                 <el-table-column
                 label="LED屏幕"
                 align='center'
-                min-width="80">
+                min-width="80"
+                v-if="JurisdictionS.poleAssociateScreen">
                     <template slot-scope="scope">
                         <button @click="relevancelanterns(scope.row.id)" style="height:20px;line-height:15px;">...</button>
                     </template>
@@ -108,7 +110,8 @@
                 <el-table-column
                 label="气象站"
                 align='center'
-                min-width="80">
+                min-width="80"
+                v-if="JurisdictionS.poleAssociateEnv">
                     <template slot-scope="scope">
                         <button @click="sensor(scope.row.id)" style="height:20px;line-height:15px;">...</button>
                     </template>
@@ -130,7 +133,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                label="风光控制器"
+                label="风光控制"
                 align='center'
                 min-width="80">
                     <template slot-scope="scope">
@@ -243,8 +246,8 @@
                             </el-input>
                         </div>
                         <!-- <div class="form-group" v-if="addtype=='0'"> -->
-                            <!-- <el-button v-if="addLamp" @click="addlamp(0)" type="primary" size='small'>添加灯具</el-button> -->
-                            <!-- <el-button v-if="relationLamp" @click="LampPole_data(0)" type="primary" size='small'>关联灯具</el-button> -->
+                            <!-- <el-button @click="addlamp(0)" type="primary" size='small'>添加灯具</el-button> -->
+                            <!-- <el-button @click="LampPole_data(0)" type="primary" size='small'>关联灯具</el-button> -->
                         <!-- </div> -->
                     </div>
                     <div class="modal-footer">
@@ -261,8 +264,8 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <div>
-                            <el-button v-if="relationLamp" @click="LampPole_data(1)" type="primary" size='small'>关联灯具</el-button>
-                            <el-button v-if="relationLamp" @click="LampPole_data(2)" type="primary" size='small'>解除关联</el-button>
+                            <el-button @click="LampPole_data(1)" type="primary" size='small'>关联灯具</el-button>
+                            <el-button @click="LampPole_data(2)" type="primary" size='small'>解除关联</el-button>
                         </div>
                     </div>
                     <div class="modal-body">
@@ -407,8 +410,8 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <div>
-                            <el-button v-if='relationScreen' @click="relevancelanterntwo(0)" type="primary" size='small'>关联屏幕</el-button>
-                            <el-button v-if='relationScreen' @click="relevancelanterntwo(1)" type="primary" size='small'>解除关联</el-button>
+                            <el-button @click="relevancelanterntwo(0)" type="primary" size='small'>关联屏幕</el-button>
+                            <el-button @click="relevancelanterntwo(1)" type="primary" size='small'>解除关联</el-button>
                         </div>
                     </div>
                     <div class="modal-body">
@@ -535,8 +538,8 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <div>
-                            <el-button v-if="relationSensor" @click="sensor_data(0)" type="primary" size='small'>关联气象站</el-button>
-                            <el-button v-if="relationSensor" @click="sensor_data(1)" type="primary" size='small'>解除关联</el-button>
+                            <el-button @click="sensor_data(0)" type="primary" size='small'>关联气象站</el-button>
+                            <el-button @click="sensor_data(1)" type="primary" size='small'>解除关联</el-button>
                         </div>
                     </div>
                     <div class="modal-body">
@@ -669,8 +672,8 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <div>
-                            <el-button v-if="relationSensor" @click="loar_data(0)" type="primary" size='small'>关联传感器</el-button>
-                            <el-button v-if="relationSensor" @click="loar_data(1)" type="primary" size='small'>解除关联</el-button>
+                            <el-button @click="loar_data(0)" type="primary" size='small'>关联传感器</el-button>
+                            <el-button @click="loar_data(1)" type="primary" size='small'>解除关联</el-button>
                         </div>
                     </div>
                     <div class="modal-body">
@@ -803,8 +806,8 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <div>
-                            <el-button v-if="relationSensor" @click="camear_data(0)" type="primary" size='small'>关联摄像头</el-button>
-                            <el-button v-if="relationSensor" @click="camear_data(1)" type="primary" size='small'>解除关联</el-button>
+                            <el-button @click="camear_data(0)" type="primary" size='small'>关联摄像头</el-button>
+                            <el-button @click="camear_data(1)" type="primary" size='small'>解除关联</el-button>
                         </div>
                     </div>
                     <div class="modal-body">
@@ -1224,15 +1227,17 @@ export default {
             type:'1',
             type:'1',
             serverurl:localStorage.serverurl,
-            viewPoleDeploy:false,
-            addPole:false,
-            editPole:false,
-            delPole:false,
-            relationLamp:false,
-            relationScreen:false,
-            relationSensor:false,
-            poleBindProject:false,
-            addLamp:false,
+            JurisdictionS:{
+                viewPoleDeploy:false,//查看灯杆
+                addPole:false,//添加灯杆
+                editPole:false,//修改灯杆
+                delPole:false,//删除灯杆
+                setPoleProject:false,//灯杆绑定项目
+                poleAssociateLamp:false,//关联灯具
+                poleAssociateScreen:false,//关联屏幕
+                poleAssociateEnv:false,//关联气象站
+                SetUp:false,//设置按钮
+            },
             options5:[],
             value5:'',
             site:[], //灯杆列表选中数据
@@ -2914,28 +2919,29 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewPoleDeploy'){
-                                that.viewPoleDeploy = true
+                                that.JurisdictionS.viewPoleDeploy = true
                             }
                             if(data.result.operats[i].code=='addPole'){
-                                that.addPole = true
+                                that.JurisdictionS.addPole = true
                             }
                             if(data.result.operats[i].code=='editPole'){
-                                that.editPole = true
+                                that.JurisdictionS.editPole = true
                             }
                             if(data.result.operats[i].code=='delPole'){
-                                that.delPole = true
+                                that.JurisdictionS.delPole = true
                             }
                             if(data.result.operats[i].code=='poleAssociateLamp'){
-                                that.relationLamp = true
+                                that.JurisdictionS.poleAssociateLamp = true
                             }
                             if(data.result.operats[i].code=='poleAssociateScreen'){
-                                that.relationScreen = true
+                                that.JurisdictionS.poleAssociateScreen = true
                             }
                             if(data.result.operats[i].code=='poleAssociateEnv'){
-                                that.relationSensor = true
+                                that.JurisdictionS.poleAssociateEnv = true
                             }
                             if(data.result.operats[i].code=='setPoleProject'){
-                                that.poleBindProject = true
+                                that.JurisdictionS.setPoleProject = true
+                                that.JurisdictionS.SetUp = true
                             }
                         }
                     }else{

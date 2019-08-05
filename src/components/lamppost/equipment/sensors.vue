@@ -2,16 +2,16 @@
     <!-- 气象站管理 -->
     <div class="cameras">
         <div class="cameras_top">
-            <el-dropdown v-if="envControl" trigger='click'>
-                <el-button type="primary" size='small' style="width:115px;">
+            <el-dropdown trigger='click'>
+                <el-button type="primary" size='small'>
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click.native="details">获取数据</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.envControl" @click.native="details">查询最新数据</el-dropdown-item>
                     <el-dropdown-item @click.native="historicalData">历史数据</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="search" v-if="viewEnvManage">
+            <div class="search" v-if="JurisdictionS.viewEnvManage">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -155,8 +155,10 @@ export default {
             name:'名称',
             type:'1',
             serverurl:localStorage.serverurl,
-            viewEnvManage:false,
-            envControl:false,
+            JurisdictionS:{
+                viewEnvManage:false,
+                envControl:false,
+            },
             tableData:[],
             site:[],
             pageSize:10,
@@ -309,10 +311,10 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewEnvManage'){
-                                that.viewEnvManage = true
+                                that.JurisdictionS.viewEnvManage = true
                             }
                             if(data.result.operats[i].code=='envControl'){
-                                that.envControl = true
+                                that.JurisdictionS.envControl = true
                             }
                         }
                     }else{
@@ -335,7 +337,7 @@ export default {
 .cameras_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;}
 .cameras_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
 .cameras{text-align: center;}
-.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search{display: flex;align-items: center;margin-left: 10px !important;}
 .search>div{margin-left: 5px;}
 .search>input{width: 146px;}
 </style>

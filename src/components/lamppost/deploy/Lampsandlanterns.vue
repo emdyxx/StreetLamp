@@ -2,17 +2,17 @@
     <div class="chargingpile">
         <!-- 灯具 -->
         <div class="chargingpile_top">
-            <el-button v-if="addLanternsDeployment" @click="addchargingpile(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="editLanternsDeployment" @click="addchargingpile(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="delLanternsDeployment" @click="deletechargingpile" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <el-dropdown v-if="lampBindProject" size="small" split-button type="primary">
+            <el-button v-if="JurisdictionS.addLamp" @click="addchargingpile(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="JurisdictionS.editLamp" @click="addchargingpile(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="JurisdictionS.delLamp" @click="deletechargingpile" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <el-dropdown v-if="JurisdictionS.SetUp" size="small" split-button type="primary">
                 <i class="el-icon-setting el-icon--left"></i>设置
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click.native="lampBindProjects">绑定项目</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.setLampProject" @click.native="lampBindProjects">绑定项目</el-dropdown-item>
                     <!-- <el-dropdown-item @click.native="Powerfailuretime">断电时间</el-dropdown-item> -->
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="search" v-if="viewLampDeploy">
+            <div class="search" v-if="JurisdictionS.viewLampDeploy">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -203,7 +203,7 @@
                             </el-input>
                         </div>
                         <div class="form-group">
-                            <el-button v-if="relationPole" @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
+                            <el-button v-if="JurisdictionS.lampAssociatePole" @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
                         </div> 
                     </div>
                     <div class="modal-footer">
@@ -483,12 +483,15 @@ export default {
             name:'名称',
             type:'1',
             serverurl:localStorage.serverurl,
-            viewLampDeploy:false,
-            addLanternsDeployment:false,
-            editLanternsDeployment:false,
-            delLanternsDeployment:false,
-            relationPole:false,
-            lampBindProject:false,
+            JurisdictionS:{
+                viewLampDeploy:false,//查看灯具部署
+                addLamp:false,//添加灯具
+                editLamp:false,//编辑灯具
+                delLamp:false,//删除灯具
+                lampAssociatePole:false,//关联灯杆
+                setLampProject:false,//灯具绑定项目
+                SetUp:false,//设置按钮
+            },
             options5:[],
             value5:'',
             addType:'0', //判断是添加还是编辑的参数
@@ -1278,22 +1281,23 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewLampDeploy'){
-                                that.viewLampDeploy = true
+                                that.JurisdictionS.viewLampDeploy = true
                             }
                             if(data.result.operats[i].code=='addLamp'){
-                                that.addLanternsDeployment = true
+                                that.JurisdictionS.addLamp = true
                             }
                             if(data.result.operats[i].code=='editLamp'){
-                                that.editLanternsDeployment = true
+                                that.JurisdictionS.editLamp = true
                             }
                             if(data.result.operats[i].code=='delLamp'){
-                                that.delLanternsDeployment = true
+                                that.JurisdictionS.delLamp = true
                             }
                             if(data.result.operats[i].code=='lampAssociatePole'){
-                                that.relationPole = true
+                                that.JurisdictionS.lampAssociatePole = true
                             }
                             if(data.result.operats[i].code=='setLampProject'){
-                                that.lampBindProject = true
+                                that.JurisdictionS.setLampProject = true
+                                that.JurisdictionS.SetUp = true
                             }
                         }
                     }else{

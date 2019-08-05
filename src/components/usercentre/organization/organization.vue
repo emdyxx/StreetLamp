@@ -6,10 +6,10 @@
         </div>
         <div class="organization_right">
             <div class="organization_right_top">
-                <el-button v-if="addOrg" @click="addorganization(0)" type="primary" icon='el-icon-plus' size='small'>添加机构</el-button>
-                <el-button v-if="editOrg" @click="addorganization(1)" type="primary" icon="el-icon-edit" size='small'>编辑机构</el-button>
-                <el-button v-if="delOrg" @click="deleteorganization" type="primary" icon='el-icon-delete' size='small'>删除机构</el-button>
-                <div class="search" v-if="viewOrg">
+                <el-button v-if="JurisdictionS.addOrg" @click="addorganization(0)" type="primary" icon='el-icon-plus' size='small'>添加机构</el-button>
+                <el-button v-if="JurisdictionS.editOrg" @click="addorganization(1)" type="primary" icon="el-icon-edit" size='small'>编辑机构</el-button>
+                <el-button v-if="JurisdictionS.delOrg" @click="deleteorganization" type="primary" icon='el-icon-delete' size='small'>删除机构</el-button>
+                <div class="search" v-if="JurisdictionS.viewOrg">
                     <el-dropdown size="small" split-button @command="handleCommand">
                         {{name}}
                         <el-dropdown-menu slot="dropdown">
@@ -320,10 +320,12 @@ export default {
             name:'机构名称',
             types:'1',
             serverurl:localStorage.serverurl,
-            viewOrg:false,
-            addOrg:false,
-            editOrg:false,
-            delOrg:false,
+            JurisdictionS:{
+                viewOrg:false,//查看机构
+                addOrg:false,//添加机构
+                editOrg:false,//编辑机构
+                delOrg:false,//删除机构
+            },
             activeName:'1',
             sizeType:{id:1}, //点击树节点ID
             detailsData:{},//机构详情
@@ -986,16 +988,16 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewOrg'){
-                                that.viewOrg = true
+                                that.JurisdictionS.viewOrg = true
                             }
                             if(data.result.operats[i].code=='addOrg'){
-                                that.addOrg = true
+                                that.JurisdictionS.addOrg = true
                             }
                             if(data.result.operats[i].code=='editOrg'){
-                                that.editOrg = true
+                                that.JurisdictionS.editOrg = true
                             }
                             if(data.result.operats[i].code=='delOrg'){
-                                that.delOrg = true
+                                that.JurisdictionS.delOrg = true
                             }
                         }
                     }else{

@@ -2,10 +2,10 @@
     <!-- 巡检计划 -->
     <div class="PatrolPlan">
         <div class="PatrolPlan_top">
-            <el-button v-if="addPatrolPlan" @click="PatrolPlan(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="editPatrolPlan" @click="PatrolPlan(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="delPatrolPlan" @click="PatrolPlan(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search" v-if="viewPatrolPlan">
+            <el-button v-if="JurisdictionS.addPatrolPlan" @click="PatrolPlan(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="JurisdictionS.editPatrolPlan" @click="PatrolPlan(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="JurisdictionS.delPatrolPlan" @click="PatrolPlan(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <div class="search" v-if="JurisdictionS.viewPatrolPlan">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -408,10 +408,12 @@ export default {
         return {
             name:'计划名称',
             types:'1',
-            viewPatrolPlan:false,
-            addPatrolPlan:false,
-            editPatrolPlan:false,
-            delPatrolPlan:false,
+            JurisdictionS:{
+                viewPatrolPlan:false,//查看巡检计划
+                addPatrolPlan:false,//添加巡检计划
+                editPatrolPlan:false,//编辑巡检计划
+                delPatrolPlan:false,//删除巡检计划
+            },
             serverurl:localStorage.serverurl,
             planName:'',
             tableData:[],
@@ -866,16 +868,16 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewPatrolPlan'){
-                                that.viewPatrolPlan = true
+                                that.JurisdictionS.viewPatrolPlan = true
                             }
                             if(data.result.operats[i].code=='addPatrolPlan'){
-                                that.addPatrolPlan = true
+                                that.JurisdictionS.addPatrolPlan = true
                             }
                             if(data.result.operats[i].code=='editPatrolPlan'){
-                                that.editPatrolPlan = true
+                                that.JurisdictionS.editPatrolPlan = true
                             }
                             if(data.result.operats[i].code=='delPatrolPlan'){
-                                that.delPatrolPlan = true
+                                that.JurisdictionS.delPatrolPlan = true
                             }
                         }
                     }else{

@@ -418,11 +418,6 @@ export default new Router({
       component: usercenter,
       children:[
         {
-          path: '/',
-          name: 'user',
-          component: user,
-        },
-        {
           path: '/user',
           name: 'user',
           component: user,

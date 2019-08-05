@@ -2,10 +2,10 @@
     <!-- 巡检地点 -->
     <div class="InspectionSite">
         <div class="InspectionSite_top">
-            <el-button v-if="addPatrolSite" @click="addInspectionSite(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="editPatrolSite" @click="addInspectionSite(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="delPatrolSite" @click="addInspectionSite(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search" v-if="viewPatrolSite">
+            <el-button v-if="JurisdictionS.addPatrolSite" @click="addInspectionSite(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="JurisdictionS.editPatrolSite" @click="addInspectionSite(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="JurisdictionS.delPatrolSite" @click="addInspectionSite(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <div class="search" v-if="JurisdictionS.viewPatrolSite">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -321,10 +321,12 @@ export default {
         return {
             name:'点名称',
             types:'1',
-            viewPatrolSite:false,
-            addPatrolSite:false,  
-            editPatrolSite:false,
-            delPatrolSite:false,
+            JurisdictionS:{
+                viewPatrolSite:false,//查看巡检点
+                addPatrolSite:false,//添加巡检点
+                editPatrolSite:false,//编辑巡检点
+                delPatrolSite:false,//删除巡检点
+            },
             serverurl:localStorage.serverurl,
             tableData:[],
             site:[],
@@ -781,16 +783,16 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewPatrolSite'){
-                                that.viewPatrolSite = true
+                                that.JurisdictionS.viewPatrolSite = true
                             }
                             if(data.result.operats[i].code=='addPatrolSite'){
-                                that.addPatrolSite = true
+                                that.JurisdictionS.addPatrolSite = true
                             }
                             if(data.result.operats[i].code=='editPatrolSite'){
-                                that.editPatrolSite = true
+                                that.JurisdictionS.editPatrolSite = true
                             }
                             if(data.result.operats[i].code=='delPatrolSite'){
-                                that.delPatrolSite = true
+                                that.JurisdictionS.delPatrolSite = true
                             }
                         }
                     }else{

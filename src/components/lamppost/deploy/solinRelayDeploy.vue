@@ -2,10 +2,10 @@
     <!-- 继电器部署 -->
     <div class="SolinRelayDeploy">
         <div class="solinRelayDeploy_top">
-            <el-button v-if="addRelay" @click="solinRelayDeployOpreat(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="editRelay" @click="solinRelayDeployOpreat(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="delRelay" @click="solinRelayDeployOpreat(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search" v-if="viewRelayDeploy">
+            <el-button v-if="JurisdictionS.addRelay" @click="solinRelayDeployOpreat(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button v-if="JurisdictionS.editRelay" @click="solinRelayDeployOpreat(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button v-if="JurisdictionS.delRelay" @click="solinRelayDeployOpreat(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <div class="search" v-if="JurisdictionS.viewRelayDeploy">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -215,10 +215,12 @@ export default {
         return {
             name:'名称',
             type1:'1',
-            viewRelayDeploy:false,
-            addRelay:false,
-            editRelay:false,
-            delRelay:false,
+            JurisdictionS:{
+                viewRelayDeploy:false,//查看继电器部署
+                addRelay:false,//添加继电器
+                editRelay:false,//编辑继电器
+                delRelay:false,//删除继电器
+            },
             serverurl:localStorage.serverurl, 
             tableData:[],
             site:[],
@@ -543,16 +545,16 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewRelayDeploy'){
-                                that.viewRelayDeploy = true
+                                that.JurisdictionS.viewRelayDeploy = true
                             }
                             if(data.result.operats[i].code=='addRelay'){
-                                that.addRelay = true
+                                that.JurisdictionS.addRelay = true
                             }
                             if(data.result.operats[i].code=='editRelay'){
-                                that.editRelay = true
+                                that.JurisdictionS.editRelay = true
                             }
                             if(data.result.operats[i].code=='delRelay'){
-                                that.delRelay = true
+                                that.JurisdictionS.delRelay = true
                             }
                         }
                     }else{

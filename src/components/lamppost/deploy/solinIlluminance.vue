@@ -2,10 +2,10 @@
     <!-- 光照度 -->
     <div class="solinIlluminance_">
         <div class="solinIlluminance_top">
-            <el-button @click="operation(0)" v-if="addIlluminance" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button @click="operation(1)" v-if="editIlluminance" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button @click="operation(2)" v-if="delIlluminance" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search" v-if="viewIlluminance">
+            <el-button @click="operation(0)" v-if="JurisdictionS.addIlluminance" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+            <el-button @click="operation(1)" v-if="JurisdictionS.editIlluminance" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+            <el-button @click="operation(2)" v-if="JurisdictionS.delIlluminance" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+            <div class="search" v-if="JurisdictionS.viewIlluminance">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -176,7 +176,7 @@
                             </el-input>
                         </div>
                         <div class="form-group">
-                            <el-button @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
+                            <el-button v-if="JurisdictionS.illuminanceAssociatePole" @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
                         </div> 
                     </div>
                     <div class="modal-footer">
@@ -283,11 +283,13 @@ export default {
     name: 'solinIlluminance_',
     data () {
         return {
-            viewIlluminance:false,
-            addIlluminance:false,
-            editIlluminance:false,
-            delIlluminance:false,
-            illuminanceAssociatePole:false,
+            JurisdictionS:{
+                viewIlluminance:false,//查看光照度部署
+                addIlluminance:false,//添加光照度
+                editIlluminance:false,//编辑光照度
+                delIlluminance:false,//删除光照度
+                illuminanceAssociatePole:false,//光照度关联灯杆
+            },
             serverurl:localStorage.serverurl,
             name:'名称',
             type:'1',
@@ -689,19 +691,19 @@ export default {
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
                             if(data.result.operats[i].code=='viewIlluminance'){
-                                that.viewIlluminance = true
+                                that.JurisdictionS.viewIlluminance = true
                             }
                             if(data.result.operats[i].code=='addIlluminance'){
-                                that.addIlluminance = true
+                                that.JurisdictionS.addIlluminance = true
                             }
                             if(data.result.operats[i].code=='editIlluminance'){
-                                that.editIlluminance = true
+                                that.JurisdictionS.editIlluminance = true
                             }
                             if(data.result.operats[i].code=='delIlluminance'){
-                                that.delIlluminance = true
+                                that.JurisdictionS.delIlluminance = true
                             }
                             if(data.result.operats[i].code=='illuminanceAssociatePole'){
-                                that.illuminanceAssociatePole = true
+                                that.JurisdictionS.illuminanceAssociatePole = true
                             }
                         }
                     }else{

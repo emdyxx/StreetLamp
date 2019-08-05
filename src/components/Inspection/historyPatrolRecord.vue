@@ -1,6 +1,6 @@
 <template>
     <!-- 历史任务 -->
-    <div class="historyPatrolRecord"> 
+    <div class="historyPatrolRecords"> 
         <div class="historyPatrolRecord_top">
             <div class="search">
                 <el-dropdown size="small" split-button @command="handleCommand">
@@ -309,7 +309,7 @@
 </template>
 <script>
 export default {
-    name: 'historyPatrolRecord',
+    name: 'historyPatrolRecords',
     data () {
         return {
             name:'计划名称',
@@ -447,8 +447,8 @@ export default {
 </script>
 <style scoped>
 .block{text-align: center;}
-.historyPatrolRecord{width: 100%;height: 100%;}
-.historyPatrolRecord>div{width: 100%;position: absolute;}
+.historyPatrolRecords{width: 100%;height: 100%;}
+.historyPatrolRecords>div{width: 100%;position: absolute;}
 .historyPatrolRecord_top{height: 46px;border-bottom: none !important;display: flex;border: 1px solid #E4E4F1;}
 .historyPatrolRecord_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
 .search{display: flex;align-items: center;}

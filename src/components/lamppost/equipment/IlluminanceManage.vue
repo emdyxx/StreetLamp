@@ -2,8 +2,15 @@
     <!-- 光照度 -->
     <div class="IlluminanceManage">
         <div class="IlluminanceManage_top">
-            <el-button @click="state" type="primary" size="small" icon="el-icon-search">查询状态</el-button>
-            <div class="search">
+            <el-dropdown v-if="JurisdictionS.controlIlluminance" style="margin-left:10px;"> 
+                <el-button type="primary" size='small' style="margin-top:8px;margin-left:5px;">
+                    操作<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown"> 
+                    <el-dropdown-item v-if="JurisdictionS.controlIlluminance" @click.native="state">查询最新数据</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>  
+            <div class="search" v-if="JurisdictionS.viewIlluminanceManage">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
@@ -122,6 +129,10 @@ export default {
     data () {
         return {
             serverurl:localStorage.serverurl,
+            JurisdictionS:{
+                viewIlluminanceManage:false,//查看光照度管理
+                controlIlluminance:false,//控制光照度
+            },
             name:'名称',
             type:'1',
             nickName:'',
@@ -234,8 +245,37 @@ export default {
         sizechange(val){this.pageSize = val;this.ready();},
         currentchange(val){this.pageIndex = val;this.ready();},
         search(){this.ready()},
+        //权限请求
+        Jurisdiction(){
+            var that = this
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/manage/operat/'+sessionStorage.menuId3,
+                contentType:'application/json;charset=UTF-8',
+                data:{
+                    menuId:sessionStorage.menuId3
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        for(var i = 0;i<data.result.operats.length;i++){
+                            if(data.result.operats[i].code=='viewIlluminanceManage'){
+                                that.JurisdictionS.viewIlluminanceManage = true
+                            }
+                            if(data.result.operats[i].code=='controlIlluminance'){
+                                that.JurisdictionS.controlIlluminance = true
+                            }
+                        }
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
     },
     created(){
+        this.Jurisdiction()
         this.ready()
     },
 }
@@ -249,7 +289,7 @@ export default {
 .IlluminanceManage_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
 .block{text-align: center;}
 
-.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search{display: flex;align-items: center;margin-left: 10px !important;}
 .search>div{margin-left: 5px;}
 .search>input{width: 146px;}
 </style>
