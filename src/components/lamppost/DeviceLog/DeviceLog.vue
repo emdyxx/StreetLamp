@@ -196,28 +196,28 @@ export default {
                                     jsonarray= datas;
                                     sessionStorage.menuId3 = data.result.menus[0].id
                                     if(sessionStorage.menuId3=='56'){
-                                        that.$router.push({'path':'/LampPoleJournal'})
+                                        that.$router.push({'path':'/solinPoleLog'})
                                     }
                                     if(sessionStorage.menuId3=='57'){
-                                        that.$router.push({'path':'/lampJournal'})
+                                        that.$router.push({'path':'/solinLampLog'})
                                     }
                                     if(sessionStorage.menuId3=='58'){
-                                        that.$router.push({'path':'/screenJournal'})
+                                        that.$router.push({'path':'/solinScreenLog'})
                                     }
                                     if(sessionStorage.menuId3=='59'){
-                                        that.$router.push({'path':'/sensorJournal'})
+                                        that.$router.push({'path':'/solinEnvLog'})
                                     }
                                     if(sessionStorage.menuId3=='60'){
-                                        that.$router.push({'path':'/loraJournal'})
+                                        that.$router.push({'path':'/solinLoraSensorsLog'})
                                     }
                                     if(sessionStorage.menuId3=='61'){
-                                        that.$router.push({'path':'/RelayJournal'})
+                                        that.$router.push({'path':'/solinRelayLog'})
                                     }
                                     if(sessionStorage.menuId3=='91'){
-                                        that.$router.push({'path':'/IlluminanceLog'})
+                                        that.$router.push({'path':'/solinIlluminanceLog'})
                                     }
                                     if(sessionStorage.menuId3=='123'){
-                                        that.$router.push({'path':'/SceneryLog'})
+                                        that.$router.push({'path':'/solinSceneryControllerLog'})
                                     }
                                 }else{
                                     that.errorCode(data)
@@ -234,13 +234,13 @@ export default {
                 }else{
                     sessionStorage.menuId3 = data.node.id
                     if(data.node.id=='56'){
-                        that.$router.push({'path':'/LampPoleJournal'})
+                        that.$router.push({'path':'/solinPoleLog'})
                     }
                     if(data.node.id=='93'||data.node.id=='94'){
                         that.$router.push({'path':'loadingLog'})
                         setTimeout(function(){
                             that.$router.push({
-                                'path':'/lampJournal',
+                                'path':'/solinLampLog',
                                 query:{
                                     id:data.node.id
                                 }
@@ -251,7 +251,7 @@ export default {
                         that.$router.push({'path':'loadingLog'})
                         setTimeout(function(){
                             that.$router.push({
-                                'path':'/screenJournal',
+                                'path':'/solinScreenLog',
                                 query:{
                                     id:data.node.id
                                 }
@@ -259,16 +259,16 @@ export default {
                         },200)
                     }
                     if(data.node.id=='59'){
-                        that.$router.push({'path':'/sensorJournal'})
+                        that.$router.push({'path':'/solinEnvLog'})
                     }
                     if(data.node.id=='60'){
-                        that.$router.push({'path':'/loraJournal'})
+                        that.$router.push({'path':'/solinLoraSensorsLog'})
                     }
                     if(data.node.id=='99'||data.node.id=='100'){
                         that.$router.push({'path':'loadingLog'})
                         setTimeout(function(){
                             that.$router.push({
-                                'path':'/RelayJournal',
+                                'path':'/solinRelayLog',
                                 query:{
                                     id:data.node.id
                                 }
@@ -279,7 +279,7 @@ export default {
                         that.$router.push({'path':'loadingLog'})
                         setTimeout(function(){
                             that.$router.push({
-                                'path':'/ConcentratorLog',
+                                'path':'/solinConcentratorLog',
                                 query:{
                                     id:data.node.id
                                 }
@@ -290,7 +290,7 @@ export default {
                         that.$router.push({'path':'loadingLog'})
                         setTimeout(function(){
                             that.$router.push({
-                                'path':'/CameraLog',
+                                'path':'/solinCameraLog',
                                 query:{
                                     id:data.node.id
                                 }
@@ -298,10 +298,10 @@ export default {
                         },200)
                     }
                     if(data.node.id=='91'){
-                        that.$router.push({'path':'/IlluminanceLog'})
+                        that.$router.push({'path':'/solinIlluminanceLog'})
                     }
                     if(data.node.id=='123'){
-                        that.$router.push({'path':'/SceneryLog'})
+                        that.$router.push({'path':'/solinSceneryControllerLog'})
                     }
                 }
             });

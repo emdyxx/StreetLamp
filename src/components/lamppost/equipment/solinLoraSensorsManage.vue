@@ -12,7 +12,7 @@
             </el-dropdown>
             <el-button @click="Return()" v-if="type=='1'" type="primary" icon='el-icon-back' size='small'>返回</el-button>
             <div class="search" v-if="type=='0'">
-                <el-dropdown size="small" split-button>
+                <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="name='名称';type1='1';">名称</el-dropdown-item>
@@ -727,6 +727,10 @@ export default {
         },
         clickRow(row){
             this.$refs.moviesTable.toggleRowSelection(row)
+        },
+        handleCommand(){
+            this.nickName=''
+            this.serialNumber=''
         },
         //点击获取历史数据按钮
         HistoryData(){

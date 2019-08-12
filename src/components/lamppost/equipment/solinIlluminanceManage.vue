@@ -24,7 +24,7 @@
                         <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='2'">
-                        <el-input v-model="concentratorSn" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+                        <el-input v-model="lightNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='3'">
                         <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
@@ -214,7 +214,7 @@ export default {
             })
         },
         //初始化列表数据
-        ready(val){
+        ready(){
             var that = this;
             $.ajax({
                 type:'get',
@@ -227,7 +227,7 @@ export default {
                     size:that.pageSize,
                     nickName:that.nickName,
                     lightNumber:that.lightNumber,
-                    online:val,
+                    online:that.value,
                     dataType:'1',
                     projectIds:sessionStorage.projectId,
                 },

@@ -1,6 +1,6 @@
 <template>
+    <!-- 灯具 -->
     <div class="lampslanterns">
-        <!-- 灯具 -->
         <div class="lampslanterns_top">
             <el-dropdown v-if="JurisdictionS.lampControl" style="margin-left:10px;" @command='operation'>
                 <el-button type="primary" size='small' style="width:85px;">
@@ -595,11 +595,7 @@ export default {
         }
     },
     mounted(){
-        var that = this
-        setTimeout(function(){
-            that.ready()
-            that.Jurisdiction()
-        },900)
+        
     },
     methods:{
         handleCommand(){
@@ -1411,7 +1407,9 @@ export default {
         },
     },
     created(){
-        
+        var that = this
+        that.ready()
+        that.Jurisdiction()
     },
 }
 </script>

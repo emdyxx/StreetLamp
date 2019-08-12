@@ -14,7 +14,6 @@ export default {
     data () {
         return {
             serverurl:localStorage.serverurl,
-            // controlhousing
         }
     },
     mounted(){
@@ -98,6 +97,9 @@ export default {
                                         arr.state = {"opened" : true}
                                         datas[0].children.push(arr)
                                     }
+                                    if(sessionStorage.menuId3==''||sessionStorage.menuId3==undefined||sessionStorage.menuId3==null){
+                                        sessionStorage.menuId3 = data.result.menus[0].id
+                                    }  
                                     //485设备下侧菜单请求
                                     $.ajax({
                                         type:"GET",
@@ -123,27 +125,26 @@ export default {
                                             jsonarray= datas;
                                         },
                                     })
-                                    sessionStorage.menuId3 = data.result.menus[0].id
                                     if(sessionStorage.menuId3=='45'){
-                                        that.$router.push({'path':'/LampPole'})
+                                        that.$router.push({'path':'/solinPoleDeploy'})
                                     }
                                     if(sessionStorage.menuId3=='46'){
-                                        that.$router.push({'path':'/Lampsandlanterns'})
+                                        that.$router.push({'path':'/solinLampDeploy'})
                                     }
                                     if(sessionStorage.menuId3=='47'){
-                                        that.$router.push({'path':'/advertisingscreen'})
+                                        that.$router.push({'path':'/solinScreenDeploy'})
                                     }
                                     if(sessionStorage.menuId3=='48'){
-                                        that.$router.push({'path':'/sensor'})
+                                        that.$router.push({'path':'/solinEnvDeploy'})
                                     }
                                     if(sessionStorage.menuId3=='49'){ //loar
-                                        that.$router.push({'path':'/loraSensor'})
+                                        that.$router.push({'path':'/solinLoraSensorsDeploy'})
                                     }
                                     if(sessionStorage.menuId3=='50'){
                                         that.$router.push({'path':'/solinRelayDeploy'})
                                     }
                                     if(sessionStorage.menuId3=='80'){
-                                        that.$router.push({'path':'/concentrator'})
+                                        that.$router.push({'path':'/solinConcentratorDeploy'})
                                     }
                                     if(sessionStorage.menuId3=='87'){
                                         that.$router.push({'path':'/solinIlluminance'})
@@ -152,7 +153,7 @@ export default {
                                         that.$router.push({'path':'/solinCameraDeploy'})
                                     }
                                     if(sessionStorage.menuId3=='118'){
-                                        that.$router.push({'path':'/SceneryDeploy'})
+                                        that.$router.push({'path':'/solinSceneryControllerDeploy'})
                                     }
                                 }else{
                                     that.errorCode(data)
@@ -168,25 +169,25 @@ export default {
                 }else{
                     sessionStorage.menuId3 = data.node.id
                     if(data.node.id=='45'){
-                        that.$router.push({'path':'/LampPole'})
+                        that.$router.push({'path':'/solinPoleDeploy'})
                     }
                     if(data.node.id=='46'){
-                        that.$router.push({'path':'/Lampsandlanterns'})
+                        that.$router.push({'path':'/solinLampDeploy'})
                     }
                     if(data.node.id=='47'){
-                        that.$router.push({'path':'/advertisingscreen'})
+                        that.$router.push({'path':'/solinScreenDeploy'})
                     }
                     if(data.node.id=='48'){
-                        that.$router.push({'path':'/sensor'})
+                        that.$router.push({'path':'/solinEnvDeploy'})
                     }
                     if(data.node.id=='49'){//loar
-                        that.$router.push({'path':'/loraSensor'})
+                        that.$router.push({'path':'/solinLoraSensorsDeploy'})
                     }
                     if(data.node.id=='50'){
                         that.$router.push({'path':'/solinRelayDeploy'})
                     }
                     if(data.node.id=='80'){
-                        that.$router.push({'path':'/concentrator'})
+                        that.$router.push({'path':'/solinConcentratorDeploy'})
                     }
                     if(data.node.id=='87'){
                         that.$router.push({'path':'/solinIlluminance'})
@@ -195,7 +196,7 @@ export default {
                         that.$router.push({'path':'/solinCameraDeploy'})
                     }
                     if(data.node.id=='118'){
-                        that.$router.push({'path':'/SceneryDeploy'})
+                        that.$router.push({'path':'/solinSceneryControllerDeploy'})
                     }
                 }
             });

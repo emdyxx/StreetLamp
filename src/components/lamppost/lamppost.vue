@@ -64,87 +64,16 @@ export default {
       var that = this
       sessionStorage.menuId2 = id
       sessionStorage.headercolorType = val
+      sessionStorage.removeItem('menuId3');
       this.headercolorType = val
       if(val=='2'){
         this.$router.push({'path':'/deploy'})
-        if(sessionStorage.menuId3=='45'){
-            that.$router.push({'path':'/LampPole'})
-        }
-        if(sessionStorage.menuId3=='46'){
-            that.$router.push({'path':'/Lampsandlanterns'})
-        }
-        if(sessionStorage.menuId3=='47'){
-            that.$router.push({'path':'/advertisingscreen'})
-        }
-        if(sessionStorage.menuId3=='48'){
-            that.$router.push({'path':'/sensor'})
-        }
-        if(sessionStorage.menuId3=='49'){ //loar
-            that.$router.push({'path':'/loraSensor'})
-        }
-        if(sessionStorage.menuId3=='50'){
-            that.$router.push({'path':'/solinRelayDeploy'})
-        }
-        if(sessionStorage.menuId3=='80'){
-            that.$router.push({'path':'/concentrator'})
-        }
-        if(sessionStorage.menuId3=='87'){
-            that.$router.push({'path':'/solinIlluminance'})
-        }
-        if(sessionStorage.menuId3=='106'){
-            that.$router.push({'path':'/solinCameraDeploy'})
-        }
-        if(sessionStorage.menuId3=='118'){
-            that.$router.push({'path':'/SceneryDeploy'})
-        }
       }
       if(val=='3'){
         this.$router.push({'path':'/equipment'})
-        if(sessionStorage.menuId3=='51'){
-            that.$router.push({'path':'lampslanterns'})
-        }
-        if(sessionStorage.menuId3=='52'){
-            that.$router.push({'path':'advertisingScreens'})
-        }
-        if(sessionStorage.menuId3=='53'){
-            that.$router.push({'path':'sensors'})
-        }
-        if(sessionStorage.menuId3=='54'){
-            that.$router.push({'path':'loraQuery'})
-        }
-        if(sessionStorage.menuId3=='55'){
-            that.$router.push({'path':'Relay'})
-        }
-        if(sessionStorage.menuId3=='107'){
-            that.$router.push({'path':'CameraManage'})
-        }
-        if(sessionStorage.menuId3=='88'){
-            that.$router.push({'path':'IlluminanceManage'})
-        }
-        if(sessionStorage.menuId3=='119'){
-            that.$router.push({'path':'Scenery'})
-        }
       }
       if(val=='4'){
         this.$router.push({'path':'/DeviceLog'})
-        if(sessionStorage.menuId3=='56'){
-            that.$router.push({'path':'/LampPoleJournal'})
-        }
-        if(sessionStorage.menuId3=='57'){
-            that.$router.push({'path':'/lampJournal'})
-        }
-        if(sessionStorage.menuId3=='58'){
-            that.$router.push({'path':'/screenJournal'})
-        }
-        if(sessionStorage.menuId3=='59'){
-            that.$router.push({'path':'/sensorJournal'})
-        }
-        if(sessionStorage.menuId3=='60'){
-            that.$router.push({'path':'/loraJournal'})
-        }
-        if(sessionStorage.menuId3=='61'){
-            that.$router.push({'path':'/RelayJournal'})
-        }
       }
     },
     //获取有权限的项目
@@ -189,47 +118,44 @@ export default {
         sessionStorage.projectId = this.value2
         this.$router.push({'path':'/Refresh'})
         setTimeout(function(){
-            if(sessionStorage.menuId2=='36'){
-                that.$router.push({'path':'/LampPoleJournal'})
-            }
             if(sessionStorage.menuId3=='45'){
-                that.$router.push({'path':'/LampPole'})
+                that.$router.push({'path':'/solinPoleDeploy'})
             }
             if(sessionStorage.menuId3=='46'){
-                that.$router.push({'path':'/Lampsandlanterns'})
+                that.$router.push({'path':'/solinLampDeploy'})
             }
             if(sessionStorage.menuId3=='47'){
-                that.$router.push({'path':'/advertisingscreen'})
+                that.$router.push({'path':'/solinScreenDeploy'})
             }
             if(sessionStorage.menuId3=='48'){
-                that.$router.push({'path':'/sensor'})
+                that.$router.push({'path':'/solinEnvDeploy'})
             }
             if(sessionStorage.menuId3=='49'){
-                that.$router.push({'path':'/loraSensor'})
+                that.$router.push({'path':'/solinLoraSensorsDeploy'})
             }
             if(sessionStorage.menuId3=='50'){
                 that.$router.push({'path':'/solinRelayDeploy'})
             }
             if(sessionStorage.menuId3=='51'){
-                that.$router.push({'path':'/lampslanterns'})
+                that.$router.push({'path':'/solinLampManage'})
             }
             if(sessionStorage.menuId3=='52'){
-                that.$router.push({'path':'/advertisingScreens'})
+                that.$router.push({'path':'/solinScreenManage'})
             }
             if(sessionStorage.menuId3=='53'){
-                that.$router.push({'path':'/sensors'})
+                that.$router.push({'path':'/solinEnvManage'})
             }
             if(sessionStorage.menuId3=='55'){
-                that.$router.push({'path':'Relay'})
+                that.$router.push({'path':'solinRelayManage'})
             }
             if(sessionStorage.menuId3=='54'||sessionStorage.menuId3=='64'||sessionStorage.menuId3=='65'||sessionStorage.menuId3=='66'||sessionStorage.menuId3=='67'||sessionStorage.menuId3=='68'||sessionStorage.menuId3=='69'||sessionStorage.menuId3=='70'||sessionStorage.menuId3=='117'){
                 that.$router.push({'path':'loading'})
                 setTimeout(function(){
-                    that.$router.push({'path':'loraQuery'})
+                    that.$router.push({'path':'solinLoraSensorsManage'})
                 },200)
             }
             if(sessionStorage.menuId3=='80'){
-                that.$router.push({'path':'/concentrator'})
+                that.$router.push({'path':'/solinConcentratorDeploy'})
             }
             if(sessionStorage.menuId3=='87'){
                 that.$router.push({'path':'/solinIlluminance'})
@@ -238,16 +164,16 @@ export default {
                 that.$router.push({'path':'/solinCameraDeploy'})
             }
             if(sessionStorage.menuId3=='107'){
-                that.$router.push({'path':'CameraManage'})
+                that.$router.push({'path':'solinCameraManage'})
             }
             if(sessionStorage.menuId3=='88'){
-                that.$router.push({'path':'IlluminanceManage'})
+                that.$router.push({'path':'solinIlluminanceManage'})
             }
             if(sessionStorage.menuId3=='118'){
-                that.$router.push({'path':'/SceneryDeploy'})
+                that.$router.push({'path':'/solinSceneryControllerDeploy'})
             }
             if(sessionStorage.menuId3=='119'){
-                that.$router.push({'path':'Scenery'})
+                that.$router.push({'path':'solinSceneryControllerManage'})
             }
         },200)
     },
@@ -267,15 +193,15 @@ export default {
                     if(sessionStorage.menuId2==''||sessionStorage.menuId2==undefined||sessionStorage.menuId2==null){
                       sessionStorage.menuId2 = data.result.menus[0].id
                     }  
-                    if(data.result.menus[0].id=='34'){
+                    if(sessionStorage.menuId2=='34'){
                         that.headercolorType = '2'
                         that.$router.push({'path':'/deploy'})
                     }
-                    if(data.result.menus[0].id=='35'){
+                    if(sessionStorage.menuId2=='35'){
                         that.headercolorType = '3'
                         that.$router.push({'path':'/equipment'})
                     }
-                    if(data.result.menus[0].id=='36'){
+                    if(sessionStorage.menuId2=='36'){
                         that.headercolorType = '4'
                         that.$router.push({'path':'/DeviceLog'})
                     }

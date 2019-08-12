@@ -298,6 +298,7 @@ export default {
                                 map.centerAndZoom(new BMap.Point(coord[0],coord[1]), 16);  // 初始化地图,设置中心点坐标和地图级别
                             }
                             map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+                            map.setMapStyle({style:'light'});
                             //添加灯杆坐标
                             var online = new BMap.Icon(that.imgserverurl+"image/img/Scenery02.png", new BMap.Size(45,45));
                             var offline = new BMap.Icon(that.imgserverurl+"image/img/Scenery03.png", new BMap.Size(45,45));
@@ -325,9 +326,8 @@ export default {
                                     // map.addOverlay(marker);
                                 } 
                             }
-                            var markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markers});
-                            markerClusterer.setMinClusterSize(3)
-                            map.setMapStyle({style:'light'});
+                            // var markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markers});
+                            // markerClusterer.setMinClusterSize(3)
                             // map.setMapStyleV2({     
                             //     styleId: '7ff9f4f543ec7f2704516df1a246f110'
                             // });

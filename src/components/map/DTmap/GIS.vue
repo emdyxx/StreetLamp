@@ -237,15 +237,24 @@ export default {
                             }
                         }
                         that.options = data.result.projects
-                        that.locationType = that.options[0].locationType
+                        
                         if(sessionStorage.projectId==''||sessionStorage.projectId==null||sessionStorage.projectId==undefined){
                             that.value = that.options[0].id
+                            that.locationType = that.options[0].locationType
+                            var name = that.options[0].area.mergerName
+                            var area = name.split(',')
+                            that.timeData.City = area[2]
                         }else{
                             that.value = Number(sessionStorage.projectId)
+                            for(var i=0;i<that.options.length;i++){
+                                if(that.options[i].id==sessionStorage.projectId){
+                                    var name = that.options[i].area.mergerName
+                                    var area = name.split(',')
+                                    that.timeData.City = area[2]
+                                    that.locationType = that.options[i].locationType
+                                }
+                            }
                         }
-                        var name = that.options[0].area.mergerName
-                        var area = name.split(',')
-                        that.timeData.City = area[2]
                         that.weatherRequest()
                         that.Statistics('1')
                         that.ready()
@@ -257,6 +266,7 @@ export default {
         },
         //项目切换change
         projectChange(id){
+            var that = this
             for(var i=0;i<this.options.length;i++){
                 if(this.options[i].id==id){
                     var name = this.options[i].area.mergerName
@@ -268,7 +278,7 @@ export default {
             sessionStorage.projectId = id;
             // this.weatherRequest()
             this.Statistics('1')
-            this.ready()
+            that.ready()
         },
         //获取项目下的统计数据
         Statistics(val){
@@ -366,27 +376,27 @@ export default {
         //获取城市天气预报
         weatherRequest(){
             var that = this;
-            var httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
-            httpRequest.open('GET', 'https://wthrcdn.etouch.cn/weather_mini?city='+that.timeData.City, true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
-            httpRequest.send();//第三步：发送请求  将请求参数写在URL中
-            httpRequest.onreadystatechange = function () {
-                if (httpRequest.readyState == 4 && httpRequest.status == 200) {
-                    var json = httpRequest.responseText;//获取到json字符串，还需解析
-                    var data = JSON.parse(json).data;
-                    that.timeData.temperature = data.wendu
-                    that.timeData.type = data.forecast[0].type
-                    that.timeData.fengxiang = data.forecast[0].fengxiang
-                    if(that.timeData.type.indexOf('雨')!=-1){
-                        that.timeData.type2='1'
-                    }else if(that.timeData.type.indexOf('雪')!=-1){
-                        that.timeData.type2='2'
-                    }else if(that.timeData.type.indexOf('云')!=-1||that.timeData.type.indexOf('晴')!=-1){
-                        that.timeData.type2='3'
-                    }else{
-                        that.timeData.type2='3'
-                    }
-                }
-            };
+            // var httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
+            // httpRequest.open('GET', 'https://wthrcdn.etouch.cn/weather_mini?city='+that.timeData.City, true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+            // httpRequest.send();//第三步：发送请求  将请求参数写在URL中
+            // httpRequest.onreadystatechange = function () {
+            //     if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+            //         var json = httpRequest.responseText;//获取到json字符串，还需解析
+            //         var data = JSON.parse(json).data;
+            //         that.timeData.temperature = data.wendu
+            //         that.timeData.type = data.forecast[0].type
+            //         that.timeData.fengxiang = data.forecast[0].fengxiang
+            //         if(that.timeData.type.indexOf('雨')!=-1){
+            //             that.timeData.type2='1'
+            //         }else if(that.timeData.type.indexOf('雪')!=-1){
+            //             that.timeData.type2='2'
+            //         }else if(that.timeData.type.indexOf('云')!=-1||that.timeData.type.indexOf('晴')!=-1){
+            //             that.timeData.type2='3'
+            //         }else{
+            //             that.timeData.type2='3'
+            //         }
+            //     }
+            // };
         },
         //请求没有坐标的灯杆列表
         LampPole(){
@@ -496,7 +506,7 @@ export default {
                                 map.centerAndZoom(new BMap.Point(coord[0],coord[1]), 16);  // 初始化地图,设置中心点坐标和地图级别
                             }
                             map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
-                            
+                            map.setMapStyle({style:'light'});
                             //添加灯杆坐标
                             var online = new BMap.Icon(that.imgserverurl+"image/img/online.png", new BMap.Size(45,45));
                             var offline = new BMap.Icon(that.imgserverurl+"image/img/offline.png", new BMap.Size(45,45));
@@ -565,16 +575,14 @@ export default {
                                         that.lampId = e.target.id
                                 })
                                 markers.push(marker)
-                                // map.addOverlay(marker);
+                                map.addOverlay(marker);
                             }
-                            var markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markers});
-                            markerClusterer.setMinClusterSize(3)
-                            map.setMapStyle({style:'light'});
-                            // map.setMapStyleV2({     
-                            //     styleId: '7ff9f4f543ec7f2704516df1a246f110'
-                            // });
+                            // var markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markers});
+                            // markerClusterer.setMinClusterSize(3)
+                            
                             //鼠标左键请求灯杆基本信息
                             map.addEventListener("click", function (e) {
+                                console.log(e)
                                 if(e.overlay){
                                     for(var i=0;i<that.readyData.length;i++){
                                         if(e.overlay.id==that.readyData[i].id){

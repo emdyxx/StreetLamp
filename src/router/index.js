@@ -9,64 +9,53 @@ import 'wangeditor/release/wangEditor.min.css'
 import login from '@/components/login'
 import index from '@/components/index'
 // 用户中心
-import usercenter from '@/components/usercentre/usercenter'
-import user from '@/components/usercentre/user/user'
-import organization from '@/components/usercentre/organization/organization'
-import article from '@/components/usercentre/article/article'
-import journal from '@/components/usercentre/journal/journal'
+import userCenter from '@/components/usercentre/userCenter'
+import managementUser from '@/components/usercentre/user/managementUser'
+import managementOrg from '@/components/usercentre/org/managementOrg'
+import managementProject from '@/components/usercentre/Project/managementProject'
+import managementLog from '@/components/usercentre/Log/managementLog'
 //灯杆系统
 import lamppost from '@/components/lamppost/lamppost'
 import Refresh from '@/components/lamppost/Refresh'
 import equipment from '@/components/lamppost/equipment/equipment'
-import lampslanterns from '@/components/lamppost/equipment/lampslanterns'
+import solinLampManage from '@/components/lamppost/equipment/solinLampManage'
 import deploy from '@/components/lamppost/deploy/deploy'
-import concentrator from '@/components/lamppost/deploy/concentrator'
-import LampPole from '@/components/lamppost/deploy/LampPole'
-import Lampsandlanterns from '@/components/lamppost/deploy/Lampsandlanterns'
-import advertisingscreen from '@/components/lamppost/deploy/advertisingscreen'
-import sensor from '@/components/lamppost/deploy/sensor'
-import loraSensor from '@/components/lamppost/deploy/loraSensor'
+import solinConcentratorDeploy from '@/components/lamppost/deploy/solinConcentratorDeploy'
+import solinPoleDeploy from '@/components/lamppost/deploy/solinPoleDeploy'
+import solinLampDeploy from '@/components/lamppost/deploy/solinLampDeploy'
+import solinScreenDeploy from '@/components/lamppost/deploy/solinScreenDeploy'
+import solinEnvDeploy from '@/components/lamppost/deploy/solinEnvDeploy'
+import solinLoraSensorsDeploy from '@/components/lamppost/deploy/solinLoraSensorsDeploy'
 import solinRelayDeploy from '@/components/lamppost/deploy/solinRelayDeploy'
 import solinCameraDeploy from '@/components/lamppost/deploy/solinCameraDeploy'
 import solinIlluminance from '@/components/lamppost/deploy/solinIlluminance'
-import SceneryDeploy from '@/components/lamppost/deploy/SceneryDeploy'
+import solinSceneryControllerDeploy from '@/components/lamppost/deploy/solinSceneryControllerDeploy'
 
-
-
-
-import chargingPiles from '@/components/lamppost/equipment/chargingPiles'
-import advertisingScreens from '@/components/lamppost/equipment/advertisingScreens'
-import sensors from '@/components/lamppost/equipment/sensors'
+import solinScreenManage from '@/components/lamppost/equipment/solinScreenManage'
+import solinEnvManage from '@/components/lamppost/equipment/solinEnvManage'
 import historicalData from '@/components/lamppost/equipment/historicalData'
-import loraQuery from '@/components/lamppost/equipment/loraQuery'
+import solinLoraSensorsManage from '@/components/lamppost/equipment/solinLoraSensorsManage'
 import loading from '@/components/lamppost/equipment/loading'
-import Relay from '@/components/lamppost/equipment/Relay'
+import solinRelayManage from '@/components/lamppost/equipment/solinRelayManage'
 import scene from '@/components/lamppost/equipment/scene'
-import CameraManage from '@/components/lamppost/equipment/CameraManage'
-import IlluminanceManage from '@/components/lamppost/equipment/IlluminanceManage'
-import Scenery from '@/components/lamppost/equipment/Scenery'
+import solinCameraManage from '@/components/lamppost/equipment/solinCameraManage'
+import solinIlluminanceManage from '@/components/lamppost/equipment/solinIlluminanceManage'
+import solinSceneryControllerManage from '@/components/lamppost/equipment/solinSceneryControllerManage'
 import SceneryHistory from '@/components/lamppost/equipment/SceneryHistory'
 
-
-import pandect from '@/components/lamppost/pandect/pandect'
-import pandecttwo from '@/components/lamppost/pandect/pandecttwo'
-
 import DeviceLog from '@/components/lamppost/DeviceLog/DeviceLog' //设备日志
-import LampPoleJournal from '@/components/lamppost/DeviceLog/LampPoleJournal' //灯杆日志
-import lampJournal from '@/components/lamppost/DeviceLog/lampJournal' //灯具日志
-import screenJournal from '@/components/lamppost/DeviceLog/screenJournal' //广告屏日志
-import sensorJournal from '@/components/lamppost/DeviceLog/sensorJournal' //气象站日志
-import RelayJournal from '@/components/lamppost/DeviceLog/RelayJournal' //继电器日志
-import loraJournal from '@/components/lamppost/DeviceLog/loraJournal' //lora传感器日志
+import solinPoleLog from '@/components/lamppost/DeviceLog/solinPoleLog' //灯杆日志
+import solinLampLog from '@/components/lamppost/DeviceLog/solinLampLog' //灯具日志
+import solinScreenLog from '@/components/lamppost/DeviceLog/solinScreenLog' //广告屏日志
+import solinEnvLog from '@/components/lamppost/DeviceLog/solinEnvLog' //气象站日志
+import solinRelayLog from '@/components/lamppost/DeviceLog/solinRelayLog' //继电器日志
+import solinLoraSensorsLog from '@/components/lamppost/DeviceLog/solinLoraSensorsLog' //lora传感器日志
 import loadingLog from '@/components/lamppost/DeviceLog/loading' 
-import ConcentratorLog from '@/components/lamppost/DeviceLog/ConcentratorLog' //继电器日志
-import CameraLog from '@/components/lamppost/DeviceLog/CameraLog' //摄像头日志
-import IlluminanceLog from '@/components/lamppost/DeviceLog/IlluminanceLog' //光照度日志
-import SceneryLog from '@/components/lamppost/DeviceLog/SceneryLog' //光照度日志
+import solinConcentratorLog from '@/components/lamppost/DeviceLog/solinConcentratorLog' //继电器日志
+import solinCameraLog from '@/components/lamppost/DeviceLog/solinCameraLog' //摄像头日志
+import solinIlluminanceLog from '@/components/lamppost/DeviceLog/solinIlluminanceLog' //光照度日志
+import solinSceneryControllerLog from '@/components/lamppost/DeviceLog/solinSceneryControllerLog' //光照度日志
 
-
-// import mapHomgPage from '@/components/map/mapHomgPage' //地图主页
-// import mapDetails from '@/components/map/mapDetails' //地图主页
 import mapHomg from '@/components/map/mapHomg' //地图主页
 import GIS from '@/components/map/DTmap/GIS' //地图主页
 import SingleLamp from '@/components/map/DTmap/SingleLamp' //单灯地图
@@ -75,13 +64,6 @@ import LED from '@/components/map/DTmap/LED' //led地图
 import GISdetails from '@/components/map/DTmap/GISdetails' //GIS详情
 import SceneryMap from '@/components/map/DTmap/SceneryMap' //风光控制器地图
 import SceneryDetails from '@/components/map/DTmap/SceneryDetails' //风光控制器详情
-
-
-
-
-import video from '@/components/video/video' //视频管理主页
-import wifi from '@/components/wifi/wifi' //WIFI管理主页
-import broadcast from '@/components/broadcast/broadcast' //广播管理主页
 
 import program from '@/components/program/program' //节目管理页面
 import programSimple from '@/components/program/programSimple' //简易节目页面
@@ -145,42 +127,7 @@ Vue.prototype.errorCode = function(data){
 	}
 }
 Vue.prototype.Verification = function(val,type){
-  var that = this
-  //中文验证
-  var result = /[\u4E00-\u9FA5\uF900-\uFA2D]/;
-  //手机号码验证
-  var phone = /^((0[0-9]{1,3}-\d{5,8})|(1[3584]\d{9}))$/;
-  //邮箱验证
-  var email = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
-  //IP地址验证
-  var ip = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]|[*])$/;
-  
-  //0为密码验证
-  if(result.test(val)){
-    that.$message({
-        message: '密码字段不能有中文',
-        type: 'error',
-        showClose: true,
-    });
-    return;
-  }
-  //1为手机号验证
-  if(!phone.test(val)){
-    that.$message({
-        message: '电话不符合格式',
-        type: 'error',
-        showClose: true,
-    });
-    return false;
-  }
-  if(!email.test(val)){
-      that.$message({
-          message: '邮箱不符合格式',
-          type: 'error',
-          showClose: true,
-      });
-      return;
-  }
+    
 }
 export default new Router({
   routes: [
@@ -210,9 +157,9 @@ export default new Router({
           component: equipment,
           children:[
             {
-              path: '/lampslanterns',
-              name: 'lampslanterns',
-              component: lampslanterns,
+              path: '/solinLampManage',
+              name: 'solinLampManage',
+              component: solinLampManage,
             },
             {
               path: '/program',
@@ -230,19 +177,14 @@ export default new Router({
               component: programSenior
             },
             {
-              path: '/chargingPiles',
-              name: 'chargingPiles',
-              component: chargingPiles,
+              path: '/solinScreenManage',
+              name: 'solinScreenManage',
+              component: solinScreenManage,
             },
             {
-              path: '/advertisingScreens',
-              name: 'advertisingScreens',
-              component: advertisingScreens,
-            },
-            {
-              path: '/sensors',
-              name: 'sensors',
-              component: sensors,
+              path: '/solinEnvManage',
+              name: 'solinEnvManage',
+              component: solinEnvManage,
             },
             {
               path: '/historicalData',
@@ -250,9 +192,9 @@ export default new Router({
               component: historicalData,
             },
             {
-              path: '/loraQuery',
-              name: 'loraQuery',
-              component: loraQuery,
+              path: '/solinLoraSensorsManage',
+              name: 'solinLoraSensorsManage',
+              component: solinLoraSensorsManage,
             },
             {
               path: '/loading',
@@ -260,9 +202,9 @@ export default new Router({
               component: loading,
             },
             {
-              path: '/Relay',
-              name: 'Relay',
-              component: Relay,
+              path: '/solinRelayManage',
+              name: 'solinRelayManage',
+              component: solinRelayManage,
             },
             {
               path: '/scene',
@@ -270,19 +212,19 @@ export default new Router({
               component: scene,
             },
             {
-              path: '/CameraManage',
-              name: 'CameraManage',
-              component: CameraManage,
+              path: '/solinCameraManage',
+              name: 'solinCameraManage',
+              component: solinCameraManage,
             },
             {
-              path: '/IlluminanceManage',
-              name: 'IlluminanceManage',
-              component: IlluminanceManage,
+              path: '/solinIlluminanceManage',
+              name: 'solinIlluminanceManage',
+              component: solinIlluminanceManage,
             },
             {
-              path: '/Scenery',
-              name: 'Scenery',
-              component: Scenery,
+              path: '/solinSceneryControllerManage',
+              name: 'solinSceneryControllerManage',
+              component: solinSceneryControllerManage,
             },
             {
               path: '/SceneryHistory',
@@ -297,34 +239,34 @@ export default new Router({
           component: deploy,
           children:[
             {
-              path: '/concentrator',
-              name: 'concentrator',
-              component: concentrator,
+              path: '/solinConcentratorDeploy',
+              name: 'solinConcentratorDeploy',
+              component: solinConcentratorDeploy,
             },
             {
-              path: '/LampPole',
-              name: 'LampPole',
-              component: LampPole,
+              path: '/solinPoleDeploy',
+              name: 'solinPoleDeploy',
+              component: solinPoleDeploy,
             },
             {
-              path: '/Lampsandlanterns',
-              name: 'Lampsandlanterns',
-              component: Lampsandlanterns,
+              path: '/solinLampDeploy',
+              name: 'solinLampDeploy',
+              component: solinLampDeploy,
             },
             {
-              path: '/advertisingscreen',
-              name: 'advertisingscreen',
-              component: advertisingscreen,
+              path: '/solinScreenDeploy',
+              name: 'solinScreenDeploy',
+              component: solinScreenDeploy,
             },
             {
-              path: '/sensor',
-              name: 'sensor',
-              component: sensor,
+              path: '/solinEnvDeploy',
+              name: 'solinEnvDeploy',
+              component: solinEnvDeploy,
             },
             {
-              path: '/loraSensor',
-              name: 'loraSensor',
-              component: loraSensor,
+              path: '/solinLoraSensorsDeploy',
+              name: 'solinLoraSensorsDeploy',
+              component: solinLoraSensorsDeploy,
             },
             {
               path: '/solinRelayDeploy',
@@ -342,9 +284,9 @@ export default new Router({
               component: solinIlluminance,
             },
             {
-              path: '/SceneryDeploy',
-              name: 'SceneryDeploy',
-              component: SceneryDeploy,
+              path: '/solinSceneryControllerDeploy',
+              name: 'solinSceneryControllerDeploy',
+              component: solinSceneryControllerDeploy,
             },
           ]
         },
@@ -354,39 +296,39 @@ export default new Router({
           component: DeviceLog,
           children:[
             {
-              path: '/LampPoleJournal',
-              name: 'LampPoleJournal',
-              component: LampPoleJournal,
+              path: '/solinPoleLog',
+              name: 'solinPoleLog',
+              component: solinPoleLog,
             },
             {
-              path: '/lampJournal',
-              name: 'lampJournal',
-              component: lampJournal,
+              path: '/solinLampLog',
+              name: 'solinLampLog',
+              component: solinLampLog,
             },
             {
-              path: '/screenJournal',
-              name: 'screenJournal',
-              component: screenJournal,
+              path: '/solinScreenLog',
+              name: 'solinScreenLog',
+              component: solinScreenLog,
             },
             {
-              path: '/sensorJournal',
-              name: 'sensorJournal',
-              component: sensorJournal,
+              path: '/solinEnvLog',
+              name: 'solinEnvLog',
+              component: solinEnvLog,
             },
             {
-              path: '/loraJournal',
-              name: 'loraJournal',
-              component: loraJournal,
+              path: '/solinLoraSensorsLog',
+              name: 'solinLoraSensorsLog',
+              component: solinLoraSensorsLog,
             },
             {
-              path: '/RelayJournal',
-              name: 'RelayJournal',
-              component: RelayJournal,
+              path: '/solinRelayLog',
+              name: 'solinRelayLog',
+              component: solinRelayLog,
             },
             {
-              path: '/ConcentratorLog',
-              name: 'ConcentratorLog',
-              component: ConcentratorLog,
+              path: '/solinConcentratorLog',
+              name: 'solinConcentratorLog',
+              component: solinConcentratorLog,
             },
             {
               path: '/loadingLog',
@@ -394,48 +336,48 @@ export default new Router({
               component: loadingLog,
             },
             {
-              path: '/CameraLog',
-              name: 'CameraLog',
-              component: CameraLog,
+              path: '/solinCameraLog',
+              name: 'solinCameraLog',
+              component: solinCameraLog,
             },
             {
-              path: '/IlluminanceLog',
-              name: 'IlluminanceLog',
-              component: IlluminanceLog,
+              path: '/solinIlluminanceLog',
+              name: 'solinIlluminanceLog',
+              component: solinIlluminanceLog,
             },
             {
-              path: '/SceneryLog',
-              name: 'SceneryLog',
-              component: SceneryLog,
+              path: '/solinSceneryControllerLog',
+              name: 'solinSceneryControllerLog',
+              component: solinSceneryControllerLog,
             },
           ]
         }
       ]
     },
     {
-      path: '/usercenter',
-      name: 'usercenter',
-      component: usercenter,
+      path: '/userCenter',
+      name: 'userCenter',
+      component: userCenter,
       children:[
         {
-          path: '/user',
-          name: 'user',
-          component: user,
+          path: '/managementUser',
+          name: 'managementUser',
+          component: managementUser,
         },
         {
-          path: '/organization',
-          name: 'organization',
-          component: organization,
+          path: '/managementOrg',
+          name: 'managementOrg',
+          component: managementOrg,
         },
         {
-          path: '/article',
-          name: 'article',
-          component: article,
+          path: '/managementProject',
+          name: 'managementProject',
+          component: managementProject,
         },
         {
-          path: '/journal',
-          name: 'journal',
-          component: journal,
+          path: '/managementLog',
+          name: 'managementLog',
+          component: managementLog,
         }
       ]
     },
@@ -480,26 +422,6 @@ export default new Router({
       path: '/SceneryDetails',
       name: 'SceneryDetails',
       component: SceneryDetails,
-    },
-    // {
-    //   path: '/mapDetails',
-    //   name: 'mapDetails',
-    //   component: mapDetails,
-    // },
-    {
-      path: '/video',
-      name: 'video',
-      component: video,
-    },
-    {
-      path: '/wifi',
-      name: 'wifi',
-      component: wifi,
-    },
-    {
-      path: '/broadcast',
-      name: 'broadcast',
-      component: broadcast,
     },
     {
       path: '/Inspection',

@@ -306,7 +306,7 @@ export default {
         },
         //返回
         Backoff(){
-            this.$router.push({'path':'/advertisingScreens'})
+            this.$router.go(-1)
         },
         //权限请求
         Jurisdiction(){

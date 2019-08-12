@@ -171,7 +171,7 @@ export default {
         }
     },
     mounted(){
-        this.ModelData()
+        // this.ModelData()
     },
     methods:{
         handleCommand(){
@@ -190,24 +190,24 @@ export default {
             this.$refs.moviesTable.toggleRowSelection(row)
         },
         //获取型号列表
-        ModelData(){
-            var that = this;
-            $.ajax({
-                type:'get',
-                async:true,
-                dataType:'json',
-                url:that.serverurl+'/v1/solin/sensor/model',
-                contentType:'application/json;charset=UTF-8',
-                data:{},
-                success:function(data){
-                    if(data.errorCode=='0'){
-                        that.options = data.result.list
-                    }else{
-                        that.errorCode(data)
-                    }
-                }
-            })
-        },
+        // ModelData(){
+        //     var that = this;
+        //     $.ajax({
+        //         type:'get',
+        //         async:true,
+        //         dataType:'json',
+        //         url:that.serverurl+'/v1/solin/sensor/model',
+        //         contentType:'application/json;charset=UTF-8',
+        //         data:{},
+        //         success:function(data){
+        //             if(data.errorCode=='0'){
+        //                 that.options = data.result.list
+        //             }else{
+        //                 that.errorCode(data)
+        //             }
+        //         }
+        //     })
+        // },
         //查询最新数据
         details(){
             var that = this;

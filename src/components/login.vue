@@ -9,11 +9,11 @@
 				<p>登录</p>
 				<label for="user">
 					<img src="../assets/img/username.png" alt="">
-					<input type="text" v-model="username" id="user" placeholder="账号">
+					<input type="text" v-model="username" id="user" autocomplete="new-password" placeholder="账号">
 				</label>
 				<label for="password" style="margin-top:65px;">
 					<img style="padding-left:4px;" src="../assets/img/password.png" alt="">
-					<input type="password" v-model="password" id="password" placeholder="密码">
+					<input type="password" v-model="password" id="password" autocomplete="new-password" placeholder="密码">
 				</label>
 				<el-checkbox v-model="checked">记住密码</el-checkbox>
 				<el-button type="primary" @click="login" :loading="loading">登录</el-button>
@@ -27,11 +27,11 @@ export default {
 	name: 'login',
 	data () {
 		return {
-				serverurl:'',
-				loading: false,
-				checked:false,
-				username:'',
-				password:'',
+			serverurl:'',
+			loading: false,
+			checked:false,
+			username:'',
+			password:'',
 		}
 	},
 	mounted(){
@@ -61,7 +61,6 @@ export default {
 				});
 				return;
 			}
-
 			that.loading = true
 			var data = {
 				username:this.username,
@@ -129,16 +128,6 @@ export default {
 			}
 		}
 		window.onkeydown = function(e){
-			if ((theUA.match(/msie\s\d+/) && theUA.match(/msie\s\d+/)[0]) || (theUA.match(/trident\s?\d+/) && theUA.match(/trident\s?\d+/)[0])) {
-				var ieVersion = theUA.match(/msie\s\d+/)[0].match(/\d+/)[0] || theUA.match(/trident\s?\d+/)[0];
-				if (ieVersion < 10) {
-					that.$message({
-						message: '如果您的使用的是360、搜狗、QQ等双核浏览器，请在最顶部切换到极速模式访问!',
-						type: 'error'
-					});
-					return
-				}
-			}
 			if(e.keyCode==13){
 				that.login()
 			}
@@ -162,8 +151,6 @@ input{background:none;outline:none;}
 .login_right{width: 40%;background: white;padding: 0 5% 0 5%;display: flex;align-items: center;}
 .login_right>div{width: 100%;}
 .login_right p{padding: 34px 0 50px 0;margin:0;font-size: 24px;font-weight: 600;color: #666666;}
-
-
 
 .login_right label{width: 100%;display: flex;padding: 0 0 0 0;border-bottom: 1px solid #e4e4e4;}
 .login_right label>img{padding-bottom: 10px;}

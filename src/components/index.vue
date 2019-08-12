@@ -24,15 +24,6 @@
             <p style="font-size:12px;">登录时间:{{data.ts}}</p>
         </div>
     </div>
-    <!-- <div class="Carousel">
-        <el-carousel :interval="100000" type="card">
-            <el-carousel-item v-for="item in menu" :key="item">
-                <template>
-                    <img class="medium" src="../assets/img/managementService05.png" alt="">
-                </template>
-            </el-carousel-item>
-        </el-carousel>
-    </div> -->
     <div class="index_bottom"> 
         <div v-if="menu.length==1">
             <div class="div_01" style="width:450px;">
@@ -808,7 +799,7 @@ export default {
         //系统管理
         usermanage(val){
             sessionStorage.menuId = val
-            this.$router.push({'path':'/usercenter'})
+            this.$router.push({'path':'/userCenter'})
         },
         //设备管理
         lamppost(val){
@@ -922,10 +913,17 @@ export default {
     created() {
         this.Jurisdiction();
         this.ready();
+        var val = ''
         var urls = window.location.href
         var url = urls.split(':')
+        if(url[0]=='http'){
+            val = 1
+        }
+        if(url[0]=='https'){
+            val = 2
+        }
         url = url[2].split('/')
-        sessionStorage.serverPort =':'+(Number(url[0])+1)
+        sessionStorage.serverPort =':'+(Number(url[0]) + val)
     },
 }
 </script>
@@ -945,7 +943,7 @@ export default {
 .index_top_psd>button:nth-of-type(1){padding: 0 0 0 20px;}
 .index_top_psd>button:nth-of-type(2){padding: 20px 0 0 20px;margin:0;}
 
-/* .Carousel{width: 80%;position: absolute;top: 380px;left: 10%;right: 0;bottom: 0;} */
+
 
 
 .index_bottom{width:100%;position: absolute;top:360px;bottom: 0;display: flex;justify-content: center;}
@@ -965,20 +963,4 @@ export default {
 .paging{position: absolute;bottom:0;width: 100%;height: 5px;display: flex;justify-content: center;}
 .paging>span{display: inline-block;background: #7c7c7c77;width: 180px;height: 1px;margin:0 5px 0 5px;}
 .active{background: white !important;}
-</style>
-<style lang='less'>
-// .Carousel{
-//     .el-carousel__item img{
-//        width: 100%; 
-//        height: 380px;
-//     }
-//     .el-carousel__item:nth-child(2n) {
-//         background-color: #99a9bf;
-//     }
-    
-//     .el-carousel__item:nth-child(2n+1) {
-//         background-color: #d3dce6;
-//     }
-// }
-  
 </style>

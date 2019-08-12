@@ -153,11 +153,11 @@
                     <div class="modal-body">
                         <div class="form_input">
                             <label><span class="Required">*</span>名称:</label>
-                            <input type="text" v-model.lazy="data.nickName" maxlength="40" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
+                            <input type="text" v-model="data.nickName" maxlength="40" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                         </div>
                         <div class="form_input">
                             <label><span class="Required">*</span>序列号:</label>
-                            <input type="text" v-model.lazy="data.serialNumber" :disabled='type=="1"' maxlength="16" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
+                            <input type="text" v-model="data.serialNumber" :disabled='type=="1"' maxlength="16" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
                         </div>
                         <div class="form_input">
                             <label><span class="Required">*</span>型号:</label>

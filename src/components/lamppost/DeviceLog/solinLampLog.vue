@@ -1,16 +1,23 @@
 <template>
-    <!-- 摄像头日志 -->
-    <div class="CameraLog">
-        <div class="CameraLog_top">
+    <!-- 灯具日志 -->
+    <div class="lampJournal">
+        <div class="lampJournal_top">
             <div class="search">
-                <span>名称:</span>
-                <input type="text" v-model="nickName" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
+                <span>序列号:</span>
+                <input type="text" v-model="serialNumber" class="form-control logManage_main_input" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入单灯序列号">
             </div>
-            <div class="search">
-                <span>IP:</span>
-                <input type="text" v-model="ipAddress" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入IP">
-            </div>
-            <template v-if="type=='115'">
+            <template v-if="type=='93'">
+                <div class="search">
+                    <span>日志模块:</span>
+                    <el-select v-model="value2" clearable size='small' placeholder="请选择">
+                        <el-option
+                        v-for="item in options2"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
                 <div class="search">
                     <span>操作类别:</span>
                     <el-select v-model="value" clearable size='small' placeholder="请选择">
@@ -22,24 +29,36 @@
                         </el-option>
                     </el-select>
                 </div>
+                <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
             </template>
-            <template v-if="type=='116'">
+            <template v-if="type=='94'">
                 <div class="search">
-                    <span>操作类型:</span>
-                    <el-select v-model="value1" clearable size='small' placeholder="请选择">
+                    <span>操作类别:</span>
+                    <el-select v-model="value5" clearable size='small' placeholder="请选择">
                         <el-option
-                        v-for="item in options1"
+                        v-for="item in options5"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
                         </el-option>
                     </el-select>
                 </div>
+                <div class="search">
+                    <span>操作状态:</span>
+                    <el-select v-model="value6" clearable size='small' placeholder="请选择">
+                        <el-option
+                        v-for="item in options6"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
             </template>
-            <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
         </div>
-        <div class="CameraLog_bottom">
-            <template v-if="type=='115'">
+        <div class="lampJournal_bottom">
+            <template v-if="type=='93'">
                 <el-table
                     :data="tableData"
                     border
@@ -62,13 +81,22 @@
                     prop="nickName"
                     align='center'
                     label="设备名称"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="serialNumber"
+                    align='center'
+                    label="序列号"
                     min-width="130">
                     </el-table-column>
                     <el-table-column
-                    prop="ipAddress"
                     align='center'
-                    label="IP"
-                    min-width="130">
+                    label="操作模块"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.operatModule=='0'">单灯</span>
+                            <span v-if="scope.row.operatModule=='1'">单灯策略</span>
+                        </template>
                     </el-table-column>
                     <el-table-column
                     align='center'
@@ -78,22 +106,16 @@
                             <span v-if="scope.row.operatType=='0'">添加</span>
                             <span v-if="scope.row.operatType=='1'">编辑</span>
                             <span v-if="scope.row.operatType=='2'">删除</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="操作状态"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.operatStatus=='0'">成功</span>
-                            <span v-if="scope.row.operatStatus=='1'">失败</span>
+                            <span v-if="scope.row.operatType=='3'">绑定灯杆</span>
+                            <span v-if="scope.row.operatType=='4'">解绑灯杆</span>
+                            <span v-if="scope.row.operatType=='5'">绑定项目</span>
                         </template>
                     </el-table-column>
                     <el-table-column
                     prop="createTime"
                     align='center'
                     label="操作时间"
-                    min-width="150">
+                    min-width="145">
                     </el-table-column>
                     <el-table-column
                     prop="content"
@@ -115,7 +137,7 @@
                     </el-pagination>
                 </div>
             </template>
-            <template v-if="type=='116'">
+            <template v-if="type=='94'">
                 <el-table
                     :data="tableData"
                     border
@@ -138,36 +160,25 @@
                     prop="nickName"
                     align='center'
                     label="设备名称"
-                    min-width="120">
+                    min-width="100">
                     </el-table-column>
                     <el-table-column
-                    prop="ipAddress"
+                    prop="serialNumber"
                     align='center'
-                    label="IP"
-                    min-width="120">
+                    label="序列号"
+                    min-width="130">
                     </el-table-column>
                     <el-table-column
                     align='center'
                     label="控制类别"
                     min-width="80">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.controlType=='1'">预览</span>
-                            <span v-if="scope.row.controlType=='11'">焦距变大</span>
-                            <span v-if="scope.row.controlType=='12'">焦距变小</span>
-                            <span v-if="scope.row.controlType=='13'">焦点前调</span>
-                            <span v-if="scope.row.controlType=='14'">焦点后调</span>
-                            <span v-if="scope.row.controlType=='15'">光圈扩大</span>
-                            <span v-if="scope.row.controlType=='16'">光圈缩小</span>
-
-                            <span v-if="scope.row.controlType=='21'">云台上仰</span>
-                            <span v-if="scope.row.controlType=='22'">云台下仰</span>
-                            <span v-if="scope.row.controlType=='23'">云台左转</span>
-                            <span v-if="scope.row.controlType=='24'">云台右转</span>
-                            <span v-if="scope.row.controlType=='25'">云台上仰和左转</span>
-                            <span v-if="scope.row.controlType=='26'">云台上仰和右转</span>
-                            <span v-if="scope.row.controlType=='27'">云台下俯和左转</span>
-                            <span v-if="scope.row.controlType=='28'">云台下俯和右转</span>
-                            <span v-if="scope.row.controlType=='29'">云台左右自动扫描</span>
+                            <span v-if="scope.row.controlType=='1'">开启</span>
+                            <span v-if="scope.row.controlType=='2'">关闭</span>
+                            <span v-if="scope.row.controlType=='3'">调光</span>
+                            <span v-if="scope.row.controlType=='4'">刷新状态</span>
+                            <span v-if="scope.row.controlType=='5'">下发策略</span>
+                            <span v-if="scope.row.controlType=='6'">清空策略</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -183,7 +194,7 @@
                     prop="createTime"
                     align='center'
                     label="控制时间"
-                    min-width="150">
+                    min-width="145">
                     </el-table-column>
                     <el-table-column
                     prop="content"
@@ -210,7 +221,7 @@
 </template>
 <script>
 export default {
-    name: 'CameraLog',
+    name: 'lamppost',
     data () {
         return {
             serverurl:localStorage.serverurl,
@@ -219,10 +230,8 @@ export default {
             pageIndex:1,
             pageSize:10,
             total:10,
-            nickName:'',
-            ipAddress:'',
-            options:[
-                {
+            serialNumber:'',
+            options:[{
                 value: '0',
                 label: '添加'
                 },{
@@ -231,61 +240,76 @@ export default {
                 },{
                 value: '2',
                 label: '删除'
-                }
-            ],
-            value:'',
-            options1:[
-                {
-                value: '1',
-                label: '预览'
                 },{
-                value: '11',
-                label: '焦距变大'
+                value: '3',
+                label: '绑定灯杆'
                 },{
-                value: '12',
-                label: '焦距变小'
+                value: '4',
+                label: '解绑灯杆'
                 },{
-                value: '13',
-                label: '焦点前调'
-                },{
-                value: '14',
-                label: '焦点后调'
-                },{
-                value: '15',
-                label: '光圈扩大'
-                },{
-                value: '16',
-                label: '光圈缩小'
-                },{
-                value: '21',
-                label: '云台上仰'
-                },{
-                value: '22',
-                label: '云台下俯'
-                },{
-                value: '23',
-                label: '云台左转'
-                },{
-                value: '24',
-                label: '云台右转'
-                },{
-                value: '25',
-                label: '云台上仰和左转'
-                },{
-                value: '26',
-                label: '云台上仰和右转'
-                },{
-                value: '27',
-                label: '云台下俯和左转'
-                },{
-                value: '28',
-                label: '云台下俯和右转'
-                },{
-                value: '29',
-                label: '云台左右自动扫描'
+                value: '5',
+                label: '绑定项目'
                 },
             ],
-            value1:'',
+            value:'',
+            options2:[{
+                value: '0',
+                label: '单灯'
+                },{
+                value: '1',
+                label: '单灯策略'
+            }],
+            value2:'0',
+            options3:[{
+                value: '1',
+                label: '故障'
+                }
+            ],
+            value3:'',
+            options4:[{
+                value: '1',
+                label: '紧急'
+                }
+            ],
+            value4:'',
+            options5:[
+                {
+                    value: '1',
+                    label: '开启'
+                },
+                {
+                    value: '2',
+                    label: '关闭'
+                },
+                {
+                    value: '3',
+                    label: '调光'
+                },
+                {
+                    value: '4',
+                    label: '刷新状态'
+                },
+                {
+                    value: '5',
+                    label: '下发策略'
+                },
+                {
+                    value: '6',
+                    label: '清空策略'
+                }
+            ],
+            value5:'',
+            options6:[
+                {
+                    value: '0',
+                    label: '成功'
+                },
+                {
+                    value: '1',
+                    label: '失败'
+                }
+            ],
+            value6:'',
         }
     },
     mounted(){
@@ -303,15 +327,16 @@ export default {
             };
             var url = '';
             data.projectIds = sessionStorage.projectId
-            data.nickName = that.nickName
-            data.ipAddress = that.ipAddress
-            if(this.type=='115'){
-                url='/v1/solin/camera/log/operat'
-                data.operatType = that.value
+            data.serialNumber = this.serialNumber
+            if(this.type=='93'){
+                url='/v1/solin/lighting/lamp/log/operation'
+                data.operatType = this.value
+                data.operatModule = this.value2
             }
-            if(this.type=='116'){
-                url='/v1/solin/camera/log/control'
-                data.controlType = that.value1
+            if(this.type=='94'){
+                url='/v1/solin/lighting/lamp/log/control'
+                data.controlType = that.value5
+                data.controlStatus = that.value6
             }
             $.ajax({
                 type:'get',
@@ -343,14 +368,15 @@ export default {
         var that = this
         this.type = this.$route.query.id
         this.ready()
-    }
+    },
 }
 </script>
 <style scoped>
-.CameraLog{width: 100%;height: 100%;}
-.CameraLog>div{width: 100%;position:absolute;}
-.CameraLog_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;line-height: 46px;padding-left: 15px;}
-.CameraLog_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
+.lampJournal{width: 100%;height: 100%;}
+.lampJournal>div{width: 100%;position:absolute;}
+.lampJournal_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;line-height: 46px;padding-left: 15px;}
+.lampJournal_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
+
 
 .search{display: flex;margin-left:10px;}
 .search>span{line-height: 30px;line-height: 45px;}

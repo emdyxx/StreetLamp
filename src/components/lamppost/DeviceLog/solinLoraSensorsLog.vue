@@ -1,17 +1,18 @@
 <template>
-    <div class="IlluminanceLog">
-        <div class="IlluminanceLog_top">
+    <!-- lora日志 -->
+    <div class="loraJournal">
+        <div class="loraJournal_top">
             <div class="search">
                 <span>名称:</span>
-                <input type="text" v-model="nickName" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
+                <input type="text" v-model="nickName" class="form-control logManage_main_input" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
             </div>
             <div class="search">
-                <span>集中器序列号:</span>
-                <input type="text" v-model="concentratorSn" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
+                <span>序列号:</span>
+                <input type="text" v-model="serialNumber" class="form-control logManage_main_input" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
             </div>
             <div class="search">
-                <span>操作类别:</span>
-                <el-select v-model="value" clearable size='small' placeholder="请选择">
+                <span>操作类型:</span>
+                <el-select v-model="value" clearable size='small' style="width:126px;" placeholder="请选择">
                     <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -22,7 +23,7 @@
             </div>
             <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
         </div>
-        <div class="IlluminanceLog_bottom">
+        <div class="loraJournal_bottom">
             <el-table
                 :data="tableData"
                 border
@@ -48,15 +49,9 @@
                 min-width="100">
                 </el-table-column>
                 <el-table-column
-                prop="lightNumber"
+                prop="serialNumber"
                 align='center'
-                label="地址"
-                min-width="130">
-                </el-table-column>
-                <el-table-column
-                prop="concentratorSn"
-                align='center'
-                label="集中器序列号"
+                label="序列号"
                 min-width="130">
                 </el-table-column>
                 <el-table-column
@@ -69,6 +64,7 @@
                         <span v-if="scope.row.operatType=='2'">删除</span>
                         <span v-if="scope.row.operatType=='3'">绑定灯杆</span>
                         <span v-if="scope.row.operatType=='4'">解绑灯杆</span>
+                        <span v-if="scope.row.operatType=='5'">绑定项目</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -101,46 +97,41 @@
 </template>
 <script>
 export default {
-    name: 'IlluminanceLog',
+    name: 'lamppost',
     data () {
         return {
             serverurl:localStorage.serverurl,
-            name:'名称',
-            type:'1',
+            serialNumber:'',
             nickName:'',
-            concentratorSn:'',
-            options:[
-                {
-                    value:0,
-                    label:'添加'
-                },
-                {
-                    value:1,
-                    label:'编辑'
-                },
-                {
-                    value:2,
-                    label:'删除'
-                },
-                {
-                    value:3,
-                    label:'绑定灯杆'
-                },
-                {
-                    value:4,
-                    label:'解绑灯杆'
-                },
+            options:[{
+                    value: '0',
+                    label: '添加'
+                },{
+                    value: '1',
+                    label: '编辑'
+                },{
+                    value: '2',
+                    label: '删除'
+                },{
+                    value: '3',
+                    label: '绑定灯杆'
+                },{
+                    value: '4',
+                    label: '解绑灯杆'
+                },{
+                    value: '5',
+                    label: '绑定项目'
+                }
             ],
             value:'',
             tableData:[],
-            site:[],
             pageIndex:1,
             pageSize:10,
             total:10,
         }
     },
     mounted(){
-         
+        
     },
     methods:{
         search(){
@@ -152,13 +143,13 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/lightSensors/log/operation',
+                url:that.serverurl+'/v1/solin/lora/sensor/log/operation',
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     page:that.pageIndex,
                     size:that.pageSize,
+                    serialNumber:that.serialNumber,
                     nickName:that.nickName,
-                    concentratorSn:that.concentratorSn,
                     operatType:that.value,
                     projectIds:sessionStorage.projectId
                 },
@@ -181,16 +172,17 @@ export default {
             this.ready()
         },
     },
-    created(){
+    created() {
+        var that = this
         this.ready()
     },
 }
 </script>
 <style scoped>
-.IlluminanceLog{width: 10%;height: 100%;}
-.IlluminanceLog>div{width: 100%;position: absolute;}
-.IlluminanceLog_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;line-height: 46px;padding-left: 15px;}
-.IlluminanceLog_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
+.loraJournal{width: 10%;height: 100%;}
+.loraJournal>div{width: 100%;position: absolute;}
+.loraJournal_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;line-height: 46px;padding-left: 15px;}
+.loraJournal_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
 
 .search{display: flex;margin-left:10px;}
 .search>span{line-height: 30px;line-height: 45px;}

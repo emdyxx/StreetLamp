@@ -7,7 +7,7 @@
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="0">下发任务</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.issuedProgram" command="0">下发任务</el-dropdown-item>
                     <el-dropdown-item v-if="JurisdictionS.screenControl" command="1">屏幕开关</el-dropdown-item>
                     <el-dropdown-item v-if="JurisdictionS.screenControl" command="2">屏幕调光</el-dropdown-item>
                     <el-dropdown-item v-if="JurisdictionS.screenControl" command="3">屏幕音量</el-dropdown-item>
@@ -623,7 +623,7 @@
                                     </div>
                                     <div>
                                         <span style="margin-left:20px;">屏幕亮度:</span>
-                                        <el-input-number v-model="DimmingDatas.brightness2" :min="1" :max="64" size='small' label="屏幕亮度"></el-input-number>
+                                        <el-input-number v-model="DimmingDatas.brightness2" :min="1" :max="100" size='small' label="屏幕亮度"></el-input-number>
                                     </div>
                                     <div style="margin-top:10px;">
                                         <el-button @click="DimmingSubmit2" type="primary" size='small'>保存</el-button>

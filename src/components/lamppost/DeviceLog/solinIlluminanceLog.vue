@@ -1,18 +1,18 @@
 <template>
-    <!-- 风光日志 -->
-    <div class="SceneryLog">
-        <div class="SceneryLog_top">
+    <!-- 光照度日志 -->
+    <div class="IlluminanceLog">
+        <div class="IlluminanceLog_top">
             <div class="search">
                 <span>名称:</span>
-                <input type="text" v-model="nickName" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
+                <input type="text" v-model="nickName" class="form-control logManage_main_input" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
             </div>
             <div class="search">
                 <span>集中器序列号:</span>
-                <input type="text" v-model="concentratorSn" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入集中器序列号">
+                <input type="text" v-model="concentratorSn" class="form-control logManage_main_input" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
             </div>
             <div class="search">
-                <span>操作类型:</span>
-                <el-select v-model="value" clearable size='small' style="width:126px;" placeholder="请选择">
+                <span>操作类别:</span>
+                <el-select v-model="value" clearable size='small' placeholder="请选择">
                     <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -23,7 +23,7 @@
             </div>
             <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
         </div>
-        <div class="SceneryLog_bottom">
+        <div class="IlluminanceLog_bottom">
             <el-table
                 :data="tableData"
                 border
@@ -49,7 +49,7 @@
                 min-width="100">
                 </el-table-column>
                 <el-table-column
-                prop="windSolarNumber"
+                prop="lightNumber"
                 align='center'
                 label="地址"
                 min-width="130">
@@ -102,53 +102,64 @@
 </template>
 <script>
 export default {
-    name: 'lamppost',
+    name: 'IlluminanceLog',
     data () {
         return {
             serverurl:localStorage.serverurl,
+            name:'名称',
+            type:'1',
             nickName:'',
             concentratorSn:'',
-            options:[{
-                    value: '0',
-                    label: '添加'
-                },{
-                    value: '1',
-                    label: '编辑'
-                },{
-                    value: '2',
-                    label: '删除'
-                },{
-                    value: '3',
-                    label: '绑定灯杆'
-                },{
-                    value: '4',
-                    label: '解绑灯杆'
-                }
+            options:[
+                {
+                    value:0,
+                    label:'添加'
+                },
+                {
+                    value:1,
+                    label:'编辑'
+                },
+                {
+                    value:2,
+                    label:'删除'
+                },
+                {
+                    value:3,
+                    label:'绑定灯杆'
+                },
+                {
+                    value:4,
+                    label:'解绑灯杆'
+                },
             ],
             value:'',
             tableData:[],
+            site:[],
             pageIndex:1,
             pageSize:10,
             total:10,
         }
     },
     mounted(){
-        
+         
     },
     methods:{
+        search(){
+            this.ready()
+        },
         ready(){
             var that = this;
             $.ajax({
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/windSolarSensors/log/operation',
+                url:that.serverurl+'/v1/solin/lightSensors/log/operation',
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     page:that.pageIndex,
                     size:that.pageSize,
-                    concentratorSn:that.concentratorSn,
                     nickName:that.nickName,
+                    concentratorSn:that.concentratorSn,
                     operatType:that.value,
                     projectIds:sessionStorage.projectId
                 },
@@ -170,9 +181,6 @@ export default {
             this.pageSize = val;
             this.ready()
         },
-        search(){
-            this.ready()
-        },
     },
     created(){
         this.ready()
@@ -180,10 +188,10 @@ export default {
 }
 </script>
 <style scoped>
-.SceneryLog{width: 10%;height: 100%;}
-.SceneryLog>div{width: 100%;position: absolute;}
-.SceneryLog_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;line-height: 46px;padding-left: 15px;}
-.SceneryLog_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
+.IlluminanceLog{width: 10%;height: 100%;}
+.IlluminanceLog>div{width: 100%;position: absolute;}
+.IlluminanceLog_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;line-height: 46px;padding-left: 15px;}
+.IlluminanceLog_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
 
 .search{display: flex;margin-left:10px;}
 .search>span{line-height: 30px;line-height: 45px;}

@@ -904,6 +904,7 @@ export default {
                             async: false,
                             success:function(data) {
                                 if(data.errorCode=='0'){
+                                    
                                     that.readyRight()
                                     var data2={"text" : "机构中心",'id':'1','type':'1',"state": {"opened" : true}}
                                     data2.children = data.result[0].children

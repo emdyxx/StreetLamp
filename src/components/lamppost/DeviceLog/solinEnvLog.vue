@@ -1,14 +1,10 @@
 <template>
-    <!-- lora日志 -->
-    <div class="loraJournal">
-        <div class="loraJournal_top">
+    <!-- 气象站日志 -->
+    <div class="sensorJournal">
+        <div class="sensorJournal_top">
             <div class="search">
-                <span>名称:</span>
-                <input type="text" v-model="nickName" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
-            </div>
-            <div class="search">
-                <span>序列号:</span>
-                <input type="text" v-model="serialNumber" class="form-control logManage_main_input" onkeyup="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
+                <span>集中器序列号:</span>
+                <input type="text" v-model="concentratorSn" class="form-control logManage_main_input" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
             </div>
             <div class="search">
                 <span>操作类型:</span>
@@ -21,9 +17,20 @@
                     </el-option>
                 </el-select>
             </div>
+            <div class="search">
+                <span style="margin-left:15px;">操作状态:</span>
+                <el-select v-model="value1" clearable size='small' style="width:126px;" placeholder="请选择">
+                    <el-option
+                    v-for="item in options1"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                    </el-option>
+                </el-select>
+            </div>
             <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
         </div>
-        <div class="loraJournal_bottom">
+        <div class="sensorJournal_bottom">
             <el-table
                 :data="tableData"
                 border
@@ -37,21 +44,21 @@
                 width="55">
                 </el-table-column>
                 <el-table-column
-                prop="createUser"
+                prop="username"
                 align='center'
                 label="操作用户"
                 min-width="100">
                 </el-table-column>
                 <el-table-column
-                prop="nickName"
-                align='center'
-                label="设备名称"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
                 prop="serialNumber"
                 align='center'
-                label="序列号"
+                label="地址"
+                min-width="130">
+                </el-table-column>
+                <el-table-column
+                prop="concentratorSn"
+                align='center'
+                label="集中器序列号"
                 min-width="130">
                 </el-table-column>
                 <el-table-column
@@ -62,9 +69,6 @@
                         <span v-if="scope.row.operatType=='0'">添加</span>
                         <span v-if="scope.row.operatType=='1'">编辑</span>
                         <span v-if="scope.row.operatType=='2'">删除</span>
-                        <span v-if="scope.row.operatType=='3'">绑定灯杆</span>
-                        <span v-if="scope.row.operatType=='4'">解绑灯杆</span>
-                        <span v-if="scope.row.operatType=='5'">绑定项目</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -101,8 +105,7 @@ export default {
     data () {
         return {
             serverurl:localStorage.serverurl,
-            serialNumber:'',
-            nickName:'',
+            concentratorSn:'',
             options:[{
                     value: '0',
                     label: '添加'
@@ -112,18 +115,18 @@ export default {
                 },{
                     value: '2',
                     label: '删除'
-                },{
-                    value: '3',
-                    label: '绑定灯杆'
-                },{
-                    value: '4',
-                    label: '解绑灯杆'
-                },{
-                    value: '5',
-                    label: '绑定项目'
                 }
             ],
             value:'',
+            options1:[{
+                    value: '0',
+                    label: '成功'
+                },{
+                    value: '1',
+                    label: '失败'
+                }
+            ],
+            value1:'',
             tableData:[],
             pageIndex:1,
             pageSize:10,
@@ -143,14 +146,14 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/lora/sensor/log/operation',
+                url:that.serverurl+'/v1/solin/sensor/env/log/operation',
                 contentType:'application/json;charset=UTF-8',
                 data:{
+                    concentratorSn:that.concentratorSn,
+                    operatType:that.value,
+                    operatStatus:that.value1,
                     page:that.pageIndex,
                     size:that.pageSize,
-                    serialNumber:that.serialNumber,
-                    nickName:that.nickName,
-                    operatType:that.value,
                     projectIds:sessionStorage.projectId
                 },
                 success:function(data){
@@ -179,10 +182,10 @@ export default {
 }
 </script>
 <style scoped>
-.loraJournal{width: 10%;height: 100%;}
-.loraJournal>div{width: 100%;position: absolute;}
-.loraJournal_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;line-height: 46px;padding-left: 15px;}
-.loraJournal_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
+.sensorJournal{width: 10%;height: 100%;}
+.sensorJournal>div{width: 100%;position: absolute;}
+.sensorJournal_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;line-height: 46px;padding-left: 15px;}
+.sensorJournal_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
 
 .search{display: flex;margin-left:10px;}
 .search>span{line-height: 30px;line-height: 45px;}
