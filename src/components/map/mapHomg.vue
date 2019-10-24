@@ -129,15 +129,15 @@ export default {
 </script>
 <style scoped>
 .mapHome{width: 100%;height: 100%;}
-.mapHome_left{width: 77px;height: 100%;background: #409eff;}
+.mapHome_left{width: 77px;height: 100%;background: #212e4e;}
 .mapHome_left_top{width: 100%;height: 48px;display: flex;justify-content: center;align-items: center;}
 .mapHome_left_top>img{cursor: pointer;width: 30px;}
 .mapHome_left_bottom{padding-top: 30px;}
-.mapHome_left_bottom>div{padding: 10px 10px 10px 10px;cursor: pointer;text-align: center;}
+.mapHome_left_bottom>div{padding: 15px 10px 15px 10px;cursor: pointer;text-align: center;}
 .mapHome_left_bottom>div>img{transform: scale(0.8);}
 .mapHome_left_bottom>div>img:hover{transition: all .5s;transform: scale(0.9);}
 .mapHome_left_bottom>div>p{margin: 0;padding:5px 0 0 0;color: #b2bdca;}
-.background{background: #2B6BC3;}
+.background{background: #17213b;}
 .mapHome_right{position: absolute;top: 0;left:77px;right: 0;bottom:0;}
 </style>
 <style lang='less'>

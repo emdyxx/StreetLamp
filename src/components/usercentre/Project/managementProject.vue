@@ -1,76 +1,50 @@
 <template>
-    <div class="article">
+    <div class="CommonStyle">
         <!-- 项目 -->
-        <div class="article_left">
+        <div class="CommonStyle_left">
             <div id="jstree"></div>
         </div>
-        <div class="article_right">
-            <div class="article_right_top">
-                <el-button v-if="JurisdictionS.addProject" @click="addarticle(0)" type="primary" icon='el-icon-plus' size='small'>添加项目</el-button>
-                <el-button v-if="JurisdictionS.editProject" @click="addarticle(1)" type="primary" icon="el-icon-edit" size='small'>编辑项目</el-button>
-                <el-button v-if="JurisdictionS.delProject" @click="deletearticle" type="primary" icon='el-icon-delete' size='small'>删除项目</el-button>
-                <div class="search" v-if="JurisdictionS.viewProject">
-                    <el-dropdown size="small" split-button @command="handleCommand">
-                        {{name}}
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item @click.native="name='项目名称';types='1';">项目名称</el-dropdown-item>
-                            <el-dropdown-item @click.native="name='负责人';types='2';">负责人</el-dropdown-item>
-                            <el-dropdown-item @click.native="name='归属机构';types='3';">归属机构</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                    <div>
-                        <template v-if="types=='1'">
-                            <el-input v-model="projectName2" size="small" placeholder="请输入项目名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                        </template>
-                        <template v-if="types=='2'">
-                            <el-input v-model="principal2" size="small" placeholder="请输入负责人" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                        </template>
-                        <template v-if="types=='3'">
-                            <el-cascader
-                            size='small'
-                            style="margin-top:6px;width:126px"
-                            :props='optionspros'
-                            :options="options"
-                            clearable
-                            :change-on-select=true
-                            :show-all-levels="false"
-                            v-model="orgId2">
-                        </el-cascader>
-                        </template>
-                    </div>
-                    <div>
-                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+        <div class="CommonStyle_right">
+            <div class="section">
+                <div class="section_top">
+                    <el-button v-if="JurisdictionS.addProject" @click="addarticle(0)" type="primary" icon='el-icon-plus' size='small'>添加项目</el-button>
+                    <el-button v-if="JurisdictionS.editProject" @click="addarticle(1)" type="primary" icon="el-icon-edit" size='small'>编辑项目</el-button>
+                    <el-button v-if="JurisdictionS.delProject" @click="deletearticle" type="primary" icon='el-icon-delete' size='small'>删除项目</el-button>
+                    <div class="search" v-if="JurisdictionS.viewProject">
+                        <el-dropdown size="small" split-button @command="handleCommand">
+                            {{name}}
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item @click.native="name='项目名称';types='1';">项目名称</el-dropdown-item>
+                                <el-dropdown-item @click.native="name='负责人';types='2';">负责人</el-dropdown-item>
+                                <el-dropdown-item @click.native="name='归属机构';types='3';">归属机构</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <div>
+                            <template v-if="types=='1'">
+                                <el-input v-model="projectName2" size="small" placeholder="请输入项目名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                            </template>
+                            <template v-if="types=='2'">
+                                <el-input v-model="principal2" size="small" placeholder="请输入负责人" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                            </template>
+                            <template v-if="types=='3'">
+                                <el-cascader
+                                size='small'
+                                style="margin-top:6px;width:126px"
+                                :props='optionspros'
+                                :options="options"
+                                clearable
+                                :show-all-levels="false"
+                                change-on-select
+                                v-model="orgId2">
+                            </el-cascader>
+                            </template>
+                        </div>
+                        <div>
+                            <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="article_right_bottom">
-                <!-- <div class="article_right_bottom_top">
-                    <div class="search">
-                        <label>项目名称:</label>
-                        <input type="text" v-model="projectName2" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入项目名称">
-                    </div>
-                    <div class="search">
-                        <label>负责人:</label>
-                        <input type="text" v-model="principal2" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入负责人">
-                    </div>
-                    <div class="search">
-                        <label>归属机构:</label>
-                        <el-cascader
-                            size='small'
-                            style="margin-top:6px;width:126px"
-                            :props='optionspros'
-                            :options="options"
-                            clearable
-                            :change-on-select=true
-                            :show-all-levels="false"
-                            v-model="orgId2">
-                        </el-cascader>
-                    </div>
-                    <div style="margin-left:15px;">
-                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                    </div>
-                </div> -->
-                <div class="article_right_bottom_bottom">
+                <div class="section_bottom">
                     <el-table
                         :data="tableData"
                         @row-click="clickRow" 
@@ -171,7 +145,7 @@
                             <input type="text" v-model="principal" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="name2" placeholder="请输入负责人">
                         </div> 
                         <div class="form-group">
-                            <label>所属机构:</label>
+                            <label><span class="Required">*</span>所属机构:</label>
                             <el-cascader
                                 :options="options"
                                 v-model="value"
@@ -238,7 +212,7 @@
                         </div>
                         <div class="form-group" v-if="mapType">
                             <label><span class="Required">*</span>平面图:</label>
-                            <div class="images">
+                            <div class="user_img">
                                 <label for="img1">
                                     <img :src=imageUrl1>
                                     <input type="file" ref="img1" id="img1" @change="images(1)">
@@ -476,9 +450,6 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.options = data.result
-                        if(that.type=='0'){
-                            that.value.push(data.result[0].id)
-                        }
                     }else{
                         that.errorCode(data)
                     }
@@ -595,7 +566,7 @@ export default {
             var data = {}
             var type = ''
             var formdate = new FormData();
-            if(that.projectName==''||that.principal==''){
+            if(that.projectName==''||that.principal==''||that.value.length==0){
                 that.$message({
                     message: '必填字段不能为空!',
                     type: 'error'
@@ -731,18 +702,22 @@ export default {
                             async: false,
                             success:function(data) {
                                 if(data.errorCode=='0'){
-                                    for(var i=0;i<data.result.length;i++){
-                                        data.result[i].state={"opened" : true}
-                                        if(data.result[i].children==undefined){}else{
-                                            for(var j=0;j<data.result[i].children.length;j++){
-                                                data.result[i].children[j].state={"opened" : true}
+                                    var data2={"text" : "中国",'id':'0','type':'0',"state": {"opened" : true}}
+                                    if(data.result!=undefined||data.result!=null){
+                                        for(var i=0;i<data.result.length;i++){
+                                            data.result[i].state={"opened" : true}
+                                            if(data.result[i].children==undefined){}else{
+                                                for(var j=0;j<data.result[i].children.length;j++){
+                                                    data.result[i].children[j].state={"opened" : true}
+                                                }
                                             }
                                         }
+                                    }else{
+                                        
                                     }
-                                    that.regitReady()
-                                    var data2={"text" : "中国",'id':'0','type':'0',"state": {"opened" : true}}
                                     data2.children = data.result
                                     jsonarray= data2;
+                                    that.regitReady()
                                 }else{
                                     that.errorCode
                                 }
@@ -757,6 +732,8 @@ export default {
                 }else{
                     that.sizeType = data.node.original
                     // sessionStorage.organization_type = data.node.original.id
+                    that.pageSize = 10;
+                    that.pageIndex = 1;
                     that.regitReady()
                 }
             });
@@ -839,29 +816,5 @@ export default {
 }
 </script>
 <style scoped>
-.Required{color: red;font-size: 17px;}
-.article{width: 100%;height: 100%;padding: 5px;}
-.article_left{width: 200px;height: 100%;border: 1px solid #E4E4F1;overflow: auto;}
-.article_right{position: absolute;left: 210px;right: 5px;top:5px;bottom:5px;}
-.article_right>div{width: 100%;border: 1px solid #E4E4F1;position: absolute;}
-.article_right_top{height: 46px;border-bottom: none !important;display: flex;}
-.article_right_top>button{height:33px;margin:8px 0 0 10px;}
-.article_right_bottom{top: 45px;bottom: 0;padding: 5px;overflow: auto;}
-/* .article_right_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;} */
-.article_right_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
-.block{text-align: center;}
 
-.images{text-align: center;position: relative;}
-.images>label{width: 150px;height: 100px;border: 1px dashed #d9d9d9;border-radius: 6px; cursor: pointer;text-align: center;line-height: 35px;position: relative;}
-.images img{width: 100%;height: 100%;position: absolute;left: 0;}
-.images>label:hover{border-color: #20a0ff;}
-.images>label>input{margin-left: -9999px;}
-
-.form-group{display:flex;justify-content: center;}
-.form-group>label{width: 90px;line-height: 32px;text-align: center;}
-.form-group>input{width: 196px;height: 32px;}
-
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
 </style>

@@ -1,7 +1,7 @@
 <template>
-    <div class="LampPole">
+    <div class="section">
         <!-- 灯杆模式 -->
-        <div class="LampPole_top">
+        <div class="section_top">
             <el-button v-if="JurisdictionS.addPole" @click="addLampPole(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="JurisdictionS.editPole" @click="addLampPole(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="JurisdictionS.delPole" @click="deleteLampPole" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
@@ -43,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <div class="LampPole_bottom">
+        <div class="section_bottom">
             <el-table
                 :data="tableData"
                 @row-click="clickRow" 
@@ -152,7 +152,7 @@
                 label="创建时间"
                 align='center'
                 :formatter="formatRole"
-                show-overflow-tooltip>
+                min-width="150">
                 </el-table-column>
             </el-table>
             <div class="block">
@@ -197,39 +197,6 @@
                                 </el-option>
                             </el-select>
                         </div>
-                        <!--<div class="form-group">
-                            <label>省:</label>
-                            <el-select @change="provinceChange" v-model="value1" size='small' style="width: 126px;" placeholder="请选择">
-                                <el-option
-                                v-for="item in options1"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                                </el-option>
-                            </el-select>
-                            <label>市:</label>
-                            <el-select  @change="cityChange" v-model="value2" size='small' style="width: 126px;" placeholder="请选择">
-                                <el-option
-                                v-for="item in options2"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                                </el-option>
-                            </el-select>
-                        </div> 
-                        <div class="form-group">
-                            <label>区/县:</label>
-                            <el-select v-model="value3" size='small' style="width: 126px;" placeholder="请选择">
-                                <el-option
-                                v-for="item in options3"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                                </el-option>
-                            </el-select>
-                            <label>地址:</label>
-                            <input type="text" v-model="LampPoleData.location" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入地址">
-                        </div>  -->
                         <div class="form-group">
                             <label>位置:</label>
                             <input type="text" v-model="LampPoleData.coord" :disabled='true' class="form-control" id="email" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="地图选点">
@@ -245,10 +212,6 @@
                                 v-model="LampPoleData.remark">
                             </el-input>
                         </div>
-                        <!-- <div class="form-group" v-if="addtype=='0'"> -->
-                            <!-- <el-button @click="addlamp(0)" type="primary" size='small'>添加灯具</el-button> -->
-                            <!-- <el-button @click="LampPole_data(0)" type="primary" size='small'>关联灯具</el-button> -->
-                        <!-- </div> -->
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -2577,7 +2540,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/windSolarSensors/pole',
+                url:that.serverurl+'/v1/solin/sensor/wind-solar/pole',
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     page:1,
@@ -2602,7 +2565,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/windSolarSensors/pole',
+                url:that.serverurl+'/v1/solin/sensor/wind-solar/pole',
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     page:that.pageIndex13,
@@ -2653,7 +2616,7 @@ export default {
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/v1/solin/windSolarSensors/device/pole',
+                    url:that.serverurl+'/v1/solin/sensor/wind-solar/pole',
                     contentType:'application/json;charset=UTF-8',
                     data:JSON.stringify(data), 
                     success:function(data){
@@ -2693,7 +2656,7 @@ export default {
                 type:'post',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/windSolarSensors/device/pole',
+                url:that.serverurl+'/v1/solin/sensor/wind-solar/pole',
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify(data), 
                 success:function(data){
@@ -2737,7 +2700,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/lightSensors/pole',
+                url:that.serverurl+'/v1/solin/sensor/lightness/pole',
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     page:1,
@@ -2762,7 +2725,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/lightSensors/pole',
+                url:that.serverurl+'/v1/solin/sensor/lightness/pole',
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     page:that.pageIndex15,
@@ -2813,7 +2776,7 @@ export default {
                     type:'post',
                     async:true,
                     dataType:'json',
-                    url:that.serverurl+'/v1/solin/lightSensors/device/pole',
+                    url:that.serverurl+'/v1/solin/sensor/lightness/pole',
                     contentType:'application/json;charset=UTF-8',
                     data:JSON.stringify(data), 
                     success:function(data){
@@ -2853,7 +2816,7 @@ export default {
                 type:'post',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/lightSensors/device/pole',
+                url:that.serverurl+'/v1/solin/sensor/lightness/pole',
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify(data), 
                 success:function(data){
@@ -2959,28 +2922,5 @@ export default {
 }
 </script>
 <style scoped>
-.Required{color: red;font-size: 17px;}
-.LampPole{width: 100%;height: 100%;}
-.LampPole>div{width: 100%;position: absolute;}
-.LampPole_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.LampPole_top>button,.LampPole_top>div{height:33px;margin:8px 0 0 10px;}
-.LampPole_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
-.block{text-align: center;}
 
-
-.modal-body>div{margin-bottom: 10px;text-align: center;}
-.form-group{display:flex;justify-content: center;}
-.form-group>label{width: 95px;line-height: 34px;text-align: center;}
-.form-group>input{width: 195px;}
-.mappoint{font-size: 24px;position: absolute;right: 110px;cursor: pointer;}
-.modal_body_table>div{margin-bottom: 10px;border: 1px solid #E4E4F1;padding: 5px;text-align: center;}
-
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
-
-.map_Z{margin: 0;padding: 0;position: relative;}
-.map_Z>div:nth-of-type(1){width: 100%;height: 30px;line-height: 30px;}
-.map_Z>div:nth-of-type(2){width: 100%;position: absolute;top: 30px;bottom: 30px;}
-.map_Z>div:nth-of-type(3){width: 100%;height: 30px;line-height: 30px;position: absolute;bottom: 1px;text-align: center;}
 </style>

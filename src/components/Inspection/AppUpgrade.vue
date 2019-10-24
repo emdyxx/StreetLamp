@@ -1,11 +1,11 @@
 <template>
     <!-- APP升级页面 -->
-    <div class="AppUpgrade">
-        <div class="AppUpgrade_top">
+    <div class="section">
+        <div class="section_top">
             <el-button @click="operation(0)" v-if="JurisdictionS.addPatrolApp" type="primary" icon='el-icon-plus' size='small'>添加升级包</el-button>
             <el-button @click="operation(1)" v-if="JurisdictionS.delPatrolApp" type="primary" icon='el-icon-delete' size='small'>删除升级包</el-button>
         </div>
-        <div class="AppUpgrade_bottom">
+        <div class="section_bottom">
             <div class="AppUpgrade_bottom_bottom">
                 <el-table
                     :data="tableData"
@@ -296,19 +296,7 @@ export default {
 }
 </script>
 <style scoped>
-.block{text-align: center;}
-.AppUpgrade{width: 100%;height: 100%;}
-.AppUpgrade>div{width: 100%;position: absolute;}
-.AppUpgrade_top{height: 46px;border-bottom: none !important;display: flex;border: 1px solid #E4E4F1;}
-.AppUpgrade_top>button{height:33px;margin:6px 0 0 10px;}
-.AppUpgrade_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
-.AppUpgrade_bottom_bottom{position: absolute;top:3px;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
-.search{display: flex;}
-.search>label{width: 80px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
-.Required{color: red;font-size: 17px;}
-.form-group{display:flex;justify-content: center;}
-.form-group>label{width: 95px;line-height: 34px;text-align: center;}
+.form-group>label{width: 95px;}
 .form-group>input{width: 156px;}
 .form-group>div{width: 156px;display: flex;justify-content: center;align-items: center;}
 </style>

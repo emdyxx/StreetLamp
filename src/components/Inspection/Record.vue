@@ -1,6 +1,6 @@
 <template>
-    <div class="Record">
-        <div class="Record_top">
+    <div class="section">
+        <div class="section_top">
             <div class="search">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <div class="Record_bottom">
+        <div class="section_bottom">
             <el-table
                 :data="tableData"
                 border
@@ -91,92 +91,6 @@
                 </el-pagination>
             </div>
         </div>
-        <!-- <el-tabs v-model="activeName" type="border-card" style="height:100%;">
-            <el-tab-pane label="巡检记录" name="0" style="height: 100%;position:relative;">
-                <div class="Record_top">
-                    <div>
-                        <span>点名称:</span>
-                        <input type="text" v-model="siteName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入计划名称">
-                    </div>
-                    <div>
-                        <span>巡检员:</span>
-                        <input type="text" v-model="inspectorName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入巡检员">
-                    </div>
-                    <div style="margin-left:15px;">
-                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                    </div>
-                </div>
-                <div class="Record_bottom">
-                    <el-table
-                        :data="tableData"
-                        border
-                        stripe
-                        size='small'
-                        tooltip-effect="dark"
-                        style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                        <el-table-column
-                        prop="siteName"
-                        align='center'
-                        label="点名称"
-                        min-width="50">
-                        </el-table-column>
-                        <el-table-column
-                        prop="siteNumber"
-                        label="点编号"
-                        align='center'>
-                        </el-table-column>
-                        <el-table-column
-                        prop="inspectorName"
-                        label="巡检员"
-                        align='center'>
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="是否为计划任务"
-                        min-width="120">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.planType=='1'">是</span>
-                                <span v-if="scope.row.planType=='2'">否</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="点状态"
-                        min-width="50">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.siteCheckStatus=='1'" style="color:#67C23A;">正常</span>
-                                <span v-if="scope.row.siteCheckStatus=='2'" style="color:#F56C6C;">异常</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="patrolTime"
-                        label="巡检时间"
-                        align='center'>
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="操作"
-                        min-width="50">
-                            <template slot-scope="scope">
-                                <el-button @click="details(scope.row)" :disabled="scope.row.recordId=='0'" type="primary" size='mini'>详情</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                    <div class="block">
-                        <el-pagination
-                        background
-                        @size-change="sizechange"
-                        @current-change="currentchange"
-                        :current-page="pageIndex"
-                        :page-sizes="[10, 20, 30, 50]"
-                        :page-size="pageSize"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="total">
-                        </el-pagination>
-                    </div>
-                </div>
-            </el-tab-pane>
-        </el-tabs> -->
         <!-- 巡检计划详情模态框（Modal） -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -314,12 +228,5 @@ export default {
 }
 </script>
 <style scoped>
-.block{text-align: center;}
-.Record{width: 100%;height: 100%;}
-.Record>div{width: 100%;position: absolute;}
-.Record_top{height: 46px;border-bottom: none !important;display: flex;border: 1px solid #E4E4F1;}
-.Record_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
-.search{display: flex;align-items: center;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
+
 </style>

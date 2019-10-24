@@ -5,6 +5,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 
 import Editor from 'wangeditor'
 import 'wangeditor/release/wangEditor.min.css'
+import '../assets/css/public.css'
 
 import login from '@/components/login'
 import index from '@/components/index'
@@ -50,7 +51,7 @@ import solinScreenLog from '@/components/lamppost/DeviceLog/solinScreenLog' //�
 import solinEnvLog from '@/components/lamppost/DeviceLog/solinEnvLog' //气象站日志
 import solinRelayLog from '@/components/lamppost/DeviceLog/solinRelayLog' //继电器日志
 import solinLoraSensorsLog from '@/components/lamppost/DeviceLog/solinLoraSensorsLog' //lora传感器日志
-import loadingLog from '@/components/lamppost/DeviceLog/loading' 
+import loadingLog from '@/components/lamppost/DeviceLog/loading'
 import solinConcentratorLog from '@/components/lamppost/DeviceLog/solinConcentratorLog' //继电器日志
 import solinCameraLog from '@/components/lamppost/DeviceLog/solinCameraLog' //摄像头日志
 import solinIlluminanceLog from '@/components/lamppost/DeviceLog/solinIlluminanceLog' //光照度日志
@@ -68,6 +69,12 @@ import SceneryDetails from '@/components/map/DTmap/SceneryDetails' //风光控�
 import program from '@/components/program/program' //节目管理页面
 import programSimple from '@/components/program/programSimple' //简易节目页面
 import programSenior from '@/components/program/programSenior' //高级节目页面
+import TheTaskPage from '@/components/program/TheTaskPage' //任务制作主页
+import mediaLibrary from '@/components/program/module/mediaLibrary' //媒体库页面
+import ProgramList from '@/components/program/module/ProgramList' //节目管理页面
+import taskManage from '@/components/program/module/taskManage' //任务管理页面
+import Programming from '@/components/program/module/Programming' //节目制作页面
+
 
 import Inspection from '@/components/Inspection/Inspection' //巡检管理页面
 import UserSettings from '@/components/Inspection/UserSettings' //用户设置
@@ -88,36 +95,36 @@ Vue.use(Router)
 Vue.use(ElementUI);
 var error = {}
 $.ajax({
-	type:'get',
-	async:false,
-	url:'../static/error.json',
+	type: 'get',
+	async: false,
+	url: '../static/error.json',
 	// url:'../solin-platform/static/error.json',
 	dataType: "text",
-	success:function(data){
+	success: function (data) {
 		error = eval('(' + data + ')');
 	}
 })
-Vue.prototype.errorCode = function(data){
-  	if(data.errorCode=='11009'){
+Vue.prototype.errorCode = function (data) {
+	if (data.errorCode == '11009') {
 		localStorage.messageNumber = Number(localStorage.messageNumber) + 1
 		console.log(localStorage.messageNumber)
-		if(localStorage.messageNumber>1){
+		if (localStorage.messageNumber > 1) {
 			return
-		}else{
+		} else {
 			this.$message({
 				message: '会话过期',
 				type: 'error',
 				showClose: true,
 			});
-			this.$router.push({'path':'/'})
+			this.$router.push({ 'path': '/' })
 		}
-	}else if(data.errorCode=='10002'){
+	} else if (data.errorCode == '10002') {
 		this.$message({
 			message: data.result.errorMessage,
 			type: 'error',
 			showClose: true,
 		});
-	}else{
+	} else {
 		var messageData = error[data.errorCode]
 		this.$message({
 			message: messageData,
@@ -126,377 +133,404 @@ Vue.prototype.errorCode = function(data){
 		});
 	}
 }
-Vue.prototype.Verification = function(val,type){
-    
+Vue.prototype.Verification = function (val, type) {
+
 }
 export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'login',
-      component: login
-    },
-    {
-      path: '/index',
-      name: 'index',
-      component: index
-    },
-    {
-      path: '/lamppost',
-      name: 'lamppost',
-      component: lamppost,
-      children:[
-        {
-          path: '/Refresh',
-          name: 'Refresh',
-          component: Refresh
-        },
-        {
-          path: '/equipment',
-          name: 'equipment',
-          component: equipment,
-          children:[
-            {
-              path: '/solinLampManage',
-              name: 'solinLampManage',
-              component: solinLampManage,
-            },
-            {
-              path: '/program',
-              name: 'program',
-              component: program,
-            },
-            {
-              path: '/programSimple',
-              name: 'programSimple',
-              component: programSimple
-            },
-            {
-              path: '/programSenior',
-              name: 'programSenior',
-              component: programSenior
-            },
-            {
-              path: '/solinScreenManage',
-              name: 'solinScreenManage',
-              component: solinScreenManage,
-            },
-            {
-              path: '/solinEnvManage',
-              name: 'solinEnvManage',
-              component: solinEnvManage,
-            },
-            {
-              path: '/historicalData',
-              name: 'historicalData',
-              component: historicalData,
-            },
-            {
-              path: '/solinLoraSensorsManage',
-              name: 'solinLoraSensorsManage',
-              component: solinLoraSensorsManage,
-            },
-            {
-              path: '/loading',
-              name: 'loading',
-              component: loading,
-            },
-            {
-              path: '/solinRelayManage',
-              name: 'solinRelayManage',
-              component: solinRelayManage,
-            },
-            {
-              path: '/scene',
-              name: 'scene',
-              component: scene,
-            },
-            {
-              path: '/solinCameraManage',
-              name: 'solinCameraManage',
-              component: solinCameraManage,
-            },
-            {
-              path: '/solinIlluminanceManage',
-              name: 'solinIlluminanceManage',
-              component: solinIlluminanceManage,
-            },
-            {
-              path: '/solinSceneryControllerManage',
-              name: 'solinSceneryControllerManage',
-              component: solinSceneryControllerManage,
-            },
-            {
-              path: '/SceneryHistory',
-              name: 'SceneryHistory',
-              component: SceneryHistory,
-            },
-          ]
-        },
-        {
-          path: '/deploy',
-          name: 'deploy',
-          component: deploy,
-          children:[
-            {
-              path: '/solinConcentratorDeploy',
-              name: 'solinConcentratorDeploy',
-              component: solinConcentratorDeploy,
-            },
-            {
-              path: '/solinPoleDeploy',
-              name: 'solinPoleDeploy',
-              component: solinPoleDeploy,
-            },
-            {
-              path: '/solinLampDeploy',
-              name: 'solinLampDeploy',
-              component: solinLampDeploy,
-            },
-            {
-              path: '/solinScreenDeploy',
-              name: 'solinScreenDeploy',
-              component: solinScreenDeploy,
-            },
-            {
-              path: '/solinEnvDeploy',
-              name: 'solinEnvDeploy',
-              component: solinEnvDeploy,
-            },
-            {
-              path: '/solinLoraSensorsDeploy',
-              name: 'solinLoraSensorsDeploy',
-              component: solinLoraSensorsDeploy,
-            },
-            {
-              path: '/solinRelayDeploy',
-              name: 'solinRelayDeploy',
-              component: solinRelayDeploy,
-            },
-            {
-              path: '/solinCameraDeploy',
-              name: 'solinCameraDeploy',
-              component: solinCameraDeploy,
-            },
-            {
-              path: '/solinIlluminance',
-              name: 'solinIlluminance',
-              component: solinIlluminance,
-            },
-            {
-              path: '/solinSceneryControllerDeploy',
-              name: 'solinSceneryControllerDeploy',
-              component: solinSceneryControllerDeploy,
-            },
-          ]
-        },
-        {
-          path: '/DeviceLog',
-          name: 'DeviceLog',
-          component: DeviceLog,
-          children:[
-            {
-              path: '/solinPoleLog',
-              name: 'solinPoleLog',
-              component: solinPoleLog,
-            },
-            {
-              path: '/solinLampLog',
-              name: 'solinLampLog',
-              component: solinLampLog,
-            },
-            {
-              path: '/solinScreenLog',
-              name: 'solinScreenLog',
-              component: solinScreenLog,
-            },
-            {
-              path: '/solinEnvLog',
-              name: 'solinEnvLog',
-              component: solinEnvLog,
-            },
-            {
-              path: '/solinLoraSensorsLog',
-              name: 'solinLoraSensorsLog',
-              component: solinLoraSensorsLog,
-            },
-            {
-              path: '/solinRelayLog',
-              name: 'solinRelayLog',
-              component: solinRelayLog,
-            },
-            {
-              path: '/solinConcentratorLog',
-              name: 'solinConcentratorLog',
-              component: solinConcentratorLog,
-            },
-            {
-              path: '/loadingLog',
-              name: 'loadingLog',
-              component: loadingLog,
-            },
-            {
-              path: '/solinCameraLog',
-              name: 'solinCameraLog',
-              component: solinCameraLog,
-            },
-            {
-              path: '/solinIlluminanceLog',
-              name: 'solinIlluminanceLog',
-              component: solinIlluminanceLog,
-            },
-            {
-              path: '/solinSceneryControllerLog',
-              name: 'solinSceneryControllerLog',
-              component: solinSceneryControllerLog,
-            },
-          ]
-        }
-      ]
-    },
-    {
-      path: '/userCenter',
-      name: 'userCenter',
-      component: userCenter,
-      children:[
-        {
-          path: '/managementUser',
-          name: 'managementUser',
-          component: managementUser,
-        },
-        {
-          path: '/managementOrg',
-          name: 'managementOrg',
-          component: managementOrg,
-        },
-        {
-          path: '/managementProject',
-          name: 'managementProject',
-          component: managementProject,
-        },
-        {
-          path: '/managementLog',
-          name: 'managementLog',
-          component: managementLog,
-        }
-      ]
-    },
-    {
-      path: '/mapHomg',
-      name: 'mapHomg',
-      component: mapHomg,
-      children:[
-        {
-          path: '/',
-          name: 'GIS',
-          component: GIS,
-        },
-        {
-          path: '/SingleLamp',
-          name: 'SingleLamp',
-          component: SingleLamp,
-        },
-        {
-          path: '/Camera',
-          name: 'Camera',
-          component: Camera,
-        },
-        {
-          path: '/LED',
-          name: 'LED',
-          component: LED,
-        },
-        {
-          path: '/SceneryMap',
-          name: 'SceneryMap',
-          component: SceneryMap,
-        },
-      ]
-    },
-    {
-      path: '/GISdetails',
-      name: 'GISdetails',
-      component: GISdetails,
-    },
-    {
-      path: '/SceneryDetails',
-      name: 'SceneryDetails',
-      component: SceneryDetails,
-    },
-    {
-      path: '/Inspection',
-      name: 'Inspection',
-      component: Inspection,
-      children:[
-        {
-          path: '/',
-          name: 'UserSettings',
-          component: UserSettings,
-        },
-        {
-          path: '/UserSettings',
-          name: 'UserSettings',
-          component: UserSettings,
-        },
-        {
-          path: '/task',
-          name: 'task',
-          component: task,
-          children:[
-            {
-              path: '/patrolItem',
-              name: 'patrolItem',
-              component: patrolItem,
-            },
-            {
-              path: '/InspectionSite',
-              name: 'InspectionSite',
-              component: InspectionSite,
-            },
-            {
-              path: '/InspectionRoute',
-              name: 'InspectionRoute',
-              component: InspectionRoute,
-            },
-            {
-              path: '/PatrolPlan',
-              name: 'PatrolPlan',
-              component: PatrolPlan,
-            },
-          ]
-        },
-        
-        {
-          path: '/Statistics',
-          name: 'Statistics',
-          component: Statistics,
-        },
-        {
-          path: '/todayPatrolPlan',
-          name: 'todayPatrolPlan',
-          component: todayPatrolPlan,
-        },
-        {
-          path: '/historyPatrolRecord',
-          name: 'historyPatrolRecord',
-          component: historyPatrolRecord,
-        },
-        {
-          path: '/Record',
-          name: 'Record',
-          component: Record,
-        },
-        {
-          path: '/AppUpgrade',
-          name: 'AppUpgrade',
-          component: AppUpgrade,
-        },
-        {
-          path: '/loading2',
-          name: 'loading2',
-          component: loading2,
-        },
-      ]
-    }
-  ]
+	routes: [
+		{
+			path: '/',
+			name: 'login',
+			component: login
+		},
+		{
+			path: '/index',
+			name: 'index',
+			component: index
+		},
+		{
+			path: '/lamppost',
+			name: 'lamppost',
+			component: lamppost,
+			children: [
+				{
+					path: '/Refresh',
+					name: 'Refresh',
+					component: Refresh
+				},
+				{
+					path: '/equipment',
+					name: 'equipment',
+					component: equipment,
+					children: [
+						{
+							path: '/solinLampManage',
+							name: 'solinLampManage',
+							component: solinLampManage,
+						},
+						{
+							path: '/program',
+							name: 'program',
+							component: program,
+						},
+						{
+							path: '/programSimple',
+							name: 'programSimple',
+							component: programSimple
+						},
+						{
+							path: '/programSenior',
+							name: 'programSenior',
+							component: programSenior
+						},
+						{
+							path: '/solinScreenManage',
+							name: 'solinScreenManage',
+							component: solinScreenManage,
+						},
+						{
+							path: '/solinEnvManage',
+							name: 'solinEnvManage',
+							component: solinEnvManage,
+						},
+						{
+							path: '/historicalData',
+							name: 'historicalData',
+							component: historicalData,
+						},
+						{
+							path: '/solinLoraSensorsManage',
+							name: 'solinLoraSensorsManage',
+							component: solinLoraSensorsManage,
+						},
+						{
+							path: '/loading',
+							name: 'loading',
+							component: loading,
+						},
+						{
+							path: '/solinRelayManage',
+							name: 'solinRelayManage',
+							component: solinRelayManage,
+						},
+						{
+							path: '/scene',
+							name: 'scene',
+							component: scene,
+						},
+						{
+							path: '/solinCameraManage',
+							name: 'solinCameraManage',
+							component: solinCameraManage,
+						},
+						{
+							path: '/solinIlluminanceManage',
+							name: 'solinIlluminanceManage',
+							component: solinIlluminanceManage,
+						},
+						{
+							path: '/solinSceneryControllerManage',
+							name: 'solinSceneryControllerManage',
+							component: solinSceneryControllerManage,
+						},
+						{
+							path: '/SceneryHistory',
+							name: 'SceneryHistory',
+							component: SceneryHistory,
+						},
+					]
+				},
+				{
+					path: '/deploy',
+					name: 'deploy',
+					component: deploy,
+					children: [
+						{
+							path: '/solinConcentratorDeploy',
+							name: 'solinConcentratorDeploy',
+							component: solinConcentratorDeploy,
+						},
+						{
+							path: '/solinPoleDeploy',
+							name: 'solinPoleDeploy',
+							component: solinPoleDeploy,
+						},
+						{
+							path: '/solinLampDeploy',
+							name: 'solinLampDeploy',
+							component: solinLampDeploy,
+						},
+						{
+							path: '/solinScreenDeploy',
+							name: 'solinScreenDeploy',
+							component: solinScreenDeploy,
+						},
+						{
+							path: '/solinEnvDeploy',
+							name: 'solinEnvDeploy',
+							component: solinEnvDeploy,
+						},
+						{
+							path: '/solinLoraSensorsDeploy',
+							name: 'solinLoraSensorsDeploy',
+							component: solinLoraSensorsDeploy,
+						},
+						{
+							path: '/solinRelayDeploy',
+							name: 'solinRelayDeploy',
+							component: solinRelayDeploy,
+						},
+						{
+							path: '/solinCameraDeploy',
+							name: 'solinCameraDeploy',
+							component: solinCameraDeploy,
+						},
+						{
+							path: '/solinIlluminance',
+							name: 'solinIlluminance',
+							component: solinIlluminance,
+						},
+						{
+							path: '/solinSceneryControllerDeploy',
+							name: 'solinSceneryControllerDeploy',
+							component: solinSceneryControllerDeploy,
+						},
+					]
+				},
+				{
+					path: '/DeviceLog',
+					name: 'DeviceLog',
+					component: DeviceLog,
+					children: [
+						{
+							path: '/solinPoleLog',
+							name: 'solinPoleLog',
+							component: solinPoleLog,
+						},
+						{
+							path: '/solinLampLog',
+							name: 'solinLampLog',
+							component: solinLampLog,
+						},
+						{
+							path: '/solinScreenLog',
+							name: 'solinScreenLog',
+							component: solinScreenLog,
+						},
+						{
+							path: '/solinEnvLog',
+							name: 'solinEnvLog',
+							component: solinEnvLog,
+						},
+						{
+							path: '/solinLoraSensorsLog',
+							name: 'solinLoraSensorsLog',
+							component: solinLoraSensorsLog,
+						},
+						{
+							path: '/solinRelayLog',
+							name: 'solinRelayLog',
+							component: solinRelayLog,
+						},
+						{
+							path: '/solinConcentratorLog',
+							name: 'solinConcentratorLog',
+							component: solinConcentratorLog,
+						},
+						{
+							path: '/loadingLog',
+							name: 'loadingLog',
+							component: loadingLog,
+						},
+						{
+							path: '/solinCameraLog',
+							name: 'solinCameraLog',
+							component: solinCameraLog,
+						},
+						{
+							path: '/solinIlluminanceLog',
+							name: 'solinIlluminanceLog',
+							component: solinIlluminanceLog,
+						},
+						{
+							path: '/solinSceneryControllerLog',
+							name: 'solinSceneryControllerLog',
+							component: solinSceneryControllerLog,
+						},
+					]
+				},
+				{
+					path: '/TheTaskPage',
+					name: 'TheTaskPage',
+					component: TheTaskPage,
+					children:[
+						{
+							path: '/mediaLibrary',
+							name: 'mediaLibrary',
+							component: mediaLibrary
+						},
+						{
+							path: '/ProgramList',
+							name: 'ProgramList',
+							component: ProgramList
+						},
+						{
+							path: '/taskManage',
+							name: 'taskManage',
+							component: taskManage
+						},
+					]
+				},
+				{
+					path: '/Programming',
+					name: 'Programming',
+					component: Programming
+				},
+			]
+		},
+		{
+			path: '/userCenter',
+			name: 'userCenter',
+			component: userCenter,
+			children: [
+				{
+					path: '/managementUser',
+					name: 'managementUser',
+					component: managementUser,
+				},
+				{
+					path: '/managementOrg',
+					name: 'managementOrg',
+					component: managementOrg,
+				},
+				{
+					path: '/managementProject',
+					name: 'managementProject',
+					component: managementProject,
+				},
+				{
+					path: '/managementLog',
+					name: 'managementLog',
+					component: managementLog,
+				}
+			]
+		},
+		{
+			path: '/mapHomg',
+			name: 'mapHomg',
+			component: mapHomg,
+			children: [
+				{
+					path: '/',
+					name: 'GIS',
+					component: GIS,
+				},
+				{
+					path: '/SingleLamp',
+					name: 'SingleLamp',
+					component: SingleLamp,
+				},
+				{
+					path: '/Camera',
+					name: 'Camera',
+					component: Camera,
+				},
+				{
+					path: '/LED',
+					name: 'LED',
+					component: LED,
+				},
+				{
+					path: '/SceneryMap',
+					name: 'SceneryMap',
+					component: SceneryMap,
+				},
+			]
+		},
+		{
+			path: '/GISdetails',
+			name: 'GISdetails',
+			component: GISdetails,
+		},
+		{
+			path: '/SceneryDetails',
+			name: 'SceneryDetails',
+			component: SceneryDetails,
+		},
+		{
+			path: '/Inspection',
+			name: 'Inspection',
+			component: Inspection,
+			children: [
+				{
+					path: '/',
+					name: 'UserSettings',
+					component: UserSettings,
+				},
+				{
+					path: '/UserSettings',
+					name: 'UserSettings',
+					component: UserSettings,
+				},
+				{
+					path: '/task',
+					name: 'task',
+					component: task,
+					children: [
+						{
+							path: '/patrolItem',
+							name: 'patrolItem',
+							component: patrolItem,
+						},
+						{
+							path: '/InspectionSite',
+							name: 'InspectionSite',
+							component: InspectionSite,
+						},
+						{
+							path: '/InspectionRoute',
+							name: 'InspectionRoute',
+							component: InspectionRoute,
+						},
+						{
+							path: '/PatrolPlan',
+							name: 'PatrolPlan',
+							component: PatrolPlan,
+						},
+					]
+				},
+
+				{
+					path: '/Statistics',
+					name: 'Statistics',
+					component: Statistics,
+				},
+				{
+					path: '/todayPatrolPlan',
+					name: 'todayPatrolPlan',
+					component: todayPatrolPlan,
+				},
+				{
+					path: '/historyPatrolRecord',
+					name: 'historyPatrolRecord',
+					component: historyPatrolRecord,
+				},
+				{
+					path: '/Record',
+					name: 'Record',
+					component: Record,
+				},
+				{
+					path: '/AppUpgrade',
+					name: 'AppUpgrade',
+					component: AppUpgrade,
+				},
+				{
+					path: '/loading2',
+					name: 'loading2',
+					component: loading2,
+				},
+			]
+		}
+	]
 })

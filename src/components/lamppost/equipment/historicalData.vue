@@ -60,6 +60,7 @@
                         prop="noiseAverage"
                         align='center'
                         label="噪声"
+                        :formatter="formatRole"
                         min-width="80">
                         </el-table-column>
                         <el-table-column

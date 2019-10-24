@@ -1,7 +1,7 @@
 <template>
-    <div class="chargingpile">
+    <div class="section">
         <!-- 灯具 -->
-        <div class="chargingpile_top">
+        <div class="section_top">
             <el-button v-if="JurisdictionS.addLamp" @click="addchargingpile(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="JurisdictionS.editLamp" @click="addchargingpile(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="JurisdictionS.delLamp" @click="deletechargingpile" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
@@ -44,101 +44,99 @@
                 </div>
             </div>
         </div>
-        <div class="chargingpile_bottom">
-            <div class="chargingpile_bottom_bottom">
-                <el-table
-                    :data="tableData"
-                    @row-click="clickRow" 
-                    ref="moviesTable"
-                    border
-                    stripe
-                    size='small'
-                    slot="empty"
-                    tooltip-effect="dark"
-                    @selection-change="SelectionChange"
-                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                    <el-table-column
-                    type="selection"
-                    align='center'
-                    width="55">
-                    </el-table-column>
-                    <el-table-column
-                    prop="nickName"
-                    align='center'
-                    label="名称"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="serialNumber"
-                    align='center'
-                    label="序列号"
-                    :formatter="formatRole"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="状态"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.online=='0'">离线</span>
-                            <span v-if="scope.row.online=='1'">在线</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="modelName"
-                    align='center'
-                    label="型号"
-                    :formatter="formatRole"
-                    min-width="100">
-                    </el-table-column>
-                    <el-table-column
-                    prop="lampNumber"
-                    align='center'
-                    label="灯具编号"
-                    :formatter="formatRole"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="poleName"
-                    align='center'
-                    label="灯杆"
-                    :formatter="formatRole"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="concentratorName"
-                    align='center'
-                    label="集中器"
-                    :formatter="formatRole"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="remark"
-                    label="备注"
-                    :formatter="formatRole"
-                    align='center'
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="createTime"
-                    align='center'
-                    label="创建时间"
-                    :formatter="formatRole"
-                    xshow-overflow-tooltip>
-                    </el-table-column>
-                </el-table>
-                <div class="block">
-                    <el-pagination
-                    background
-                    @size-change="sizechange"
-                    @current-change="currentchange"
-                    :current-page="pageIndex"
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-                    </el-pagination>
-                </div>
+        <div class="section_bottom">
+            <el-table
+                :data="tableData"
+                @row-click="clickRow" 
+                ref="moviesTable"
+                border
+                stripe
+                size='small'
+                slot="empty"
+                tooltip-effect="dark"
+                @selection-change="SelectionChange"
+                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                <el-table-column
+                type="selection"
+                align='center'
+                width="55">
+                </el-table-column>
+                <el-table-column
+                prop="nickName"
+                align='center'
+                label="名称"
+                min-width="80">
+                </el-table-column>
+                <el-table-column
+                prop="serialNumber"
+                align='center'
+                label="序列号"
+                :formatter="formatRole"
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="状态"
+                min-width="80">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.online=='0'">离线</span>
+                        <span v-if="scope.row.online=='1'">在线</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                prop="modelName"
+                align='center'
+                label="型号"
+                :formatter="formatRole"
+                min-width="100">
+                </el-table-column>
+                <el-table-column
+                prop="lampNumber"
+                align='center'
+                label="灯具编号"
+                :formatter="formatRole"
+                min-width="80">
+                </el-table-column>
+                <el-table-column
+                prop="poleName"
+                align='center'
+                label="灯杆"
+                :formatter="formatRole"
+                min-width="80">
+                </el-table-column>
+                <el-table-column
+                prop="concentratorName"
+                align='center'
+                label="集中器"
+                :formatter="formatRole"
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                prop="remark"
+                label="备注"
+                :formatter="formatRole"
+                align='center'
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                prop="createTime"
+                align='center'
+                label="创建时间"
+                :formatter="formatRole"
+                min-width="150">
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                background
+                @size-change="sizechange"
+                @current-change="currentchange"
+                :current-page="pageIndex"
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+                </el-pagination>
             </div>
         </div>
         <!-- 添加编辑模态框 -->
@@ -1314,27 +1312,5 @@ export default {
 }
 </script>
 <style scoped>
-.Required{color: red;font-size: 17px;}
-.chargingpile{width: 100%;height: 100%;}
-.chargingpile>div{width: 100%;position: absolute;}
-.chargingpile_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.chargingpile_top>button,.chargingpile_top>div{height:33px;margin:8px 0 0 10px;}
-.chargingpile_bottom{top: 46px;border: 1px solid #E4E4F1;bottom: 0;overflow: auto;}
-.chargingpile_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
-.block{text-align: center;}
 
-.form-group{display:flex;justify-content: center;}
-.form-group>label{width: 95px;line-height: 34px;text-align: center;}
-.form-group>input{width: 195px;}
-.mappoint{font-size: 24px;position: absolute;right: 110px;cursor: pointer;}
-.modal_body_table>div{margin-bottom: 10px;border: 1px solid #E4E4F1;padding: 5px;text-align: center;}
-
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
-
-.map_Z{margin: 0;padding: 0;position: relative;}
-.map_Z>div:nth-of-type(1){width: 100%;height: 30px;line-height: 30px;}
-.map_Z>div:nth-of-type(2){width: 100%;position: absolute;top: 30px;bottom: 30px;}
-.map_Z>div:nth-of-type(3){width: 100%;height: 30px;line-height: 30px;position: absolute;bottom: 1px;text-align: center;}
 </style>

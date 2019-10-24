@@ -1,13 +1,13 @@
 <template>
     <!-- 风光 -->
-    <div class="Scenery">
-        <div class="Scenery_top">
+    <div class="section">
+        <div class="section_top">
             <el-dropdown trigger='click'>
                 <el-button type="primary" size='small' style="width:115px;">
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-if="JurisdictionS.viewSceneryControllerStatus" @click.native="details">获取数据</el-dropdown-item>
+                    <el-dropdown-item v-if="JurisdictionS.viewSceneryControllerStatus" @click.native="details">查询最新数据</el-dropdown-item>
                     <el-dropdown-item @click.native="SceneryHistory">历史数据</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -25,7 +25,9 @@
                         <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='2'">
-                        <el-input v-model="windSolarNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+                        <el-input type="number" v-model="windSolarNumber" size="small" placeholder="请输入地址" style="width:200px;"></el-input>
+                        <!-- <el-input-number v-model="windSolarNumber" size="small" :precision="0" :min="1" :max="253" label="请输入地址" style="width:200px;"></el-input-number> -->
+                        <!-- <el-input v-model="windSolarNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input> -->
                     </template>
                     <template v-if="type=='3'">
                         <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
@@ -43,7 +45,7 @@
                 </div>
             </div>
         </div>
-        <div class="Scenery_bottom">
+        <div class="section_bottom">
             <el-table
                 :data="tableData"
                 @row-click="clickRow" 
@@ -121,7 +123,7 @@
                 prop="timestamp"
                 align='center'
                 label="采集时间"
-                show-overflow-tooltip>
+                min-width="150">
                 </el-table-column>
             </el-table>
             <div class="block">
@@ -205,7 +207,7 @@ export default {
                 type:'post',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/windSolarSensors/control/status',
+                url:that.serverurl+'/v1/solin/sensor/wind-solar/control/status',
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify({
                     command:'1',
@@ -228,9 +230,9 @@ export default {
         },
         //历史数据
         SceneryHistory(){
-            if(this.site.length==0){
+            if(this.site.length==0||this.site.length>=2){
                 this.$message({
-                    message: '请选择风光控制器进行查询!',
+                    message: '请选择单个风光控制器进行查询!',
                     type: 'warning'
                 });
                 return;
@@ -255,7 +257,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/windSolarSensors/device',
+                url:that.serverurl+'/v1/solin/sensor/wind-solar',
                 contentType:'application/json;charset=UTF-8',
                 data:data,
                 success:function(data){
@@ -308,13 +310,5 @@ export default {
 }
 </script>
 <style scoped>
-.block{text-align: center;}
-.Scenery{width: 100%;height: 100%;}
-.Scenery>div{width: 100%;border: 1px solid #E4E4F1;position: absolute;}
-.Scenery_top{height: 46px;border-bottom: none !important;display: flex;align-items: center;font-size: 16px;padding-left: 20px;}
-.Scenery_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;}
 
-.search{display: flex;align-items: center;margin-left: 10px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
 </style>

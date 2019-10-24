@@ -1,7 +1,7 @@
 <template>
     <!-- lora传感器 -->
-    <div class="loraQuery">
-        <div class="loraQuery_top">
+    <div class="section">
+        <div class="section_top">
             <el-dropdown v-if="type=='0'" trigger='click'>
                 <el-button type="primary" size='small' style="width:115px;">
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -32,336 +32,334 @@
                 </div>
             </div>
         </div>
-        <div class="loraQuery_bottom" v-if="type=='0'">
-            <div class="loraQuery_bottom_bottom">
-                <el-table
-                    :data="tableData"
-                    @row-click="clickRow" 
-                    ref="moviesTable"
-                    border
-                    stripe
-                    size='small'
-                    tooltip-effect="dark"
-                    @selection-change="SelectionChange"
-                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+        <div class="section_bottom" v-if="type=='0'">
+            <el-table
+                :data="tableData"
+                @row-click="clickRow" 
+                ref="moviesTable"
+                border
+                stripe
+                size='small'
+                tooltip-effect="dark"
+                @selection-change="SelectionChange"
+                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                <el-table-column
+                type="selection"
+                align='center'
+                width="55">
+                </el-table-column>
+                <el-table-column
+                prop="nickName"
+                align='center'
+                label="名称"
+                :formatter="formatRole"
+                min-width="100">
+                </el-table-column>
+                <el-table-column
+                prop="serialNumber"
+                align='center'
+                label="序列号"
+                :formatter="formatRole"
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                prop="modelName"
+                label="型号"
+                :formatter="formatRole"
+                min-width="100">
+                </el-table-column>
+                <template v-if="menuId3=='64'">
                     <el-table-column
-                    type="selection"
+                    prop="equipmentAlarmDesc"
                     align='center'
-                    width="55">
-                    </el-table-column>
-                    <el-table-column
-                    prop="nickName"
-                    align='center'
-                    label="名称"
-                    :formatter="formatRole"
-                    min-width="100">
-                    </el-table-column>
-                    <el-table-column
-                    prop="serialNumber"
-                    align='center'
-                    label="序列号"
-                    :formatter="formatRole"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    prop="modelName"
-                    label="型号"
-                    :formatter="formatRole"
-                    min-width="100">
-                    </el-table-column>
-                    <template v-if="menuId3=='64'">
-                        <el-table-column
-                        prop="equipmentAlarmDesc"
-                        align='center'
-                        label="设备状态"
-                        min-width="120"
-                        :formatter="formatRole">
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="告警状态"
-                        min-width="80"
-                        :formatter="formatRole">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                                <span v-else-if="scope.row.businessAlarmType=='1'">火灾告警</span>
-                                <span v-else>----</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="voltage"
-                        align='center'
-                        label="电压值"
-                        min-width="80"
-                        :formatter="formatRole">
-                        </el-table-column>
-                        <el-table-column
-                        prop="temperature"
-                        align='center'
-                        label="底座温度值"
-                        min-width="80"
-                        :formatter="formatRole">
-                        </el-table-column>
-                    </template>
-                    <template v-if="menuId3=='65'">
-                        <el-table-column
-                        prop="equipmentAlarmDesc"
-                        align='center'
-                        label="设备状态"
-                        min-width="120"
-                        :formatter="formatRole">
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="告警状态"
-                        min-width="80"
-                        :formatter="formatRole">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                                <span v-else-if="scope.row.businessAlarmType=='1'">告警</span>
-                                <span v-else>----</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="temperature"
-                        align='center'
-                        label="温度℃/湿度%"
-                        min-width="100"
-                        :formatter="formatRole">
-                            <template slot-scope="scope">
-                                <template v-if="scope.row.temperature==null">
-                                    --
-                                </template>
-                                <template v-if="scope.row.temperature!=null">
-                                    {{scope.row.temperature}}
-                                </template>/
-                                <template v-if="scope.row.humidity==null">
-                                    --
-                                </template>
-                                <template v-if="scope.row.humidity!=null">
-                                    {{scope.row.humidity}}
-                                </template>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="voltage"
-                        align='center'
-                        label="电压值V"
-                        min-width="80"
-                        :formatter="formatRole">
-                        </el-table-column>
-                    </template>
-                    <template v-if="menuId3=='66'">
-                        <el-table-column
-                        prop="equipmentAlarmDesc"
-                        align='center'
-                        label="设备状态"
-                        min-width="120"
-                        :formatter="formatRole">
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="告警状态"
-                        min-width="80"
-                        :formatter="formatRole">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                                <span v-else-if="scope.row.businessAlarmType=='1'">车位空</span>
-                                <span v-else-if="scope.row.businessAlarmType=='2'">车位被占</span>
-                                <span v-else>----</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="batteryLevel"
-                        align='center'
-                        label="电压值V"
-                        min-width="80"
-                        :formatter="formatRole">
-                        </el-table-column>
-                    </template>
-                    <template v-if="menuId3=='67'">
-                        <el-table-column
-                        prop="equipmentAlarmDesc"
-                        align='center'
-                        label="设备状态"
-                        min-width="120"
-                        :formatter="formatRole">
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="告警状态"
-                        min-width="80"
-                        :formatter="formatRole">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                                <span v-else-if="scope.row.businessAlarmType=='1'">井盖异常</span>
-                                <span v-else-if="scope.row.businessAlarmType=='2'">水位异常</span>
-                                <span v-else-if="scope.row.businessAlarmType=='3'">井盖，水位异常</span>
-                                <span v-else>----</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="voltage"
-                        align='center'
-                        label="电压值V"
-                        min-width="80"
-                        :formatter="formatRole">
-                        </el-table-column>
-                    </template>
-                    <template v-if="menuId3=='68'">
-                        <el-table-column
-                        prop="equipmentAlarmDesc"
-                        align='center'
-                        label="设备状态"
-                        min-width="120"
-                        :formatter="formatRole">
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="告警状态"
-                        min-width="80"
-                        :formatter="formatRole">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                                <span v-else-if="scope.row.businessAlarmType=='1'">压力过低</span>
-                                <span v-else-if="scope.row.businessAlarmType=='2'">压力过高</span>
-                                <span v-else>----</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="battery"
-                        align='center'
-                        label="电压值V"
-                        min-width="80"
-                        :formatter="formatRole">
-                        </el-table-column>
-                        <el-table-column
-                        prop="pressure"
-                        align='center'
-                        label="水压mpa"
-                        :formatter="formatRole"
-                        min-width="80">
-                        </el-table-column>
-                    </template>
-                    <template v-if="menuId3=='69'">
-                        <el-table-column
-                        prop="equipmentAlarmDesc"
-                        align='center'
-                        label="设备状态"
-                        min-width="120"
-                        :formatter="formatRole">
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="告警状态"
-                        min-width="80"
-                        :formatter="formatRole">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                                <span v-else-if="scope.row.businessAlarmType=='1'">门磁告警</span>
-                                <span v-else>----</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="voltage"
-                        align='center'
-                        label="电压值V"
-                        min-width="80"
-                        :formatter="formatRole">
-                        </el-table-column>
-                    </template>
-                    <template v-if="menuId3=='70'">
-                        <el-table-column
-                        prop="equipmentAlarmDesc"
-                        align='center'
-                        label="设备状态"
-                        min-width="120"
-                        :formatter="formatRole">
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="告警状态"
-                        min-width="80"
-                        :formatter="formatRole">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                                <span v-else-if="scope.row.businessAlarmType=='1'">障碍物告警</span>
-                                <span v-else>----</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="voltage"
-                        align='center'
-                        label="电压值V"
-                        min-width="80"
-                        :formatter="formatRole">
-                        </el-table-column>
-                        <el-table-column
-                        prop="distance"
-                        align='center'
-                        label="距离m"
-                        :formatter="formatRole"
-                        min-width="80">
-                        </el-table-column>
-                    </template>
-                    <template v-if="menuId3=='117'">
-                        <el-table-column
-                        prop="equipmentAlarmDesc"
-                        align='center'
-                        label="设备状态"
-                        min-width="120"
-                        :formatter="formatRole">
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="告警状态"
-                        min-width="80"
-                        :formatter="formatRole">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                                <span v-else-if="scope.row.businessAlarmType=='1'">水位告警</span>
-                                <span v-else>----</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="voltage"
-                        align='center'
-                        label="电压值V"
-                        min-width="80"
-                        :formatter="formatRole">
-                        </el-table-column>
-                        <el-table-column
-                        prop="waterLevel"
-                        align='center'
-                        label="水深M"
-                        min-width="80"
-                        :formatter="formatRole">
-                        </el-table-column>
-                    </template>
-                    <el-table-column
-                    prop="timestamp"
-                    label="采集时间"
-                    align='center'
+                    label="设备状态"
                     min-width="120"
                     :formatter="formatRole">
                     </el-table-column>
-                </el-table>
-                <div class="block">
-                    <el-pagination
-                    background
-                    @size-change="sizechange"
-                    @current-change="currentchange"
-                    :current-page="pageIndex"
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-                    </el-pagination>
-                </div>
+                    <el-table-column
+                    align='center'
+                    label="告警状态"
+                    min-width="80"
+                    :formatter="formatRole">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.businessAlarmType=='0'">正常</span>
+                            <span v-else-if="scope.row.businessAlarmType=='1'">火灾告警</span>
+                            <span v-else>----</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="voltage"
+                    align='center'
+                    label="电压值"
+                    min-width="80"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    prop="temperature"
+                    align='center'
+                    label="底座温度值"
+                    min-width="80"
+                    :formatter="formatRole">
+                    </el-table-column>
+                </template>
+                <template v-if="menuId3=='65'">
+                    <el-table-column
+                    prop="equipmentAlarmDesc"
+                    align='center'
+                    label="设备状态"
+                    min-width="120"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    align='center'
+                    label="告警状态"
+                    min-width="80"
+                    :formatter="formatRole">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.businessAlarmType=='0'">正常</span>
+                            <span v-else-if="scope.row.businessAlarmType=='1'">告警</span>
+                            <span v-else>----</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="temperature"
+                    align='center'
+                    label="温度℃/湿度%"
+                    min-width="100"
+                    :formatter="formatRole">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.temperature==null">
+                                --
+                            </template>
+                            <template v-if="scope.row.temperature!=null">
+                                {{scope.row.temperature}}
+                            </template>/
+                            <template v-if="scope.row.humidity==null">
+                                --
+                            </template>
+                            <template v-if="scope.row.humidity!=null">
+                                {{scope.row.humidity}}
+                            </template>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="voltage"
+                    align='center'
+                    label="电压值V"
+                    min-width="80"
+                    :formatter="formatRole">
+                    </el-table-column>
+                </template>
+                <template v-if="menuId3=='66'">
+                    <el-table-column
+                    prop="equipmentAlarmDesc"
+                    align='center'
+                    label="设备状态"
+                    min-width="120"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    align='center'
+                    label="告警状态"
+                    min-width="80"
+                    :formatter="formatRole">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.businessAlarmType=='0'">正常</span>
+                            <span v-else-if="scope.row.businessAlarmType=='1'">车位空</span>
+                            <span v-else-if="scope.row.businessAlarmType=='2'">车位被占</span>
+                            <span v-else>----</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="batteryLevel"
+                    align='center'
+                    label="电压值V"
+                    min-width="80"
+                    :formatter="formatRole">
+                    </el-table-column>
+                </template>
+                <template v-if="menuId3=='67'">
+                    <el-table-column
+                    prop="equipmentAlarmDesc"
+                    align='center'
+                    label="设备状态"
+                    min-width="120"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    align='center'
+                    label="告警状态"
+                    min-width="80"
+                    :formatter="formatRole">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.businessAlarmType=='0'">正常</span>
+                            <span v-else-if="scope.row.businessAlarmType=='1'">井盖异常</span>
+                            <span v-else-if="scope.row.businessAlarmType=='2'">水位异常</span>
+                            <span v-else-if="scope.row.businessAlarmType=='3'">井盖，水位异常</span>
+                            <span v-else>----</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="voltage"
+                    align='center'
+                    label="电压值V"
+                    min-width="80"
+                    :formatter="formatRole">
+                    </el-table-column>
+                </template>
+                <template v-if="menuId3=='68'">
+                    <el-table-column
+                    prop="equipmentAlarmDesc"
+                    align='center'
+                    label="设备状态"
+                    min-width="120"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    align='center'
+                    label="告警状态"
+                    min-width="80"
+                    :formatter="formatRole">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.businessAlarmType=='0'">正常</span>
+                            <span v-else-if="scope.row.businessAlarmType=='1'">压力过低</span>
+                            <span v-else-if="scope.row.businessAlarmType=='2'">压力过高</span>
+                            <span v-else>----</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="battery"
+                    align='center'
+                    label="电压值V"
+                    min-width="80"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    prop="pressure"
+                    align='center'
+                    label="水压mpa"
+                    :formatter="formatRole"
+                    min-width="80">
+                    </el-table-column>
+                </template>
+                <template v-if="menuId3=='69'">
+                    <el-table-column
+                    prop="equipmentAlarmDesc"
+                    align='center'
+                    label="设备状态"
+                    min-width="120"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    align='center'
+                    label="告警状态"
+                    min-width="80"
+                    :formatter="formatRole">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.businessAlarmType=='0'">关闭</span>
+                            <span v-else-if="scope.row.businessAlarmType=='1'">打开</span>
+                            <span v-else>----</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="voltage"
+                    align='center'
+                    label="电压值V"
+                    min-width="80"
+                    :formatter="formatRole">
+                    </el-table-column>
+                </template>
+                <template v-if="menuId3=='70'">
+                    <el-table-column
+                    prop="equipmentAlarmDesc"
+                    align='center'
+                    label="设备状态"
+                    min-width="120"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    align='center'
+                    label="告警状态"
+                    min-width="80"
+                    :formatter="formatRole">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.businessAlarmType=='0'">正常</span>
+                            <span v-else-if="scope.row.businessAlarmType=='1'">障碍物告警</span>
+                            <span v-else>----</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="voltage"
+                    align='center'
+                    label="电压值V"
+                    min-width="80"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    prop="distance"
+                    align='center'
+                    label="距离m"
+                    :formatter="formatRole"
+                    min-width="80">
+                    </el-table-column>
+                </template>
+                <template v-if="menuId3=='117'">
+                    <el-table-column
+                    prop="equipmentAlarmDesc"
+                    align='center'
+                    label="设备状态"
+                    min-width="120"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    align='center'
+                    label="告警状态"
+                    min-width="80"
+                    :formatter="formatRole">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.businessAlarmType=='0'">正常</span>
+                            <span v-else-if="scope.row.businessAlarmType=='1'">水位告警</span>
+                            <span v-else>----</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="voltage"
+                    align='center'
+                    label="电压值V"
+                    min-width="80"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    prop="waterLevel"
+                    align='center'
+                    label="水深M"
+                    min-width="80"
+                    :formatter="formatRole">
+                    </el-table-column>
+                </template>
+                <el-table-column
+                prop="collectTime"
+                label="采集时间"
+                align='center'
+                min-width="150"
+                :formatter="formatRole">
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                background
+                @size-change="sizechange"
+                @current-change="currentchange"
+                :current-page="pageIndex"
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+                </el-pagination>
             </div>
         </div>
-        <div class="loraQuery_bottom" v-if="type=='1'">
+        <div class="section_bottom" v-if="type=='1'">
             <el-table
                 :data="tableData2"
                 border
@@ -583,8 +581,8 @@
                     min-width="80"
                     :formatter="formatRole">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.businessAlarmType=='0'">正常</span>
-                            <span v-else-if="scope.row.businessAlarmType=='1'">门磁告警</span>
+                            <span v-if="scope.row.businessAlarmType=='0'">关闭</span>
+                            <span v-else-if="scope.row.businessAlarmType=='1'">打开</span>
                             <span v-else>----</span>
                         </template>
                     </el-table-column>
@@ -665,10 +663,10 @@
                     </el-table-column>
                 </template>
                 <el-table-column
-                prop="timestamp"
+                prop="collectTime"
                 label="采集时间"
                 align='center'
-                min-width="120"
+                min-width="150"
                 :formatter="formatRole">
                 </el-table-column>
             </el-table>
@@ -839,13 +837,5 @@ export default {
 }
 </script>
 <style scoped>
-.loraQuery{width: 100%;height: 100%;}
-.loraQuery>div{width: 100%;border: 1px solid #E4E4F1;position: absolute;}
-.loraQuery_top{height: 46px;border-bottom: none !important;display: flex;align-items: center;font-size: 16px;padding-left: 20px;}
-.loraQuery_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;}
-.loraQuery_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
-.block{text-align: center;}
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
+
 </style>

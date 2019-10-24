@@ -1,105 +1,110 @@
 <template>
     <!-- 场景管理 -->
-    <div class="scene">
-        <div class="scene_top">
+    <div class="section">
+        <div class="section_top">
             <el-button @click="sceneOperation(0)" type="primary" icon='el-icon-plus' size='small'>添加场景</el-button>
             <el-button @click="sceneOperation(1)" type="primary" icon="el-icon-edit" size='small'>编辑场景</el-button>
             <el-button @click="sceneOperation(2)" type="primary" icon='el-icon-delete' size='small'>删除场景</el-button>
             <el-button @click="backtrack" type="success" plain icon='el-icon-arrow-left' size='small' style="position:absolute;right:10px;">返回</el-button>
-        </div>
-        <div class="scene_bottom">
-            <!-- <div class="scene_bottom_top">
-                <div class="search">
-                    <label style="width:90px;">场景名字:</label>
-                    <input v-model="nickName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入场景名字">
+            <div class="search">
+                <el-dropdown size="small" split-button>
+                    {{name}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="name='场景名称';types='1';">场景名称</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>
+                    <template v-if="types=='1'">
+                        <el-input v-model="nickName" size="small" placeholder="请输入场景名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                    </template>
                 </div>
-                <div style="margin-left:15px;">
+                <div>
                     <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                 </div>
-            </div> -->
-            <div class="scene_bottom_bottom">
-                <el-table
-                    :data="tableData"
-                    @row-click="clickRow" 
-                    ref="moviesTable"
-                    border
-                    stripe
-                    size='small'
-                    tooltip-effect="dark"
-                    @selection-change="SelectionChange"
-                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                    <el-table-column
-                    type="selection"
-                    align='center'
-                    width="55">
-                    </el-table-column>
-                    <el-table-column
-                    prop="nickName"
-                    align='center'
-                    label="场景名称"
-                    :formatter="formatRole"
-                    min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    prop="concentratorSn"
-                    align='center'
-                    :formatter="formatRole"
-                    label="集中器序列号"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="relayCount"
-                    align='center'
-                    :formatter="formatRole"
-                    label="包含继电器数量"
-                    min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="下发状态"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.sendStatus=='0'">未下发</span>
-                            <span v-if="scope.row.sendStatus=='1'">已下发</span>
+            </div>
+        </div>
+        <div class="section_bottom">
+            <el-table
+                :data="tableData"
+                @row-click="clickRow" 
+                ref="moviesTable"
+                border
+                stripe
+                size='small'
+                tooltip-effect="dark"
+                @selection-change="SelectionChange"
+                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                <el-table-column
+                type="selection"
+                align='center'
+                width="55">
+                </el-table-column>
+                <el-table-column
+                prop="nickName"
+                align='center'
+                label="场景名称"
+                :formatter="formatRole"
+                min-width="110">
+                </el-table-column>
+                <el-table-column
+                prop="concentratorSn"
+                align='center'
+                :formatter="formatRole"
+                label="集中器序列号"
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                prop="relayCount"
+                align='center'
+                :formatter="formatRole"
+                label="包含继电器数量"
+                min-width="110">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="下发状态"
+                min-width="80">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.sendStatus=='0'">未下发</span>
+                        <span v-if="scope.row.sendStatus=='1'">已下发</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                prop="createTime"
+                align='center'
+                :formatter="formatRole"
+                label="创建时间"
+                min-width="110">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="操作"
+                :formatter="formatRole"
+                min-width="170"
+                show-overflow-tooltip>
+                    <template slot-scope="scope">
+                        <el-button @click="details(scope.row.id)" type="primary" size='mini'>详情</el-button>
+                        <el-button @click="Lowerhair(scope.row.id)" type="primary" size='mini'>下发</el-button>
+                        <template v-if="scope.row.status=='0'">
+                            <el-button @click="status(scope.row.id,scope.row.status)" type="primary" size='mini'>启用</el-button>
                         </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="createTime"
-                    align='center'
-                    :formatter="formatRole"
-                    label="创建时间"
-                    min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="操作"
-                    :formatter="formatRole"
-                    min-width="170"
-                    show-overflow-tooltip>
-                        <template slot-scope="scope">
-                            <el-button @click="details(scope.row.id)" type="primary" size='mini'>详情</el-button>
-                            <el-button @click="Lowerhair(scope.row.id)" type="primary" size='mini'>下发</el-button>
-                            <template v-if="scope.row.status=='0'">
-                                <el-button @click="status(scope.row.id,scope.row.status)" type="primary" size='mini'>启用</el-button>
-                            </template>
-                            <template v-if="scope.row.status=='1'">
-                                <el-button @click="status(scope.row.id,scope.row.status)" type="danger" size='mini'>禁用</el-button>
-                            </template>
+                        <template v-if="scope.row.status=='1'">
+                            <el-button @click="status(scope.row.id,scope.row.status)" type="danger" size='mini'>禁用</el-button>
                         </template>
-                    </el-table-column>
-                </el-table>
-                <div class="block">
-                    <el-pagination
-                    background
-                    @size-change="sizechange"
-                    @current-change="currentchange"
-                    :current-page="pageIndex"
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-                    </el-pagination>
-                </div>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                background
+                @size-change="sizechange"
+                @current-change="currentchange"
+                :current-page="pageIndex"
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+                </el-pagination>
             </div>
         </div>
         <!-- 添加场景 -->
@@ -508,6 +513,8 @@ export default {
     name: 'scene',
     data () {
         return {
+            name:'场景名称',
+            types:'1',
             serverurl:localStorage.serverurl, 
             tableData:[],
             site:[],
@@ -1021,20 +1028,6 @@ export default {
 }
 </script>
 <style scoped>
-.Required{color: red;font-size: 17px;}
-.scene{width: 100%;height: 100%;}
-.scene>div{width: 100%;position: absolute;}
-.scene_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.scene_top>button{height:33px;margin:8px 0 0 10px;}
-.scene_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
-.scene_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.scene_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
-
-.search{display: flex;}
-.search>label{width: 60px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
-.block{text-align: center;}
-
 .sceneDataTop{display: flex;}
 .sceneDataTop>span{display: inline-block;padding-top:8px;}
 .sceneDataCenter{width: 100%;max-height: 150px;border: 1px solid #E4E4F1;margin-top:10px;overflow: auto;}

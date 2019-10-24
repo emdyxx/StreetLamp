@@ -1,9 +1,9 @@
 <template>
-    <div class="equipments">
-        <div class="equipment_left">
+    <div class="CommonStyle">
+        <div class="CommonStyle_left">
             <div id="jstree"></div>
         </div>
-        <div class="equipment_right">
+        <div class="CommonStyle_right">
             <router-view></router-view>
         </div>
     </div>
@@ -239,7 +239,5 @@ export default {
 }
 </script>
 <style scoped>
-.equipments{width: 100%;height: 100%;padding: 5px;}
-.equipment_left{width: 200px;height: 100%;border: 1px solid #E4E4F1;overflow: auto;}
-.equipment_right{position: absolute;left: 210px;right: 5px;top:5px;bottom:5px;}
+
 </style>

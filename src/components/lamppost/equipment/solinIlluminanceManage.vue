@@ -1,9 +1,9 @@
 <template>
     <!-- 光照度 -->
-    <div class="IlluminanceManage">
-        <div class="IlluminanceManage_top">
-            <el-dropdown v-if="JurisdictionS.controlIlluminance" style="margin-left:10px;"> 
-                <el-button type="primary" size='small' style="margin-top:8px;margin-left:5px;">
+    <div class="section">
+        <div class="section_top">
+            <el-dropdown v-if="JurisdictionS.controlIlluminance"> 
+                <el-button type="primary" size='small'>
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown"> 
@@ -24,7 +24,9 @@
                         <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='2'">
-                        <el-input v-model="lightNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+                        <el-input type="number" v-model="lightNumber" size="small" placeholder="请输入地址" style="width:200px;"></el-input>
+                        <!-- <el-input-number v-model="lightNumber" size="small" :precision="0" :min="1" :max="253" label="请输入地址" style="width:200px;"></el-input-number> -->
+                        <!-- <el-input v-model="lightNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input> -->
                     </template>
                     <template v-if="type=='3'">
                         <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
@@ -42,7 +44,7 @@
                 </div>
             </div>
         </div>
-        <div class="IlluminanceManage_bottom">
+        <div class="section_bottom">
             <el-table
                 :data="tableData"
                 @row-click="clickRow" 
@@ -105,7 +107,7 @@
                 align='center'
                 label="采集时间"
                 :formatter="formatRole"
-                xshow-overflow-tooltip>
+                min-width="150">
                 </el-table-column>
             </el-table>
             <div class="block">
@@ -192,7 +194,7 @@ export default {
                 type:'post',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/lightSensors/control/status',
+                url:that.serverurl+'/v1/solin/sensor/lightness/control/status',
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify({
                     command:'1',
@@ -220,7 +222,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/lightSensors/device',
+                url:that.serverurl+'/v1/solin/sensor/lightness',
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     page:that.pageIndex,
@@ -281,15 +283,5 @@ export default {
 }
 </script>
 <style scoped>
-.Required{color: red;font-size: 17px;}
-.IlluminanceManage{width: 100%;height: 100%;}
-.IlluminanceManage>div{width: 100%;position: absolute;}
-.IlluminanceManage_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.IlluminanceManage_top>button,.solinIlluminance_top>div{height:33px;margin:8px 0 0 10px;}
-.IlluminanceManage_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
-.block{text-align: center;}
 
-.search{display: flex;align-items: center;margin-left: 10px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
 </style>

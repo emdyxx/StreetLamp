@@ -1,7 +1,7 @@
 <template>
     <!-- 今日巡检计划 -->
-    <div class="todayPatrolPlans">
-        <div class="todayPatrolPlan_top">
+    <div class="section">
+        <div class="section_top">
             <div class="search">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{name}}
@@ -23,7 +23,7 @@
                 </div>
             </div>
         </div>
-        <div class="todayPatrolPlan_bottom">
+        <div class="section_bottom">
             <el-table
                 :data="tableData"
                 row-key="id"
@@ -141,141 +141,6 @@
                 </el-pagination>
             </div>
         </div>
-        <!-- <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card" style="height:100%;">
-            <el-tab-pane label="今日任务" name="0"  style="height: 100%;position:relative;">
-                <div class="todayPatrolPlan_top">
-                    <div>
-                        <span>计划名称:</span>
-                        <input type="text" v-model="planName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入计划名称">
-                    </div>
-                    <div>
-                        <span>巡检员:</span>
-                        <input type="text" v-model="inspectorName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入巡检员">
-                    </div>
-                    <div style="margin-left:15px;">
-                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                    </div>
-                </div>
-                <div class="todayPatrolPlan_bottom">
-                    <el-table
-                        :data="tableData"
-                        row-key="id"
-                        border
-                        stripe
-                        size='small'
-                        :expand-row-keys="expands"
-                        tooltip-effect="dark"
-                        style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;"
-                        @expand-change='clickTable'>
-                        <el-table-column type="expand">
-                            <template slot-scope="props">
-                                <el-table
-                                :data='tableData2'
-                                border
-                                size='mini'
-                                style="width: 100%;">
-                                    <el-table-column
-                                    prop="siteName"
-                                    align='center'
-                                    label="点名称"
-                                    min-width="50">
-                                    </el-table-column>
-                                    <el-table-column
-                                    prop="siteNumber"
-                                    label="点编号"
-                                    align='center'>
-                                    </el-table-column>
-                                    <el-table-column
-                                    align='center'
-                                    label="点状态"
-                                    min-width="50">
-                                        <template slot-scope="scope">
-                                            <span v-if="scope.row.siteStatus=='1'" style="color:#67C23A;">正常</span>
-                                            <span v-if="scope.row.siteStatus=='2'" style="color:#F56C6C;">异常</span>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column
-                                    align='center'
-                                    label="执行状态"
-                                    min-width="50">
-                                        <template slot-scope="scope">
-                                            <span v-if="scope.row.siteExecuteStatus=='0'" style="color:#F56C6C;">未执行</span>
-                                            <span v-if="scope.row.siteExecuteStatus=='1'" style="color:#67C23A;">已执行</span>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column
-                                    prop="updateTime"
-                                    label="上报时间"
-                                    align='center'>
-                                    </el-table-column>
-                                    <el-table-column
-                                    align='center'
-                                    label="操作"
-                                    min-width="50">
-                                        <template slot-scope="scope">
-                                            <el-button @click="details(scope.row)" :disabled="scope.row.siteExecuteStatus=='0'" type="primary" size='mini'>详情</el-button>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-                                <div class="block">
-                                    <el-pagination
-                                    background
-                                    @size-change="sizechange2"
-                                    @current-change="currentchange2"
-                                    :current-page="pageIndex2"
-                                    :page-sizes="[10, 20, 30, 50]"
-                                    :page-size="pageSize2"
-                                    layout="total, sizes, prev, pager, next, jumper"
-                                    :total="total2">
-                                    </el-pagination>
-                                </div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="planName"
-                        align='center'
-                        label="计划名称"
-                        min-width="180">
-                        </el-table-column>
-                        <el-table-column
-                        prop="routeName"
-                        align='center'
-                        label="巡检路线"
-                        min-width="180">
-                        </el-table-column>
-                        <el-table-column
-                        prop="inspectorName"
-                        align='center'
-                        label="巡检员"
-                        min-width="180">
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="状态"
-                        min-width="80"
-                        show-overflow-tooltip>
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.executeStatus=='1'">未开始</span>
-                                <span v-if="scope.row.executeStatus=='2'">进行中</span>
-                                <span v-if="scope.row.executeStatus=='3'">已结束</span>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                    <div class="block">
-                        <el-pagination
-                        background
-                        @size-change="sizechange"
-                        @current-change="currentchange"
-                        :current-page="pageIndex"
-                        :page-sizes="[10, 20, 30, 50]"
-                        :page-size="pageSize"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="total">
-                        </el-pagination>
-                    </div>
-                </div>
-            </el-tab-pane>
-        </el-tabs> -->
         <!-- 巡检点详情 -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -468,14 +333,7 @@ export default {
 }
 </script>
 <style scoped>
-.block{text-align: center;}
-.todayPatrolPlans{width: 100%;height: 100%;}
-.todayPatrolPlans>div{width: 100%;position: absolute;}
-.todayPatrolPlan_top{height: 46px;border-bottom: none !important;display: flex;border: 1px solid #E4E4F1;}
-.todayPatrolPlan_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
-.search{display: flex;align-items: center;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
+
 </style>
 
 <style>

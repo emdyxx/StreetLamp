@@ -1,7 +1,7 @@
 <template>
     <!-- 风光传感器 -->
-    <div class="SceneryDeploy">
-        <div class="SceneryDeploy_top">
+    <div class="section">
+        <div class="section_top">
             <el-button @click="operation(0)" v-if="JurisdictionS.addSceneryController" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button @click="operation(1)" v-if="JurisdictionS.editSceneryController" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button @click="operation(2)" v-if="JurisdictionS.delSceneryController" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
@@ -19,7 +19,9 @@
                         <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='2'">
-                        <el-input v-model="windSolarNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+                        <el-input type="number" v-model="windSolarNumber" size="small" placeholder="请输入地址" style="width:200px;"></el-input>
+                        <!-- <el-input-number v-model="windSolarNumber" size="small" :precision="0" :min="1" :max="253" label="请输入地址" style="width:200px;"></el-input-number> -->
+                        <!-- <el-input v-model="windSolarNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input> -->
                     </template>
                     <template v-if="type=='3'">
                         <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
@@ -37,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <div class="SceneryDeploy_bottom">
+        <div class="section_bottom">
             <el-table
                 :data="tableData"
                 @row-click="clickRow" 
@@ -104,7 +106,7 @@
                 prop="createTime"
                 align='center'
                 label="创建时间"
-                show-overflow-tooltip>
+                min-width="150">
                 </el-table-column>
             </el-table>
             <div class="block">
@@ -137,7 +139,7 @@
                         <div class="form-group">
                             <label><span class="Required">*</span>地址:</label>
                             <!-- <input type="text" v-model="data.serialNumber" id="serialNumber" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号"> -->
-                            <el-input-number v-model.lazy="data.windSolarNumber" :min="1" :max="253" size="small" style="width:196px;" label="地址"></el-input-number>
+                            <el-input-number v-model.lazy="data.windSolarNumber" :precision="0" :min="1" :max="253" size="small" style="width:196px;" label="地址"></el-input-number>
                         </div>
                         <div class="form-group">
                             <label><span class="Required">*</span>型号:</label>
@@ -404,7 +406,7 @@ export default {
                         type:'post',
                         async:true,
                         dataType:'json',
-                        url:that.serverurl+'/v1/solin/windSolarSensors/device/deletes',
+                        url:that.serverurl+'/v1/solin/sensor/wind-solar/deletes',
                         contentType:'application/json;charset=UTF-8',
                         data:JSON.stringify({
                             windSolars:arr
@@ -464,7 +466,7 @@ export default {
                 type:type,
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/windSolarSensors/device',
+                url:that.serverurl+'/v1/solin/sensor/wind-solar',
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify(data),
                 success:function(data){
@@ -497,7 +499,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/windSolarSensors/device',
+                url:that.serverurl+'/v1/solin/sensor/wind-solar',
                 contentType:'application/json;charset=UTF-8',
                 data:data,
                 success:function(data){
@@ -623,7 +625,7 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/windSolarSensors/model',
+                url:that.serverurl+'/v1/solin/sensor/wind-solar/model',
                 contentType:'application/json;charset=UTF-8',
                 data:{},
                 success:function(data){
@@ -712,23 +714,5 @@ export default {
 }
 </script>
 <style scoped>
-.Required{color: red;font-size: 17px;}
-.SceneryDeploy{width: 100%;height: 100%;}
-.SceneryDeploy>div{width: 100%;}
-.SceneryDeploy_top{height: 46px;display: flex;border: 1px solid #E4E4F1;border-bottom: none !important;}
-.SceneryDeploy_top>button,.SceneryDeploy_top>div{height:33px;margin:6px 0 0 10px;}
-.SceneryDeploy_bottom{position: absolute;top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
-.block{text-align: center;}
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
-.form-group{display:flex;justify-content: center;}
-.form-group>label{width: 105px;line-height: 34px;text-align: center;}
-.form-group>input{width: 195px;}
-.mappoint{font-size: 24px;position: absolute;right: 110px;cursor: pointer;}
 
-.map_Z{margin: 0;padding: 0;position: relative;}
-.map_Z>div:nth-of-type(1){width: 100%;height: 30px;line-height: 30px;}
-.map_Z>div:nth-of-type(2){width: 100%;position: absolute;top: 30px;bottom: 30px;}
-.map_Z>div:nth-of-type(3){width: 100%;height: 30px;line-height: 30px;position: absolute;bottom: 1px;text-align: center;}
 </style>

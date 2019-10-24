@@ -25,13 +25,6 @@ function myScript(Left,a,b,c){
 
 
 
-
-
-
-
-
-
-
 export {
     time,
     myScript

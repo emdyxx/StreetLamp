@@ -1,7 +1,7 @@
 <template>
     <!-- 巡检计划 -->
-    <div class="PatrolPlan">
-        <div class="PatrolPlan_top">
+    <div class="section">
+        <div class="section_top">
             <el-button v-if="JurisdictionS.addPatrolPlan" @click="PatrolPlan(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="JurisdictionS.editPatrolPlan" @click="PatrolPlan(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="JurisdictionS.delPatrolPlan" @click="PatrolPlan(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
@@ -22,70 +22,59 @@
                 </div>
             </div>
         </div>
-        <div class="PatrolPlan_bottom">
-            <!-- <div class="PatrolPlan_bottom_top">
-                <div class="search">
-                    <label>计划名称:</label>
-                    <input v-model="planName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入巡检计划名称">
-                </div>
-                <div style="margin-left:15px;">
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div> -->
-            <div class="PatrolPlan_bottom_bottom">
-                <el-table
-                    :data="tableData"
-                    @row-click="clickRow" 
-                    ref="moviesTable"
-                    border
-                    stripe
-                    size='small'
-                    tooltip-effect="dark"
-                    @selection-change="SelectionChange"
-                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                    <el-table-column
-                    type="selection"
-                    align='center'
-                    width="55">
-                    </el-table-column>
-                    <el-table-column
-                    prop="planName"
-                    align='center'
-                    label="计划名称"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="routeName"
-                    align='center'
-                    label="巡检路线"
-                    min-width="150">
-                    </el-table-column>
-                    <el-table-column
-                    prop="inspectorName"
-                    align='center'
-                    label="巡检员"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="createTime"
-                    label="创建时间"
-                    align='center'
-                    min-width="180"
-                    show-overflow-tooltip>
-                    </el-table-column>
-                </el-table>
-                <div class="block">
-                    <el-pagination
-                    background
-                    @size-change="sizechange"
-                    @current-change="currentchange"
-                    :current-page="pageIndex"
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-                    </el-pagination>
-                </div>
+        <div class="section_bottom">
+            <el-table
+                :data="tableData"
+                @row-click="clickRow" 
+                ref="moviesTable"
+                border
+                stripe
+                size='small'
+                tooltip-effect="dark"
+                @selection-change="SelectionChange"
+                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                <el-table-column
+                type="selection"
+                align='center'
+                width="55">
+                </el-table-column>
+                <el-table-column
+                prop="planName"
+                align='center'
+                label="计划名称"
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                prop="routeName"
+                align='center'
+                label="巡检路线"
+                min-width="150">
+                </el-table-column>
+                <el-table-column
+                prop="inspectorName"
+                align='center'
+                label="巡检员"
+                min-width="80">
+                </el-table-column>
+                <el-table-column
+                prop="createTime"
+                label="创建时间"
+                align='center'
+                min-width="180"
+                show-overflow-tooltip>
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                background
+                @size-change="sizechange"
+                @current-change="currentchange"
+                :current-page="pageIndex"
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+                </el-pagination>
             </div>
         </div>
         <!-- 添加  编辑  模态框 -->
@@ -901,25 +890,7 @@ export default {
 }
 </script>
 <style scoped> 
-.block{text-align: center;}
-.PatrolPlan{width: 100%;height: 100%;}
-.PatrolPlan>div{width: 100%;position: absolute;}
-.PatrolPlan_top{height: 46px;border-bottom: none !important;display: flex;border: 1px solid #E4E4F1;}
-.PatrolPlan_top>button{height:33px;margin:6px 0 0 10px;}
-.PatrolPlan_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
-/* .PatrolPlan_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;} */
-.PatrolPlan_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
-.search{display: flex;}
-.search>label{width: 70px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
-.Required{color: red;font-size: 17px;}
-.form-group{display:flex;justify-content: center;}
-.form-group>label{width: 115px;line-height: 34px;text-align: center;}
+.form-group>label{width: 115px;}
 .form-group>input{width: 156px;}
 .form-group>div{width: 156px;display: flex;justify-content: center;align-items: center;}
-.form-group>div>label,.form-group_s>div>label{margin-left:10px !important;}
-
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
 </style>

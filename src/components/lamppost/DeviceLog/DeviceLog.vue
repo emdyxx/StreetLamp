@@ -1,9 +1,9 @@
 <template>
-    <div class="DeviceLog">
-        <div class="DeviceLog_left">
+    <div class="CommonStyle">
+        <div class="CommonStyle_left">
             <div id="jstree"></div>
         </div>
-        <div class="DeviceLog_right">
+        <div class="CommonStyle_right">
             <router-view></router-view>
         </div>
     </div>
@@ -314,7 +314,5 @@ export default {
 }
 </script>
 <style scoped>
-.DeviceLog{width: 100%;height: 100%;}
-.DeviceLog_left{width: 200px;height: 100%;border: 1px solid #E4E4F1;}
-.DeviceLog_right{position: absolute;left: 210px;right: 5px;top:5px;bottom:5px;}
+
 </style>

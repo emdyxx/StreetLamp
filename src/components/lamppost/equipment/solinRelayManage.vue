@@ -1,9 +1,9 @@
 <template>
     <!-- 继电器管理 -->
-    <div class="Relay">
-        <div class="Relay_top">
-            <el-dropdown v-if="JurisdictionS.relayControl" style="margin-left:10px;" @command='operation'> 
-                <el-button type="primary" size='small' style="margin-top:8px;margin-left:5px;">
+    <div class="section">
+        <div class="section_top">
+            <el-dropdown v-if="JurisdictionS.relayControl" @command='operation'> 
+                <el-button type="primary" size='small'>
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown"> 
@@ -27,7 +27,9 @@
                         <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='2'">
-                        <el-input v-model="relayNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+                        <el-input type="number" v-model="relayNumber" size="small" placeholder="请输入地址" style="width:200px;"></el-input>
+                        <!-- <el-input-number v-model="relayNumber" size="small" :precision="0" :min="1" :max="253" label="请输入地址" style="width:200px;"></el-input-number> -->
+                        <!-- <el-input v-model="relayNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input> -->
                     </template>
                     <template v-if="type=='3'">
                         <el-select v-model="value" clearable placeholder="请选择" size='small'>
@@ -45,97 +47,95 @@
                 </div>
             </div>
         </div>
-        <div class="Relay_bottom">
-            <div class="Relay_bottom_bototm">
-                <el-table
-                    :data="tableData"
-                    @row-click="clickRow" 
-                    ref="moviesTable"
-                    border
-                    stripe
-                    size='small'
-                    tooltip-effect="dark"
-                    @selection-change="SelectionChange"
-                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                    <el-table-column
-                    type="selection"
-                    align='center'
-                    width="55">
-                    </el-table-column>
-                    <el-table-column
-                    prop="nickName"
-                    align='center'
-                    label="名称"
-                    :formatter="formatRole"
-                    min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    prop="concentratorSn"
-                    align='center'
-                    :formatter="formatRole"
-                    label="地址"
-                    min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="在线状态"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.online=='0'">离线</span>
-                            <span v-if="scope.row.online=='1'">在线</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="modelName"
-                    align='center'
-                    label="型号"
-                    :formatter="formatRole"
-                    min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="工作模式"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.pattern=='0'">正常</span>
-                            <span v-if="scope.row.pattern=='1'">联动</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="relaySceneName"
-                    align='center'
-                    :formatter="formatRole"
-                    label="当前场景"
-                    min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="通道状态"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <el-button @click="details(scope.row.id)" type="primary" size='mini'>详情</el-button>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="editTime"
-                    align='center'
-                    label="采集时间"
-                    :formatter="formatRole"
-                    show-overflow-tooltip>
-                    </el-table-column>
-                </el-table>
-                <div class="block">
-                    <el-pagination
-                    background
-                    @size-change="sizechange"
-                    @current-change="currentchange"
-                    :current-page="pageIndex"
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-                    </el-pagination>
-                </div>
+        <div class="section_bottom">
+            <el-table
+                :data="tableData"
+                @row-click="clickRow" 
+                ref="moviesTable"
+                border
+                stripe
+                size='small'
+                tooltip-effect="dark"
+                @selection-change="SelectionChange"
+                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                <el-table-column
+                type="selection"
+                align='center'
+                width="55">
+                </el-table-column>
+                <el-table-column
+                prop="nickName"
+                align='center'
+                label="名称"
+                :formatter="formatRole"
+                min-width="110">
+                </el-table-column>
+                <el-table-column
+                prop="relayNumber"
+                align='center'
+                :formatter="formatRole"
+                label="地址"
+                min-width="110">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="在线状态"
+                min-width="80">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.online=='0'">离线</span>
+                        <span v-if="scope.row.online=='1'">在线</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                prop="modelName"
+                align='center'
+                label="型号"
+                :formatter="formatRole"
+                min-width="110">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="工作模式"
+                min-width="80">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.pattern=='0'">正常</span>
+                        <span v-if="scope.row.pattern=='1'">联动</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                prop="relaySceneName"
+                align='center'
+                :formatter="formatRole"
+                label="当前场景"
+                min-width="110">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="通道状态"
+                min-width="80">
+                    <template slot-scope="scope">
+                        <el-button @click="details(scope.row.id)" type="primary" size='mini'>详情</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                prop="editTime"
+                align='center'
+                label="采集时间"
+                :formatter="formatRole"
+                min-width="150">
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                background
+                @size-change="sizechange"
+                @current-change="currentchange"
+                :current-page="pageIndex"
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+                </el-pagination>
             </div>
         </div>
         <!-- 输出控制模态框 -->
@@ -646,16 +646,5 @@ export default {
 }
 </script>
 <style scoped> 
-.Required{color: red;font-size: 17px;}
-.Relay{width: 100%;height: 100%;}
-.Relay>div{width: 100%;position: absolute;}
-.Relay_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.Relay_top>button{height:33px;margin:8px 0 0 10px;}
-.Relay_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
-.Relay_bottom_bottom{position: absolute;top:46px;bottom: 0;left: 0;right: 0;padding:5px;}
 
-.search{display: flex;align-items: center;margin-left: 10px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
-.block{text-align: center;}
 </style>

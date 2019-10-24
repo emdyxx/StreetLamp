@@ -1,7 +1,7 @@
 <template>
     <!-- 摄像头 -->
-    <div class="SolinCameraDeploy">
-        <div class="solinCameraDeploy_top">
+    <div class="section">
+        <div class="section_top">
             <el-button v-if="JurisdictionS.addCameraDeploy" @click="CameraDeploy(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="JurisdictionS.editCameraDeploy" @click="CameraDeploy(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="JurisdictionS.delCameraDeploy" @click="CameraDeploy(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
@@ -43,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <div class="solinCameraDeploy_bottom">
+        <div class="section_bottom">
             <el-table
                 :data="tableData"
                 @row-click="clickRow" 
@@ -54,7 +54,7 @@
                 slot="empty"
                 tooltip-effect="dark"
                 @selection-change="myModalChange"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;margin-top:10px;">
+                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                 <el-table-column
                 type="selection"
                 align='center'
@@ -113,7 +113,7 @@
                 align='center'
                 label="创建时间"
                 :formatter="formatRole"
-                xshow-overflow-tooltip>
+                min-width="150">
                 </el-table-column>
             </el-table>
             <div class="block">
@@ -153,7 +153,8 @@
                             v-model="data.producerId"
                             size="small"
                             :props='props'
-                            :options="options2">
+                            :options="options2"
+                            style="width:196px;">
                             </el-cascader>
                         </div> 
                         <div class="form-group">
@@ -370,12 +371,12 @@ export default {
             data:{
                 nickName:'',
                 ipAddress:'',
-                producerId:'',
+                producerId:[],
                 username:'',
                 userPwd:'',
                 cameraNumber:'',
                 rtspPort:'554',
-                serverPort:'9005',
+                serverPort:'8000',
                 coord:'',
                 remark:'',
             },
@@ -417,12 +418,12 @@ export default {
                 this.addType='0'
                 this.data.nickName = ''
                 this.data.ipAddress = ''
-                this.data.producerId = ''
+                this.data.producerId = []
                 this.data.username = ''
                 this.data.userPwd = ''
                 this.data.cameraNumber = ''
                 this.data.rtspPort = '554'
-                this.data.serverPort = '9005'
+                this.data.serverPort = '8000'
                 this.data.coord = ''
                 this.data.remark = ''
                 this.referencePosition = ''
@@ -431,9 +432,9 @@ export default {
                 $('#addModal').modal('show')
             }
             if(val=='1'){
-                if(this.site.length==0||this.site[0].length>=2){
+                if(this.site.length==0||this.site.length>=2){
                     this.$message({
-                        message: '请选择摄像头进行编辑!',
+                        message: '请选择单个摄像头进行编辑!',
                         type: 'error'
                     });
                     return;
@@ -507,7 +508,7 @@ export default {
                         that.data.nickName = data.result.camera.nickName
                         that.data.ipAddress = data.result.camera.ipAddress
                         that.data.producerId.push(data.result.camera.producerName)
-                        that.data.producerId.push(data.result.camera.producerId)
+                        that.data.producerId.push(Number(data.result.camera.producerId))
                         that.data.username = data.result.camera.username
                         that.data.userPwd = data.result.camera.userPwd
                         that.data.cameraNumber = data.result.camera.cameraNumber
@@ -517,7 +518,7 @@ export default {
                             that.data.rtspPort = data.result.camera.rtspPort
                         }
                         if(data.result.camera.serverPort==null||data.result.camera.serverPort==''){
-                            that.data.serverPort = '9005'
+                            that.data.serverPort = '8000'
                         }else{
                             that.data.serverPort = data.result.camera.serverPort
                         }
@@ -551,7 +552,7 @@ export default {
             var url = '/v1/solin/camera/device'
             var type = ''
             var data = {}
-            data = that.data
+            data = JSON.parse(JSON.stringify(that.data))
             data.projectId = sessionStorage.projectId
             data.producerId = data.producerId[1]
             if(this.site2.length==0){
@@ -863,25 +864,5 @@ export default {
 }
 </script>
 <style scoped>
-.Required{color: red;font-size: 17px;}
-.SolinCameraDeploy{width: 100%;height: 100%;}
-.SolinCameraDeploy>div{width: 100%;position: absolute;}
-.solinCameraDeploy_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.solinCameraDeploy_top>button,.solinCameraDeploy_top>div{height:33px;margin:8px 0 0 10px;}
-.solinCameraDeploy_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
-.block{text-align: center;}
 
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
-
-.form-group{display:flex;justify-content: center;}
-.form-group>label{width: 105px;line-height: 34px;text-align: center;}
-.form-group>input,.form-group>div{width: 195px;}
-.mappoint{font-size: 24px;position: absolute;right: 70px;cursor: pointer;}
-
-.map_Z{margin: 0;padding: 0;position: relative;}
-.map_Z>div:nth-of-type(1){width: 100%;height: 30px;line-height: 30px;}
-.map_Z>div:nth-of-type(2){width: 100%;position: absolute;top: 30px;bottom: 30px;}
-.map_Z>div:nth-of-type(3){width: 100%;height: 30px;line-height: 30px;position: absolute;bottom: 1px;text-align: center;}
 </style>

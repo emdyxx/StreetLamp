@@ -20,7 +20,7 @@
                             <div class="panel-body" style="max-height:650px;overflow:auto;">
                                 <ul style="list-style:none;padding: 0;">
                                     <li v-for="item in mediatableData" :key=item.id :id=item.id class="programSimple_li">
-                                        <el-button type="danger" icon="el-icon-delete" size='small' style="border-top-right-radius: 0;border-bottom-right-radius: 0;"></el-button>
+                                        <!-- <el-button type="danger" icon="el-icon-delete" size='small' style="border-top-right-radius: 0;border-bottom-right-radius: 0;"></el-button> -->
                                         <span @dragstart="dragstart" draggable="true" :id='item.id' :title=item.nickName>{{item.nickName}}</span>
                                     </li>
                                 </ul>
@@ -47,9 +47,9 @@
                         </div>
                         <div id="collapseTwo" class="panel-collapse collapse">
                             <div class="panel-body" style="max-height:750px;overflow:auto;">
-                                <ul style="list-style:none;">
+                                <ul style="list-style:none;padding: 0;">
                                     <li v-for="item in mediatableData2" :key=item.id :id=item.id class="programSimple_li">
-                                        <el-button type="danger" icon="el-icon-delete" size='small' style="border-top-right-radius: 0;border-bottom-right-radius: 0;"></el-button>
+                                        <!-- <el-button type="danger" icon="el-icon-delete" size='small' style="border-top-right-radius: 0;border-bottom-right-radius: 0;"></el-button> -->
                                         <span @dragstart="dragstart2" draggable="true" :id='item.id' :title=item.nickName>{{item.nickName}}</span>
                                     </li>
                                 </ul>
@@ -978,7 +978,7 @@ export default {
 .programSenior_left_bottom{position: absolute;top: 53px;width:100%;}
 .a_style{text-decoration: none;display: inline-block;width:100%;}
 .programSimple_li{padding-bottom: 10px;position: relative;}
-.programSimple_li>span{position: absolute;width:100px;background:#5bc0de;height:32px;color: white;line-height: 32px;text-align: center;border-top-right-radius:4px;border-bottom-right-radius:4px;cursor: pointer;overflow: hidden;}
+.programSimple_li>span{display:inline-block;width:120px;background:#5bc0de;height:32px;color: white;line-height: 32px;text-align: center;border-radius:4px;cursor: pointer;overflow: hidden;}
 .programSenior_center_top{position: absolute;top: 10px;left: 250px;right:440px;height: 250px;}
 .heading_top{width: 100%;height: 50px;background: #d9edf7;border: 1px solid #bce8f1;border-top-left-radius: 4px;border-top-right-radius: 4px;color: #31708f;font-size: 14px;font-weight: 600;line-height: 45px;padding-left: 15px;}
 .heading_bottom{position: absolute;top: 50px;bottom:0;width:100%;border: 1px solid #bce8f1;border-top: none;}

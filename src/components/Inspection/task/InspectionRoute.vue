@@ -1,7 +1,7 @@
 <template>
     <!-- 巡检路线 -->
-    <div class="InspectionRoute">
-        <div class="InspectionRoute_top">
+    <div class="section">
+        <div class="section_top">
             <el-button v-if="JurisdictionS.addPatrolRoute" @click="InspectionRoute(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="JurisdictionS.editPatrolRoute" @click="InspectionRoute(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="JurisdictionS.delPatrolRoute" @click="InspectionRoute(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <div class="InspectionRoute_bottom">
+        <div class="section_bottom">
             <!-- <div class="UserSettings_bottom_top">
                 <div class="search">
                     <label>路线名称:</label>
@@ -522,20 +522,7 @@ export default {
 }
 </script>
 <style scoped>
-.block{text-align: center;}
-.InspectionRoute{width: 100%;height: 100%;}
-.InspectionRoute>div{width: 100%;position: absolute;}
-.InspectionRoute_top{height: 46px;border-bottom: none !important;display: flex;border: 1px solid #E4E4F1;}
-.InspectionRoute_top>button{height:33px;margin:6px 0 0 10px;}
-.InspectionRoute_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
-/* .UserSettings_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;} */
-.UserSettings_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
-.search{display: flex;}
-.search>label{width: 70px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
-.Required{color: red;font-size: 17px;}
-.form-group{display:flex;justify-content: center;}
-.form-group>label{width: 95px;line-height: 34px;text-align: center;}
+.form-group>label{width: 95px;}
 .form-group>input{width: 156px;}
 .form-group>div{width: 156px;display: flex;justify-content: center;align-items: center;}
 
@@ -543,8 +530,4 @@ export default {
 .spot>div:nth-of-type(1){width: 46%;}
 .spot>div:nth-of-type(2){width: 8%;display: flex;align-items: center;justify-content: center;}
 .spot>div:nth-of-type(3){width: 46%;}
-
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
 </style>

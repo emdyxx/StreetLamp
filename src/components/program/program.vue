@@ -1,12 +1,12 @@
 <template>
-    <div class="program">
-        <div class="program_top">
+    <div class="section">
+        <div class="section_top">
             <el-button v-if="addProgram" @click="program(0)" type="primary" size='small'>创建简易节目</el-button>
             <el-button v-if="addProgram" @click="program(1)" type="primary" size='small'>创建高级节目</el-button>
             <el-button v-if="delProgram" @click="primary_delete" type="primary" size='small'>删除节目</el-button>
             <el-button @click="Backoff" style="position:absolute;right:20px;top:4px;" type="warning" icon="el-icon-arrow-left" size='small'>返回</el-button>
         </div>
-        <div class="program_bottom">
+        <div class="section_bottom">
             <el-table
                 :data="tableData"
                 @row-click="clickRow" 
@@ -93,10 +93,10 @@
                         <h4 class="modal-title" id="myModalLabel">创建节目</h4>
                     </div>
                     <div class="modal-body" style="text-align:center;">
-                        <el-input v-model="width" size='small' maxlength="10" style="width:256px;" oninput="value=value.replace(/[^\d]/g,'')">
+                        <el-input v-model="width" size='small' maxlength="10" style="width:256px;">
                             <template slot="prepend">宽</template>
                         </el-input>
-                        <el-input v-model="height" size='small' maxlength="10" style="width:256px;margin-left:20px;" oninput="value=value.replace(/[^\d]/g,'')">
+                        <el-input v-model="height" size='small' maxlength="10" style="width:256px;margin-left:20px;">
                             <template slot="prepend">高</template>
                         </el-input>
                     </div>
@@ -116,11 +116,11 @@
                         <h4 class="modal-title" id="myModalLabel">创建节目</h4>
                     </div>
                     <div class="modal-body" style="text-align:center;">
-                        <el-input v-model="width" size='small' style="width:256px;" oninput="value=value.replace(/[^\d]/g,'')">
-                            <template slot="prepend" maxlength="10">宽</template>
+                        <el-input v-model="width" size='small' maxlength="10" style="width:256px;">
+                            <template slot="prepend">宽</template>
                         </el-input>
-                        <el-input v-model="height" size='small' style="width:256px;margin-left:20px;" oninput="value=value.replace(/[^\d]/g,'')">
-                            <template slot="prepend" maxlength="10">高</template>
+                        <el-input v-model="height" size='small' maxlength="10" style="width:256px;margin-left:20px;">
+                            <template slot="prepend">高</template>
                         </el-input>
                     </div>
                     <div class="modal-footer">
@@ -247,9 +247,11 @@ export default {
         //点击确定创建简易/高级节目按钮
         SuremyModal(val){
             var that = this;
-            if(that.width==''||that.height==''){
+            console.log(that.width,that.height)
+            var num = /^[+]{0,1}(\d+)$/
+            if(num.test(that.width)==false||num.test(that.height)==false){
                 that.$message({
-                    message: '宽,高不能为空!',
+                    message: '宽,高只能为数值!',
                     type: 'error'
                 });
                 return;
@@ -306,7 +308,7 @@ export default {
         },
         //返回
         Backoff(){
-            this.$router.go(-1)
+            this.$router.push({path:'solinScreenManage'})
         },
         //权限请求
         Jurisdiction(){
@@ -345,8 +347,5 @@ export default {
 }
 </script>
 <style scoped>
-.block{text-align: center;}
-.program{width: 100%;height: 100%;padding: 5px;}
-.program_top{position: relative;width: 100%;height:46px;line-height:38px;padding-left:15px;border: 1px solid #cccccc;border-bottom: none;}
-.program_bottom{position: absolute;top:46px;bottom:5px;left:5px;right:5px;border: 1px solid #cccccc;padding:5px;}
+
 </style>

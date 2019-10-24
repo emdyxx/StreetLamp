@@ -1,7 +1,7 @@
 <template>
-    <div class="concentrator">
+    <div class="section">
         <!-- 集中器模式 -->
-        <div class="concentrator_top">
+        <div class="section_top">
             <el-button v-if="JurisdictionS.addConcentrator" @click="myModalOperation(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="JurisdictionS.editConcentrator" @click="myModalOperation(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="JurisdictionS.delConcentrator" @click="myModalOperation(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
@@ -26,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <div class="concentrator_bottom">
+        <div class="section_bottom">
             <el-table
                 :data="myModaltableData"
                 @row-click="clickRow3" 
@@ -37,7 +37,7 @@
                 slot="empty"
                 tooltip-effect="dark"
                 @selection-change="myModalChange"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;margin-top:10px;">
+                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                 <el-table-column
                 type="selection"
                 align='center'
@@ -361,19 +361,5 @@ export default {
 }
 </script>
 <style scoped>
-.Required{color: red;font-size: 17px;}
-.concentrator{width: 100%;height: 100%;}
-.concentrator>div{width: 100%;position: absolute;}
-.concentrator_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.concentrator_top>button,.concentrator_top>div{height:33px;margin:8px 0 0 10px;}
-.concentrator_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
-.block{text-align: center;}
 
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
-
-.form-group{display:flex;justify-content: center;}
-.form-group>label{width: 105px;line-height: 34px;text-align: center;}
-.form-group>input,.form-group>div{width: 155px;}
 </style>

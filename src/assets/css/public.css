@@ -1,0 +1,64 @@
+
+/* 所有菜单头部(header)css*/
+.OverallSituation{width: 100%;height: 100%;}
+.header{width:100%;height: 60px;background: #212e4e;display: flex;align-items: center;}
+.header>i{font-size: 32px;color: white;cursor: pointer;position: absolute;left: 20px;top:8px;}
+.header>i:hover{color: aquamarine;}
+.header-left{height: 100%;display: inline-block;margin-left: 70px;color: white;font-size: 24px;line-height: 50px;}
+.header-left>i{color: white;font-size: 26px;line-height: 62px;}
+.header-center{height: 100%;margin-left: 25px;display: flex;justify-content: center;align-items: center;}
+.header-center>div{color: white;font-size: 16px;width: 110px;height: 30px;text-align: center;line-height: 30px;border-radius: 8px;cursor: pointer;}
+/* .header-center>div:hover{background: #66b1ff;} */
+.header-center-color{background:white;color: #212e4e !important;}
+.header-right{position: absolute;right: 30px;height: 60px;;display: flex;align-items:center;}
+.header-right>i{color: white;font-size: 34px;cursor: pointer;}
+.header-right>i:hover{color: aquamarine;}
+.footer{width: 100%;position: absolute;top: 60px;bottom: 0;}
+
+/* 左右布局通用css */
+.CommonStyle{width: 100%;height: 100%;padding: 5px;}
+.CommonStyle_left{width: 200px;height: 100%;border: 1px solid #E4E4F1;overflow: auto;}
+.CommonStyle_right{position: absolute;left: 210px;right: 5px;top:5px;bottom:5px;}
+
+/* 系统管理上传图片模块通用css */
+.user_img{text-align: center;position: relative;height: 100px !important;}
+.user_img>label{width: 150px;height: 100px;border: 1px dashed #d9d9d9;border-radius: 6px; cursor: pointer;text-align: center;line-height: 35px;position: relative;}
+.user_img img{width: 100%;height: 100%;position: absolute;left: 0;}
+.user_img>label:hover{border-color: #20a0ff;}
+.user_img>label>input{margin-left: -9999px;}
+.cancel_s{position: absolute;top:-3px;right: 0px;font-size: 20px;}
+.cancel_s:hover{color: #20a0ff;}
+
+/* 所有页面主体上层按钮,检索条件以及数据层css */
+.section{width: 100%;height: 100%;}
+.section>div{position: absolute;width: 100%;}
+.section_top{height: 46px;display: flex;border: 1px solid #E4E4F1;border-bottom: none !important;}
+.section_top>button,.section_top>div{height:33px;margin:6px 0 0 10px;}
+.section_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
+
+/* 弹框内部输入框,必填项,table分页居中 通用css */
+.Required{color: red;font-size: 17px;}
+.block{text-align: center;}
+.form-group{display:flex;justify-content: center;}
+.form-group>label{width: 90px;line-height: 32px;text-align: right;}
+.form-group>input,.form-group>div{width: 196px;height: 32px;}
+.form-group>button{margin-top: 15px;}
+.search{display: flex;align-items: center;margin-left: 50px !important;}
+.search>div,.search_Log>div{margin-left: 5px;}
+.search>input,.search_Log>input,.search_Log>div{width: 146px;}
+/* 日志页面检索css */
+.search_Log{display: flex;align-items: center;margin-left: 15px !important;}
+
+/* 所有地图选点样式 */
+.map_Z{margin: 0;padding: 0;position: relative;}
+.map_Z>div:nth-of-type(1){width: 100%;height: 30px;line-height: 30px;}
+.map_Z>div:nth-of-type(2){width: 100%;position: absolute;top: 30px;bottom: 30px;}
+.map_Z>div:nth-of-type(3){width: 100%;height: 30px;line-height: 30px;position: absolute;bottom: 1px;text-align: center;}
+.mappoint{font-size: 24px;position: absolute;right: 110px;cursor: pointer;}
+
+/* 地图样式 */
+.project_top_left{position: absolute;top: 0;left: 0;width: 100%;height: 48px;background: white;display: flex;align-items: center;z-index: 2;}
+.project_top_left>div{width: 300px;margin-left: 15px;}
+.project_top_left>p{margin: 0;position: absolute;right: 20px;display: flex;align-items: center;}
+.project_top_left>p>span{padding: 0 5px 0 5px;}
+.project_top_left>p img{width: 40px;height: 40px;}

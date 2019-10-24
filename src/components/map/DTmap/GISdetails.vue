@@ -6,7 +6,7 @@
         </div>
         <div class="mapDetails">
             <!-- 单灯 -->
-            <div class="LampPost">
+            <div class="LampPost" v-if="LampType">
                 <p class="title">
                     名称:{{Sdata.Lampname}}
                     <span v-if="Sdata.online0=='1'">
@@ -63,7 +63,7 @@
                 </div>
             </div>
             <!-- 气象站 -->
-            <div class="sensor" v-if="sensorType&&rightType=='1'">
+            <div class="sensor" v-if="sensorType">
                 <p class="title">
                     名称:{{envSensorsVoList[0].nickName}}
                     <span v-if="Sdata.online2=='1'">
@@ -75,7 +75,7 @@
                         离线
                     </span>
                 </p>
-                <div class="section">
+                <div class="sections">
                     <div class="section_top_left" style="border-top:1px solid #192d5d;">
                         <p>
                             <img src="../../../assets/img/sunlight.png" alt="">
@@ -152,7 +152,7 @@
                 </div>
             </div>
             <!-- 广告屏 -->
-            <div class="Screen" v-if="screenType&&rightType=='2'">
+            <div class="Screen" v-if="screenType">
                 <p class="title">
                     名称:{{screenVoList[0].nickName}}
                     <span v-if="Sdata.online3=='1'">
@@ -176,15 +176,15 @@
             <div class="mapIMG">
                 <!-- 灯杆 -->
                 <img src="../../../assets/img/LampPost.png" alt="">
-                <img src="../../../assets/img/d0.png" alt="" style="right:110%;top:30px;">
+                <img v-if="LampType" src="../../../assets/img/d0.png" alt="" style="right:110%;top:30px;">
                 <!-- 广告屏 -->
                 <img v-if="screenType" src="../../../assets/img/AdvertisingScreen.png" alt="" style="top:45%;right:-42px;">
-                <img v-if="screenType&&rightType=='2'" @click="Rendering(2)" src="../../../assets/img/p0.png" alt="" style="left:138%;top:50%;">
-                <img v-if="screenType&&rightType!='2'" @click="Rendering(2)" src="../../../assets/img/p1.png" alt="" style="left:138%;top:50%;">
+                <img v-if="screenType" @click="Rendering(2)" src="../../../assets/img/p0.png" alt="" style="left:138%;top:50%;">
+                <!-- <img v-if="screenType&&rightType!='2'" @click="Rendering(2)" src="../../../assets/img/p1.png" alt="" style="left:70%;top:52%;"> -->
                 <!-- 气象站 -->
                 <img v-if="sensorType" src="../../../assets/img/sensor.png" alt="" style="top:0;right:5px;">
-                <img v-if="sensorType&&rightType=='1'" @click="Rendering(1)" src="../../../assets/img/q0.png" alt="" style="left:100%;top:-20px;">
-                <img v-if="sensorType&&rightType!='1'" @click="Rendering(1)" src="../../../assets/img/q1.png" alt="" style="left:100%;top:-20px;">
+                <img v-if="sensorType" @click="Rendering(1)" src="../../../assets/img/q0.png" alt="" style="left:100%;top:-20px;">
+                <!-- <img v-if="sensorType&&rightType!='1'" @click="Rendering(1)" src="../../../assets/img/q1.png" alt="" style="left:60%;top:7px;"> -->
                 <!-- 摄像头 -->
                 <img v-if="cameraType" src="../../../assets/img/Camera.png" alt="" style="top:45%;right:17px;">  
                 <img v-if="cameraType" src="../../../assets/img/t0.png" alt="" style="right:57%;top:42%;">
@@ -251,17 +251,29 @@ export default {
                 },
                 success:function(data){
                     //灯具
-                    if(data.LampVoList.length==0){
+                    if(data.LampVoList==null||data.LampVoList.length==0){
                         that.LampVoList = []
                         that.LampType = false
                     }else{
+                        if(data.LampVoList[0].brightness==''||data.LampVoList[0].brightness==null){
+                            data.LampVoList[0].brightness=0
+                        }
+                        if(data.LampVoList[0].electricity==''||data.LampVoList[0].electricity==null){
+                            data.LampVoList[0].electricity=0
+                        }
+                        if(data.LampVoList[0].voltage==''||data.LampVoList[0].voltage==null){
+                            data.LampVoList[0].voltage=0
+                        }
+                        if(data.LampVoList[0].power==''||data.LampVoList[0].power==null){
+                            data.LampVoList[0].power=0
+                        }
                         that.LampVoList = data.LampVoList
                         that.LampType = true
                         that.Sdata.Lampname = that.LampVoList[0].nickName
                         that.Sdata.brightness = that.LampVoList[0].brightness
                         that.Sdata.online0 = that.LampVoList[0].online
                         setTimeout(function(){
-                            var brightness_s = (that.LampVoList[0].brightness/10).toFixed(0)
+                            var brightness_s = (data.LampVoList[0].brightness/10).toFixed(0)
                             $('.LampPost_center>span').eq(brightness_s-1).append('<div style="position: absolute;width: 35px;text-align: center;top: -20px;">'+that.Sdata.brightness+'%</div>')
                             var myChart = that.$echarts.init(document.getElementById('myChart'))
                             myChart.setOption({
@@ -333,7 +345,7 @@ export default {
                                                 fontSize: 16,
                                             }
                                         },
-                                        data:[{value: that.LampVoList[0].electricity*1000, name: '电流/mA'}]
+                                        data:[{value: data.LampVoList[0].electricity*1000, name: '电流/mA'}]
                                     },
                                     {
                                         name:'电压',
@@ -408,7 +420,7 @@ export default {
                                                 fontSize: 18,
                                             }
                                         },
-                                        data:[{value: that.LampVoList[0].voltage, name: '电压/V'}]
+                                        data:[{value: data.LampVoList[0].voltage, name: '电压/V'}]
                                     },
                                     {
                                         name:'功率',
@@ -483,14 +495,14 @@ export default {
                                                 fontSize: 18,
                                             }
                                         },
-                                        data:[{value: that.LampVoList[0].power, name: '功率/W'}]
+                                        data:[{value: data.LampVoList[0].power, name: '功率/W'}]
                                     },
                                 ]
                             })
                         },100)
                     }
                     //摄像头
-                    if(data.cameraVoList.length==0){
+                    if(data.cameraVoList==null||data.cameraVoList.length==0){
                         that.LampVoList = []
                         that.cameraType = false
                     }else{
@@ -544,7 +556,7 @@ export default {
                         },100)
                     }
                     //气象站
-                    if(data.envSensorsVoList.length==0){
+                    if(data.envSensorsVoList==null||data.envSensorsVoList.length==0){
                         that.LampVoList = []
                         that.sensorType = false
                         that.rightType = ''
@@ -555,7 +567,7 @@ export default {
                         that.rightType = '1'
                     }
                     //屏幕
-                    if(data.screenVoList.length==0){
+                    if(data.screenVoList==null||data.screenVoList.length==0){
                         that.screenVoList = []
                         that.screenType = false
                     }else{
@@ -567,7 +579,9 @@ export default {
                         }
                     }
                     setTimeout(function(){
-                        that.Rendering(that.rightType)
+                        // that.Rendering(that.rightType)
+                        that.Rendering('1')
+                        that.Rendering('2')
                     },100)
                 }
             })
@@ -732,85 +746,86 @@ export default {
                     },20)
                 }
                 //气压
-                if(that.envSensorsVoList[0].pressure!=null){
-                    var pressure = that.envSensorsVoList[0].pressure.split('.')[0]
-                    setTimeout(function(){
-                        var myChart3 = that.$echarts.init(document.getElementById('pressure_div'))
-                        myChart3.setOption({
-                            series : [
-                                {
-                                    name:'气压',
-                                    type:'gauge',
-                                    min:600,
-                                    max:2080,
-                                    splitNumber:2,
-                                    radius: '80%',
-                                    axisLine: {            // 坐标轴线
-                                        lineStyle: {       // 属性lineStyle控制线条样式
-                                            color: [[0.09, 'lime'],[0.82, '#1e90ff'],[1, '#ff4500']],
-                                            width: 3,
-                                            shadowColor : '#fff', //默认透明
-                                            shadowBlur: 5
-                                        }
-                                    },
-                                    axisLabel: {            // 坐标轴小标记
-                                        textStyle: {       // 属性lineStyle控制线条样式
-                                            fontWeight: 'bolder',
-                                            color: '#fff',
-                                            shadowColor : '#fff', //默认透明
-                                            shadowBlur: 5
-                                        }
-                                    },
-                                    axisTick: {            // 坐标轴小标记
-                                        length :10,        // 属性length控制线长
-                                        lineStyle: {       // 属性lineStyle控制线条样式
-                                            color: 'auto',
-                                            shadowColor : '#fff', //默认透明
-                                            shadowBlur: 5
-                                        }
-                                    },
-                                    splitLine: {           // 分隔线
-                                        length :15,         // 属性length控制线长
-                                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
-                                            width:3,
-                                            color: '#fff',
-                                            shadowColor : '#fff', //默认透明
-                                            shadowBlur: 5
-                                        }
-                                    },
-                                    pointer: {           // 分隔线
+                if(that.envSensorsVoList[0].pressure==null||that.envSensorsVoList[0].pressure==''){
+                    that.envSensorsVoList[0].pressure = '0'
+                }
+                var pressure = that.envSensorsVoList[0].pressure.split('.')[0]
+                setTimeout(function(){
+                    var myChart3 = that.$echarts.init(document.getElementById('pressure_div'))
+                    myChart3.setOption({
+                        series : [
+                            {
+                                name:'气压',
+                                type:'gauge',
+                                min:600,
+                                max:2080,
+                                splitNumber:2,
+                                radius: '80%',
+                                axisLine: {            // 坐标轴线
+                                    lineStyle: {       // 属性lineStyle控制线条样式
+                                        color: [[0.09, 'lime'],[0.82, '#1e90ff'],[1, '#ff4500']],
+                                        width: 3,
                                         shadowColor : '#fff', //默认透明
                                         shadowBlur: 5
-                                    },
-                                    title : {
-                                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                                            fontWeight: 'bolder',
-                                            fontSize: 12,
-                                            fontStyle: 'italic',
-                                            color: '#fff',
-                                            shadowColor : '#fff', //默认透明
-                                            shadowBlur: 5
-                                        }
-                                    },
-                                    detail : {
-                                        backgroundColor: 'rgba(30,144,255,0.8)',
-                                        borderWidth: 1,
-                                        borderColor: '#fff',
+                                    }
+                                },
+                                axisLabel: {            // 坐标轴小标记
+                                    textStyle: {       // 属性lineStyle控制线条样式
+                                        fontWeight: 'bolder',
+                                        color: '#fff',
                                         shadowColor : '#fff', //默认透明
-                                        shadowBlur: 5,
-                                        offsetCenter: [0, '85%'],       // x, y，单位px
-                                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                                            fontWeight: 'bolder',
-                                            color: '#fff',
-                                            fontSize: 16,
-                                        }
-                                    },
-                                    data:[{value: pressure, name: '气压/H'}]
-                                }
-                            ]
-                        })
-                    },20)
-                }
+                                        shadowBlur: 5
+                                    }
+                                },
+                                axisTick: {            // 坐标轴小标记
+                                    length :10,        // 属性length控制线长
+                                    lineStyle: {       // 属性lineStyle控制线条样式
+                                        color: 'auto',
+                                        shadowColor : '#fff', //默认透明
+                                        shadowBlur: 5
+                                    }
+                                },
+                                splitLine: {           // 分隔线
+                                    length :15,         // 属性length控制线长
+                                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                                        width:3,
+                                        color: '#fff',
+                                        shadowColor : '#fff', //默认透明
+                                        shadowBlur: 5
+                                    }
+                                },
+                                pointer: {           // 分隔线
+                                    shadowColor : '#fff', //默认透明
+                                    shadowBlur: 5
+                                },
+                                title : {
+                                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                                        fontWeight: 'bolder',
+                                        fontSize: 12,
+                                        fontStyle: 'italic',
+                                        color: '#fff',
+                                        shadowColor : '#fff', //默认透明
+                                        shadowBlur: 5
+                                    }
+                                },
+                                detail : {
+                                    backgroundColor: 'rgba(30,144,255,0.8)',
+                                    borderWidth: 1,
+                                    borderColor: '#fff',
+                                    shadowColor : '#fff', //默认透明
+                                    shadowBlur: 5,
+                                    offsetCenter: [0, '85%'],       // x, y，单位px
+                                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                                        fontWeight: 'bolder',
+                                        color: '#fff',
+                                        fontSize: 16,
+                                    }
+                                },
+                                data:[{value: pressure, name: '气压/H'}]
+                            }
+                        ]
+                    })
+                },20)
             }
             if(val=='2'){
                 if(that.screenVoList[0].online=='0'){
@@ -904,41 +919,41 @@ export default {
 .backtrack{font-size: 34px;cursor: pointer;padding-top: 5px;}
 .mapDetails{position: relative;display: flex;width: 500px;justify-content: center;margin-left: 70px;}
 .mapDetails div{color: white;}
-.title{margin: 0;padding: 20px 0 20px 15px;font-size: 20px;position: relative;}
+.title{margin: 0;padding: 10px 0 10px 15px;font-size: 20px;position: relative;}
 .title>span{position: absolute;right: 20px;}
-.LampPost{position: absolute;left:0;top:0;margin-left: -570px;width: 550px;box-shadow: 0 0 3px white;background: rgba(0,0,0,0.3);}
+.LampPost{position: absolute;top:0;margin-left: -540px;width: 550px;box-shadow: 0 0 3px white;background: rgba(0,0,0,0.3);}
 .LampPost>div{width: 100%;}
-.LampPost_center{position:relative;padding:40px 30px 20px 30px;text-align: center;border-top: 1px solid #1a2c59;border-bottom: 1px solid #1a2c59;}
+.LampPost_center{position:relative;padding:20px 30px 10px 30px;text-align: center;border-top: 1px solid #1a2c59;border-bottom: 1px solid #1a2c59;}
 .LampPost_center>span{display: inline-block;width: 35px;height: 20px;margin-right: 5px;position: relative;}
-.LampPost_center>p{margin:0;font-size: 18px;position: absolute;right: 20px;top: 37px;}
+.LampPost_center>p{margin:0;font-size: 18px;position: absolute;right: 20px;top: 17px;}
 .brightness{position: absolute;width: 35px;text-align: center;top: -20px;}
-.LampPost_bottom{height: 210px;padding: 20px 30px 20px 30px}
+.LampPost_bottom{height: 180px;padding: 10px 30px 10px 30px}
 .LampPost_bottom>div{width: 100%;height:100%;}
-.Camera{position: absolute;left:0;top:50%;margin-left: -470px;width: 450px;box-shadow: 0 0 3px white;background: rgba(0,0,0,0.3);}
+.Camera{position: absolute;left:0;top:40%;margin-left: -465px;width: 450px;box-shadow: 0 0 3px white;background: rgba(0,0,0,0.3);}
 .Camera_bottom{width:100%;height: 100%;padding:10px;position: relative;}
-.sensor{position: absolute;right:0;top:0;margin-right: -620px;width: 600px;box-shadow: 0 0 3px white;background: rgba(0,0,0,0.3);}
-.Screen{position: absolute;right:0;top:50%;margin-right: -300px;width: 280px;box-shadow: 0 0 3px white;background: rgba(0,0,0,0.3);}
+.sensor{position: absolute;right:0;top:-35px;margin-right: -565px;width: 548px;box-shadow: 0 0 3px white;background: rgba(0,0,0,0.3);}
+.Screen{position: absolute;right:0;top:54%;margin-right: -294px;width: 280px;box-shadow: 0 0 3px white;background: rgba(0,0,0,0.3);}
 .Screen_bottom{width: 100%;padding: 5px;}
 
 
-.section{width: 570px;height: 480px !important;margin: 0 30px 20px 15px;display: flex;flex-wrap: wrap;}
-.section>div{display: inline-block;width: 50%;}
-.section_top_left>p,.section_top_right>p,.section_bottom_left>p,.section_bottom_right>p{margin: 0;padding: 20px 0px;text-align: center;font-size: 22px;color: #666d7a}
-.section_top_left>div{margin-top:40px;text-align: center;}
+.sections{width: 500px;height: 360px !important;margin: 0 30px 20px 15px;display: flex;flex-wrap: wrap;}
+.sections>div{display: inline-block;width: 50%;}
+.section_top_left>p,.section_top_right>p,.section_bottom_left>p,.section_bottom_right>p{margin: 0;padding: 5px 0px;text-align: center;font-size: 16px;color: #666d7a}
+.section_top_left>div{margin-top:20px;text-align: center;}
 .section_top_left>div>p{margin-bottom:20px;text-align: center;font-size: 16px;}
 .section_top_left>div>p>span:nth-of-type(2){display:inline-block;width:70px;height:30px;line-height:30px;font-weight:600;border-radius:5px;color: #010000;font-size: 19px;background:#72d671;}
-.section_top_right>div{display: flex;justify-content: center;margin-top: 50px;}
+.section_top_right>div{display: flex;justify-content: center;margin-top: 30px;}
 .section_top_right div:nth-of-type(2){font-size: 20px;font-weight: 600;padding-top: 45px;}
 .Noise2{width:100px;height:70px;}
 .Noise2>span{border-radius: 5px;} 
 .wind{display: flex;justify-content: center;}
-.wind1{width: 170px;height:170px;background: url('../../../assets/wind1.png') no-repeat;background-size: 100% 100%;}
-.wind2{width: 60px;margin-left: 55px;margin-top: 35px;}
+.wind1{width: 150px;height:150px;background: url('../../../assets/wind1.png') no-repeat;background-size: 100% 100%;}
+.wind2{width: 45px;margin-left: 53px;margin-top: 35px;}
 .section_bottom_left>div:nth-of-type(2){text-align: center;font-size: 16px;}
-.sensors_bottom{display: flex;width: 100%;height: 190px;}
+.sensors_bottom{display: flex;width: 100%;height: 170px;}
 .sensors_bottom>div:nth-of-type(1),.sensors_bottom>div:nth-of-type(2){width: 25%}
-.sensors_bottom>div:nth-of-type(3){width: 50%;padding-top: 30px;padding-left: 5px;}
-.sensors_bottom>div{height: 190px;text-align: center;}
+.sensors_bottom>div:nth-of-type(3){width: 50%;padding-top: 14px;padding-left: 5px;}
+.sensors_bottom>div{height: 170px;text-align: center;}
 
 .mapIMG{position: relative;height: 767px;margin-left: -70px;}
 .mapIMG>img:nth-of-type(1){height: 100%;}

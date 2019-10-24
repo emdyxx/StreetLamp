@@ -1,7 +1,7 @@
 <template>
     <!-- 巡检项 -->
-    <div class="patrolItem">
-        <div class="patrolItem_top">
+    <div class="section">
+        <div class="section_top">
             <el-button v-if="JurisdictionS.addPatrolItem" @click="operationPatrolItem(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="JurisdictionS.editPatrolItem" @click="operationPatrolItem(1)" type="primary" icon='el-icon-edit' size='small'>编辑</el-button>
             <el-button v-if="JurisdictionS.delPatrolItem" @click="operationPatrolItem(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
@@ -34,7 +34,7 @@
                 </div>
             </div>
         </div>
-        <div class="patrolItem_bottom">
+        <div class="section_bottom">
             <!-- <div class="patrolItem_bottom_top">
                 <div class="search">
                     <label>检查项名称:</label>
@@ -551,24 +551,7 @@ export default {
 }
 </script>
 <style scoped>
-.patrolItem{width: 100%;height: 100%;}
-.patrolItem>div{width: 100%;position: absolute;}
-.patrolItem_top{height: 46px;border-bottom: none !important;display: flex;border: 1px solid #E4E4F1;}
-.patrolItem_top>button{height:33px;margin:6px 0 0 10px;}
-.patrolItem_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
-/* .patrolItem_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;} */
-.patrolItem_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
-.search{display: flex;margin-left:10px;}
-.search>label{width: 80px;}
-.search>input{width: 176px;margin-top:7px;height: 32px;}
-.block{text-align: center;}
-.Required{color: red;font-size: 17px;}
-.form-group{display:flex;justify-content: center;}
-.form-group>label{width: 95px;line-height: 34px;text-align: center;}
+.form-group>label{width: 95px;}
 .form-group>input{width: 156px;}
 .form-group>div{width: 156px;display: flex;justify-content: center;align-items: center;}
-
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
 </style>

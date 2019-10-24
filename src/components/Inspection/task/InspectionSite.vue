@@ -1,7 +1,7 @@
 <template>
     <!-- 巡检地点 -->
-    <div class="InspectionSite">
-        <div class="InspectionSite_top">
+    <div class="section">
+        <div class="section_top">
             <el-button v-if="JurisdictionS.addPatrolSite" @click="addInspectionSite(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="JurisdictionS.editPatrolSite" @click="addInspectionSite(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="JurisdictionS.delPatrolSite" @click="addInspectionSite(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
@@ -22,88 +22,77 @@
                 </div>
             </div>
         </div>
-        <div class="InspectionSite_bottom">
-            <!-- <div class="InspectionSite_bottom_top">
-                <div class="search">
-                    <label>点名称:</label>
-                    <input v-model="siteName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入点名称">
-                </div>
-                <div style="margin-left:15px;">
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div> -->
-            <div class="InspectionSite_bottom_bottom">
-                <el-table
-                    :data="tableData"
-                    @row-click="clickRow" 
-                    ref="moviesTable"
-                    border
-                    stripe
-                    size='small'
-                    tooltip-effect="dark"
-                    @selection-change="SelectionChange"
-                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                    <el-table-column
-                    type="selection"
-                    align='center'
-                    width="55">
-                    </el-table-column>
-                    <el-table-column
-                    prop="siteNumber"
-                    align='center'
-                    label="点编号"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="siteName"
-                    align='center'
-                    label="点名称"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="点状态"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.siteStatus=='1'">正常</span>
-                            <span v-if="scope.row.siteStatus=='2'">异常</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="点类型"
-                    min-width="150">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.siteType=='1'">固定时间检查点</span>
-                            <span v-if="scope.row.siteType=='2'">随机时间检查点</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="offsetDistance"
-                    align='center'
-                    label="有效巡检距离"
-                    :formatter="formatRole"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="createTime"
-                    align='center'
-                    label="创建时间"
-                   show-overflow-tooltip>
-                    </el-table-column>
-                </el-table>
-                <div class="block">
-                    <el-pagination
-                    background
-                    @size-change="sizechange"
-                    @current-change="currentchange"
-                    :current-page="pageIndex"
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-                    </el-pagination>
-                </div>
+        <div class="section_bottom">
+            <el-table
+                :data="tableData"
+                @row-click="clickRow" 
+                ref="moviesTable"
+                border
+                stripe
+                size='small'
+                tooltip-effect="dark"
+                @selection-change="SelectionChange"
+                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                <el-table-column
+                type="selection"
+                align='center'
+                width="55">
+                </el-table-column>
+                <el-table-column
+                prop="siteNumber"
+                align='center'
+                label="点编号"
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                prop="siteName"
+                align='center'
+                label="点名称"
+                min-width="80">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="点状态"
+                min-width="80">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.siteStatus=='1'">正常</span>
+                        <span v-if="scope.row.siteStatus=='2'">异常</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="点类型"
+                min-width="150">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.siteType=='1'">固定时间检查点</span>
+                        <span v-if="scope.row.siteType=='2'">随机时间检查点</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                prop="offsetDistance"
+                align='center'
+                label="有效巡检距离"
+                :formatter="formatRole"
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                prop="createTime"
+                align='center'
+                label="创建时间"
+                show-overflow-tooltip>
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                background
+                @size-change="sizechange"
+                @current-change="currentchange"
+                :current-page="pageIndex"
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+                </el-pagination>
             </div>
         </div>
         <!-- 添加  编辑  模态框 -->
@@ -143,9 +132,9 @@
                                 </div> 
                                 <div class="form-group">
                                     <label for="phone">点类型:</label>
-                                    <el-radio-group v-model="data.siteType">
+                                    <el-radio-group v-model="data.siteType" style="margin-left:15px;">
                                         <el-radio :label="1">固定时间检查点</el-radio>
-                                        <el-radio :label="2">随机时间检查点</el-radio>
+                                        <el-radio :label="2" style="margin-left:0;">随机时间检查点</el-radio>
                                     </el-radio-group>
                                 </div>
                                 <div class="form-group">
@@ -297,10 +286,11 @@
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->
-        <div class="modal fade" id="map" tabindex="-1" role="dialog" style="margin-top:15%;" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:350px;">
+        <!-- 地图选点 -->
+        <div class="modal fade" id="map" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width:700px;">
                 <div class="modal-content">
-                    <div class="modal-body map_Z" style='height:300px'>
+                    <div class="modal-body map_Z" style='height:550px'>
                         <div>点击地图选取坐标--坐标:{{referencePosition}}</div>
                         <div>
                             <div style="width:100%;height:100%;" id="allmap"></div>
@@ -414,7 +404,7 @@ export default {
             }
             if(val=='1'){
                 that.type = '1'
-                if(that.site.length==0){
+                if(that.site.length==0||that.site.length>=2){
                     that.$message({
                         message: '请选择单个巡检点进行编辑!',
                         type: 'error'
@@ -809,37 +799,13 @@ export default {
 }
 </script>
 <style scoped>
-.block{text-align: center;}
-.InspectionSite{width: 100%;height: 100%;}
-.InspectionSite>div{width: 100%;position: absolute;}
-.InspectionSite_top{height: 46px;border-bottom: none !important;display: flex;border: 1px solid #E4E4F1;}
-.InspectionSite_top>button{height:33px;margin:6px 0 0 10px;}
-.InspectionSite_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
-/* .InspectionSite_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;} */
-.InspectionSite_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
-.search{display: flex;}
-.search>label{width: 60px;}
-.search>input{width: 146px;margin-top:7px;height: 34px;}
-.Required{color: red;font-size: 17px;}
-.form-group{display:flex;justify-content: center;}
-.form-group>label{width: 105px;line-height: 34px;text-align: center;}
+.form-group>label{width: 105px;}
 .form-group>input{width: 216px;}
 .form-group>div{width: 216px;display: flex;justify-content: center;align-items: center;}
-
 .term{width: 100%;height: 350px;display: flex;}
-
 .term>div:nth-of-type(1){width: 45%;border:1px solid #E4E4F1;position: relative;}
 .term>div:nth-of-type(2){width: 10%;display: flex;justify-content: center;align-items: center;}
 .term>div:nth-of-type(3){width: 45%;border:1px solid #E4E4F1;position: relative;}
 .term_left_data{width:100%;position: absolute;top:33px;bottom: 0;}
-
-.mappoint{font-size: 24px;position: absolute;right: 150px;cursor: pointer;}
-.map_Z{margin: 0;padding: 0;position: relative;}
-.map_Z>div:nth-of-type(1){width: 100%;height: 30px;line-height: 30px;}
-.map_Z>div:nth-of-type(2){width: 100%;position: absolute;top: 30px;bottom: 30px;}
-.map_Z>div:nth-of-type(3){width: 100%;height: 30px;line-height: 30px;position: absolute;bottom: 1px;text-align: center;}
-
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
+.mappoint{right: 150px;}
 </style>

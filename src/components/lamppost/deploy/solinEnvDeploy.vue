@@ -1,7 +1,7 @@
 <template>
-    <div class="sensor">
+    <div class="section">
         <!-- 气象站部署 -->
-        <div class="sensor_top">
+        <div class="section_top">
             <el-button v-if="JurisdictionS.addEnv" @click="addsensor(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="JurisdictionS.editEnv" @click="addsensor(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="JurisdictionS.delEnv" @click="deletesensor" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
@@ -19,7 +19,9 @@
                         <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='2'"> 
-                        <el-input v-model="serialNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+                        <el-input type="number" v-model="serialNumber" size="small" placeholder="请输入地址" style="width:200px;"></el-input>
+                        <!-- <el-input-number v-model="serialNumber" size="small" :precision="0" :min="1" :max="253" label="请输入地址" style="width:200px;"></el-input-number> -->
+                        <!-- <el-input v-model.number="serialNumber" size="small" placeholder="请输入地址"></el-input> -->
                     </template>
                     <template v-if="type=='3'">
                         <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
@@ -37,89 +39,87 @@
                 </div>
             </div>
         </div>
-        <div class="sensor_bottom">
-            <div class="sensor_bottom_bottom">
-                <el-table
-                    :data="tableData"
-                    @row-click="clickRow" 
-                    ref="moviesTable"
-                    border
-                    stripe
-                    size='small'
-                    tooltip-effect="dark"
-                    @selection-change="SelectionChange"
-                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                    <el-table-column
-                    type="selection"
-                    align='center'
-                    width="55">
-                    </el-table-column>
-                    <el-table-column
-                    prop="nickName"
-                    align='center'
-                    label="名称"
-                    min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    prop="serialNumber"
-                    align='center'
-                    label="地址"
-                    min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="状态"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.online=='0'">离线</span>
-                            <span v-if="scope.row.online=='1'">在线</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="modelName"
-                    align='center'
-                    label="型号"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="poleName"
-                    align='center'
-                    label="灯杆"
-                    min-width="110"
-                    :formatter="formatRole">
-                    </el-table-column>
-                    <el-table-column
-                    prop="concentratorName"
-                    align='center'
-                    label="集中器"
-                    min-width="100">
-                    </el-table-column>
-                    <el-table-column
-                    prop="mark"
-                    align='center'
-                    label="备注"
-                    min-width="120"
-                    :formatter="formatRole">
-                    </el-table-column>
-                    <el-table-column
-                    prop="createTime"
-                    align='center'
-                    label="创建时间"
-                    show-overflow-tooltip>
-                    </el-table-column>
-                </el-table>
-                <div class="block">
-                    <el-pagination
-                    background
-                    @size-change="sizechange"
-                    @current-change="currentchange"
-                    :current-page="pageIndex"
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-                    </el-pagination>
-                </div>
+        <div class="section_bottom">
+            <el-table
+                :data="tableData"
+                @row-click="clickRow" 
+                ref="moviesTable"
+                border
+                stripe
+                size='small'
+                tooltip-effect="dark"
+                @selection-change="SelectionChange"
+                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                <el-table-column
+                type="selection"
+                align='center'
+                width="55">
+                </el-table-column>
+                <el-table-column
+                prop="nickName"
+                align='center'
+                label="名称"
+                min-width="110">
+                </el-table-column>
+                <el-table-column
+                prop="serialNumber"
+                align='center'
+                label="地址"
+                min-width="110">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="状态"
+                min-width="80">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.online=='0'">离线</span>
+                        <span v-if="scope.row.online=='1'">在线</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                prop="modelName"
+                align='center'
+                label="型号"
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                prop="poleName"
+                align='center'
+                label="灯杆"
+                min-width="110"
+                :formatter="formatRole">
+                </el-table-column>
+                <el-table-column
+                prop="concentratorName"
+                align='center'
+                label="集中器"
+                min-width="100">
+                </el-table-column>
+                <el-table-column
+                prop="mark"
+                align='center'
+                label="备注"
+                min-width="120"
+                :formatter="formatRole">
+                </el-table-column>
+                <el-table-column
+                prop="createTime"
+                align='center'
+                label="创建时间"
+                min-width="150">
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                background
+                @size-change="sizechange"
+                @current-change="currentchange"
+                :current-page="pageIndex"
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+                </el-pagination>
             </div>
         </div>
         <!-- 添加编辑气象站模态框 -->
@@ -138,7 +138,7 @@
                         </div> 
                         <div class="form-group">
                             <label><span class="Required">*</span>地址:</label>
-                            <el-input-number v-model.lazy="data.serialNumber" :min="1" :max="253" size="small" style="width:196px;" label="地址"></el-input-number>
+                            <el-input-number v-model.lazy="data.serialNumber" :precision="0" :min="1" :max="253" size="small" style="width:196px;" label="地址"></el-input-number>
                             <!-- <input type="text" v-model="data.serialNumber" id="serialNumber" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号"> -->
                         </div>
                         <div class="form-group">
@@ -782,7 +782,9 @@ export default {
                 }
             })
         },
-        search(){this.ready()},
+        search(){
+            this.ready()
+        },
         // 列表数据选中事件  进行编辑,删除操作
         SelectionChange(val){this.site = val;},
         sizechange(val){this.pageSize = val;this.ready()},
@@ -832,32 +834,5 @@ export default {
 }
 </script>
 <style scoped>
-.Required{color: red;font-size: 17px;}
-.sensor{width: 100%;height: 100%;}
-.sensor>div{width: 100%;position: absolute;}
-.sensor_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.sensor_top>button,.sensor_top>div{height:33px;margin:6px 0 0 10px;}
-.sensor_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
-.sensor_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
-.block{text-align: center;}
 
-
-.form-group{display:flex;justify-content: center;}
-.form-group>label{width: 105px;line-height: 34px;text-align: center;}
-.form-group>input{width: 195px;}
-.mappoint{font-size: 24px;position: absolute;right: 110px;cursor: pointer;}
-.modal_body_table>div{margin-bottom: 10px;border: 1px solid #E4E4F1;padding: 5px;text-align: center;}
-.table_data{width: 100%;padding: 10px;}
-.table_data>table{width:100%;}
-.table_data>table tr{display: flex;}
-.table_data>table tr>td{width: 25%;text-align: center;line-height: 25px !important;}
-
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
-
-.map_Z{margin: 0;padding: 0;position: relative;}
-.map_Z>div:nth-of-type(1){width: 100%;height: 30px;line-height: 30px;}
-.map_Z>div:nth-of-type(2){width: 100%;position: absolute;top: 30px;bottom: 30px;}
-.map_Z>div:nth-of-type(3){width: 100%;height: 30px;line-height: 30px;position: absolute;bottom: 1px;text-align: center;}
 </style>

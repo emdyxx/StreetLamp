@@ -1,7 +1,7 @@
 <template>
     <!-- 气象站管理 -->
-    <div class="cameras">
-        <div class="cameras_top">
+    <div class="section">
+        <div class="section_top">
             <el-dropdown trigger='click'>
                 <el-button type="primary" size='small'>
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -25,7 +25,9 @@
                         <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     </template>
                     <template v-if="type=='2'">
-                        <el-input v-model="serialNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+                        <el-input type="number" v-model="serialNumber" size="small" placeholder="请输入地址" style="width:200px;"></el-input>
+                        <!-- <el-input-number v-model="serialNumber" size="small" :precision="0" :min="0" :max="253" label="请输入地址" style="width:200px;"></el-input-number> -->
+                        <!-- <el-input v-model="serialNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input> -->
                     </template>
                     <template v-if="type=='3'">
                         <el-select v-model="value" clearable placeholder="请选择" size='small'>
@@ -43,113 +45,113 @@
                 </div>
             </div>
         </div>
-        <div class="cameras_bottom">
-            <div class="cameras_bottom_bottom">
-                <el-table
-                    :data="tableData"
-                    @row-click="clickRow" 
-                    ref="moviesTable"
-                    border
-                    stripe
-                    size='small'
-                    tooltip-effect="dark"
-                    @selection-change="SelectionChange"
-                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                    <el-table-column
-                    type="selection"
-                    align='center'
-                    width="55">
-                    </el-table-column>
-                    <el-table-column
-                    prop="nickName"
-                    align='center'
-                    label="名称"
-                    min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    prop="serialNumber"
-                    align='center'
-                    label="地址"
-                    min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="在线状态"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.online=='0'">离线</span>
-                            <span v-if="scope.row.online=='1'">在线</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="modelName"
-                    align='center'
-                    label="型号"
-                    min-width="100">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="风向/风速"
-                    min-width="90">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.windDirectionAverage}}/{{scope.row.windSpeedAverage}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="温度/湿度"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.temperature}}/{{scope.row.humidity}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="pressure"
-                    align='center'
-                    label="气压"
-                    min-width="80"
-                    :formatter="formatRole">
-                    </el-table-column>
-                    <el-table-column
-                    prop="noiseAverage"
-                    align='center'
-                    label="噪声"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="PM2.5/PM10"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.PM2}}/{{scope.row.PM10}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="editTime"
-                    label="采集时间"
-                    align='center'
-                    min-width="120">
-                    </el-table-column>
-                </el-table>
-                <div class="block">
-                    <el-pagination
-                    background
-                    @size-change="sizechange"
-                    @current-change="currentchange"
-                    :current-page="pageIndex"
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-                    </el-pagination>
-                </div>
+        <div class="section_bottom">
+            <el-table
+                :data="tableData"
+                @row-click="clickRow" 
+                ref="moviesTable"
+                border
+                stripe
+                size='small'
+                tooltip-effect="dark"
+                @selection-change="SelectionChange"
+                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                <el-table-column
+                type="selection"
+                align='center'
+                width="55">
+                </el-table-column>
+                <el-table-column
+                prop="nickName"
+                align='center'
+                label="名称"
+                min-width="110">
+                </el-table-column>
+                <el-table-column
+                prop="serialNumber"
+                align='center'
+                label="地址"
+                min-width="110">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="在线状态"
+                min-width="80">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.online=='0'">离线</span>
+                        <span v-if="scope.row.online=='1'">在线</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                prop="modelName"
+                align='center'
+                label="型号"
+                min-width="100">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="风向/风速"
+                min-width="90">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.windDirectionAverage}}/{{scope.row.windSpeedAverage}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="温度/湿度"
+                min-width="80">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.temperature}}/{{scope.row.humidity}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                prop="pressure"
+                align='center'
+                label="气压"
+                min-width="80"
+                :formatter="formatRole">
+                </el-table-column>
+                <el-table-column
+                prop="noiseAverage"
+                align='center'
+                :formatter="formatRole"
+                label="噪声"
+                min-width="80">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="PM2.5/PM10"
+                min-width="80">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.PM2}}/{{scope.row.PM10}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                prop="latestTime"
+                :formatter="formatRole"
+                label="采集时间"
+                align='center'
+                min-width="150">
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                background
+                @size-change="sizechange"
+                @current-change="currentchange"
+                :current-page="pageIndex"
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+                </el-pagination>
             </div>
         </div>
     </div>
 </template>
 <script>
 export default {
-    name: 'chargingPile',
+    name: 'section',
     data () {
         return {
             name:'名称',
@@ -171,7 +173,7 @@ export default {
         }
     },
     mounted(){
-        // this.ModelData()
+        
     },
     methods:{
         handleCommand(){
@@ -189,25 +191,6 @@ export default {
         clickRow(row){
             this.$refs.moviesTable.toggleRowSelection(row)
         },
-        //获取型号列表
-        // ModelData(){
-        //     var that = this;
-        //     $.ajax({
-        //         type:'get',
-        //         async:true,
-        //         dataType:'json',
-        //         url:that.serverurl+'/v1/solin/sensor/model',
-        //         contentType:'application/json;charset=UTF-8',
-        //         data:{},
-        //         success:function(data){
-        //             if(data.errorCode=='0'){
-        //                 that.options = data.result.list
-        //             }else{
-        //                 that.errorCode(data)
-        //             }
-        //         }
-        //     })
-        // },
         //查询最新数据
         details(){
             var that = this;
@@ -249,9 +232,9 @@ export default {
         },
         //查看历史数据
         historicalData(){
-            if(this.site.length==0){
+            if(this.site.length==0||this.site.length>=2){
                 this.$message({
-                    message: '请选择气象站进行查询!',
+                    message: '请选择单个气象站进行查询!',
                     type: 'warning'
                 });
                 return;
@@ -261,6 +244,7 @@ export default {
         },
         ready(){
             var that = this;
+            console.log(this.serialNumber)
             var data = {
                 page:that.pageIndex,
                 size:that.pageSize,
@@ -331,13 +315,5 @@ export default {
 }
 </script>
 <style scoped>
-.cameras{width: 100%;height: 100%;}
-.cameras>div{width: 100%;border: 1px solid #E4E4F1;position: absolute;}
-.cameras_top{height: 46px;border-bottom: none !important;display: flex;align-items: center;font-size: 16px;padding-left: 20px;}
-.cameras_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;}
-.cameras_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
-.cameras{text-align: center;}
-.search{display: flex;align-items: center;margin-left: 10px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
+
 </style>

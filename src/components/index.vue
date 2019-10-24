@@ -1,11 +1,11 @@
 <template>
   <div class="index">
     <div class="index_top">
-        <img src="../assets/img/biaoti.png" alt="">
+        <img :src=serverurl2 alt="">
         <div class="index_top_right">
             <span>欢迎您 !</span>
             <span>{{data.username}}</span>
-            <img id="img" :src=data.icon alt="" >
+            <img id="img" :src=data.icon alt="">
             <span>{{versionNumber}}</span>
         </div>
         <div class="index_top_psd">
@@ -587,6 +587,7 @@ export default {
     data () {
         return {
             serverurl:localStorage.serverurl,
+            serverurl2:'',
             versionNumber:localStorage.versionNumber,  //版本号
             menu:[],
             data:{
@@ -602,6 +603,7 @@ export default {
         }
     },
     mounted(){
+        this.serverurl2 = localStorage.serverurl2 + '/img/icon02.png'
         $('#img').click(function() {
             event.stopPropagation();
             $('.index_top_psd').css('display','inline-block')
@@ -630,6 +632,7 @@ export default {
         //修改密码提交
         addSubmit(){
             var that = this;
+            var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/;
             if(this.password1==''||this.password2==''||this.password3==''){
                 this.$message({
                     message: '必填字段不能为空!',
@@ -655,6 +658,14 @@ export default {
                 this.$message({
                     message: '密码长度不得小于6位!',
                     type: 'error'
+                });
+                return;
+            }
+            if(!reg.test(this.password1)){
+                this.$message({
+                    message: '密码字段必须为字母与数字组合',
+                    type: 'error',
+                    showClose: true,
                 });
                 return;
             }
@@ -844,24 +855,30 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/manage/menu/3',
+                url:that.serverurl+'/v1/manage/menu/0',
                 contentType:'application/json;charset=UTF-8',
                 data:{},
                 success:function(data){
                     if(data.errorCode==0){
-                        that.menu = data.result.menus
+                        var array = []
+                        if(data.result.menus.length!=0&&data.result.menus[0].code=='managementService'){
+                            array[0] = data.result.menus[0]
+                        }
                         $.ajax({
                             type:'get',
                             async:true,
                             dataType:'json',
-                            url:that.serverurl+'/v1/manage/menu/0',
+                            url:that.serverurl+'/v1/manage/menu/3',
                             contentType:'application/json;charset=UTF-8',
                             data:{},
                             success:function(data){
                                 if(data.errorCode==0){
-                                    that.menu.unshift(data.result.menus[0])
+                                    that.menu = data.result.menus
+                                    if(array.length==0){
+                                    }else{
+                                        that.menu.unshift(array[0])
+                                    }
                                     that.manageChange()
-                                    that.length = that.menu.length/4
                                 }else{
                                     that.errorCode(data)
                                 }
@@ -872,6 +889,7 @@ export default {
                     }
                 },
             })
+            
         },
         //请求用户基本信息
         ready(){
@@ -889,6 +907,8 @@ export default {
                     if(data.errorCode=='0'){
                         that.data = data.result.user
                         that.data.ts = ts
+                        sessionStorage.username = data.result.user.username
+                        sessionStorage.icon = data.result.user.icon
                         sessionStorage.userId = data.result.user.id
                         var url=that.serverurl+data.result.user.org.backdrop
                         that.data.icon = that.serverurl+data.result.user.icon

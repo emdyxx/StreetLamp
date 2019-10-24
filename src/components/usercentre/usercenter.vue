@@ -1,45 +1,44 @@
 <template>
-	<div class="userCenter">
+	<div class="OverallSituation">
 		<header class="header">
 			<i @click="backtrack" class="iconfont icon-fanhui2"></i>
-			<div class="user-header-left">
-			<i class="iconfont icon-hengpai"></i>
-			系统管理
+			<div class="header-left">
+				<i class="iconfont icon-hengpai"></i>
+				系统管理
 			</div>
 			<div class="header-center">
-			<template v-for="item in menu">
-				<template v-if="item.code=='managementUser'">
-				<div @click="headercolor(1,item.id)" :key="item.id" :class="headercolorType=='1'?'header-center-color':''">用户</div>
+				<template v-for="item in menu">
+					<template v-if="item.code=='managementUser'">
+						<div @click="headercolor(1,item.id)" :key="item.id" :class="headercolorType=='1'?'header-center-color':''">用户</div>
+					</template>
+					<template v-if="item.code=='managementOrg'">
+						<div @click="headercolor(2,item.id)" :key="item.id" :class="headercolorType=='2'?'header-center-color':''">机构</div>
+					</template>
+					<template v-if="item.code=='managementProject'">
+						<div @click="headercolor(3,item.id)" :key="item.id" :class="headercolorType=='3'?'header-center-color':''">项目</div>
+					</template>
+					<template v-if="item.code=='managementLog'">
+						<div @click="headercolor(4,item.id)" :key="item.id" :class="headercolorType=='4'?'header-center-color':''">日志</div>
+					</template>
 				</template>
-				<template v-if="item.code=='managementOrg'">
-				<div @click="headercolor(2,item.id)" :key="item.id" :class="headercolorType=='2'?'header-center-color':''">机构</div>
-				</template>
-				<template v-if="item.code=='managementProject'">
-				<div @click="headercolor(3,item.id)" :key="item.id" :class="headercolorType=='3'?'header-center-color':''">项目</div>
-				</template>
-				<template v-if="item.code=='managementLog'">
-				<div @click="headercolor(4,item.id)" :key="item.id" :class="headercolorType=='4'?'header-center-color':''">日志</div>
-				</template>
-			</template>
 			</div>
-			<div class="header-right">
-			<i @click="backtrack" class="iconfont icon-guanbi"></i>
-			</div>
+			<!-- <div class="header-right">
+				<i @click="backtrack" class="iconfont icon-guanbi"></i>
+			</div> -->
 		</header>
-		<div class="bottom">
+		<div class="footer">
 			<router-view></router-view> 
 		</div>
 	</div>
 </template>
-
 <script>
 export default {
   name: 'userCenter',
   data () {
     return {
-		serverurl:localStorage.serverurl,
-		headercolorType:'',
-		menu:[],
+      serverurl:localStorage.serverurl,
+      headercolorType:'',
+      menu:[],
     }
   },
   mounted(){
@@ -47,26 +46,26 @@ export default {
   },
   methods:{
     headercolor(val,id){
-		this.headercolorType = val;
-		sessionStorage.menuId2 = id
-		sessionStorage.headercolorType = val
-		if(val=='1'){
-			this.$router.push({'path':'/managementUser'})
-		}
-		if(val=='2'){
-			this.$router.push({'path':'/managementOrg'})
-		}
-		if(val=='3'){
-			this.$router.push({'path':'/managementProject'})
-		}
-		if(val=='4'){
-			this.$router.push({'path':'/managementLog'})
-		}
+      this.headercolorType = val;
+      sessionStorage.menuId2 = id
+      sessionStorage.headercolorType = val
+      if(val=='1'){
+        this.$router.push({'path':'/managementUser'})
+      }
+      if(val=='2'){
+        this.$router.push({'path':'/managementOrg'})
+      }
+      if(val=='3'){
+        this.$router.push({'path':'/managementProject'})
+      }
+      if(val=='4'){
+        this.$router.push({'path':'/managementLog'})
+      }
     },
     backtrack(){
-		this.$router.push({'path':'/index'})
-		sessionStorage.removeItem('menuId');
-		sessionStorage.removeItem('menuId2');
+      this.$router.push({'path':'/index'})
+      sessionStorage.removeItem('menuId');
+      sessionStorage.removeItem('menuId2');
     },
     //请求权限
     Jurisdiction(){
@@ -114,18 +113,5 @@ export default {
 }
 </script>
 <style scoped>
-.userCenter{width: 100%;height: 100%;}
-.header{width:100%;height: 60px;background: #409eff;display: flex;}
-.header>i{font-size: 32px;color: white;cursor: pointer;position: absolute;left: 20px;top:10px;}
-.header>i:hover{color: aquamarine;}
-.user-header-left{height: 100%;display: inline-block;margin-left: 70px;color: white;font-size: 24px;line-height: 50px;}
-.user-header-left>i{color: white;font-size: 26px;line-height: 62px;}
-.header-center{height: 100%;margin-left: 25px;display: flex;justify-content: center;align-items: center;}
-.header-center>div{color: white;font-size: 16px;width: 110px;height: 30px;text-align: center;line-height: 30px;border-radius: 8px;cursor: pointer;}
-.header-center>div:hover{background: #66b1ff;}
-.header-center-color{background:#2B6BC3;}
-.header-right{position: absolute;right: 30px;height: 60px;;display: flex;align-items:center;}
-.header-right>i{color: white;font-size: 34px;cursor: pointer;}
-.header-right>i:hover{color: aquamarine;}
-.bottom{width: 100%;position: absolute;top: 60px;bottom: 0;}
+
 </style>

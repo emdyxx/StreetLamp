@@ -1,8 +1,8 @@
 <template>
     <!-- 统计信息 -->
-    <div class="Record">
-        <div class="Record_top">
-            <el-select v-model="value" @change="Recordchange" style="margin:0 0 0 10px;" size="small" placeholder="请选择">
+    <div class="section">
+        <div class="section_top">
+            <el-select v-model="value" @change="Recordchange" size="small" placeholder="请选择">
                 <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -11,13 +11,13 @@
                 </el-option>
             </el-select>
             <template v-if="value=='1'">
-                <div class="search">
-                    <label>姓名:</label>
+                <div class="search_Log">
+                    <span>姓名:</span>
                     <input v-model="inspectorName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入巡检员姓名">
                 </div>
             </template>
-            <div class="search">
-                <label>开始日期:</label>
+            <div class="search_Log">
+                <span>开始日期:</span>
                 <el-date-picker
                     size="small"
                     align="right"
@@ -27,8 +27,8 @@
                     placeholder="选择日期">
                 </el-date-picker>
             </div>
-            <div class="search">
-                <label>结束日期:</label>
+            <div class="search_Log">
+                <span>结束日期:</span>
                 <el-date-picker
                     size="small"
                     align="right"
@@ -42,7 +42,7 @@
                 <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
             </div>
         </div>
-        <div class="Record_bottom">
+        <div class="section_bottom">
             <!-- <div class="Record_bottom_top">
                 <template v-if="value=='1'">
                     <div class="search">
@@ -403,18 +403,5 @@ export default {
 }
 </script>
 <style scoped>
-.block{text-align: center;}
-.Record{width: 100%;height: 100%;}
-.Record>div{width: 100%;position: absolute;}
-.Record_top{height: 46px;border-bottom: none !important;display: flex;border: 1px solid #E4E4F1;align-items: center;}
-/* .Record_top>button{height:33px;margin:6px 0 0 10px;} */
-.Record_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
-.Record_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;}
-.Record_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
-.search{display: flex;height: 100%;align-items: center;margin-left: 5px;}
-.search>label{padding-top: 5px;}
-.search>div,.search>input{width: 146px;height: 32px;}
-
-.Record_table tr>td:nth-of-type(1),.Record_table tr>td:nth-of-type(3){width:80px;}
 
 </style>

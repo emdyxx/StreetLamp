@@ -1,58 +1,41 @@
 <template>
-    <div class="organization">
+    <div class="CommonStyle">
         <!-- 机构 -->
-        <div class="organization_left">
+        <div class="CommonStyle_left">
             <div id="jstree"></div>
         </div>
-        <div class="organization_right">
-            <div class="organization_right_top">
-                <el-button v-if="JurisdictionS.addOrg" @click="addorganization(0)" type="primary" icon='el-icon-plus' size='small'>添加机构</el-button>
-                <el-button v-if="JurisdictionS.editOrg" @click="addorganization(1)" type="primary" icon="el-icon-edit" size='small'>编辑机构</el-button>
-                <el-button v-if="JurisdictionS.delOrg" @click="deleteorganization" type="primary" icon='el-icon-delete' size='small'>删除机构</el-button>
-                <div class="search" v-if="JurisdictionS.viewOrg">
-                    <el-dropdown size="small" split-button @command="handleCommand">
-                        {{name}}
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item @click.native="name='机构名称';types='1';">机构名称</el-dropdown-item>
-                            <el-dropdown-item @click.native="name='负责人';types='2';">负责人</el-dropdown-item>
-                            <el-dropdown-item @click.native="name='电话';types='3';">电话</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                    <div>
-                        <template v-if="types=='1'">
-                            <el-input v-model="orgName" size="small" placeholder="请输入机构名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                        </template>
-                        <template v-if="types=='2'">
-                            <el-input v-model="principal" size="small" placeholder="请输入负责人" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                        </template>
-                        <template v-if="types=='3'">
-                            <el-input v-model="mobile" size="small" placeholder="请输入电话" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                        </template>
-                    </div>
-                    <div>
-                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+        <div class="CommonStyle_right">
+            <div class="section">
+                <div class="section_top">
+                    <el-button v-if="JurisdictionS.addOrg" @click="addorganization(0)" type="primary" icon='el-icon-plus' size='small'>添加机构</el-button>
+                    <el-button v-if="JurisdictionS.editOrg" @click="addorganization(1)" type="primary" icon="el-icon-edit" size='small'>编辑机构</el-button>
+                    <el-button v-if="JurisdictionS.delOrg" @click="deleteorganization" type="primary" icon='el-icon-delete' size='small'>删除机构</el-button>
+                    <div class="search" v-if="JurisdictionS.viewOrg">
+                        <el-dropdown size="small" split-button @command="handleCommand">
+                            {{name}}
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item @click.native="name='机构名称';types='1';">机构名称</el-dropdown-item>
+                                <el-dropdown-item @click.native="name='负责人';types='2';">负责人</el-dropdown-item>
+                                <el-dropdown-item @click.native="name='电话';types='3';">电话</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <div>
+                            <template v-if="types=='1'">
+                                <el-input v-model="orgName" size="small" placeholder="请输入机构名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                            </template>
+                            <template v-if="types=='2'">
+                                <el-input v-model="principal" size="small" placeholder="请输入负责人" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                            </template>
+                            <template v-if="types=='3'">
+                                <el-input v-model="mobile" size="small" placeholder="请输入电话" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                            </template>
+                        </div>
+                        <div>
+                            <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="organization_right_bottom">
-                <!-- <div class="organization_right_bottom_top">
-                    <div class="search">
-                        <label>机构名称:</label>
-                        <input type="text" v-model="orgName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入机构名称">
-                    </div>
-                    <div class="search">
-                        <label>负责人:</label>
-                        <input type="text" v-model="principal" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入负责人">
-                    </div>
-                    <div class="search">
-                        <label>电话:</label>
-                        <input type="text" v-model="mobile" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入电话">
-                    </div>
-                    <div style="margin-left:15px;">
-                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                    </div>
-                </div> -->
-                <div class="organization_right_bottom_bottom">
+                <div class="section_bottom">
                     <el-table
                         :data="tableData"
                         @row-click="clickRow" 
@@ -124,7 +107,7 @@
                         <h4 v-if="type=='0'" class="modal-title" id="myModalLabel">添加机构</h4>
                         <h4 v-if="type=='1'" class="modal-title" id="myModalLabel">编辑机构</h4>
                     </div>  
-                    <div class="modal-body">
+                    <div class="modal-body" style='min-height:200px;max-height:590px;overflow:auto;'>
                         <ul id="myTab" class="nav nav-tabs">
                             <li class="active">
                                 <a href="#a" data-toggle="tab">基本信息</a>
@@ -137,7 +120,7 @@
                             </li>
                         </ul>
                         <div id="myTabContent" class="tab-content">
-                            <div class="tab-pane fade in active" id="a" style='padding-left: 70px;'>
+                            <div class="tab-pane fade in active" id="a">
                                 <div class="form-group">
                                     <label for="name"><span class="Required">*</span>机构名称:</label>
                                     <input type="text" v-model="data.orgName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入机构名称">
@@ -169,8 +152,8 @@
                                 </div> 
                                 <div class="form-group">
                                     <label>背景图片:</label>
-                                    <div class="images">
-                                        <i @click="cancelImage(1)" class="iconfont icon-guanbi cancel"></i>
+                                    <div class="user_img">
+                                        <i @click="cancelImage(1)" class="iconfont icon-guanbi cancel_s"></i>
                                         <label for="img1">
                                             <img :src=imageUrl1>
                                             <input type="file" ref="img1" id="img1" @change="images(1)">
@@ -182,7 +165,7 @@
                                     <el-button @click="Appoint" size='small' type="primary">指定机构管理员</el-button>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="b" style='padding-left: 70px;'>
+                            <div class="tab-pane fade" id="b">
                                 <div class="form-group" v-if="type=='0'">
                                     <label for="name"><span class="Required">*</span>用户名:</label>
                                     <input type="text" v-model="data.userName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
@@ -212,8 +195,8 @@
                                 </div> 
                                 <div class="form-group">
                                     <label>头像:</label>
-                                    <div class="images">
-                                        <i @click="cancelImage(2)" class="iconfont icon-guanbi cancel"></i>
+                                    <div class="user_img">
+                                        <i @click="cancelImage(2)" class="iconfont icon-guanbi cancel_s"></i>
                                         <label for="img2">
                                             <img :src=imageUrl2>
                                             <input type="file" ref="img2" id="img2" @change="images(2)">
@@ -793,6 +776,13 @@ export default {
             for(let i=0;i<array.length;i++){
                 arrar2.push(array[i].id)
             }
+            if(arrar2.length==0){
+                this.$message({
+                    message: '用户权限不能为空!',
+                    type: 'error'
+                });
+                return;
+            }
             formdate.append("iconFile", this.$refs.img2.files[0])
             formdate.append("userName", this.data.userName)
             formdate.append("userPwd", md5(this.data.userPwd))
@@ -856,7 +846,6 @@ export default {
                                 type: 'success',
                                 message: '删除成功!'
                             });
-                            
                         }else{
                             that.errorCode(data)
                         }
@@ -904,19 +893,25 @@ export default {
                             async: false,
                             success:function(data) {
                                 if(data.errorCode=='0'){
-                                    
-                                    that.readyRight()
                                     var data2={"text" : "机构中心",'id':'1','type':'1',"state": {"opened" : true}}
-                                    data2.children = data.result[0].children
-                                    for(var i=0;i<data.result[0].children.length;i++){
-                                        data.result[0].children[i].state={"opened" : true}
-                                        if(data.result[0].children[i].children==undefined){}else{
-                                            for(var j=0;j<data.result[0].children[i].children.length;j++){
-                                                data.result[0].children[i].children[j].state={"opened" : true}
+                                    if(data.result[0].id=='1'){
+                                        if(data.result[0].children!=null){
+                                            data2.children = data.result[0].children
+                                            for(var i=0;i<data.result[0].children.length;i++){
+                                                data.result[0].children[i].state={"opened" : true}
+                                                if(data.result[0].children[i].children==undefined){}else{
+                                                    for(var j=0;j<data.result[0].children[i].children.length;j++){
+                                                        data.result[0].children[i].children[j].state={"opened" : true}
+                                                    }
+                                                }
                                             }
                                         }
+                                    }else{
+                                        data2.children = []
+                                        data2.children.push(data.result[0])
                                     }
                                     jsonarray= data2;
+                                    that.readyRight()
                                 }else{
                                     that.errorCode
                                 }
@@ -931,6 +926,8 @@ export default {
                 }else{
                     that.sizeType = data.node.original
                     // sessionStorage.organization_type = data.node.original.id
+                    that.pageSize = 10;
+                    that.pageIndex = 1;
                     that.readyRight()
                 }
             });
@@ -1014,35 +1011,5 @@ export default {
 }
 </script>
 <style scoped>
-.Required{color: red;font-size: 17px;}
-.organization{width: 100%;height: 100%;padding: 5px;}
-.organization_left{width: 200px;height: 100%;border: 1px solid #E4E4F1;overflow: auto;}
-.organization_right{position: absolute;left: 210px;right: 5px;top:5px;bottom:5px;}
-.organization_right>div{width: 100%;border: 1px solid #E4E4F1;position: absolute;}
-.organization_right_top{height: 46px;border-bottom: none !important;display: flex;}
-.organization_right_top>button{height:33px;margin:8px 0 0 10px;}
-.organization_right_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;}
-/* .organization_right_bottom_top{width: 100%;height: 46px;line-height: 46px;text-align: center;display: flex;justify-content: center;} */
-.organization_right_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
-.organization_little{width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;}
-.organization_little>table{box-shadow: 0 0 3px gray;border-radius: 8px;}
-.organization_little>table tr{width: 500px;}
-.organization_little>table tr>td{width: 250px;height:50px;font-size: 18px;padding-left: 5px;font-weight: 600;}
-.organization_little>table tr>td>i{font-size: 14px;color: #606266;}
-.block{text-align: center;}
-.images{text-align: center;position: relative;}
-.images>label{width: 150px;height: 100px;border: 1px dashed #d9d9d9;border-radius: 6px; cursor: pointer;text-align: center;line-height: 35px;position: relative;}
-.images img{width: 100%;height: 100%;position: absolute;left: 0;}
-.images>label:hover{border-color: #20a0ff;}
-.images>label>input{margin-left: -9999px;}
-.cancel{position: absolute;top:-3px;right: -20px;font-size: 20px;}
-.cancel:hover{color: #20a0ff;}
 
-.form-group{display:flex;}
-.form-group>label{width: 75px;line-height: 34px;text-align: center;}
-.form-group>input{width: 196px;}
-
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
 </style>

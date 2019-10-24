@@ -1,7 +1,7 @@
 <template>
     <!-- 摄像头操作 -->
-    <div class="CameraManage">
-        <div class="CameraManage_top">
+    <div class="section">
+        <div class="section_top">
             <div class="search">
                 <el-dropdown size="small" split-button @command="handleCommand">
                     {{names}}
@@ -34,7 +34,7 @@
                 </div>
             </div>
         </div>
-        <div class="CameraManage_bottom">
+        <div class="section_bottom">
             <el-table
                 :data="tableData"
                 @row-click="clickRow" 
@@ -66,7 +66,7 @@
                 <el-table-column
                 align='center'
                 label="在线状态"
-                min-width="100">
+                min-width="80">
                     <template slot-scope="scope">
                         <span v-if="scope.row.online=='0'">离线</span>
                         <span v-if="scope.row.online=='1'">在线</span>
@@ -76,14 +76,14 @@
                 prop="producerName"
                 align='center'
                 label="厂商"
-                min-width="100">
+                min-width="80">
                 </el-table-column>
                 <el-table-column
                 prop="cameraNumber"
                 align='center'
                 label="编号"
                 :formatter="formatRole"
-                min-width="100">
+                min-width="80">
                 </el-table-column>
                 <el-table-column
                 prop="poleName"
@@ -97,21 +97,21 @@
                 align='center'
                 label="备注"
                 :formatter="formatRole"
-                min-width="100">
+                xshow-overflow-tooltip>
                 </el-table-column>
                 <el-table-column
                 prop="createTime"
                 align='center'
                 label="创建时间"
-                :formatter="formatRole"
-                xshow-overflow-tooltip>
+                min-width="120"
+                :formatter="formatRole">
                 </el-table-column>
                 <el-table-column
                 prop="createTime"
                 align='center'
                 label="预览"
                 :formatter="formatRole"
-                min-width="100">
+                min-width="80">
                     <template slot-scope="scope">
                         <el-button @click="preview(scope.row)" type="primary" size='small'>预览</el-button>
                     </template>
@@ -451,16 +451,6 @@ export default {
 }
 </script>
 <style scoped>
-.CameraManage{width: 100%;height: 100%;}
-.CameraManage>div{width: 100%;position: absolute;}
-.CameraManage_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.CameraManage_top>button,.CameraManage_top>div{height:33px;margin:8px 0 0 10px;}
-.CameraManage_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
-.block{text-align: center;}
-.search{display: flex;align-items: center;margin-left: 20px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
-
 .Modal{width: 100%;height: 400px;display: flex;}
 .Modal_left{width: 480px;position: relative;}
 .flashLoadMsg{width: 100%;height: 100%;background: black;display: flex;justify-content: center;align-items: center;font-size: 16px;display: none;position: absolute;z-index: 9;}

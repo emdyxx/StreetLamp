@@ -5,14 +5,13 @@
 		</div>
 		<div class="login_right">
 			<div>
-				<img src="../assets/img/solin.png" alt="">
-				<p>登录</p>
-				<label for="user">
-					<img src="../assets/img/username.png" alt="">
+				<img :src = serverurl2 alt="">
+				<label for="user" style="margin-top:100px;">
+					<img src="../assets/img/username.png" alt="" class="image">
 					<input type="text" v-model="username" id="user" autocomplete="new-password" placeholder="账号">
 				</label>
-				<label for="password" style="margin-top:65px;">
-					<img style="padding-left:4px;" src="../assets/img/password.png" alt="">
+				<label for="password" style="margin-top:30px;">
+					<img src="../assets/img/password.png" alt="" class="image">
 					<input type="password" v-model="password" id="password" autocomplete="new-password" placeholder="密码">
 				</label>
 				<el-checkbox v-model="checked">记住密码</el-checkbox>
@@ -28,6 +27,7 @@ export default {
 	data () {
 		return {
 			serverurl:'',
+			serverurl2:'',
 			loading: false,
 			checked:false,
 			username:'',
@@ -36,9 +36,11 @@ export default {
 	},
 	mounted(){
 		var that = this;
+		
 		setTimeout(function(){
 			that.serverurl = localStorage.serverurl
-		},1000)
+			that.serverurl2 = localStorage.serverurl2 + '/img/icon01.png'
+		},50)
 	},
 	methods:{
 		login(){
@@ -115,7 +117,7 @@ export default {
 			this.password = localStorage.password
 			this.checked = true
 		}
-		sessionStorage.clear() 
+		sessionStorage.clear()
 		var theUA = window.navigator.userAgent.toLowerCase();
 		if ((theUA.match(/msie\s\d+/) && theUA.match(/msie\s\d+/)[0]) || (theUA.match(/trident\s?\d+/) && theUA.match(/trident\s?\d+/)[0])) {
 			var ieVersion = theUA.match(/msie\s\d+/)[0].match(/\d+/)[0] || theUA.match(/trident\s?\d+/)[0];
@@ -149,12 +151,14 @@ input{background:none;outline:none;}
 .login{width:100%;height:100%;display: flex;}
 .login_left{width: 60%;background:url('../assets/img/beijing.jpg');background-size: 100% 100%; background-repeat: no-repeat;}
 .login_right{width: 40%;background: white;padding: 0 5% 0 5%;display: flex;align-items: center;}
-.login_right>div{width: 100%;}
-.login_right p{padding: 34px 0 50px 0;margin:0;font-size: 24px;font-weight: 600;color: #666666;}
+.login_right>div{width: 100%;text-align: center;}
 
-.login_right label{width: 100%;display: flex;padding: 0 0 0 0;border-bottom: 1px solid #e4e4e4;}
-.login_right label>img{padding-bottom: 10px;}
-.login_right label>input{margin-left: 25px;border: none;font-size: 16px;}
-.login_right label:nth-of-type(3){border: none;margin:10px 0 36px 0;padding: 0;color: #9d9d9d;}
+.login_right label{width: 100%;display: flex;border: 1px solid #e4e8ee;height: 60px;}
+.login_right label>img{height: 21px;margin: 20px 10px 15px 15px;}
+
+.login_right label>input{margin-left: 5px;padding-left:15px;border: none;font-size: 16px;border-left: 1px solid #e4e8ee;height: 40px;margin-top: 10px;}
+.login_right label:nth-of-type(3){border: none;height: 30px;margin:15px 0 0px 0;padding: 0;color: #9d9d9d;}
 .login_right button{width: 100%;height: 48px;font-size: 20px;}
+
+input:-webkit-autofill{-webkit-box-shadow: 0 0 0px 1000px white inset;}
 </style>

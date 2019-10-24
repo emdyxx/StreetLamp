@@ -1,6 +1,6 @@
 .equipment{background-image: url(img/equipment.png) !important;background-repeat: no-repeat !important;}
 .solinPoleDeploy{background-image: url(img/solinPoleDeploy.png) !important;background-repeat: no-repeat !important;}
-.solinLampDeploy,.solinLampManage{background-image: url(img/solinLampDeploy.png) !important;background-repeat: no-repeat !important ;}
+.solinLampDeploy,.solinLampManage{background-image: url(img/solinLampDeploy.png) !important;background-repeat: no-repeat !important;background-size: 100% 100%;}
 .solinScreenDeploy,.solinScreenManage{background-image: url(img/solinScreenDeploy.png) !important;background-repeat: no-repeat !important;}
 .solinLoraSensorsDeploy,.solinLoraSensorsManage{background-image: url(img/solinLoraSensorsDeploy.png) !important;background-repeat: no-repeat !important;}
 .solinConcentratorDeploy{background-image: url(img/solinConcentratorDeploy.png) !important;background-repeat: no-repeat !important;}
@@ -17,8 +17,8 @@
 .solinLoraMagneticDoor{background-image: url(img/solinLoraMagneticDoor.png) !important;background-repeat: no-repeat !important;}
 .solinLoraInfrared{background-image: url(img/solinLoraInfrared.png) !important;background-repeat: no-repeat !important;}
 
-.solinSceneryControllerDeploy{background-image: url(img/SceneryS.png) !important;background-repeat: no-repeat !important;}
-.solinLoraWaterLevel{background-image: url(img/waterlevelS.png) !important;background-repeat: no-repeat !important;}
+.solinSceneryControllerDeploy{background-image: url(img/solinSceneryControllerDeploy.png) !important;background-repeat: no-repeat !important;}
+.solinLoraWaterLevel{background-image: url(img/solinLoraWaterLevel.png) !important;background-repeat: no-repeat !important;}
 
 
 .jstree_mechanism1 {
@@ -494,8 +494,7 @@
 }
 
 .jstree-default .jstree-anchor {
-    line-height: 24px;
-    height: 24px
+    height: 27px
 }
 
 .jstree-default .jstree-icon {
@@ -503,6 +502,7 @@
     height: 24px;
     line-height: 24px;
     background-position-x: 50%;
+    margin-top: 2px;
 }
 
 .jstree-default .jstree-icon:empty {

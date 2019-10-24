@@ -1,7 +1,7 @@
 <template>
     <!-- 灯具 -->
-    <div class="lampslanterns">
-        <div class="lampslanterns_top">
+    <div class="section">
+        <div class="section_top">
             <el-dropdown v-if="JurisdictionS.lampControl" style="margin-left:10px;" @command='operation'>
                 <el-button type="primary" size='small' style="width:85px;">
                     操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -55,129 +55,127 @@
                 </div>
             </div>
         </div>
-        <div class="lampslanterns_bottom">
-            <div class="lampslanterns_bottom_bottom">
-                <el-table
-                    :data="tableData"
-                    @row-click="clickRow" 
-                    ref="moviesTable"
-                    border
-                    stripe
-                    size='small'
-                    tooltip-effect="dark"
-                    @selection-change="SelectionChange"
-                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                    <el-table-column
-                    type="selection"
-                    align='center'
-                    width="55">
-                    </el-table-column>
-                    <el-table-column
-                    prop="nickName"
-                    align='center'
-                    label="名称"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="serialNumber"
-                    align='center'
-                    label="序列号"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="在线状态"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.online=='0'">离线</span>
-                            <span v-if="scope.row.online=='1'">在线</span>
-                        </template>
-                    </el-table-column>
-                    <!-- <el-table-column
-                    align='center'
-                    label="灯状态"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.lampStatus=='0'">关闭</span>
-                            <span v-if="scope.row.lampStatus=='1'">开启</span>
-                            <span v-if="scope.row.lampStatus=='2'">告警</span>
-                        </template>
-                    </el-table-column> -->
-                    <!-- <el-table-column
-                    prop="lampNumber"
-                    align='center'
-                    label="灯具编号"
-                    :formatter="formatRole"
-                    min-width="80">
-                    </el-table-column> -->
-                    <el-table-column
-                    prop="strategyName"
-                    align='center'
-                    label="当前策略"
-                    :formatter="formatRole"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="envBrightness"
-                    align='center'
-                    :formatter="formatRole"
-                    label="环境亮度"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="brightness"
-                    align='center'
-                    :formatter="formatRole"
-                    label="灯亮度"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="voltage"
-                    align='center'
-                    :formatter="formatRole"
-                    label="电压(V)"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="electricity"
-                    align='center'
-                    :formatter="formatRole"
-                    label="电流(A)"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="power"
-                    align='center'
-                    :formatter="formatRole"
-                    label="功率(W)"
-                    min-width="80">
-                    </el-table-column>
-                    <!-- <el-table-column
-                    prop="location"
-                    align='center'
-                    label="区域"
-                    min-width="120">
-                    </el-table-column> -->
-                    <el-table-column
-                    prop="timestamp"
-                    :formatter="formatRole"
-                    label="采集时间"
-                    align='center'
-                    min-width="160">
-                    </el-table-column>
-                </el-table>
-                <div class="block">
-                    <el-pagination
-                    background
-                    @size-change="sizechange"
-                    @current-change="currentchange"
-                    :current-page="pageIndex"
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-                    </el-pagination>
-                </div>
+        <div class="section_bottom">
+            <el-table
+                :data="tableData"
+                @row-click="clickRow" 
+                ref="moviesTable"
+                border
+                stripe
+                size='small'
+                tooltip-effect="dark"
+                @selection-change="SelectionChange"
+                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                <el-table-column
+                type="selection"
+                align='center'
+                width="55">
+                </el-table-column>
+                <el-table-column
+                prop="nickName"
+                align='center'
+                label="名称"
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                prop="serialNumber"
+                align='center'
+                label="序列号"
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="在线状态"
+                min-width="80">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.online=='0'">离线</span>
+                        <span v-if="scope.row.online=='1'">在线</span>
+                    </template>
+                </el-table-column>
+                <!-- <el-table-column
+                align='center'
+                label="灯状态"
+                min-width="80">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.lampStatus=='0'">关闭</span>
+                        <span v-if="scope.row.lampStatus=='1'">开启</span>
+                        <span v-if="scope.row.lampStatus=='2'">告警</span>
+                    </template>
+                </el-table-column> -->
+                <!-- <el-table-column
+                prop="lampNumber"
+                align='center'
+                label="灯具编号"
+                :formatter="formatRole"
+                min-width="80">
+                </el-table-column> -->
+                <el-table-column
+                prop="strategyName"
+                align='center'
+                label="当前策略"
+                :formatter="formatRole"
+                min-width="80">
+                </el-table-column>
+                <el-table-column
+                prop="envBrightness"
+                align='center'
+                :formatter="formatRole"
+                label="环境亮度"
+                min-width="80">
+                </el-table-column>
+                <el-table-column
+                prop="brightness"
+                align='center'
+                :formatter="formatRole"
+                label="灯亮度"
+                min-width="80">
+                </el-table-column>
+                <el-table-column
+                prop="voltage"
+                align='center'
+                :formatter="formatRole"
+                label="电压(V)"
+                min-width="80">
+                </el-table-column>
+                <el-table-column
+                prop="electricity"
+                align='center'
+                :formatter="formatRole"
+                label="电流(A)"
+                min-width="80">
+                </el-table-column>
+                <el-table-column
+                prop="power"
+                align='center'
+                :formatter="formatRole"
+                label="功率(W)"
+                min-width="80">
+                </el-table-column>
+                <!-- <el-table-column
+                prop="location"
+                align='center'
+                label="区域"
+                min-width="120">
+                </el-table-column> -->
+                <el-table-column
+                prop="timestamp"
+                :formatter="formatRole"
+                label="采集时间"
+                align='center'
+                min-width="160">
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                background
+                @size-change="sizechange"
+                @current-change="currentchange"
+                :current-page="pageIndex"
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+                </el-pagination>
             </div>
         </div>
         <!-- 策略管理 -->
@@ -377,7 +375,7 @@
                                         slot="empty"
                                         tooltip-effect="dark"
                                         @selection-change="myModalChange"
-                                        style="width: 100%;overflow:auto;max-height:158px;margin-bottom:10px;margin-top:10px;">
+                                        style="width: 100%;overflow:auto;max-height:136px;margin-bottom:10px;margin-top:10px;">
                                         <el-table-column
                                         type="selection"
                                         align='center'
@@ -708,6 +706,7 @@ export default {
                                 message: '亮度调节成功!',
                                 type: 'success'
                             });
+                            that.dialogVisible0 = false
                             setTimeout(function(){
                                 that.ready()
                             },5000)
@@ -1414,25 +1413,5 @@ export default {
 }
 </script>
 <style scoped>
-.Required{color: red;font-size: 17px;}
-.lampslanterns{width: 100%;height: 100%;}
-.lampslanterns>div{width: 100%;border: 1px solid #E4E4F1;position: absolute;}
-.lampslanterns_top{height: 46px;border-bottom: none !important;display: flex;align-items: center;font-size: 16px;padding-left: 20px;}
-.lampslanterns_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;}
-.lampslanterns_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
-.block{text-align: center;}
-.strategy{width: 100%;}
-.strategy_top{width: 100%;height: 40px;line-height: 40px;}
-.strategy_bottom{width: 100%;}
-.form-group{display:flex;justify-content: center;}
-.form-group>label{width: 95px;line-height: 34px;text-align: center;}
-.form-group>div{height: 34px;line-height: 34px;}
-.form-group>input{width: 185px;}
-
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
-</style>
-<style>
-/* .el-tabs__content{position: relative;top:0;height: 505px;} */
+.strategy_bottom{margin-top:10px;}
 </style>

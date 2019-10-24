@@ -29,18 +29,18 @@
                 </el-table-column>
                 <el-table-column
                 align='center'
-                label="太阳能电流/功率/电压"
+                label="太阳能电流/电压/功率"
                 min-width="120">
                     <template slot-scope="scope">
-                        {{scope.row.solarEngIma}}/{{scope.row.solarEngPower}}/{{scope.row.solarEngVoltage}}
+                        {{scope.row.solarEngIma}}/{{scope.row.solarEngVoltage}}/{{scope.row.solarEngPower}}
                     </template>
                 </el-table-column>
                 <el-table-column
                 align='center'
-                label="风机电流/功率/电压"
+                label="风机电流/电压/功率"
                 min-width="120">
                     <template slot-scope="scope">
-                        {{scope.row.fanIma}}/{{scope.row.fanPower}}/{{scope.row.fanVoltage}}
+                        {{scope.row.fanIma}}/{{scope.row.fanVoltage}}/{{scope.row.fanPower}}
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -131,7 +131,7 @@ export default {
                 size:that.pageSize,
                 command:that.value,
             }
-            url='/v1/solin/windSolarSensors/log/data'
+            url='/v1/solin/sensor/wind-solar/log/data'
             $.ajax({
                 type:'get',
                 async:true,

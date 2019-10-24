@@ -1,32 +1,30 @@
 <template>
     <!-- 巡检主页 -->
-    <div class="Inspection">
+    <div class="OverallSituation">
         <header class="header">
             <i @click="backtrack" class="iconfont icon-fanhui2"></i>
-            <div class="Inspection_header_left">
+            <div class="header-left">
                 <i class="iconfont icon-hengpai"></i>
                 巡检管理
             </div>
-            <div class="Inspection_header_project">
-                <el-select size='small' v-model="value" @change='projectChange' style="margin-left:20px;" placeholder="请选择">
-                    <el-option
-                        v-for="item in options"
-                        style="height:30px;"
-                        :key="item.id"
-                        :label="item.projectName"
-                        :value="item.id">
-                    </el-option>
-                </el-select>
-            </div>
-            <div class="header_right">
+            <el-select size='small' v-model="value" @change='projectChange' style="margin-left:20px;" placeholder="请选择">
+                <el-option
+                    v-for="item in options"
+                    style="height:30px;"
+                    :key="item.id"
+                    :label="item.projectName"
+                    :value="item.id">
+                </el-option>
+            </el-select>
+            <!-- <div class="header-right">
                 <i @click="backtrack" class="iconfont icon-guanbi"></i>
-            </div>
+            </div> -->
         </header>
-        <div class="bottom">
-            <div class="bottom_left">
+        <div class="footer">
+            <div class="CommonStyle_left">
                 <div id="jstree"></div>
             </div>
-            <div class="bottom_right">
+            <div class="CommonStyle_right">
                 <router-view></router-view>
             </div>
         </div>
@@ -226,18 +224,5 @@ export default {
 }
 </script>
 <style scoped>
-.Inspection{width: 100%;height: 100%;}
-.header{width:100%;height: 60px;background: #409EFF;display: flex;}
-.header>i{font-size: 32px;color: white;cursor: pointer;position: absolute;left: 20px;top:10px;}
-.header>i:hover{color: aquamarine;}
-.Inspection_header_left{height: 100%;display: inline-block;margin-left: 70px;color: white;font-size: 24px;line-height: 50px;}
-.Inspection_header_left>i{color: white;font-size: 26px;line-height: 62px;}
-.Inspection_header_project{line-height: 60px;}
-.header_right{position: absolute;right: 30px;height: 60px;;display: flex;align-items:center;}
-.header_right>i{color: white;font-size: 34px;cursor: pointer;}
-.header_right>i:hover{color: aquamarine;}
 
-.bottom{width: 100%;position: absolute;top:60px;bottom:0;display: flex;padding: 5px;}
-.bottom_left{width:200px;height: 100%;border:1px solid #e4e4f1;}
-.bottom_right{position: absolute;left:210px;right: 5px;top:5px;bottom:5px;}
 </style>

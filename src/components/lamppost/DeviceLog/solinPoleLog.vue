@@ -1,16 +1,16 @@
 <template>
     <!-- 灯杆日志 -->
-    <div class="LampPoleJournal">
-        <div class="LampPoleJournal_top">
-            <div class="search">
+    <div class="section">
+        <div class="section_top">
+            <div class="search_Log">
                 <span>名称:</span>
                 <input type="text" v-model="nickName" style="width:126px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入灯杆名称">
             </div>
-            <div class="search">
+            <div class="search_Log">
                 <span>序列号:</span>
                 <input type="text" v-model="serialNumber" style="width:126px;" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="fullName" placeholder="请输入灯杆编号">
             </div>
-            <div class="search">
+            <div class="search_Log">
                 <span>操作类别:</span>
                 <el-select v-model="value" clearable size='small' style="width:126px;" placeholder="请选择">
                     <el-option
@@ -23,7 +23,7 @@
             </div>
             <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
         </div>
-        <div class="LampPoleJournal_bottom">
+        <div class="section_bottom">
             <el-table
                 :data="tableData"
                 border
@@ -176,14 +176,5 @@ export default {
 }
 </script>
 <style scoped>
-.LampPoleJournal{width: 100%;height: 100%;}
-.LampPoleJournal>div{width: 100%;position: absolute;}
-.LampPoleJournal_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;line-height: 46px;padding-left: 15px;}
-.LampPoleJournal_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
 
-.search{display: flex;margin-left:10px;}
-.search>span{line-height: 30px;line-height: 45px;}
-.search>input{height: 30px;width: 110px;margin-top: 6px;height: 33px;}
-.search>div{height: 30px;width: 110px;}
-.block{text-align: center;}
 </style>

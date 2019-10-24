@@ -9,9 +9,9 @@ export default {
 	name: 'App',
 	created(){
 		// localStorage.serverurl = 'http://192.168.70.17:8071/SD-IOT-API'
-		// localStorage.serverurl = 'http://192.168.10.46:8080/SD-IOT-API'
-		//  localStorage.serverurl = 'http://192.168.10.54:8080/SD-IOT-API'
+		// localStorage.serverurl = 'http://192.168.10.7:8080/SD-IOT-API'
 		localStorage.serverurl = 'http://192.168.70.10:8071/SD-IOT-API'
+		// localStorage.serverurl = 'http://192.168.10.95:8071/SD-IOT-API'
 
 		// $.ajax({
 		// 	type:'post',
@@ -24,6 +24,7 @@ export default {
 		// 			var url = window.location.href
 		// 			url = url.split('/')
 		// 			localStorage.serverurl = url[0]+'//'+url[2]+'/SD-IOT-API';
+		// 			localStorage.serverurl2 = url[0]+'//'+url[2]+'/solin-platform'
 		// 		}else{
 		// 			localStorage.serverurl = data.url;
 		// 		}  

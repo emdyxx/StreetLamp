@@ -1,9 +1,9 @@
 <template>
-    <div class="deploy">
-        <div class="deploy_left">
+    <div class="CommonStyle">
+        <div class="CommonStyle_left">
             <div id="jstree"></div>
         </div>
-        <div class="deploy_right">
+        <div class="CommonStyle_right">
             <router-view></router-view>
         </div>
     </div>
@@ -125,6 +125,7 @@ export default {
                                             jsonarray= datas;
                                         },
                                     })
+                                    console.log(sessionStorage.menuId3)
                                     if(sessionStorage.menuId3=='45'){
                                         that.$router.push({'path':'/solinPoleDeploy'})
                                     }
@@ -208,7 +209,5 @@ export default {
 }
 </script>
 <style scoped>
-.deploy{width: 100%;height: 100%;}
-.deploy_left{width: 200px;height: 100%;border: 1px solid #E4E4F1;overflow: auto;}
-.deploy_right{position: absolute;left: 210px;right: 5px;top:5px;bottom:5px;}
+
 </style>

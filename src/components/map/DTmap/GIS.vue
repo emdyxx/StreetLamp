@@ -9,6 +9,14 @@
                 :value="item.id">
                 </el-option>
             </el-select>
+            <p>
+                <span>欢迎您!</span>
+                <span>{{username}}</span>
+                <span>
+                    <img :src=serverurl+icon alt="">
+                </span>
+                <span>{{versionNumber}}</span>
+            </p>
         </div>
         <div class="statistical">
             <div class="statistical_top">
@@ -114,7 +122,7 @@
             </div>
         </div>
         <div class="allmap" v-if="locationType=='1'">
-            <div id="allmap"></div>
+            <div id="allmap_map"></div>
         </div>
         <div class="lampData" v-if="lampData_type">
             <div class="lampData_top">
@@ -174,6 +182,9 @@ export default {
     data () {
         return {
             serverurl:localStorage.serverurl,
+            username:sessionStorage.username,
+            icon:sessionStorage.icon,
+            versionNumber:localStorage.versionNumber,
             imgserverurl:'',
             options:[],
             value:'',
@@ -257,7 +268,9 @@ export default {
                         }
                         that.weatherRequest()
                         that.Statistics('1')
-                        that.ready()
+                        // setTimeout(() => {
+                            that.ready()
+                        // }, 100);
                     }else{
                         that.errorCode(data)
                     }
@@ -495,32 +508,35 @@ export default {
                         }
                         that.readyData = data.result.list
                         if(that.locationType=='1'){
-                            // 百度地图API功能
-                            var map = new BMap.Map("allmap",{enableMapClick:false});    // 创建Map实例
                             if(data.result.list.length==0){
-                                map.centerAndZoom(that.timeData.City, 16); 
-                            }else{
-                                var coord = ''
-                                coord = data.result.list[0].coord
-                                coord = coord.split(',')
-                                map.centerAndZoom(new BMap.Point(coord[0],coord[1]), 16);  // 初始化地图,设置中心点坐标和地图级别
+                                setTimeout(() => {
+                                    var map = new BMap.Map("allmap_map",{enableMapClick:false});    // 创建Map实例
+                                    map.centerAndZoom(that.timeData.City, 15); 
+                                    map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+                                },100)
+                                return;
                             }
+                            // 百度地图API功能
+                            var map = new BMap.Map("allmap_map",{enableMapClick:false,minZoom:5,maxZoom:19});    // 创建Map实例
+                            var coord = ''
+                            coord = data.result.list[0].coord
+                            coord = coord.split(',')
+                            map.centerAndZoom(new BMap.Point(coord[0],coord[1]), 16);  // 初始化地图,设置中心点坐标和地图级别
                             map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
-                            map.setMapStyle({style:'light'});
-                            //添加灯杆坐标
+                            // //添加灯杆坐标
                             var online = new BMap.Icon(that.imgserverurl+"image/img/online.png", new BMap.Size(45,45));
                             var offline = new BMap.Icon(that.imgserverurl+"image/img/offline.png", new BMap.Size(45,45));
                             var Unknown = new BMap.Icon(that.imgserverurl+"image/img/Unknown.png", new BMap.Size(45,45));
-                            var abnormal = new BMap.Icon(that.imgserverurl+"image/img/abnormal.gif", new BMap.Size(210,210));
+                            var abnormal = new BMap.Icon(that.imgserverurl+"image/img/abnormal.png", new BMap.Size(45,45));
                             var markers = []
                             for(var i=0;i<data.result.list.length;i++){
                                 var coord = data.result.list[i].coord
                                 var point = new BMap.Point(coord.split(",")[0],coord.split(",")[1]);
-                                if(data.result.list[i].poleStatus=='2'){
+                                if(data.result.list[i].poleStatus=='3'){
                                     var marker = new BMap.Marker(point,{icon:abnormal});
-                                }else if(data.result.list[i].poleStatus=='3'){
+                                }else if(data.result.list[i].poleStatus=='0'){
                                     var marker = new BMap.Marker(point,{icon:Unknown});
-                                }else if(data.result.list[i].poleOnlie=='1'){
+                                }else if(data.result.list[i].poleStatus=='2'){
                                     var marker = new BMap.Marker(point,{icon:online});
                                 }else{
                                     var marker = new BMap.Marker(point,{icon:offline});
@@ -575,14 +591,11 @@ export default {
                                         that.lampId = e.target.id
                                 })
                                 markers.push(marker)
-                                map.addOverlay(marker);
+                                // map.addOverlay(marker);
                             }
-                            // var markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markers});
-                            // markerClusterer.setMinClusterSize(3)
-                            
-                            //鼠标左键请求灯杆基本信息
+                            var markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markers});
+                            // //鼠标左键请求灯杆基本信息
                             map.addEventListener("click", function (e) {
-                                console.log(e)
                                 if(e.overlay){
                                     for(var i=0;i<that.readyData.length;i++){
                                         if(e.overlay.id==that.readyData[i].id){
@@ -612,7 +625,7 @@ export default {
                             map.addContextMenu(menu);                         
                         }
                         if(that.locationType=='0'){
-                       
+                            
                         }
                     }else{
                         that.errorCode(data)
@@ -671,8 +684,6 @@ export default {
 <style scoped>
 hr{margin: 0;}
 .GIS{width: 100%;height: 100%;position: relative;}
-.project_top_left{position: absolute;top: 0;left: 0;width: 403px;height: 48px;background: #409eff;border-top-right-radius: 40px;border-bottom-right-radius: 40px;display: flex;justify-content: center;align-items: center;z-index: 2;}
-.project_top_left>div{width: 348px;}
 .statistical{width: 350px;height: 190px;border-radius: 10px;box-shadow: 3px 3px 5px #999;position: absolute;top: 75px;left: 10px;padding: 0 15px 0 15px;z-index: 2;background: white;}
 .statistical_top{height: 40px;display: flex;align-items: center;font-size: 15px;color: #333333;}
 .statistical_top>img{padding-right: 15px;width: 40px;}

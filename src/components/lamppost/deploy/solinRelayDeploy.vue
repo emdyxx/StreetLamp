@@ -1,7 +1,7 @@
 <template>
     <!-- 继电器部署 -->
-    <div class="SolinRelayDeploy">
-        <div class="solinRelayDeploy_top">
+    <div class="section">
+        <div class="section_top">
             <el-button v-if="JurisdictionS.addRelay" @click="solinRelayDeployOpreat(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="JurisdictionS.editRelay" @click="solinRelayDeployOpreat(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="JurisdictionS.delRelay" @click="solinRelayDeployOpreat(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
@@ -19,7 +19,9 @@
                         <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                     </template>
                     <template v-if="type1=='2'">
-                        <el-input v-model="relayNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+                        <el-input type="number" v-model="relayNumber" size="small" placeholder="请输入地址" style="width:200px;"></el-input>
+                        <!-- <el-input-number v-model="relayNumber" size="small" :precision="0" :min="1" :max="253" label="请输入地址" style="width:200px;"></el-input-number> -->
+                        <!-- <el-input v-model="relayNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input> -->
                     </template>
                     <template v-if="type1=='3'">
                         <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
@@ -37,87 +39,85 @@
                 </div>
             </div>
         </div>
-        <div class="solinRelayDeploy_bottom"> 
-            <div class="solinRelayDeploy_bottom_bottom">
-                <el-table
-                    :data="tableData"
-                    @row-click="clickRow" 
-                    ref="moviesTable"
-                    border
-                    stripe
-                    size='small'
-                    tooltip-effect="dark"
-                    @selection-change="SelectionChange"
-                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                    <el-table-column
-                    type="selection"
-                    align='center'
-                    width="55">
-                    </el-table-column>
-                    <el-table-column
-                    prop="nickName"
-                    align='center'
-                    label="名称"
-                    :formatter="formatRole"
-                    min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    prop="relayNumber"
-                    align='center'
-                    :formatter="formatRole"
-                    label="地址"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="状态"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.online=='0'">离线</span>
-                            <span v-if="scope.row.online=='1'">在线</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="modelName"
-                    align='center'
-                    label="型号"
-                    :formatter="formatRole"
-                    min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    prop="concentratorName"
-                    align='center'
-                    :formatter="formatRole"
-                    label="集中器"
-                    min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    prop="remark"
-                    align='center'
-                    :formatter="formatRole"
-                    label="备注"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="createTime"
-                    align='center'
-                    label="创建时间"
-                    :formatter="formatRole"
-                    show-overflow-tooltip>
-                    </el-table-column>
-                </el-table>
-                <div class="block">
-                    <el-pagination
-                    background
-                    @size-change="sizechange"
-                    @current-change="currentchange"
-                    :current-page="pageIndex"
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-                    </el-pagination>
-                </div>
+        <div class="section_bottom"> 
+            <el-table
+                :data="tableData"
+                @row-click="clickRow" 
+                ref="moviesTable"
+                border
+                stripe
+                size='small'
+                tooltip-effect="dark"
+                @selection-change="SelectionChange"
+                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                <el-table-column
+                type="selection"
+                align='center'
+                width="55">
+                </el-table-column>
+                <el-table-column
+                prop="nickName"
+                align='center'
+                label="名称"
+                :formatter="formatRole"
+                min-width="110">
+                </el-table-column>
+                <el-table-column
+                prop="relayNumber"
+                align='center'
+                :formatter="formatRole"
+                label="地址"
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="状态"
+                min-width="80">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.online=='0'">离线</span>
+                        <span v-if="scope.row.online=='1'">在线</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                prop="modelName"
+                align='center'
+                label="型号"
+                :formatter="formatRole"
+                min-width="110">
+                </el-table-column>
+                <el-table-column
+                prop="concentratorName"
+                align='center'
+                :formatter="formatRole"
+                label="集中器"
+                min-width="110">
+                </el-table-column>
+                <el-table-column
+                prop="remark"
+                align='center'
+                :formatter="formatRole"
+                label="备注"
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                prop="createTime"
+                align='center'
+                label="创建时间"
+                :formatter="formatRole"
+                min-width="150">
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                background
+                @size-change="sizechange"
+                @current-change="currentchange"
+                :current-page="pageIndex"
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+                </el-pagination>
             </div>
         </div>
         <!-- 添加/编辑继电器模态框 -->
@@ -130,15 +130,15 @@
                         <h4 v-if="type=='1'" class="modal-title" id="myModalLabel">编辑继电器</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="form_input">
+                        <div class="form-group">
                             <label><span class="Required">*</span>名称:</label>
                             <input type="text" v-model.lazy="data.nickName" maxlength="40" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入继电器名称">
                         </div>
-                        <div class="form_input">
+                        <div class="form-group">
                             <label><span class="Required">*</span>地址:</label>
-                            <el-input-number v-model.lazy="data.relayNumber" :min="1" :max="253" size="small" style="width:196px;" label="地址"></el-input-number>
+                            <el-input-number v-model.lazy="data.relayNumber" :precision="0" :min="1" :max="253" size="small" style="width:196px;" label="地址"></el-input-number>
                         </div>
-                        <div class="form_input">
+                        <div class="form-group">
                             <label><span class="Required">*</span>型号:</label>
                             <el-select v-model="data.modelId" @change="modelChange" size='small' clearable style='width:196px;' placeholder="请选择">
                                 <el-option
@@ -149,7 +149,7 @@
                                 </el-option>
                             </el-select>
                         </div>
-                        <div class="form_input">
+                        <div class="form-group">
                             <label><span class="Required">*</span>集中器:</label>
                             <el-select v-model="data.concentratorSn" size='small' clearable style='width:196px;' placeholder="请选择">
                                 <el-option
@@ -162,7 +162,7 @@
                                 </el-option>
                             </el-select>
                         </div>
-                        <div class="form_input">
+                        <div class="form-group">
                             <label>备注:</label>
                             <el-input
                                 type="textarea"
@@ -571,24 +571,7 @@ export default {
 }
 </script>
 <style scoped>
-.Required{color: red;font-size: 17px;}
-.SolinRelayDeploy{width: 100%;height: 100%;}
-.SolinRelayDeploy>div{width: 100%;position: absolute;}
-.solinRelayDeploy_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.solinRelayDeploy_top>button,.solinRelayDeploy_top>div{height:33px;margin:8px 0 0 10px;}
-.solinRelayDeploy_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
-.solinRelayDeploy_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
-
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
-.block{text-align: center;}
-
-.form_input{display:flex;justify-content: center;}
-.form_input>label{width: 105px;line-height: 34px;text-align: center;}
-.form_input>input{width: 196px;}
-
-.passageway{width: 100%;padding: 5px;border: 1px solid #dcdfe6;margin-top:10px;}
+.passageway{width: 100%;padding: 5px;border: 1px solid #dcdfe6;margin-top:30px;}
 .passageway>div{width:100%;}
 .passageway_div1{display: flex;border: 1px solid #dcdfe6;}
 .passageway_div1>span{display: inline-block;width: 25%;text-align: center;border-right: 1px solid #dcdfe6;box-sizing: border-box;}
@@ -596,5 +579,5 @@ export default {
 .passageway_div2>div{width: 50%;}
 .passageway_div2>div>div{display: flex;}
 .passageway_div2 span{display: inline-block;width: 100%;text-align: center;line-height: 34px;box-sizing: border-box;border-bottom: 1px solid #dcdfc6;border-left: 1px solid #dcdfc6;}
-.passageway_div2 span>input{width: 100%;}
+.passageway_div2 span>input{width: 100%;} 
 </style>

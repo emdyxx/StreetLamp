@@ -1,7 +1,7 @@
 <template>
-    <div class="loraSensor">
+    <div class="section">
         <!-- 传感器部署 -->
-        <div class="loraSensor_top">
+        <div class="section_top">
             <el-button v-if="JurisdictionS.addLoraSensor" @click="addloraSensor(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
             <el-button v-if="JurisdictionS.editLoraSensor" @click="addloraSensor(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
             <el-button v-if="JurisdictionS.delLoraSensor" @click="deletloraSensor" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
@@ -32,9 +32,9 @@
                         <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
                             <el-option
                             v-for="item in options"
-                            :key="item.modelId"
+                            :key="item.sensorsType"
                             :label="item.text"
-                            :value="item.modelId">
+                            :value="item.sensorsType">
                             </el-option>
                         </el-select>
                     </template>
@@ -44,101 +44,99 @@
                 </div>
             </div>
         </div>
-        <div class="loraSensor_bottom">
-            <div class="loraSensor_bottom_bottom">
-                <el-table
-                    :data="tableData"
-                    @row-click="clickRow" 
-                    ref="moviesTable"
-                    border
-                    stripe
-                    size='small'
-                    tooltip-effect="dark"
-                    @selection-change="SelectionChange"
-                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                    <el-table-column
-                    type="selection"
-                    align='center'
-                    width="55">
-                    </el-table-column>
-                    <el-table-column
-                    prop="nickName"
-                    align='center'
-                    label="名称"
-                    :formatter="formatRole"
-                    min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    prop="serialNumber"
-                    align='center'
-                    :formatter="formatRole"
-                    label="序列号"
-                    min-width="110">
-                    </el-table-column>
-                    <el-table-column
-                    align='center'
-                    label="状态"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.online=='0'">离线</span>
-                            <span v-if="scope.row.online=='1'">在线</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="sensorsTypeDesc"
-                    align='center'
-                    :formatter="formatRole"
-                    label="类型"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="modelName"
-                    align='center'
-                    :formatter="formatRole"
-                    label="型号"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="network"
-                    align='center'
-                    :formatter="formatRole"
-                    label="入网方式"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="poleName"
-                    align='center'
-                    label="灯杆"
-                    min-width="110"
-                    :formatter="formatRole">
-                    </el-table-column>
-                    <el-table-column
-                    prop="remark"
-                    label="备注"
-                    align='center'
-                    :formatter="formatRole"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="createTime"
-                    align='center'
-                    label="创建时间"
-                    :formatter="formatRole"
-                    show-overflow-tooltip>
-                    </el-table-column>
-                </el-table>
-                <div class="block">
-                    <el-pagination
-                    background
-                    @size-change="sizechange"
-                    @current-change="currentchange"
-                    :current-page="pageIndex"
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-                    </el-pagination>
-                </div>
+        <div class="section_bottom">
+            <el-table
+                :data="tableData"
+                @row-click="clickRow" 
+                ref="moviesTable"
+                border
+                stripe
+                size='small'
+                tooltip-effect="dark"
+                @selection-change="SelectionChange"
+                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                <el-table-column
+                type="selection"
+                align='center'
+                width="55">
+                </el-table-column>
+                <el-table-column
+                prop="nickName"
+                align='center'
+                label="名称"
+                :formatter="formatRole"
+                min-width="110">
+                </el-table-column>
+                <el-table-column
+                prop="serialNumber"
+                align='center'
+                :formatter="formatRole"
+                label="序列号"
+                min-width="110">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                label="状态"
+                min-width="80">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.online=='0'">离线</span>
+                        <span v-if="scope.row.online=='1'">在线</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                prop="sensorsTypeDesc"
+                align='center'
+                :formatter="formatRole"
+                label="类型"
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                prop="modelName"
+                align='center'
+                :formatter="formatRole"
+                label="型号"
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                prop="network"
+                align='center'
+                :formatter="formatRole"
+                label="入网方式"
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                prop="poleName"
+                align='center'
+                label="灯杆"
+                min-width="110"
+                :formatter="formatRole">
+                </el-table-column>
+                <el-table-column
+                prop="remark"
+                label="备注"
+                align='center'
+                :formatter="formatRole"
+                min-width="120">
+                </el-table-column>
+                <el-table-column
+                prop="createTime"
+                align='center'
+                label="创建时间"
+                :formatter="formatRole"
+                min-width="150">
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                background
+                @size-change="sizechange"
+                @current-change="currentchange"
+                :current-page="pageIndex"
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+                </el-pagination>
             </div>
         </div>
         <!-- 添加/编辑传感器模态框 -->
@@ -151,15 +149,15 @@
                         <h4 v-if="type=='1'" class="modal-title" id="myModalLabel">编辑传感器</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="form_input">
+                        <div class="form-group">
                             <label><span class="Required">*</span>名称:</label>
                             <input type="text" v-model="data.nickName" maxlength="40" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                         </div>
-                        <div class="form_input">
+                        <div class="form-group">
                             <label><span class="Required">*</span>序列号:</label>
                             <input type="text" v-model="data.serialNumber" :disabled='type=="1"' maxlength="16" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
                         </div>
-                        <div class="form_input">
+                        <div class="form-group">
                             <label><span class="Required">*</span>型号:</label>
                             <el-cascader
                                 :options="options"
@@ -170,7 +168,7 @@
                                 style="width:196px;">
                             </el-cascader>
                         </div>
-                        <div class="form_input">
+                        <div class="form-group">
                             <label><span class="Required">*</span>入网方式:</label>
                             <el-select v-model="data.networkId" @change="networkIdChange" size='small' clearable style='width:196px;' placeholder="请选择">
                                 <el-option
@@ -182,26 +180,26 @@
                             </el-select>
                         </div>
                         <template v-if="networkType=='0'">
-                            <div class="form_input">
+                            <div class="form-group">
                                 <label><span class="Required">*</span>设备地址:</label>
                                 <input type="text" v-model.lazy="data.devAddr" maxlength="8" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入设备地址">
                             </div>
-                            <div class="form_input">
+                            <div class="form-group">
                                 <label><span class="Required">*</span>网络秘钥:</label>
                                 <input type="text" v-model.lazy="data.nwksKey" maxlength="32" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入网络秘钥">
                             </div>
-                            <div class="form_input">
+                            <div class="form-group">
                                 <label><span class="Required">*</span>应用秘钥:</label>
                                 <input type="text" v-model.lazy="data.appsKey" maxlength="32" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入应用秘钥">
                             </div>
                         </template>
                         <template v-if="networkType=='1'">
-                            <div class="form_input">
+                            <div class="form-group">
                                 <label><span class="Required">*</span>应用秘钥:</label>
                                 <input type="text" v-model.lazy="data.applicationKey" maxlength="32" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入应用秘钥">
                             </div>
                         </template>
-                        <div class="form_input">
+                        <div class="form-group">
                             <label><span class="Required">*</span>服务配置:</label>
                             <el-select v-model="data.serviceProfileId" size='small' clearable style='width:196px;' placeholder="请选择">
                                 <el-option
@@ -212,12 +210,12 @@
                                 </el-option>
                             </el-select>
                         </div>
-                        <div class="form_input">
+                        <div class="form-group">
                             <label>位置:</label>
                             <input type="text" v-model="data.coord" :disabled='true' class="form-control" id="email" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="地图选点">
                             <i @click="mapClick" class="iconfont icon-baidumap mappoint"></i>
                         </div>
-                        <div class="form_input">
+                        <div class="form-group">
                             <label>备注:</label>
                             <el-input
                                 type="textarea"
@@ -227,7 +225,7 @@
                                 style="width:196px;">
                             </el-input>
                         </div>
-                        <div v-if="JurisdictionS.loraSensorAssociatePole" class="form_input" style="margin-top:10px;">
+                        <div v-if="JurisdictionS.loraSensorAssociatePole" class="form-group" style="margin-top:10px;">
                             <el-button @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
                         </div>
                     </div>
@@ -950,27 +948,6 @@ export default {
 }
 </script>
 <style scoped>
-.Required{color: red;font-size: 17px;}
-.loraSensor{width: 100%;height: 100%;}
-.loraSensor>div{width: 100%;position: absolute;}
-.loraSensor_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;}
-.loraSensor_top>button,.loraSensor_top>div{height:33px;margin:8px 0 0 10px;}
-.loraSensor_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
-.loraSensor_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;}
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
-.block{text-align: center;}
 
-
-.form_input{display:flex;justify-content: center;}
-.form_input>label{width: 105px;line-height: 34px;text-align: center;}
-.form_input>input{width: 196px;}
-.mappoint{font-size: 24px;position: absolute;right: 110px;cursor: pointer;}
-
-.map_Z{margin: 0;padding: 0;position: relative;}
-.map_Z>div:nth-of-type(1){width: 100%;height: 30px;line-height: 30px;}
-.map_Z>div:nth-of-type(2){width: 100%;position: absolute;top: 30px;bottom: 30px;}
-.map_Z>div:nth-of-type(3){width: 100%;height: 30px;line-height: 30px;position: absolute;bottom: 1px;text-align: center;}
 </style>
 

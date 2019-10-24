@@ -10,6 +10,14 @@
                 :value="item.id">
                 </el-option>
             </el-select>
+            <p>
+                <span>欢迎您!</span>
+                <span>{{username}}</span>
+                <span>
+                    <img :src=serverurl+icon alt="">
+                </span>
+                <span>{{versionNumber}}</span>
+            </p>
         </div>
         <div class="statistical">
             <div class="statistical_top">
@@ -199,6 +207,9 @@ export default {
     data () {
         return {
             serverurl:localStorage.serverurl,
+            username:sessionStorage.username,
+            icon:sessionStorage.icon,
+            versionNumber:localStorage.versionNumber,
             imgserverurl:'',
             options:[],
             value:'',
@@ -498,7 +509,7 @@ export default {
                                 {
                                     action:'1',
                                     command:val,
-                                    id:that.id
+                                    id:that.informationData.id
                                 }
                             ),
                             success:function(data){
@@ -553,7 +564,7 @@ export default {
                         that.readyData = data.result.cameras
                         if(that.locationType=='1'){
                             // 百度地图API功能
-                            var map = new BMap.Map("allmap",{enableMapClick:false});    // 创建Map实例
+                            var map = new BMap.Map("allmap",{enableMapClick:false,minZoom:5,maxZoom:19});    // 创建Map实例
                             if(data.result.cameras.length==0){
                                 map.centerAndZoom(that.timeData.City, 16); 
                             }else{
@@ -563,7 +574,6 @@ export default {
                                 map.centerAndZoom(new BMap.Point(coord[0],coord[1]), 16);  // 初始化地图,设置中心点坐标和地图级别
                             }  
                             map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩
-                            map.setMapStyle({style:'light'});
                             //添加灯杆坐标放
                             var online = new BMap.Icon(that.imgserverurl+"image/img/Camera02.png", new BMap.Size(45,45));
                             var offline = new BMap.Icon(that.imgserverurl+"image/img/Camera03.png", new BMap.Size(45,45));
@@ -589,7 +599,7 @@ export default {
                                     marker.id=data.result.cameras[i].id
                                     marker.type=that.value1
                                     markers.push(marker)
-                                    // map.addOverlay(marker);
+                                    map.addOverlay(marker);
                                 } 
                             }
                             // var markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markers});
@@ -695,8 +705,6 @@ export default {
 <style scoped>
 hr{margin: 0;}
 .SingleLamp{width: 100%;height: 100%;position: relative;}
-.project_top_left{position: absolute;top: 0;left: 0;width: 403px;height: 48px;background: #409eff;border-top-right-radius: 40px;border-bottom-right-radius: 40px;display: flex;justify-content: center;align-items: center;z-index: 2;}
-.project_top_left>div{width: 348px;}
 .statistical{width: 350px;height: 190px;border-radius: 10px;box-shadow: 3px 3px 5px #999;position: absolute;top: 75px;left: 10px;padding: 0 15px 0 15px;z-index: 2;background: white;}
 .statistical_top{height: 40px;display: flex;align-items: center;font-size: 15px;color: #333333;}
 .statistical_top>img{padding-right: 15px;width: 40px;}

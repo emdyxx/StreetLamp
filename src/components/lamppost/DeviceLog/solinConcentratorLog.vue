@@ -1,17 +1,17 @@
 <template>
     <!-- 集中器日志 -->
-    <div class="ConcentratorLog">
-        <div class="ConcentratorLog_top">
+    <div class="section">
+        <div class="section_top">
             <template v-if="type=='104'">
-                <div class="search">
+                <div class="search_Log">
                     <span>名称:</span>
                     <input type="text" v-model="nickName" class="form-control logManage_main_input" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                 </div>
-                <div class="search">
+                <div class="search_Log">
                     <span>序列号:</span>
                     <input type="text" v-model="concentratorSn" class="form-control logManage_main_input" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
                 </div>
-                <div class="search">
+                <div class="search_Log">
                     <span>操作类型:</span>
                     <el-select v-model="value" clearable size='small' placeholder="请选择">
                         <el-option
@@ -25,15 +25,15 @@
                 <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
             </template>
             <template v-if="type=='105'">
-                <div class="search">
+                <div class="search_Log">
                     <span>名称:</span>
                     <input type="text" v-model="nickName" class="form-control logManage_main_input" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                 </div>
-                <div class="search">
+                <div class="search_Log">
                     <span>序列号:</span>
                     <input type="text" v-model="concentratorSn" class="form-control logManage_main_input" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
                 </div>
-                <div class="search">
+                <div class="search_Log">
                     <span>控制类型:</span>
                     <el-select v-model="value1" clearable size='small' placeholder="请选择">
                         <el-option
@@ -44,7 +44,7 @@
                         </el-option>
                     </el-select>
                 </div>
-                <div class="search">
+                <div class="search_Log">
                     <span>控制状态:</span>
                     <el-select v-model="value2" clearable size='small' placeholder="请选择">
                         <el-option
@@ -58,7 +58,7 @@
                 <el-button @click="search" type="primary" size='small' style="margin-left:15px;height:34px;margin-top:5px;" icon="el-icon-search">搜索</el-button>
             </template>
         </div>
-        <div class="ConcentratorLog_bottom">
+        <div class="section_bottom">
             <template v-if="type=='104'">
                 <el-table
                     :data="tableData"
@@ -313,15 +313,5 @@ export default {
 }
 </script>
 <style scoped>
-.ConcentratorLog{width: 100%;height: 100%;}
-.ConcentratorLog>div{width: 100%;position:absolute;}
-.ConcentratorLog_top{height: 46px;border: 1px solid #E4E4F1;border-bottom: none !important;display: flex;line-height: 46px;padding-left: 15px;}
-.ConcentratorLog_bottom{top: 46px;bottom: 0;border: 1px solid #E4E4F1;padding: 5px;overflow: auto;}
 
-
-.search{display: flex;margin-left:10px;}
-.search>span{line-height: 30px;line-height: 45px;}
-.search>input{height: 30px;width: 135px;margin-top: 6px;height: 33px;}
-.search>div{height: 30px;width: 135px;}
-.block{text-align: center;}
 </style>

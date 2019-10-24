@@ -1,13 +1,13 @@
 <template>
-    <div class="user">
+    <div class="CommonStyle">
         <!-- 用户 -->
-        <div class="user-left">
+        <div class="CommonStyle_left">
             <div id="jstree"></div>
         </div>
-        <div class="user-right">
-            <div class="usermanage">
+        <div class="CommonStyle_right">
+            <div class="section">
                 <!-- 用户详细信息 -->
-                <div class="usermanage_top">
+                <div class="section_top">
                     <el-button v-if="JurisdictionS.addUser" @click="adduser(0)" type="primary" icon='el-icon-plus' size='small'>添加用户</el-button>
                     <el-button v-if="JurisdictionS.editUser" @click="adduser(1)" type="primary" icon="el-icon-edit" size='small'>编辑用户</el-button>
                     <el-button v-if="JurisdictionS.delUser" @click="deleteuser" type="primary" icon='el-icon-delete' size='small'>删除用户</el-button>
@@ -36,115 +36,96 @@
                         </div>
                     </div>
                 </div>
-                <div class="usermanage_bottom">
-                    <!-- <div class="usermanage_bottom_top">
-                        <div class="search">
-                            <label>用户名:</label>
-                            <input type="text" v-model="username" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
-                        </div>
-                        <div class="search">
-                            <label>姓名:</label>
-                            <input type="text" v-model="fullname" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入姓名">
-                        </div>
-                        <div class="search">
-                            <label>电话:</label>
-                            <input type="text" v-model="mobile" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
-                        </div>
-                        <div style="margin-left:15px;">
-                            <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                        </div>
-                    </div> -->
-                    <div class="usermanage_bottom_bottom">
-                        <el-table
-                            :data="tableData"
-                            @row-click="clickRow" 
-                            ref="moviesTable"
-                            border
-                            stripe
-                            size='small'
-                            tooltip-effect="dark"
-                            @selection-change="userSelectionChange"
-                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                            <el-table-column
-                            type="selection"
-                            align='center'
-                            width="55">
-                            </el-table-column>
-                            <el-table-column
-                            prop="username"
-                            align='center'
-                            label="用户名"
-                            min-width="120">
-                            </el-table-column>
-                            <el-table-column
-                            prop="fullName"
-                            align='center'
-                            label="用户姓名"
-                            min-width="120">
-                            </el-table-column>
-                            <el-table-column
-                            prop="userType"
-                            align='center'
-                            label="用户类型"
-                            min-width="120">
-                                <template slot-scope="scope">
-                                    <span v-if="scope.row.userType=='0'">普通用户</span>
-                                    <span v-if="scope.row.userType=='1'">管理员</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                            prop="mobile"
-                            align='center'
-                            label="电话"
-                            min-width="150">
-                            </el-table-column>
-                            <el-table-column
-                            align='center'
-                            label="所属机构"
-                            min-width="120">
-                                <template slot-scope="scope">
-                                    <span>{{scope.row.org.orgName}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                            align='center'
-                            label="状态"
-                            min-width="80">
-                                <template slot-scope="scope">
-                                    <span v-if="scope.row.status=='0'">启用</span>
-                                    <span v-if="scope.row.status=='1'">禁用</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                            prop="createTime"
-                            align='center'
-                            label="创建时间"
-                            min-width="180">
-                            </el-table-column>
-                            <el-table-column
-                            label="操作"
-                            align='center'
-                            min-width="180"
-                            show-overflow-tooltip>
-                                <template slot-scope="scope">
-                                    <el-button v-if="scope.row.status=='0'&&JurisdictionS.enabledUser" @click="userStatus(scope.row.id,scope.row.status)" type="danger" size='mini'>禁用</el-button>
-                                    <el-button v-if="scope.row.status=='1'&&JurisdictionS.enabledUser" @click="userStatus(scope.row.id,scope.row.status)" type="primary" size='mini'>启用</el-button>
-                                    <el-button v-if="JurisdictionS.resetPassword" @click="resetPasswords(scope.row.id)" type="primary" size='mini'>重置密码</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <div class="block">
-                            <el-pagination
-                            background
-                            @size-change="sizechange"
-                            @current-change="currentchange"
-                            :current-page="pageIndex"
-                            :page-sizes="[10, 20, 30, 50]"
-                            :page-size="pageSize"
-                            layout="total, sizes, prev, pager, next, jumper"
-                            :total="total">
-                            </el-pagination>
-                        </div>
+                <div class="section_bottom">
+                    <el-table
+                        :data="tableData"
+                        @row-click="clickRow" 
+                        ref="moviesTable"
+                        border
+                        stripe
+                        size='small'
+                        tooltip-effect="dark"
+                        @selection-change="userSelectionChange"
+                        style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                        <el-table-column
+                        type="selection"
+                        align='center'
+                        width="55">
+                        </el-table-column>
+                        <el-table-column
+                        prop="username"
+                        align='center'
+                        label="用户名"
+                        min-width="120">
+                        </el-table-column>
+                        <el-table-column
+                        prop="fullName"
+                        align='center'
+                        label="用户姓名"
+                        min-width="120">
+                        </el-table-column>
+                        <el-table-column
+                        prop="userType"
+                        align='center'
+                        label="用户类型"
+                        min-width="120">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.userType=='0'">普通用户</span>
+                                <span v-if="scope.row.userType=='1'">管理员</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                        prop="mobile"
+                        align='center'
+                        label="电话"
+                        min-width="150">
+                        </el-table-column>
+                        <el-table-column
+                        align='center'
+                        label="所属机构"
+                        min-width="120">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.org.orgName}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                        align='center'
+                        label="状态"
+                        min-width="80">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.status=='0'">启用</span>
+                                <span v-if="scope.row.status=='1'">禁用</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                        prop="createTime"
+                        align='center'
+                        label="创建时间"
+                        min-width="180">
+                        </el-table-column>
+                        <el-table-column
+                        label="操作"
+                        align='center'
+                        min-width="180"
+                        show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                <el-button v-if="scope.row.status=='0'&&JurisdictionS.enabledUser" @click="userStatus(scope.row.id,scope.row.status)" type="danger" size='mini'>禁用</el-button>
+                                <el-button v-if="scope.row.status=='1'&&JurisdictionS.enabledUser" @click="userStatus(scope.row.id,scope.row.status)" type="primary" size='mini'>启用</el-button>
+                                <el-button v-if="JurisdictionS.resetPassword" @click="resetPasswords(scope.row.id)" type="primary" size='mini'>重置密码</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <div class="block">
+                        <el-pagination
+                        background
+                        @size-change="sizechange"
+                        @current-change="currentchange"
+                        :current-page="pageIndex"
+                        :page-sizes="[10, 20, 30, 50]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="total">
+                        </el-pagination>
                     </div>
                 </div>
             </div>
@@ -171,7 +152,7 @@
                             </li>
                         </ul>
                         <div id="myTabContent" class="tab-content">
-                            <div class="tab-pane fade in active" id="a" style='padding-left: 70px;'>
+                            <div class="tab-pane fade in active" id="a">
                                 <div class="form-group" v-if="type=='0'">
                                     <label for="username"><span class="Required">*</span>用户名:</label>
                                     <input type="text" v-model="data.username" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="username" placeholder="请输入用户名">
@@ -196,7 +177,7 @@
                                     <label for="phone">性别:</label>
                                     <template>
                                         <el-radio v-model="data.sex" label="0">男</el-radio>
-                                        <el-radio v-model="data.sex" label="1">女</el-radio>
+                                        <el-radio v-model="data.sex" label="1" style="margin-left:10px;">女</el-radio>
                                     </template>
                                 </div> 
                                 <div class="form-group">
@@ -225,8 +206,8 @@
                                 </div> 
                                 <div class="form-group">
                                     <label for="phone">头像:</label>
-                                    <div class="images">
-                                        <i @click="cancelImage()" class="iconfont icon-guanbi cancel"></i>
+                                    <div class="user_img">
+                                        <i @click="cancelImage()" class="iconfont icon-guanbi cancel_s"></i>
                                         <label for="img1">
                                             <img :src=imageUrl1>
                                             <input type="file" ref="img1" id="img1" @change="images(1)">
@@ -849,18 +830,25 @@ export default {
                             async: false,
                             success:function(data) {
                                 if(data.errorCode=='0'){
-                                    that.readyRight()
                                     var data2={"text" : "用户中心",'id':'1','type':'1',"state": {"opened" : true}}
-                                    data2.children = data.result[0].children
-                                    for(var i=0;i<data.result[0].children.length;i++){
-                                        data.result[0].children[i].state={"opened" : true}
-                                        if(data.result[0].children[i].children==undefined){}else{
-                                            for(var j=0;j<data.result[0].children[i].children.length;j++){
-                                                data.result[0].children[i].children[j].state={"opened" : true}
+                                    if(data.result[0].id=='1'){
+                                        if(data.result[0].children!=null){
+                                            data2.children = data.result[0].children
+                                            for(var i=0;i<data.result[0].children.length;i++){
+                                                data.result[0].children[i].state={"opened" : true}
+                                                if(data.result[0].children[i].children==undefined){}else{
+                                                    for(var j=0;j<data.result[0].children[i].children.length;j++){
+                                                        data.result[0].children[i].children[j].state={"opened" : true}
+                                                    }
+                                                }
                                             }
                                         }
+                                    }else{
+                                        data2.children = []
+                                        data2.children.push(data.result[0])
                                     }
                                     jsonarray= data2;
+                                    that.readyRight()
                                 }else{
                                     that.errorCode(data)
                                 }
@@ -877,6 +865,8 @@ export default {
                 }else{
                     that.sizeType = data.node.original
                     // sessionStorage.organization_type = data.node.original.id
+                    that.pageSize = 10;
+                    that.pageIndex = 1;
                     that.readyRight()
                 }
             });
@@ -1011,31 +1001,5 @@ export default {
 }
 </script>
 <style scoped>
-.Required{color: red;font-size: 17px;}
-.user{width:100%;height: 100%;padding: 5px;display: flex;}
-.user-left{width: 200px;height: 100%;border: 1px solid #E4E4F1;overflow: auto;}
-.user-left>ul{background:#eef1f6;}
-.user-right{position: absolute;left: 210px;right: 5px;top:5px;bottom:5px;}
-.usermanage{width:100%;height:100%;}
-.usermanage>div{width: 100%;border: 1px solid #E4E4F1;position: absolute;}
-.usermanage_top{height: 46px;border-bottom: none !important;display: flex;}
-.usermanage_top>button{height:33px;margin:6px 0 0 10px;}
-.usermanage_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;}
-.usermanage_bottom_bottom{position: absolute;top:0;bottom: 0;left: 0;right: 0;padding:5px;overflow: auto;}
-.block{text-align: center;}
-.images{text-align: center;position: relative;}
-.images>label{width: 150px;height: 100px;border: 1px dashed #d9d9d9;border-radius: 6px; cursor: pointer;text-align: center;line-height: 35px;position: relative;}
-.images img{width: 100%;height: 100%;position: absolute;left: 0;}
-.images>label:hover{border-color: #20a0ff;}
-.images>label>input{margin-left: -9999px;}
-.cancel{position: absolute;top:-3px;right: -20px;font-size: 20px;}
-.cancel:hover{color: #20a0ff;}
 
-.form-group{display:flex;}
-.form-group>label{width: 75px;line-height: 34px;text-align: center;}
-.form-group>input{width: 196px;}
-
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div{margin-left: 5px;}
-.search>input{width: 146px;}
 </style>
