@@ -338,6 +338,36 @@
                     :formatter="formatRole">
                     </el-table-column>
                 </template>
+                <template v-if="menuId3=='135'">
+                    <el-table-column
+                    prop="rainValue"
+                    align='center'
+                    label="雨量值mm"
+                    min-width="120"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    prop="temperature"
+                    align='center'
+                    label="温度值℃"
+                    min-width="80"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    prop="humidity"
+                    align='center'
+                    label="湿度值%"
+                    min-width="80"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    prop="voltage"
+                    align='center'
+                    label="电压值V"
+                    min-width="80"
+                    :formatter="formatRole">
+                    </el-table-column>
+                </template>
                 <el-table-column
                 prop="collectTime"
                 label="采集时间"
@@ -662,6 +692,36 @@
                     :formatter="formatRole">
                     </el-table-column>
                 </template>
+                <template v-if="menuId3=='135'">
+                    <el-table-column
+                    prop="rainValue"
+                    align='center'
+                    label="雨量值mm"
+                    min-width="120"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    prop="temperature"
+                    align='center'
+                    label="温度值℃"
+                    min-width="80"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    prop="humidity"
+                    align='center'
+                    label="湿度值%"
+                    min-width="80"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    prop="voltage"
+                    align='center'
+                    label="电压值V"
+                    min-width="80"
+                    :formatter="formatRole">
+                    </el-table-column>
+                </template>
                 <el-table-column
                 prop="collectTime"
                 label="采集时间"
@@ -746,8 +806,8 @@ export default {
             this.ready2()
         },
         //返回
-        Return(){this.type='0';this.ready();this.site = [];},
         sizechange2(val){this.pageSize2 = val;this.ready2()},
+        Return(){this.type='0';this.ready();this.site = [];},
         currentchange2(val){this.pageIndex2 = val;this.ready2();},
         //请求历史数据
         ready2(){
@@ -761,6 +821,10 @@ export default {
             if(sessionStorage.menuId3=='69'){url='/v1/solin/lora/sensor/magnetic-door/log';}
             if(sessionStorage.menuId3=='70'){url='/v1/solin/lora/sensor/ultrasonic/log';}
             if(sessionStorage.menuId3=='117'){url='/v1/solin/lora/sensor/waterLevel/log';}
+
+            if(sessionStorage.menuId3=='135'){url='/v1/solin/lora/sensor/rainfall/log';}
+            if(sessionStorage.menuId3=='136'){url='/v1/solin/lora/sensor/waterLevel';}
+            if(sessionStorage.menuId3=='137'){url='/v1/solin/lora/sensor/waterLevel';}
             var data = {
                 page:that.pageIndex2,
                 size:that.pageSize2,
@@ -799,6 +863,10 @@ export default {
             if(sessionStorage.menuId3=='69'){url='/v1/solin/lora/sensor/magnetic-door';}
             if(sessionStorage.menuId3=='70'){url='/v1/solin/lora/sensor/ultrasonic';}
             if(sessionStorage.menuId3=='117'){url='/v1/solin/lora/sensor/waterLevel';}
+
+            if(sessionStorage.menuId3=='135'){url='/v1/solin/lora/sensor/rainfall';}
+            if(sessionStorage.menuId3=='136'){url='/v1/solin/lora/sensor/waterLevel';}
+            if(sessionStorage.menuId3=='137'){url='/v1/solin/lora/sensor/waterLevel';}
             var data = {
                 page:that.pageIndex,
                 size:that.pageSize,

@@ -9,8 +9,8 @@ export default {
 	name: 'App',
 	created(){
 		// localStorage.serverurl = 'http://192.168.70.17:8071/SD-IOT-API'
-		// localStorage.serverurl = 'http://192.168.10.7:8080/SD-IOT-API'
-		localStorage.serverurl = 'http://192.168.70.10:8071/SD-IOT-API'
+		localStorage.serverurl = 'http://192.168.10.9:8071/SD-IOT-API'
+		// localStorage.serverurl = 'http://192.168.70.10:8071/SD-IOT-API'
 		// localStorage.serverurl = 'http://192.168.10.95:8071/SD-IOT-API'
 
 		// $.ajax({

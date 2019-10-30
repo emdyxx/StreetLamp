@@ -19,8 +19,9 @@
 
 .solinSceneryControllerDeploy{background-image: url(img/solinSceneryControllerDeploy.png) !important;background-repeat: no-repeat !important;}
 .solinLoraWaterLevel{background-image: url(img/solinLoraWaterLevel.png) !important;background-repeat: no-repeat !important;}
-
-
+.solinLoraRainfall{background-image: url(img/solinLoraRainfall.png) !important;background-repeat: no-repeat !important;}
+.solinLoraFireHydrant{background-image: url(img/solinLoraFireHydrant.png) !important;background-repeat: no-repeat !important;}
+.solinLoraFireExtinguisher{background-image: url(img/solinLoraFireExtinguisher.png) !important;background-repeat: no-repeat !important;}
 .jstree_mechanism1 {
     background-image: url(img/mechanism1.png) !important;
 }

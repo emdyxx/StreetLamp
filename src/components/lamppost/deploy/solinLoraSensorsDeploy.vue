@@ -165,9 +165,27 @@
                                 :props="props"
                                 :disabled='type=="1"'
                                 size='small'
+                                @change="modelChange"
                                 style="width:196px;">
                             </el-cascader>
                         </div>
+                        <template v-if="modalType=='5'">
+                            <div class="form-group">
+                                <label><span class="Required">*</span>告警类型:</label>
+                                <el-select v-model="value5" size="small" placeholder="请选择">
+                                    <el-option
+                                    v-for="item in options5"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </div>
+                            <div class="form-group">
+                                <label><span class="Required">*</span>告警距离:</label>
+                                <el-input-number v-model="alarmDistance" :min="0" :max="400" size="small" label="cm"></el-input-number>
+                            </div>
+                        </template>
                         <div class="form-group">
                             <label><span class="Required">*</span>入网方式:</label>
                             <el-select v-model="data.networkId" @change="networkIdChange" size='small' clearable style='width:196px;' placeholder="请选择">
@@ -321,9 +339,9 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <span style="line-height:35px;">项目:</span>
-                            <el-select size='small' v-model="value3" style="margin-left:20px;" placeholder="请选择">
+                            <el-select size='small' v-model="value4" style="margin-left:20px;" placeholder="请选择">
                                 <el-option
-                                    v-for="item in options3"
+                                    v-for="item in options4"
                                     style="height:30px;"
                                     :key="item.id"
                                     :label="item.projectName"
@@ -388,6 +406,7 @@ export default {
                 children: 'children'
             },
             value:'',
+            modalType:'',
             //添加/编辑
             type:'0',
             options2:[],
@@ -416,8 +435,12 @@ export default {
             pageIndex2:1,
             total2:10,
             //绑定项目
-            options3:[],
-            value3:'',
+            options4:[],
+            value4:'',
+            //告警类型
+            options5:[{label:'不告警',value:'0'},{label:'大于告警',value:'1'},{label:'小于告警',value:'2'}],
+            value5:'0',
+            alarmDistance:0,
         }
     },
     mounted(){
@@ -498,6 +521,8 @@ export default {
                 this.networkType = ''
                 this.data.coord = ''
                 this.referencePosition = ''
+                this.value5 = '0'
+                this.alarmDistance = 0
                 this.site2 = []
                 $('#myModal').modal('show')
             }
@@ -514,9 +539,13 @@ export default {
                 this.network();
                 this.data.nickName = this.site[0].nickName
                 this.data.serialNumber = this.site[0].serialNumber
-                this.data.modelId = []
-                this.data.modelId.push(this.site[0].sensorsType)
-                this.data.modelId.push(this.site[0].modelId)
+                this.site[0].modelIds[0] = String(this.site[0].modelIds[0])
+                this.data.modelId = this.site[0].modelIds
+                if(this.site[0].modelIds[0]=='5'){
+                    this.modalType = '5'
+                    this.value5 = String(this.site[0].alarmCondition)
+                    this.alarmDistance = this.site[0].alarmDistance
+                }
                 this.data.serviceProfileId = this.site[0].serviceProfileId
                 this.data.networkId = this.site[0].networkId
                 this.data.devAddr = this.site[0].devAddr
@@ -575,6 +604,10 @@ export default {
             data.remark = that.data.remark
             data.projectId = sessionStorage.projectId
             data.coord = that.data.coord
+            if(that.modalType=='5'){
+                data.alarmCondition = that.value5
+                data.alarmDistance = that.alarmDistance
+            }
             if(that.site2.length==0){
                 if(that.type=='0'){
                     data.poleId='0'
@@ -740,8 +773,8 @@ export default {
                 data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
-                        that.options3 = data.result.projects
-                        that.value3 = ''
+                        that.options4 = data.result.projects
+                        that.value4 = ''
                     }else{
                         that.errorCode(data)
                     }
@@ -763,7 +796,7 @@ export default {
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify({
                     loraSensors:arr,
-                    projectId:that.value3
+                    projectId:that.value4
                 }),
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -778,6 +811,10 @@ export default {
                     }
                 },
             })
+        },
+        //型号change
+        modelChange(val){
+            this.modalType = val[0]
         },
         //请求服务配置方式
         serviceProfile(){
