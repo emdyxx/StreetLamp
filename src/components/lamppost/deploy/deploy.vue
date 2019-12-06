@@ -65,6 +65,9 @@ export default {
                     },
                     "solinSceneryControllerDeploy" : {
                         "icon" : 'solinSceneryControllerDeploy',
+                    },
+                    "solinRadarDeploy":{
+                        "icon" : 'solinRadar',
                     }
                 },
                 // "state" : { "key" : that.sizeType.text },
@@ -125,7 +128,6 @@ export default {
                                             jsonarray= datas;
                                         },
                                     })
-                                    console.log(sessionStorage.menuId3)
                                     if(sessionStorage.menuId3=='45'){
                                         that.$router.push({'path':'/solinPoleDeploy'})
                                     }
@@ -156,6 +158,9 @@ export default {
                                     if(sessionStorage.menuId3=='118'){
                                         that.$router.push({'path':'/solinSceneryControllerDeploy'})
                                     }
+                                    if(sessionStorage.menuId3=='138'){
+                                        that.$router.push({'path':'/solinRadarDeploy'})
+                                    }
                                 }else{
                                     that.errorCode(data)
                                 }
@@ -168,6 +173,7 @@ export default {
             $('#jstree').bind("activate_node.jstree.jstree", function (e, data) {
                 if(data.node.id==''||data.node.id==undefined){
                 }else{
+                    console.log(data.node.id)
                     sessionStorage.menuId3 = data.node.id
                     if(data.node.id=='45'){
                         that.$router.push({'path':'/solinPoleDeploy'})
@@ -198,6 +204,9 @@ export default {
                     }
                     if(data.node.id=='118'){
                         that.$router.push({'path':'/solinSceneryControllerDeploy'})
+                    }
+                    if(data.node.id=='138'){
+                        that.$router.push({'path':'/solinRadarDeploy'})
                     }
                 }
             });

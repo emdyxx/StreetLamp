@@ -2,170 +2,171 @@
     <!--广告屏 -->
     <div class="section">
         <div class="section_top">
-            <el-dropdown v-if="JurisdictionS.operation" trigger='click' @command="handleCommand">
-                <el-button type="primary" size='small' style="width:115px;">
-                    操作<i class="el-icon-arrow-down el-icon--right"></i>
-                </el-button>
-                <el-dropdown-menu slot="dropdown">
-                    <!-- <el-dropdown-item v-if="JurisdictionS.issuedProgram" command="0">下发任务</el-dropdown-item> -->
-                    <el-dropdown-item v-if="JurisdictionS.screenControl" command="1">屏幕开关</el-dropdown-item>
-                    <el-dropdown-item v-if="JurisdictionS.screenControl" command="2">屏幕调光</el-dropdown-item>
-                    <el-dropdown-item v-if="JurisdictionS.screenControl" command="3">屏幕音量</el-dropdown-item>
-                    <el-dropdown-item v-if="JurisdictionS.screenControl" command="4">屏幕重启</el-dropdown-item>
-                    <el-dropdown-item v-if="JurisdictionS.screenControl" command="5">在线更新</el-dropdown-item>
-                    <el-dropdown-item v-if="JurisdictionS.screenControl" command="6">状态查询</el-dropdown-item>
-                    <el-dropdown-item v-if="JurisdictionS.synchronousPlayback" command="7">同步播放</el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>
-            <el-button @click="ScreenManage" type="primary" size="small">节目管理</el-button>
-            <div class="search" v-if="JurisdictionS.viewScreenManage">
-                <el-dropdown size="small" split-button @command="handleCommand2">
-                    {{name}}
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='类型';type='3';">状态</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <div>
-                    <template v-if="type=='1'">
-                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="type=='2'">
-                        <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="type=='3'">
-                        <el-select v-model="value" clearable placeholder="请选择" size='small'>
-                            <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </template>
-                </div>
-                <div>
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
+            <p>位置: &nbsp;设备操作 > LED屏幕操作</p>
+            <div>
+                <span style="background: #4382e6;color:white;">屏幕操作</span>
+                <span @click="ScreenManage">节目制作</span>
             </div>
         </div>
         <div class="section_bottom">
-            <el-table
-                :data="tableData"
-                @row-click="clickRow" 
-                ref="moviesTable"
-                border
-                stripe
-                size='small'
-                tooltip-effect="dark"
-                style="width: 100%;max-height:80%;margin-bottom:10px;overflow:auto;"
-                @selection-change="tableChange1">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="nickName"
-                align='center'
-                label="名称"
-                :formatter="formatRole"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="serialNumber"
-                align='center'
-                label="序列号"
-                :formatter="formatRole"
-                min-width="125">
-                </el-table-column>
-                <el-table-column
-                prop="ipAddress"
-                align='center'
-                label="IP"
-                :formatter="formatRole"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="在线状态"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.online=='0'">离线</span>
-                        <span v-if="scope.row.online=='1'">在线</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="屏幕状态"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.status=='0'">关闭</span>
-                        <span v-if="scope.row.status=='1'">开启</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="width"
-                align='center'
-                label="宽:高(像素)"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span>{{scope.row.width}}:{{scope.row.height}}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="taskName"
-                align='center'
-                label="当前播放"
-                :formatter="formatRole"
-                min-width="110">
-                </el-table-column>
-                <el-table-column
-                prop="brightness"
-                align='center'
-                label="亮度(%)"
-                :formatter="formatRole"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="volume"
-                align='center'
-                label="音量"
-                :formatter="formatRole"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="versionName"
-                align='center'
-                label="版本"
-                :formatter="formatRole"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="timestamp"
-                align='center'
-                label="采集时间"
-                :formatter="formatRole"
-                min-width="150">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="操作"
-                :formatter="formatRole"
-                show-overflow-tooltip>
-                    <template slot-scope="scope">
-                        <el-dropdown size="small" trigger="click" split-button>
-                            更多
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item @click.native="handleCommand(8,scope.row.id)">屏幕截图</el-dropdown-item>
-                                <el-dropdown-item @click.native="handleCommand(9,scope.row.id)">查询定时</el-dropdown-item>
-                                <el-dropdown-item @click.native="Speed(scope.row)">查询进度</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                    </template>
-                </el-table-column>
-            </el-table>
+            <div class="section_bottom_bottom">
+                <div class="search" v-if="JurisdictionS.viewScreenManage">
+                    <el-dropdown size="small" split-button @command="handleCommand2">
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='状态';type='3';">状态</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="type=='1'">
+                            <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="type=='2'">
+                            <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="type=='3'">
+                            <el-select v-model="value" clearable placeholder="请选择" size='small'>
+                                <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </template>
+                    </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
+                </div>
+                <div class="section_bottom_right">
+                    <el-button @click="handleCommand(1)" v-if="JurisdictionS.screenControl" size="small" type="primary" plain>开关</el-button>
+                    <el-button @click="handleCommand(2)" v-if="JurisdictionS.screenControl" size="small" type="primary" plain>调光</el-button>
+                    <el-button @click="handleCommand(3)" v-if="JurisdictionS.screenControl" size="small" type="primary" plain>音量</el-button>
+                    <el-button @click="handleCommand(4)" v-if="JurisdictionS.screenControl" size="small" type="primary" plain>重启</el-button>
+                    <el-button @click="handleCommand(5)" v-if="JurisdictionS.screenControl" size="small" type="primary" plain>在线更新</el-button>
+                    <el-button @click="handleCommand(6)" v-if="JurisdictionS.screenControl" size="small" type="primary" plain>状态查询</el-button>
+                    <el-button @click="handleCommand(7)" v-if="JurisdictionS.synchronousPlayback" size="small" type="primary" plain>同步播放</el-button>
+                </div>
+            </div>
+            <div>
+                <el-table
+                    :data="tableData"
+                    @row-click="clickRow" 
+                    ref="moviesTable"
+                    size='small'
+                    border
+                    tooltip-effect="dark"
+                    style="width: 100%;max-height:80%;margin-bottom:10px;overflow:auto;"
+                    @selection-change="tableChange1">
+                    <el-table-column
+                    align="center"
+                    type="selection"
+                    width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="nickName"
+                    label="名称"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="serialNumber"
+                    label="序列号"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="ipAddress"
+                    label="IP"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    label="在线状态"
+                    show-overflow-tooltip
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.online=='0'" class="offLine">离线</span>
+                            <span v-if="scope.row.online=='1'" class="onLine">在线</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    label="屏幕状态"
+                    show-overflow-tooltip
+                    min-width="90">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.status=='0'">
+                                <img src="../../../assets/img/offline.png" style="width: 12px;margin-top:-2px;" alt="">
+                                关闭
+                            </span>
+                            <span v-if="scope.row.status=='1'">
+                                <img src="../../../assets/img/online.png" style="width: 12px;margin-top:-2px;" alt="">
+                                开启
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="width"
+                    label="宽:高"
+                    show-overflow-tooltip
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.width}}:{{scope.row.height}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="brightness"
+                    label="亮度(%)"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="volume"
+                    label="音量"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="versionName"
+                    label="版本"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="timestamp"
+                    label="采集时间"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    min-width="150">
+                    </el-table-column>
+                    <el-table-column
+                    label="操作"
+                    :formatter="formatRole"
+                    min-width="100"
+                    show-overflow-tooltip>
+                        <template slot-scope="scope">
+                            <el-dropdown size="mini" trigger="click" split-button type="primary">
+                                更多
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item @click.native="handleCommand(8,scope.row.id)">屏幕截图</el-dropdown-item>
+                                    <el-dropdown-item @click.native="handleCommand(9,scope.row.id)">查询定时</el-dropdown-item>
+                                    <el-dropdown-item @click.native="Speed(scope.row)">查询进度</el-dropdown-item>
+                                    <el-dropdown-item @click.native="contentCommand(scope.row)">内容管理</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="block">
                 <el-pagination
                 background
@@ -183,7 +184,7 @@
         <el-dialog
             :title=title
             :visible.sync="dialogVisible"
-            width="510px">
+            width="400px">
             <span>
                 <div v-if="operationType=='1'">
                     <el-radio v-model="radio" label="1">手动</el-radio>
@@ -345,7 +346,7 @@
         <el-dialog
             title='进度查询'
             :visible.sync="dialogVisible2"
-            width="510px"
+            width="400px"
             :before-close='handleClose'>
             <span>
                 <div>
@@ -370,11 +371,18 @@
                 <el-button @click="handleClose">关 闭</el-button>
             </span>
         </el-dialog>
+        <!-- 添加编辑屏幕内容 -->
+        <ScreenContents ref="ContentIntive"></ScreenContents>
     </div>
 </template>
 <script>
+import ScreenContents from './screen/ScreenContent'
 export default {
     name: 'solinScreenManage',
+    components: {
+        //调用组件
+        ScreenContents,
+    },
     data () {
         return {
             name:'名称',
@@ -405,12 +413,12 @@ export default {
             serialNumber:'',
             options:[
                 {
-                    value:0,
-                    label:'离线'
-                },
-                {
                     value:1,
                     label:'在线'
+                },
+                {
+                    value:0,
+                    label:'离线'
                 }
             ],
             value:'',
@@ -582,6 +590,13 @@ export default {
             }
             //屏幕截图
             if(val=='8'){
+                if(val.online!='1'){
+                    this.$message({
+                        message: '屏幕离线!',
+                        type: 'error'
+                    });
+                    return;
+                }
                 this.dialogVisible = true
                 this.title = '屏幕截图'
                 this.loading = true
@@ -628,6 +643,13 @@ export default {
             }
             //查询定时信息
             if(val=='9'){
+                if(val.online!='1'){
+                    this.$message({
+                        message: '屏幕离线!',
+                        type: 'error'
+                    });
+                    return;
+                }
                 this.dialogVisible = true
                 this.title = '定时信息'
                 this.loading = true
@@ -676,7 +698,6 @@ export default {
                         }
                     },
                 })
-                
             }
         },
         pickerChange(val){
@@ -785,6 +806,9 @@ export default {
                                                 type: 'success'
                                             });
                                             that.dialogVisible = false
+                                            setTimeout(() => {
+                                                that.ready()
+                                            }, 3000);
                                         }else{
                                             that.errorCode(res)
                                         }
@@ -818,6 +842,9 @@ export default {
                             type: 'success'
                         });
                         that.dialogVisible = false
+                        setTimeout(() => {
+                            that.ready()
+                        }, 3000);
                     }else{
                         that.errorCode(data)
                     }
@@ -850,6 +877,9 @@ export default {
                                         type: 'success'
                                     });
                                     that.dialogVisible = false
+                                    setTimeout(() => {
+                                        that.ready()
+                                    }, 3000);
                                 }else{
                                     that.errorCode(res)
                                 }
@@ -919,6 +949,13 @@ export default {
         },
         //点击查询进度
         Speed(val){
+            if(val.online!='1'){
+                this.$message({
+                    message: '屏幕离线!',
+                    type: 'error'
+                });
+                return;
+            }
             var that = this;
             this.dialogVisible2 = true
             this.status = '0'
@@ -985,10 +1022,21 @@ export default {
         handleClose(){
             this.dialogVisible2 = false
         },
-        //屏幕管理按钮
+        //屏幕--节目管理按钮
         ScreenManage(){
             sessionStorage.removeItem('type');
             this.$router.push({path:'/TheTaskPage'})
+        },
+        //更多->内容管理
+        contentCommand(val){
+            if(val.online!='1'){
+                this.$message({
+                    message: '屏幕离线!',
+                    type: 'error'
+                });
+                return;
+            }
+            this.$refs.ContentIntive.readyIntive(val.id);
         },
         //获取广告屏列表
         ready(){
@@ -1019,9 +1067,7 @@ export default {
         },
         sizechange(val){this.pageSize = val;this.ready()},
         currentchange(val){this.pageIndex = val;this.ready()},
-        search(){
-            this.ready()
-        },
+        search(){this.ready()},
         //权限请求
         Jurisdiction(){
             var that = this
@@ -1087,4 +1133,5 @@ export default {
 .mediaLibrary_top>span,{font-size: 15px;line-height: 35px;}
 .mediaLibrary_top>span:nth-of-type(2){margin-left: 30px;}
 .mediaLibrary_bottom{width: 100%;height: auto;margin-top:5px;}
+
 </style>

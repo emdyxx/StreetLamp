@@ -1,12 +1,12 @@
 <template>
-    <!-- 气象站管理 -->
+    <!-- 雷达传感器 -->
     <div class="section">
         <div class="section_top">
-            <p>位置: &nbsp;设备操作>气象站操作</p>
+            <p>位置: &nbsp;设备操作>雷达传感器操作</p>    
         </div>
         <div class="section_bottom">
             <div class="section_bottom_bottom">
-                <div class="search" v-if="JurisdictionS.viewEnvManage">
+                <div class="search" v-if="DataType=='0'">
                     <el-dropdown size="small" split-button @command="handleCommand">
                         {{name}}
                         <el-dropdown-menu slot="dropdown">
@@ -20,12 +20,10 @@
                             <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                         </template>
                         <template v-if="type=='2'">
-                            <el-input type="number" v-model="serialNumber" size="small" placeholder="请输入地址" style="width:200px;"></el-input>
-                            <!-- <el-input-number v-model="serialNumber" size="small" :precision="0" :min="0" :max="253" label="请输入地址" style="width:200px;"></el-input-number> -->
-                            <!-- <el-input v-model="serialNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input> -->
+                            <el-input type="number" v-model="radarNumber" size="small" placeholder="请输入地址" style="width:200px;"></el-input>
                         </template>
                         <template v-if="type=='3'">
-                            <el-select v-model="value" clearable placeholder="请选择" size='small'>
+                            <el-select v-model="online" size='small' style="width:194px;" clearable placeholder="请选择">
                                 <el-option
                                 v-for="item in options"
                                 :key="item.value"
@@ -38,9 +36,17 @@
                     <div>
                         <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
                     </div>
-                </div>
-                <div class="section_bottom_right">
-                    <el-button v-if="JurisdictionS.envControl" @click="details" type="primary" plain size='small'>查询最新数据</el-button>
+                </div> 
+                <div class="section_bottom_right"  v-if="DataType=='1'">
+                    <el-select v-model="value2" @change="SceneryHistoryChange" size='small' style="width:120px;" placeholder="请选择">
+                        <el-option
+                        v-for="item in options2"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-button @click="backtrack" size="small" type="primary" plain>返回</el-button>
                 </div>
             </div>
             <div>
@@ -59,20 +65,23 @@
                     width="55">
                     </el-table-column>
                     <el-table-column
+                    v-if="DataType=='0'"
                     prop="nickName"
                     show-overflow-tooltip
                     label="名称"
                     min-width="110">
                     </el-table-column>
                     <el-table-column
-                    prop="serialNumber"
+                    v-if="DataType=='0'"
+                    prop="radarNumber"
                     show-overflow-tooltip
                     label="地址"
                     min-width="110">
                     </el-table-column>
                     <el-table-column
+                    v-if="DataType=='0'"
                     show-overflow-tooltip
-                    label="在线状态"
+                    label="状态"
                     min-width="80">
                         <template slot-scope="scope">
                             <span v-if="scope.row.online=='0'" class="offLine">离线</span>
@@ -80,61 +89,32 @@
                         </template>
                     </el-table-column>
                     <el-table-column
+                    v-if="DataType=='0'"
                     prop="modelName"
                     show-overflow-tooltip
                     label="型号"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="speed"
+                    show-overflow-tooltip
+                    label="当前车速"
+                    :formatter="formatRole"
                     min-width="100">
                     </el-table-column>
                     <el-table-column
+                    prop="timestamp"
                     show-overflow-tooltip
-                    label="风向/风速"
-                    min-width="90">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.windDirectionAverage}}/{{scope.row.windSpeedAverage}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    show-overflow-tooltip
-                    label="温度/湿度"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.temperature}}/{{scope.row.humidity}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="pressure"
-                    show-overflow-tooltip
-                    label="气压"
-                    min-width="80"
-                    :formatter="formatRole">
-                    </el-table-column>
-                    <el-table-column
-                    prop="noiseAverage"
-                    show-overflow-tooltip
-                    :formatter="formatRole"
-                    label="噪声"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    show-overflow-tooltip
-                    label="PM2.5/PM10"
-                    min-width="80">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.PM2}}/{{scope.row.PM10}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="latestTime"
                     :formatter="formatRole"
                     label="采集时间"
-                    show-overflow-tooltip
                     min-width="150">
                     </el-table-column>
                     <el-table-column
                     label="操作"
+                    v-if="DataType=='0'"
                     min-width="120">
                         <template slot-scope="scope">
-                            <el-button @click="historicalData(scope.row.concentratorSn)" type="primary" size='mini'>历史数据</el-button>
+                            <el-button @click="radarHistory(scope.row.id)" type="primary" size='mini'>历史数据</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -156,25 +136,46 @@
 </template>
 <script>
 export default {
-    name: 'section',
+    name: '',
     data () {
         return {
+            JurisdictionS:{
+                viewRadarManage:false,
+                viewRadarHistoryData:false
+            },
             name:'名称',
             type:'1',
             serverurl:localStorage.serverurl,
-            JurisdictionS:{
-                viewEnvManage:false,
-                envControl:false,
-            },
+            radarId:'',
+            DataType:'0',//数据类型
+            options2:[
+                {
+                    value:'0',
+                    label:'近24小时'
+                },
+                {
+                    value:'1',
+                    label:'近一周'
+                },
+                {
+                    value:'2',
+                    label:'近一月'
+                },
+                {
+                    value:'3',
+                    label:'近一年'
+                }
+            ],
+            value2:'0',
+            nickName:'',
+            radarNumber:'',
+            options:[{label:'在线',value:'1'},{label:'离线',value:'0'}],
+            online:'',
             tableData:[],
             site:[],
             pageSize:10,
             pageIndex:1,
-            total:50,
-            nickName:'',
-            serialNumber:'',
-            options:[{label:'在线',value:'1'},{label:'离线',value:'0'}],
-            value:'',
+            total:10,
         }
     },
     mounted(){
@@ -183,8 +184,8 @@ export default {
     methods:{
         handleCommand(){
             this.nickName=''
-            this.serialNumber=''
-            this.value=''
+            this.radarNumber=''
+            this.online=''
         },
         formatRole:function(val, column, cellValue, index){
             if(cellValue == null||cellValue == undefined||cellValue == ''){
@@ -196,70 +197,28 @@ export default {
         clickRow(row){
             this.$refs.moviesTable.toggleRowSelection(row)
         },
-        //查询最新数据
-        details(){
+        //历史数据
+        radarHistory(id,type){
             var that = this;
-            var arr = [];
-            if(this.site.length==0){
-                this.$message({
-                    message: '请选择气象站进行查询!',
-                    type: 'warning'
-                });
-                return;
+            if(type=='1'){
+                
+            }else{
+                this.pageIndex = 1
+                this.pageSize = 10
             }
-            for(var i =0;i<this.site.length;i++){
-                arr.push(this.site[i].id)
-            }
-            $.ajax({
-                type:'post',
-                async:true,
-                dataType:'json',
-                url:that.serverurl+'/v1/solin/sensor/env/control',
-                contentType:'application/json;charset=UTF-8',
-                data:JSON.stringify({
-                    command:'1',
-                    envs:arr
-                }),
-                success:function(data){
-                    if(data.errorCode=='0'){
-                        that.$message({
-                            message: '请稍后查询,正在获取最新数据!',
-                            type: 'success'
-                        });
-                        setTimeout(function(){
-                            that.ready()
-                        },10000)
-                    }else{
-                        that.errorCode(data)
-                    }
-                },
-            })
-        },
-        //查看历史数据
-        historicalData(concentratorSn){
-            sessionStorage.concentratorSn = concentratorSn
-            this.$router.push({'path':'/historicalData'})
-        },
-        ready(){
-            var that = this;
-            console.log(this.serialNumber)
-            var data = {
-                page:that.pageIndex,
-                size:that.pageSize,
-                poleId:'',
-                projectIds:sessionStorage.projectId,
-                nickName:that.nickName,
-                serialNumber:that.serialNumber,
-                online:that.value,
-                dataType:1,
-            }
+            this.radarId = id
+            this.DataType = '1'
             $.ajax({
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/sensor/env',
-                contentType:'application/json;charset=UTF-8',
-                data:data,
+                url:that.serverurl+'/v1/solin/sensor/radar/log/data',
+                data:{
+                   page:that.pageIndex,
+                   size:that.pageSize,
+                   radarId:id,
+                   command:that.value2
+                },
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.tableData = data.result.list
@@ -270,13 +229,60 @@ export default {
                 }
             })
         },
-        search(){this.ready();},
-        // 列表数据选中事件  进行编辑,删除操作
-        SelectionChange(val){
-            this.site = val;
+        SceneryHistoryChange(){
+           this.radarHistory() 
         },
-        sizechange(val){this.pageSize = val;this.ready()},
-        currentchange(val){this.pageIndex = val;this.ready();},
+        //返回
+        backtrack(){
+            this.DataType = '0'
+            this.pageIndex = 1
+            this.pageSize = 10
+            this.ready()
+        },
+        ready(){
+            var that = this;
+            $.ajax({
+                type:'get',
+                async:true,
+                dataType:'json',
+                url:that.serverurl+'/v1/solin/sensor/radar',
+                data:{
+                   page:that.pageIndex,
+                   size:that.pageSize,
+                   nickName:that.nickName,
+                   radarNumber:that.radarNumber,
+                   online:that.online,
+                   projectIds:sessionStorage.projectId,
+                   dataType:1,
+                },
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        that.tableData = data.result.list
+                        that.total = data.result.total
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
+        },
+        SelectionChange(val){this.site = val;},
+        sizechange(val){
+            this.pageSize = val;
+            if(this.DataType=='1'){
+                this.radarHistory(this.radarId,1)
+            }else{
+                this.ready()
+            }
+        },
+        currentchange(val){
+            this.pageIndex = val;
+            if(this.DataType=='1'){
+                this.radarHistory(this.radarId,1)
+            }else{
+                this.ready()
+            }
+        },
+        search(){this.ready()},
         //权限请求
         Jurisdiction(){
             var that = this
@@ -292,11 +298,11 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         for(var i = 0;i<data.result.operats.length;i++){
-                            if(data.result.operats[i].code=='viewEnvManage'){
-                                that.JurisdictionS.viewEnvManage = true
+                            if(data.result.operats[i].code=='viewRadarManage'){
+                                that.JurisdictionS.viewRadarManage = true
                             }
-                            if(data.result.operats[i].code=='envControl'){
-                                that.JurisdictionS.envControl = true
+                            if(data.result.operats[i].code=='viewRadarHistoryData'){
+                                that.JurisdictionS.viewRadarHistoryData = true
                             }
                         }
                     }else{
@@ -304,9 +310,9 @@ export default {
                     }
                 }
             })
-        }
+        },
     },
-    created() {
+    created(){
         this.ready()
         this.Jurisdiction()
     },

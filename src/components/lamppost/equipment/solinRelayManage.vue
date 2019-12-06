@@ -2,129 +2,143 @@
     <!-- 继电器管理 -->
     <div class="section">
         <div class="section_top">
-            <el-dropdown v-if="JurisdictionS.relayControl" @command='operation'> 
-                <el-button type="primary" size='small'>
-                    操作<i class="el-icon-arrow-down el-icon--right"></i>
-                </el-button>
-                <el-dropdown-menu slot="dropdown"> 
-                    <el-dropdown-item v-if="JurisdictionS.relayControl" command='1'>查询最新数据</el-dropdown-item>
-                    <el-dropdown-item v-if="JurisdictionS.relayControl" command='2'>输出控制</el-dropdown-item>
-                    <el-dropdown-item v-if="JurisdictionS.relayControl" command='3'>工作模式切换</el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>  
-            <el-button v-if="JurisdictionS.viewRelayStrategy" @click="sceneRouter" type="primary" size='small'>场景管理</el-button>
-            <div class="search" v-if="JurisdictionS.viewRelayManage">
-                <el-dropdown size="small" split-button @command="handleCommand">
-                    {{name}}
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='地址';type='2';">地址</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='类型';type='3';">状态</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <div>
-                    <template v-if="type=='1'">
-                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="type=='2'">
-                        <el-input type="number" v-model="relayNumber" size="small" placeholder="请输入地址" style="width:200px;"></el-input>
-                        <!-- <el-input-number v-model="relayNumber" size="small" :precision="0" :min="1" :max="253" label="请输入地址" style="width:200px;"></el-input-number> -->
-                        <!-- <el-input v-model="relayNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input> -->
-                    </template>
-                    <template v-if="type=='3'">
-                        <el-select v-model="value" clearable placeholder="请选择" size='small'>
-                            <el-option
-                            v-for="item in options"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </template>
-                </div>
-                <div>
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
+            <p>位置: &nbsp;设备操作>继电器操作</p>
+            <div v-if="JurisdictionS.viewRelayStrategy">
+                <span style="background: #4382e6;color:white;">继电器操作</span>
+                <span @click="sceneRouter">场景管理</span>
             </div>
         </div>
         <div class="section_bottom">
-            <el-table
-                :data="tableData"
-                @row-click="clickRow" 
-                ref="moviesTable"
-                border
-                stripe
-                size='small'
-                tooltip-effect="dark"
-                @selection-change="SelectionChange"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="nickName"
-                align='center'
-                label="名称"
-                :formatter="formatRole"
-                min-width="110">
-                </el-table-column>
-                <el-table-column
-                prop="relayNumber"
-                align='center'
-                :formatter="formatRole"
-                label="地址"
-                min-width="110">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="在线状态"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.online=='0'">离线</span>
-                        <span v-if="scope.row.online=='1'">在线</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="modelName"
-                align='center'
-                label="型号"
-                :formatter="formatRole"
-                min-width="110">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="工作模式"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.pattern=='0'">正常</span>
-                        <span v-if="scope.row.pattern=='1'">联动</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="relaySceneName"
-                align='center'
-                :formatter="formatRole"
-                label="当前场景"
-                min-width="110">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="通道状态"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <el-button @click="details(scope.row.id)" type="primary" size='mini'>详情</el-button>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="editTime"
-                align='center'
-                label="采集时间"
-                :formatter="formatRole"
-                min-width="150">
-                </el-table-column>
-            </el-table>
+            <div class="section_bottom_bottom">
+                <div class="search" v-if="JurisdictionS.viewRelayManage">
+                    <el-dropdown size="small" split-button @command="handleCommand">
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='地址';type='2';">地址</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='类型';type='3';">状态</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="type=='1'">
+                            <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="type=='2'">
+                            <el-input type="number" v-model="relayNumber" size="small" placeholder="请输入地址" style="width:200px;"></el-input>
+                            <!-- <el-input-number v-model="relayNumber" size="small" :precision="0" :min="1" :max="253" label="请输入地址" style="width:200px;"></el-input-number> -->
+                            <!-- <el-input v-model="relayNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input> -->
+                        </template>
+                        <template v-if="type=='3'">
+                            <el-select v-model="value" clearable placeholder="请选择" size='small'>
+                                <el-option
+                                v-for="item in options"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </template>
+                    </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
+                </div>
+                <div class="section_bottom_right">
+                    <el-button @click="operation(1)" v-if="JurisdictionS.relayControl" size="small" type="primary" plain>查询最新数据</el-button>
+                </div>
+            </div>
+            <div>
+                <el-table
+                    :data="tableData"
+                    @row-click="clickRow" 
+                    ref="moviesTable"
+                    border
+                    size='small'
+                    tooltip-effect="dark"
+                    @selection-change="SelectionChange"
+                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                    <el-table-column
+                    align="center"
+                    type="selection"
+                    width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="nickName"
+                    show-overflow-tooltip
+                    label="名称"
+                    :formatter="formatRole"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    prop="relayNumber"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    label="地址"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    show-overflow-tooltip
+                    label="在线状态"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.online=='0'" class="offLine">离线</span>
+                            <span v-if="scope.row.online=='1'" class="onLine">在线</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="modelName"
+                    show-overflow-tooltip
+                    label="型号"
+                    :formatter="formatRole"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    show-overflow-tooltip
+                    label="工作模式"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.pattern=='0'">正常</span>
+                            <span v-if="scope.row.pattern=='1'">联动</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="relaySceneName"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    label="当前场景"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    show-overflow-tooltip
+                    label="通道状态"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <el-button @click="details(scope.row.id)" type="primary" size='mini'>详情</el-button>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="timestamp"
+                    show-overflow-tooltip
+                    label="采集时间"
+                    :formatter="formatRole"
+                    min-width="150">
+                    </el-table-column>
+                    <el-table-column
+                    label="操作"
+                    v-if="JurisdictionS.relayControl"
+                    min-width="120">
+                        <template slot-scope="scope">
+                            <el-dropdown size="mini" trigger="click" split-button type="primary">
+                                更多
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item @click.native="operation(2,scope.row.id)">输出控制</el-dropdown-item>
+                                    <el-dropdown-item @click.native="operation(3,scope.row.id)">工作模式切换</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="block">
                 <el-pagination
                 background
@@ -150,31 +164,29 @@
                         <el-table
                             :data="myModalData"
                             border
-                            stripe
                             size='small'
                             tooltip-effect="dark"
                             style="width: 100%;overflow:auto;height:auto;max-height:90%;">
                             <el-table-column
+                            align="center"
                             type="selection"
-                            align='center'
                             width="55">
                             </el-table-column>
                             <el-table-column
                             prop="nickName"
-                            align='center'
+                            show-overflow-tooltip
                             label="通道名称"
                             :formatter="formatRole"
                             min-width="110">
                             </el-table-column>
                             <el-table-column
                             prop="channelNumber"
-                            align='center'
+                            show-overflow-tooltip
                             label="通道编号"
                             :formatter="formatRole"
                             min-width="110">
                             </el-table-column>
                             <el-table-column
-                            align='center'
                             label="通道状态"
                             show-overflow-tooltip>
                                 <template slot-scope="scope">
@@ -231,26 +243,24 @@
                             <el-table
                                 :data="myModalData2"
                                 border
-                                stripe
                                 size='small'
                                 tooltip-effect="dark"
                                 style="width: 100%;overflow:auto;height:auto;">
                                 <el-table-column
                                 prop="nickName"
-                                align='center'
+                                show-overflow-tooltip
                                 label="通道名称"
                                 :formatter="formatRole"
                                 min-width="80">
                                 </el-table-column>
                                 <el-table-column
                                 prop="channelNumber"
-                                align='center'
+                                show-overflow-tooltip
                                 label="通道编号"
                                 :formatter="formatRole"
                                 min-width="80">
                                 </el-table-column>
                                 <el-table-column
-                                align='center'
                                 label="通道状态"
                                 :formatter="formatRole"
                                 show-overflow-tooltip>
@@ -266,26 +276,24 @@
                             <el-table
                                 :data="myModalData3"
                                 border
-                                stripe
                                 size='small'
                                 tooltip-effect="dark"
                                 style="width: 100%;overflow:auto;height:auto;">
                                 <el-table-column
                                 prop="nickName"
-                                align='center'
+                                show-overflow-tooltip
                                 label="通道名称"
                                 :formatter="formatRole"
                                 min-width="80">
                                 </el-table-column>
                                 <el-table-column
                                 prop="channelNumber"
-                                align='center'
+                                show-overflow-tooltip
                                 label="通道编号"
                                 :formatter="formatRole"
                                 min-width="80">
                                 </el-table-column>
                                 <el-table-column
-                                align='center'
                                 label="通道状态"
                                 :formatter="formatRole"
                                 show-overflow-tooltip>
@@ -317,6 +325,7 @@ export default {
             },
             tableData:[],
             site:[],
+            siteId:'',
             pageIndex:1,
             pageSize:10,
             total:10,
@@ -325,12 +334,12 @@ export default {
             value:'',
             options:[
                 {
-                    name:'离线',
-                    id:'0'
-                },
-                {
                     name:'在线',
                     id:'1'
+                },
+                {
+                    name:'离线',
+                    id:'0'
                 }
             ],
             options2:[
@@ -381,12 +390,12 @@ export default {
             this.$refs.moviesTable.toggleRowSelection(row)
         },
         //继电器操作
-        operation(val){
+        operation(val,id){
             var that = this;
             if(val=='1'){
                 if(this.site.length==0){
                     this.$message({
-                        message: '请选择单个继电器进行查询!',
+                        message: '请选择继电器进行查询!',
                         type: 'warning'
                     });
                     return;
@@ -421,24 +430,12 @@ export default {
                 })
             }
             if(val=='2'){
-                if(this.site.length==0||this.site.length>=2){
-                    this.$message({
-                        message: '请选择单个继电器进行操作!',
-                        type: 'warning'
-                    });
-                    return;
-                }
-                that.passageway()
+                
+                that.passageway(id)
                 $('#myModal').modal('show')
             }
             if(val=='3'){
-                if(this.site.length==0||this.site.length>=2){
-                    this.$message({
-                        message: '请选择单个继电器进行操作!',
-                        type: 'warning'
-                    });
-                    return;
-                }
+                that.siteId = id
                 that.dialogVisible = true
             }
         },
@@ -493,7 +490,7 @@ export default {
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify({
                     command:that.value3,
-                    relayId:that.site[0].id
+                    relayId:that.siteId
                 }),
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -502,6 +499,7 @@ export default {
                             type: 'success'
                         });
                         that.dialogVisible = false
+                        that.siteId = ''
                         setTimeout(function(){
                             that.ready()
                         },2000)
@@ -512,7 +510,7 @@ export default {
             })
         },
         //请求继电器所有通道信息
-        passageway(){
+        passageway(id){
             var that = this;
             $.ajax({
                 type:'get',
@@ -523,7 +521,7 @@ export default {
                 data:{
                     page:1,
                     size:500,
-                    relayIds:that.site[0].id,
+                    relayIds:id,
                     nickName:'',
                     channelType:'1'
                 },

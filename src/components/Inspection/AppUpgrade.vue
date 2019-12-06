@@ -2,35 +2,39 @@
     <!-- APP升级页面 -->
     <div class="section">
         <div class="section_top">
-            <el-button @click="operation(0)" v-if="JurisdictionS.addPatrolApp" type="primary" icon='el-icon-plus' size='small'>添加升级包</el-button>
-            <el-button @click="operation(1)" v-if="JurisdictionS.delPatrolApp" type="primary" icon='el-icon-delete' size='small'>删除升级包</el-button>
+            <p>位置: &nbsp;巡检管理>APP升级页面</p>
         </div>
         <div class="section_bottom">
+            <div class="section_bottom_bottom">
+                <div class="search">
+                    <el-button @click="operation(0)" v-if="JurisdictionS.addPatrolApp" type="primary" plain icon='el-icon-plus' size='small'>添加升级包</el-button>
+                    <el-button @click="operation(1)" v-if="JurisdictionS.delPatrolApp" type="primary" plain icon='el-icon-delete' size='small'>删除升级包</el-button>
+                </div>
+            </div>
             <div class="AppUpgrade_bottom_bottom">
                 <el-table
                     :data="tableData"
                     @row-click="clickRow" 
                     ref="moviesTable"
                     border
-                    stripe
                     size='small'
                     tooltip-effect="dark"
                     @selection-change="SelectionChange"
                     style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                     <el-table-column
+                    align="center"
                     type="selection"
-                    align='center'
                     width="55">
                     </el-table-column>
                     <el-table-column
                     prop="fileName"
-                    align='center'
+                    show-overflow-tooltip
                     label="升级包名称"
                     min-width="200">
                     </el-table-column>
                     <el-table-column
                     prop="sex"
-                    align='center'
+                    show-overflow-tooltip
                     label="是否强制升级"
                     min-width="100">
                         <template slot-scope="scope">
@@ -40,19 +44,19 @@
                     </el-table-column>
                      <el-table-column
                     prop="createUser"
-                    align='center'
+                    show-overflow-tooltip
                     label="上传人员"
                     min-width="80">
                     </el-table-column>
                     <el-table-column
                     prop="updateDesc"
-                    align='center'
+                    show-overflow-tooltip
                     label="升级描述"
                     min-width="220">
                     </el-table-column>
                     <el-table-column
                     prop="remark"
-                    align='center'
+                    show-overflow-tooltip
                     label="备注信息"
                     :formatter="formatRole"
                     min-width="150">
@@ -61,7 +65,6 @@
                     prop="createTime"
                     label="上传时间"
                     :formatter="formatRole"
-                    align='center'
                     min-width="160"
                     show-overflow-tooltip>
                     </el-table-column>
@@ -90,7 +93,7 @@
                     </div>
                     <div class="modal-body" style='min-height:200px;max-height:590px;overflow:auto;'>
                         <div class="form-group">
-                            <label><span class="Required">*</span>升级包:</label>
+                            <label><span class="Required">*</span>升&ensp;级&ensp;包:</label>
                             <input type="file" ref="upgradeFile" id="upgradeFile">
                         </div>
                         <div class="form-group">

@@ -2,123 +2,130 @@
     <div class="section">
         <!-- 广告屏 -->
         <div class="section_top">
-            <el-button v-if="JurisdictionS.addScreen" @click="addadvertisingscreen(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="JurisdictionS.editScreen" @click="addadvertisingscreen(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="JurisdictionS.delScreen" @click="deleteadvertisingscreen" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <el-dropdown v-if="JurisdictionS.SetUp" size="small" split-button type="primary">
-                <i class="el-icon-setting el-icon--left"></i>设置
-                <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-if="JurisdictionS.setScreenProject" @click.native="screenBindProjectss">绑定项目</el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>
-            <div class="search" v-if="JurisdictionS.viewScreenDeploy">
-                <el-dropdown size="small" split-button @command="handleCommand">
-                    {{name}}
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='状态';type='3';">状态</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <div>
-                    <template v-if="type=='1'">
-                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="type=='2'">
-                        <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="type=='3'">
-                        <el-select v-model="value4" size='small' style="width:194px;" clearable placeholder="请选择">
-                            <el-option
-                            v-for="item in options4"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </template>
-                </div>
-                <div>
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div>
+            <p>位置: &nbsp;设备部署>屏幕管理</p>
         </div>
         <div class="section_bottom">
-            <el-table
-                :data="tableData"
-                @row-click="clickRow" 
-                ref="moviesTable"
-                border
-                stripe
-                size='small'
-                tooltip-effect="dark"
-                @selection-change="userSelectionChange"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="nickName"
-                align='center'
-                label="名称"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
-                prop="serialNumber"
-                align='center'
-                label="序列号"
-                min-width="140">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="状态"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.online=='0'">离线</span>
-                        <span v-if="scope.row.online=='1'">在线</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="modelName"
-                align='center'
-                label="型号"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
-                prop="width"
-                align='center'
-                label="宽度(像素)"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="height"
-                align='center'
-                label="高度(像素)"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="poleName"
-                align='center'
-                label="灯杆"
-                :formatter="formatRole"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
-                prop="remark"
-                align='center'
-                label="备注"
-                :formatter="formatRole"
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                prop="createTime"
-                label="创建时间"
-                align='center'
-                min-width="150">
-                </el-table-column>
-            </el-table>
+            <div class="section_bottom_bottom">
+                <div class="search" v-if="JurisdictionS.viewScreenDeploy">
+                    <el-dropdown size="small" split-button @command="handleCommand">
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='状态';type='3';">状态</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="type=='1'">
+                            <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="type=='2'">
+                            <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="type=='3'">
+                            <el-select v-model="value4" size='small' style="width:194px;" clearable placeholder="请选择">
+                                <el-option
+                                v-for="item in options4"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </template>
+                    </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
+                </div>
+                <div class="section_bottom_right">
+                    <el-button v-if="JurisdictionS.addScreen" @click="addadvertisingscreen(0)" type="primary" plain icon='el-icon-plus' size='small'>添加</el-button>
+                    <el-button v-if="JurisdictionS.delScreen" @click="deleteadvertisingscreen" type="primary" plain icon='el-icon-delete' size='small'>删除</el-button>
+                    <el-button v-if="JurisdictionS.setScreenProject" @click="screenBindProjectss" type="primary" plain size='small'>绑定项目</el-button>
+                </div>
+            </div>
+            <div>
+                <el-table
+                    :data="tableData"
+                    @row-click="clickRow" 
+                    ref="moviesTable"
+                    border
+                    size='small'
+                    tooltip-effect="dark"
+                    @selection-change="userSelectionChange"
+                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                    <el-table-column
+                    align="center"
+                    type="selection"
+                    width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="nickName"
+                    show-overflow-tooltip
+                    label="名称"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="serialNumber"
+                    show-overflow-tooltip
+                    label="序列号"
+                    min-width="140">
+                    </el-table-column>
+                    <el-table-column
+                    show-overflow-tooltip
+                    label="状态"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.online=='0'" class="offLine">离线</span>
+                            <span v-if="scope.row.online=='1'" class="onLine">在线</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="modelName"
+                    show-overflow-tooltip
+                    label="型号"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="width"
+                    show-overflow-tooltip
+                    label="宽度(像素)"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="height"
+                    show-overflow-tooltip
+                    label="高度(像素)"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="poleName"
+                    show-overflow-tooltip
+                    label="所属灯杆"
+                    :formatter="formatRole"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="remark"
+                    show-overflow-tooltip
+                    label="备注"
+                    :formatter="formatRole"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="createTime"
+                    label="创建时间"
+                    show-overflow-tooltip
+                    min-width="150">
+                    </el-table-column>
+                    <el-table-column
+                    label="操作"
+                    min-width="120">
+                        <template slot-scope="scope">
+                            <el-button v-if="JurisdictionS.editScreen" @click="addadvertisingscreen(1,scope.row)" type="primary" size='mini'>编辑</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="block">
                 <el-pagination
                 background
@@ -134,7 +141,7 @@
         </div>
         <!-- 添加编辑模态框 -->
         <div class="modal fade" id="addModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:500px;">
+            <div class="modal-dialog" style="width:400px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -143,15 +150,15 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label><span class="Required">*</span>名称:</label>
+                            <label><span class="Required">*</span>名&emsp;&emsp;称:</label>
                             <input type="text" v-model='form.nickName' class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>序列号:</label>
+                            <label><span class="Required">*</span>序&ensp;列&ensp;号:</label>
                             <input type="text" v-model="form.serialNumber" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
                         </div>
                         <div class="form-group">
-                            <label><span class="Required">*</span>型号:</label>
+                            <label><span class="Required">*</span>型&emsp;&emsp;号:</label>
                             <el-select v-model="form.modelId" size='small' style='width:195px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options"
@@ -170,21 +177,21 @@
                             <input type="text" v-model='form.height' class="form-control" maxlength="10" oninput="value=value.replace(/[^\d]/g,'')" placeholder="请输入高度">
                         </div>
                         <div class="form-group">
-                            <label>位置:</label>
+                            <label>位&emsp;&emsp;置:</label>
                             <input type="text" v-model="form.coord" :disabled='true' class="form-control" id="email" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="地图选点">
                             <i @click="mapClick" class="iconfont icon-baidumap mappoint"></i>
                         </div>  
                         <div class="form-group">
-                            <label>备注:</label>
+                            <label>备&emsp;&emsp;注:</label>
                             <el-input
                                 type="textarea"
                                 v-model='form.remark'
-                                :rows="2"
+                                :rows="1"
                                 style="width:195px;"
                                 placeholder="请输入备注">
                             </el-input>
                         </div>                                                                                             
-                        <div class="form-group">
+                        <div class="form-group" v-if="addType=='0'">
                             <el-button v-if="JurisdictionS.screenAssociatePole" @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
                         </div> 
                     </div>
@@ -201,7 +208,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>请选择灯杆进行关联</h4>
+                        <h4 class="modal-title" id="myModalLabel">请选择灯杆进行关联</h4>
                     </div>
                     <div class="modal-body">
                         <el-table
@@ -209,24 +216,23 @@
                             @row-click="clickRow2" 
                             ref="multipleTable"
                             border
-                            stripe
                             size='small'
                             tooltip-effect="dark"
                             @selection-change="SelectionChange2"
                             style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                             <el-table-column
+                            align="center"
                             type="selection"
-                            align='center'
                             width="55">
                             </el-table-column>
                             <el-table-column
                             prop="nickName"
-                            align='center'
+                            show-overflow-tooltip
                             label="灯杆名称"
                             width="120">
                             </el-table-column>
                             <el-table-column
-                            align='center'
+                            show-overflow-tooltip
                             label="灯杆类型"
                             width="80">
                                 <template slot-scope="scope">
@@ -236,7 +242,7 @@
                             </el-table-column>
                             <el-table-column
                             prop="coord"
-                            align='center'
+                            show-overflow-tooltip
                             :formatter="formatRole"
                             label="位置"
                             width="150">
@@ -245,7 +251,7 @@
                             prop="remark"
                             label="备注"
                             :formatter="formatRole"
-                            align='center'
+                            show-overflow-tooltip
                             width="162">
                             </el-table-column>
                         </el-table>
@@ -336,6 +342,7 @@ export default {
             projectId:sessionStorage.projectId,
             site:[], //列表数据选中  进行修改编辑操作
             addType:'0',  //添加编辑类型
+            screenSite:[],
             options5:[],
             value5:'',
             tableData:[],
@@ -346,12 +353,12 @@ export default {
             serialNumber:'',
             options4:[
                 {
-                    value:0,
-                    label:'离线'
-                },
-                {
                     value:1,
                     label:'在线'
+                },
+                {
+                    value:0,
+                    label:'离线'
                 }
             ],
             value4:'',
@@ -439,7 +446,7 @@ export default {
             this.site = val
         },
         //获取型号列表
-        ModelData(){
+        ModelData(modelId){
             var that = this;
             $.ajax({
                 type:'get',
@@ -457,7 +464,7 @@ export default {
                             that.form.modelId = data.result.mapList[0].id
                         }
                         if(that.addType=='1'){
-                            that.form.modelId = that.site[0].modelId
+                            that.form.modelId = modelId
                         }
                     }else{
                         that.errorCode(data)
@@ -466,7 +473,7 @@ export default {
             })
         },
         //添加 编辑点击事件
-        addadvertisingscreen(val){
+        addadvertisingscreen(val,row){
             if(sessionStorage.projectId=='0'){
                 this.$message({
                     message: '此操作请选择具体项目!',
@@ -490,26 +497,16 @@ export default {
                 $('#addModal').modal('show')
             }
             if(val=='1'){
-                if(this.site.length==0||that.site.length>1){
-                    that.$message({
-                        message: '请选择一条数据进行编辑!',
-                        type: 'error',
-                        showClose: true,
-                    });
-                    return;
-                }
                 this.addType = val
-                this.ModelData()
-                setTimeout(function(){
-                    that.form.nickName = that.site[0].nickName
-                    that.form.width = String(that.site[0].width)
-                    that.form.height = String(that.site[0].height)
-                    that.form.serialNumber = that.site[0].serialNumber
-                    that.form.remark = that.site[0].remark
-                    that.form.coord = that.site[0].coord
-                    that.referencePosition = that.site[0].coord
-                },400)
-                
+                that.screenSite = row,
+                that.form.nickName = row.nickName
+                that.form.width = String(row.width)
+                that.form.height = String(row.height)
+                that.form.serialNumber = row.serialNumber
+                that.form.remark = row.remark
+                that.form.coord = row.coord
+                that.referencePosition = row.coord
+                this.ModelData(row.modelId)
                 $('#addModal').modal('show')
             }
             /* 完成拖拽 */
@@ -518,6 +515,75 @@ export default {
                 handle: '.modal-header'
             });
             $('#addModal').css("overflow", "hidden")
+        },
+        //添加修改广告屏提交
+        submit(){
+            var that = this
+            var url = ''
+            var data = that.form
+            var type = ''
+            if(that.form.nickName==''||that.form.width==''||that.form.height==''){
+                that.$message({
+                    message: '必填字段不能为空!',
+                    type: 'error'
+                });
+                return;
+            }
+            if(that.form.serialNumber==''){
+                that.$message({
+                    message: '必填字段不能为空!',
+                    type: 'error'
+                });
+                return;
+            }
+            if(this.addType=='0'){
+                url = '/v1/solin/screen/device'
+                type = 'post'
+                if(this.site2.length==0){
+                    data.poleId='0'
+                }else{
+                    data.poleId = that.site2[0].id
+                }
+            }
+            if(this.addType=='1'){
+                data.id = that.screenSite.id
+                data.status = that.screenSite.status
+                data.poleId = that.screenSite.poleId
+                url = '/v1/solin/screen/device' 
+                type = 'put'
+            }
+            data.projectId=sessionStorage.projectId
+            data.coord = that.form.coord
+            $.ajax({
+                type:type,
+                async:true,
+                dataType:'json',
+                url:that.serverurl+url,
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(data),
+                success:function(data){
+                    if(data.errorCode=='0'){
+                        $('#addModal').modal('hide')
+                        if(that.addType=='0'){
+                            that.$message({
+                                message: '添加成功',
+                                type: 'success',
+                                showClose: true,
+                            });
+                        }
+                        if(that.addType=='1'){
+                            that.$message({
+                                message: '编辑成功',
+                                type: 'success',
+                                showClose: true,
+                            });
+                        }
+                        that.ready()
+                    }else{
+                        that.errorCode(data)
+                    }
+                }
+            })
         },
         //删除广告屏
         deleteadvertisingscreen(){
@@ -576,6 +642,7 @@ export default {
                 });
                 return;
             }
+            that.value5 = Number(sessionStorage.projectId)
             $('#screenBindProjectsModal').modal('show')
             this.project()
         },
@@ -592,7 +659,6 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.options5 = data.result.projects
-                        that.value5 = ''
                     }else{
                         that.errorCode(data)
                     }
@@ -727,78 +793,6 @@ export default {
         currentchange(val){this.pageIndex = val;this.ready()},
         search(){
             this.ready()
-        },
-        //添加修改广告屏提交
-        submit(){
-            var that = this
-            var url = ''
-            var data = that.form
-            var type = ''
-            if(that.form.nickName==''||that.form.width==''||that.form.height==''){
-                that.$message({
-                    message: '必填字段不能为空!',
-                    type: 'error'
-                });
-                return;
-            }
-            if(that.form.serialNumber==''){
-                that.$message({
-                    message: '必填字段不能为空!',
-                    type: 'error'
-                });
-                return;
-            }
-            if(this.addType=='0'){
-                url = '/v1/solin/screen/device'
-                type = 'post'
-            }
-            if(this.addType=='1'){
-                data.id = that.site[0].id
-                data.status = that.site[0].status
-                url = '/v1/solin/screen/device' 
-                type = 'put'
-            }
-            data.projectId=sessionStorage.projectId
-            data.coord = that.form.coord
-            if(this.site2.length==''){
-                if(this.addType=='0'){
-                    data.poleId='0'
-                }else{
-                    data.poleId=that.site[0].poleId
-                }
-            }else{
-                data.poleId = this.site2[0].id
-            }
-            $.ajax({
-                type:type,
-                async:true,
-                dataType:'json',
-                url:that.serverurl+url,
-                contentType:'application/json;charset=UTF-8',
-                data:JSON.stringify(data),
-                success:function(data){
-                    if(data.errorCode=='0'){
-                        $('#addModal').modal('hide')
-                        if(that.addType=='0'){
-                            that.$message({
-                                message: '添加成功',
-                                type: 'success',
-                                showClose: true,
-                            });
-                        }
-                        if(that.addType=='1'){
-                            that.$message({
-                                message: '编辑成功',
-                                type: 'success',
-                                showClose: true,
-                            });
-                        }
-                        that.ready()
-                    }else{
-                        that.errorCode(data)
-                    }
-                }
-            })
         },
         //权限请求
         Jurisdiction(){

@@ -2,120 +2,127 @@
     <!-- 摄像头 -->
     <div class="section">
         <div class="section_top">
-            <el-button v-if="JurisdictionS.addCameraDeploy" @click="CameraDeploy(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="JurisdictionS.editCameraDeploy" @click="CameraDeploy(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="JurisdictionS.delCameraDeploy" @click="CameraDeploy(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <el-dropdown v-if="JurisdictionS.SetUp" size="small" split-button type="primary">
-                <i class="el-icon-setting el-icon--left"></i>设置
-                <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-if="JurisdictionS.setCameraProject" @click.native="BindProjectss">绑定项目</el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>
-            <div class="search" v-if="JurisdictionS.viewCameraDeploy">
-                <el-dropdown size="small" split-button @command="handleCommand">
-                    {{name}}
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="name='名称';type1='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='IP';type1='2';">IP</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='状态';type1='3';">状态</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <div>
-                    <template v-if="type1=='1'">
-                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="type1=='2'">
-                        <el-input v-model="ipAddress" size="small" placeholder="请输入IP" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="type1=='3'">
-                        <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
-                            <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </template>
-                </div>
-                <div>
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div>
+            <p>位置: &nbsp;设备部署>摄像头管理</p>
         </div>
         <div class="section_bottom">
-            <el-table
-                :data="tableData"
-                @row-click="clickRow" 
-                ref="myModalmoviesTable"
-                border
-                stripe
-                size='small'
-                slot="empty"
-                tooltip-effect="dark"
-                @selection-change="myModalChange"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="nickName"
-                align='center'
-                label="名称"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
-                prop="ipAddress"
-                align='center'
-                label="IP"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="状态"
-                min-width="100">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.online=='0'">离线</span>
-                        <span v-if="scope.row.online=='1'">在线</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="producerName"
-                align='center'
-                label="厂商"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
-                prop="cameraNumber"
-                align='center'
-                label="编号"
-                :formatter="formatRole"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
-                prop="poleName"
-                align='center'
-                label="灯杆"
-                :formatter="formatRole"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
-                prop="remark"
-                align='center'
-                label="备注"
-                :formatter="formatRole"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
-                prop="createTime"
-                align='center'
-                label="创建时间"
-                :formatter="formatRole"
-                min-width="150">
-                </el-table-column>
-            </el-table>
+            <div class="section_bottom_bottom">
+                <div class="search" v-if="JurisdictionS.viewCameraDeploy">
+                    <el-dropdown size="small" split-button @command="handleCommand">
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='名称';type1='1';">名称</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='IP';type1='2';">IP</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='状态';type1='3';">状态</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="type1=='1'">
+                            <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="type1=='2'">
+                            <el-input v-model="ipAddress" size="small" placeholder="请输入IP" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="type1=='3'">
+                            <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
+                                <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </template>
+                    </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
+                </div>
+                <div class="section_bottom_right">
+                    <el-button v-if="JurisdictionS.addCameraDeploy" @click="CameraDeploy(0)" type="primary" plain icon='el-icon-plus' size='small'>添加</el-button>
+                    <el-button v-if="JurisdictionS.delCameraDeploy" @click="CameraDeploy(2)" type="primary" plain icon='el-icon-delete' size='small'>删除</el-button>
+                    <el-button v-if="JurisdictionS.setCameraProject" @click="BindProjectss" type="primary" plain size='small'>绑定项目</el-button>
+                </div>
+            </div>
+            <div>
+                <el-table
+                    :data="tableData"
+                    @row-click="clickRow" 
+                    ref="myModalmoviesTable"
+                    border
+                    size='small'
+                    slot="empty"
+                    tooltip-effect="dark"
+                    @selection-change="myModalChange"
+                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                    <el-table-column
+                    align="center"
+                    type="selection"
+                    width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="nickName"
+                    show-overflow-tooltip
+                    label="名称"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="ipAddress"
+                    show-overflow-tooltip
+                    label="IP"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    show-overflow-tooltip
+                    label="状态"
+                    min-width="100">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.online=='0'" class="offLine">离线</span>
+                            <span v-if="scope.row.online=='1'" class="onLine">在线</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="producerName"
+                    show-overflow-tooltip
+                    label="厂商"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="cameraNumber"
+                    show-overflow-tooltip
+                    label="编号"
+                    :formatter="formatRole"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="poleName"
+                    show-overflow-tooltip
+                    label="所属灯杆"
+                    :formatter="formatRole"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="remark"
+                    show-overflow-tooltip
+                    label="备注"
+                    :formatter="formatRole"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="createTime"
+                    show-overflow-tooltip
+                    label="创建时间"
+                    :formatter="formatRole"
+                    min-width="150">
+                    </el-table-column>
+                    <el-table-column
+                    label="操作"
+                    min-width="120">
+                        <template slot-scope="scope">
+                            <el-button v-if="JurisdictionS.editCameraDeploy" @click="CameraDeploy(1,scope.row)" type="primary" size='mini'>编辑</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="block">
                 <el-pagination
                 background
@@ -131,7 +138,7 @@
         </div>
         <!-- 添加编辑模态框 -->
         <div class="modal fade" id="addModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:500px;">
+            <div class="modal-dialog" style="width:400px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -140,15 +147,15 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label><span class="Required">*</span>名称:</label>
+                            <label><span class="Required">*</span>名&emsp;&emsp;称:</label>
                             <input type="text" v-model='data.nickName' class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>IP:</label>
+                            <label><span class="Required">*</span>I&emsp;&emsp;&emsp;P:</label>
                             <input type="text" v-model='data.ipAddress' class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入IP">
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>厂商:</label>
+                            <label><span class="Required">*</span>厂&emsp;&emsp;商:</label>
                             <el-cascader
                             v-model="data.producerId"
                             size="small"
@@ -158,15 +165,15 @@
                             </el-cascader>
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>用户名:</label>
+                            <label><span class="Required">*</span>用&ensp;户&ensp;名:</label>
                             <input type="text" v-model='data.username' class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入用户名">
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>密码:</label>
+                            <label><span class="Required">*</span>密&emsp;&emsp;码:</label>
                             <input type="password" v-model='data.userPwd' class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入密码">
                         </div> 
                         <div class="form-group">
-                            <label>编号:</label>
+                            <label>编&emsp;&emsp;号:</label>
                             <input type="text" v-model='data.cameraNumber' class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入编号">
                         </div> 
                         <div class="form-group">
@@ -178,21 +185,21 @@
                             <input type="text" v-model='data.serverPort' class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入服务端口">
                         </div> 
                         <div class="form-group">
-                            <label>位置:</label>
+                            <label>位&emsp;&emsp;置:</label>
                             <input type="text" v-model="data.coord" :disabled='true' class="form-control" id="email" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="地图选点">
                             <i @click="mapClick" class="iconfont icon-baidumap mappoint"></i>
                         </div>  
                         <div class="form-group">
-                            <label>备注:</label>
+                            <label>备&emsp;&emsp;注:</label>
                             <el-input
                                 v-model="data.remark"
                                 type="textarea"
-                                :rows="2"
+                                :rows="1"
                                 style="width:195px;"
                                 placeholder="请输入备注">
                             </el-input>
                         </div>                                                                                             
-                        <div class="form-group">
+                        <div class="form-group" v-if="addType=='0'">
                             <el-button @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
                         </div> 
                     </div>
@@ -225,7 +232,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>请选择灯杆进行关联</h4>
+                        <h4 class="modal-title" id="myModalLabel">请选择灯杆进行关联</h4>
                     </div>
                     <div class="modal-body">
                         <el-table
@@ -233,24 +240,23 @@
                             @row-click="clickRow2" 
                             ref="multipleTable"
                             border
-                            stripe
                             size='small'
                             tooltip-effect="dark"
                             @selection-change="SelectionChange2"
                             style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                             <el-table-column
+                            align="center"
                             type="selection"
-                            align='center'
                             width="55">
                             </el-table-column>
                             <el-table-column
                             prop="nickName"
-                            align='center'
+                            show-overflow-tooltip
                             label="灯杆名称"
                             width="120">
                             </el-table-column>
                             <el-table-column
-                            align='center'
+                            show-overflow-tooltip
                             label="灯杆类型"
                             width="80">
                                 <template slot-scope="scope">
@@ -261,7 +267,7 @@
                             <el-table-column
                             prop="coord"
                             :formatter="formatRole"
-                            align='center'
+                            show-overflow-tooltip
                             label="位置"
                             width="150">
                             </el-table-column>
@@ -269,7 +275,7 @@
                             prop="remark"
                             :formatter="formatRole"
                             label="备注"
-                            align='center'
+                            show-overflow-tooltip
                             width="162">
                             </el-table-column>
                         </el-table>
@@ -344,12 +350,12 @@ export default {
             ipAddress:'',
             options:[
                 {
-                    value:0,
-                    label:'离线'
-                },
-                {
                     value:1,
                     label:'在线'
+                },
+                {
+                    value:0,
+                    label:'离线'
                 }
             ],
             value:'',
@@ -360,6 +366,7 @@ export default {
             total:10,
             referencePosition:'',
             addType:'0',
+            cameraSite:[],
             options2:[],
             props:{
                 label:'text',
@@ -412,7 +419,7 @@ export default {
             this.$refs.multipleTable.toggleRowSelection(row)
         },
         //点击 添加/编辑/删除
-        CameraDeploy(val){
+        CameraDeploy(val,row){
             var that = this;
             if(val=='0'){
                 this.addType='0'
@@ -432,16 +439,10 @@ export default {
                 $('#addModal').modal('show')
             }
             if(val=='1'){
-                if(this.site.length==0||this.site.length>=2){
-                    this.$message({
-                        message: '请选择单个摄像头进行编辑!',
-                        type: 'error'
-                    });
-                    return;
-                }
                 this.addType='1'
-                that.producer()
-                this.details()
+                this.producer()
+                this.details(row)
+                this.cameraSite = row
                 $('#addModal').modal('show')
             }
             if(val=='2'){
@@ -491,13 +492,13 @@ export default {
             }
         },
         //编辑获取详情
-        details(){
+        details(row){
             var that = this;
             $.ajax({
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/camera/device/information/'+that.site[0].id,
+                url:that.serverurl+'/v1/solin/camera/device/information/'+row.id,
                 contentType:'application/json;charset=UTF-8',
                 data:{
                     
@@ -555,20 +556,17 @@ export default {
             data = JSON.parse(JSON.stringify(that.data))
             data.projectId = sessionStorage.projectId
             data.producerId = data.producerId[1]
-            if(this.site2.length==0){
-                if(this.addType=='0'){
-                    data.poleId='0'
-                }else{
-                    data.poleId=that.site[0].poleId
-                }
-            }else{
-                data.poleId = this.site2[0].id
-            }
             if(this.addType=='0'){
                 type = 'post'
+                if(this.site2.length==0){
+                    data.poleId='0'
+                }else{
+                    data.poleId = this.site2[0].id
+                }
             }
             if(this.addType=='1'){
-                data.id = that.site[0].id
+                data.id = that.cameraSite.id
+                data.poleId = that.cameraSite.poleId
                 type = 'put'
             }
             $.ajax({
@@ -764,6 +762,7 @@ export default {
                 });
                 return;
             }
+            that.value3 = Number(sessionStorage.projectId)
             $('#BindProjectsModal').modal('show')
             this.project()
         },
@@ -780,7 +779,6 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.options3 = data.result.projects
-                        that.value3 = ''
                     }else{
                         that.errorCode(data)
                     }

@@ -2,111 +2,123 @@
     <!-- 继电器部署 -->
     <div class="section">
         <div class="section_top">
-            <el-button v-if="JurisdictionS.addRelay" @click="solinRelayDeployOpreat(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="JurisdictionS.editRelay" @click="solinRelayDeployOpreat(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="JurisdictionS.delRelay" @click="solinRelayDeployOpreat(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search" v-if="JurisdictionS.viewRelayDeploy">
-                <el-dropdown size="small" split-button @command="handleCommand">
-                    {{name}}
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="name='名称';type1='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='地址';type1='2';">地址</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='状态';type1='3';">状态</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <div>
-                    <template v-if="type1=='1'">
-                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="type1=='2'">
-                        <el-input type="number" v-model="relayNumber" size="small" placeholder="请输入地址" style="width:200px;"></el-input>
-                        <!-- <el-input-number v-model="relayNumber" size="small" :precision="0" :min="1" :max="253" label="请输入地址" style="width:200px;"></el-input-number> -->
-                        <!-- <el-input v-model="relayNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input> -->
-                    </template>
-                    <template v-if="type1=='3'">
-                        <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
-                            <el-option
-                            v-for="item in options"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </template>
-                </div>
-                <div>
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div>
+            <p>位置: &nbsp;设备部署>继电器管理</p>
         </div>
         <div class="section_bottom"> 
-            <el-table
-                :data="tableData"
-                @row-click="clickRow" 
-                ref="moviesTable"
-                border
-                stripe
-                size='small'
-                tooltip-effect="dark"
-                @selection-change="SelectionChange"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="nickName"
-                align='center'
-                label="名称"
-                :formatter="formatRole"
-                min-width="110">
-                </el-table-column>
-                <el-table-column
-                prop="relayNumber"
-                align='center'
-                :formatter="formatRole"
-                label="地址"
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="状态"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.online=='0'">离线</span>
-                        <span v-if="scope.row.online=='1'">在线</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="modelName"
-                align='center'
-                label="型号"
-                :formatter="formatRole"
-                min-width="110">
-                </el-table-column>
-                <el-table-column
-                prop="concentratorName"
-                align='center'
-                :formatter="formatRole"
-                label="集中器"
-                min-width="110">
-                </el-table-column>
-                <el-table-column
-                prop="remark"
-                align='center'
-                :formatter="formatRole"
-                label="备注"
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                prop="createTime"
-                align='center'
-                label="创建时间"
-                :formatter="formatRole"
-                min-width="150">
-                </el-table-column>
-            </el-table>
+            <div class="section_bottom_bottom">
+                <div class="search" v-if="JurisdictionS.viewRelayDeploy">
+                    <el-dropdown size="small" split-button @command="handleCommand">
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='名称';type1='1';">名称</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='地址';type1='2';">地址</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='状态';type1='3';">状态</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="type1=='1'">
+                            <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="type1=='2'">
+                            <el-input type="number" v-model="relayNumber" size="small" placeholder="请输入地址" style="width:200px;"></el-input>
+                            <!-- <el-input-number v-model="relayNumber" size="small" :precision="0" :min="1" :max="253" label="请输入地址" style="width:200px;"></el-input-number> -->
+                            <!-- <el-input v-model="relayNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input> -->
+                        </template>
+                        <template v-if="type1=='3'">
+                            <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
+                                <el-option
+                                v-for="item in options"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </template>
+                    </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
+                </div>
+                <div class="section_bottom_right">
+                    <el-button v-if="JurisdictionS.addRelay" @click="solinRelayDeployOpreat(0)" type="primary" plain icon='el-icon-plus' size='small'>添加</el-button>
+                    <el-button v-if="JurisdictionS.delRelay" @click="solinRelayDeployOpreat(2)" type="primary" plain icon='el-icon-delete' size='small'>删除</el-button>
+                </div>
+            </div>
+            <div>
+                <el-table
+                    :data="tableData"
+                    @row-click="clickRow" 
+                    ref="moviesTable"
+                    border
+                    size='small'
+                    tooltip-effect="dark"
+                    @selection-change="SelectionChange"
+                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                    <el-table-column
+                    align="center"
+                    type="selection"
+                    width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="nickName"
+                    show-overflow-tooltip
+                    label="名称"
+                    :formatter="formatRole"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    prop="relayNumber"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    label="地址"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    show-overflow-tooltip
+                    label="状态"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.online=='0'" class="offLine">离线</span>
+                            <span v-if="scope.row.online=='1'" class="onLine">在线</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="modelName"
+                    show-overflow-tooltip
+                    label="型号"
+                    :formatter="formatRole"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    prop="concentratorName"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    label="集中器"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    prop="remark"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    label="备注"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="createTime"
+                    show-overflow-tooltip
+                    label="创建时间"
+                    :formatter="formatRole"
+                    min-width="150">
+                    </el-table-column>
+                    <el-table-column
+                    label="操作"
+                    min-width="120">
+                        <template slot-scope="scope">
+                            <el-button v-if="JurisdictionS.editRelay" @click="solinRelayDeployOpreat(1,scope.row)" type="primary" size='mini'>编辑</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="block">
                 <el-pagination
                 background
@@ -131,15 +143,15 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label><span class="Required">*</span>名称:</label>
+                            <label><span class="Required">*</span>名&emsp;&emsp;称:</label>
                             <input type="text" v-model.lazy="data.nickName" maxlength="40" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入继电器名称">
                         </div>
                         <div class="form-group">
-                            <label><span class="Required">*</span>地址:</label>
+                            <label><span class="Required">*</span>地&emsp;&emsp;址:</label>
                             <el-input-number v-model.lazy="data.relayNumber" :precision="0" :min="1" :max="253" size="small" style="width:196px;" label="地址"></el-input-number>
                         </div>
                         <div class="form-group">
-                            <label><span class="Required">*</span>型号:</label>
+                            <label><span class="Required">*</span>型&emsp;&emsp;号:</label>
                             <el-select v-model="data.modelId" @change="modelChange" size='small' clearable style='width:196px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options3"
@@ -150,7 +162,7 @@
                             </el-select>
                         </div>
                         <div class="form-group">
-                            <label><span class="Required">*</span>集中器:</label>
+                            <label><span class="Required">*</span>集&ensp;中&ensp;器:</label>
                             <el-select v-model="data.concentratorSn" size='small' clearable style='width:196px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options2"
@@ -163,10 +175,10 @@
                             </el-select>
                         </div>
                         <div class="form-group">
-                            <label>备注:</label>
+                            <label>备&emsp;&emsp;注:</label>
                             <el-input
                                 type="textarea"
-                                :rows="2"
+                                :rows="1"
                                 placeholder="请输入备注"
                                 v-model="data.remark"
                                 style="width:196px;">
@@ -227,17 +239,18 @@ export default {
             pageIndex:1,
             pageSize:10,
             total:10,
+            relaySite:[],
             nickName:'',
             relayNumber:'',
             value:'',
             options:[
                 {
-                    name:'离线',
-                    id:'0'
-                },
-                {
                     name:'在线',
                     id:'1'
+                },
+                {
+                    name:'离线',
+                    id:'0'
                 }
             ],
             type:'0',
@@ -274,7 +287,7 @@ export default {
             this.$refs.moviesTable.toggleRowSelection(row)
         },
         //点击添加,编辑,删除按钮
-        solinRelayDeployOpreat(val){
+        solinRelayDeployOpreat(val,row){
             var that = this;
             if(val=='0'){
                 this.type = '0'
@@ -285,28 +298,23 @@ export default {
                 that.data.concentratorSn=''
                 that.data.modelId=''
                 that.data.remark=''
-                that.data.passagewayList=[]
+                that.data.inputChannelDTOs = []
+                that.data.outputChannelDTOs = []
                 $('#myModal').modal('show')
             }
             if(val=='1'){
-                if(this.site.length==0||this.site.length>=2){
-                    this.$message({
-                        message: '请选择单个继电器进行编辑!',
-                        type: 'error'
-                    });
-                    return
-                }
                 this.type = '1'
                 that.data.inputChannelDTOs = []
                 that.data.outputChannelDTOs = []
                 this.concentratorSnData()
                 this.modelData()
-                this.passageway()
-                that.data.nickName=this.site[0].nickName
-                that.data.relayNumber=this.site[0].relayNumber
-                that.data.concentratorSn=this.site[0].concentratorSn
-                that.data.modelId=this.site[0].modelId
-                that.data.remark=this.site[0].remark
+                this.passageway(row)
+                that.relaySite = row
+                that.data.nickName=row.nickName
+                that.data.relayNumber=row.relayNumber
+                that.data.concentratorSn=row.concentratorSn
+                that.data.modelId=row.modelId
+                that.data.remark=row.remark
                 $('#myModal').modal('show')
             }
             if(val=='2'){
@@ -369,7 +377,7 @@ export default {
             var data = {}
             data = that.data
             if(that.type=='0'){type='post';}
-            if(that.type=='1'){type='put';data.id = that.site[0].id}
+            if(that.type=='1'){type='put';data.id = that.relaySite.id}
             data.projectId	= sessionStorage.projectId
             $.ajax({
                 type:type,
@@ -393,7 +401,7 @@ export default {
             })
         },
         //请求继电器所有的通道
-        passageway(){
+        passageway(row){
             var that = this;
             $.ajax({
                 type:'get',
@@ -404,7 +412,7 @@ export default {
                 data:{
                     page:1,
                     size:500,
-                    relayIds:that.site[0].id,
+                    relayIds:row.id,
                     nickName:'',
                     channelType:'',
                 },

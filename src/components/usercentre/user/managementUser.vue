@@ -8,113 +8,117 @@
             <div class="section">
                 <!-- 用户详细信息 -->
                 <div class="section_top">
-                    <el-button v-if="JurisdictionS.addUser" @click="adduser(0)" type="primary" icon='el-icon-plus' size='small'>添加用户</el-button>
-                    <el-button v-if="JurisdictionS.editUser" @click="adduser(1)" type="primary" icon="el-icon-edit" size='small'>编辑用户</el-button>
-                    <el-button v-if="JurisdictionS.delUser" @click="deleteuser" type="primary" icon='el-icon-delete' size='small'>删除用户</el-button>
-                    <div class="search" v-if="JurisdictionS.viewUser">
-                        <el-dropdown size="small" split-button @command="handleCommand">
-                            {{name}}
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item @click.native="name='用户名';types='1';">用户名</el-dropdown-item>
-                                <el-dropdown-item @click.native="name='姓名';types='2';">姓名</el-dropdown-item>
-                                <el-dropdown-item @click.native="name='电话';types='3';">电话</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                        <div>
-                            <template v-if="types=='1'">
-                                <el-input v-model="username" size="small" placeholder="请输入用户名" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                            </template>
-                            <template v-if="types=='2'">
-                                <el-input v-model="fullname" size="small" placeholder="请输入姓名" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                            </template>
-                            <template v-if="types=='3'">
-                                <el-input v-model="mobile" size="small" placeholder="请输入电话" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                            </template>
-                        </div>
-                        <div>
-                            <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                        </div>
-                    </div>
+                    <p>位置: &nbsp;系统管理>用户操作</p>
                 </div>
                 <div class="section_bottom">
-                    <el-table
-                        :data="tableData"
-                        @row-click="clickRow" 
-                        ref="moviesTable"
-                        border
-                        stripe
-                        size='small'
-                        tooltip-effect="dark"
-                        @selection-change="userSelectionChange"
-                        style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                        <el-table-column
-                        type="selection"
-                        align='center'
-                        width="55">
-                        </el-table-column>
-                        <el-table-column
-                        prop="username"
-                        align='center'
-                        label="用户名"
-                        min-width="120">
-                        </el-table-column>
-                        <el-table-column
-                        prop="fullName"
-                        align='center'
-                        label="用户姓名"
-                        min-width="120">
-                        </el-table-column>
-                        <el-table-column
-                        prop="userType"
-                        align='center'
-                        label="用户类型"
-                        min-width="120">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.userType=='0'">普通用户</span>
-                                <span v-if="scope.row.userType=='1'">管理员</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="mobile"
-                        align='center'
-                        label="电话"
-                        min-width="150">
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="所属机构"
-                        min-width="120">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.org.orgName}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        align='center'
-                        label="状态"
-                        min-width="80">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.status=='0'">启用</span>
-                                <span v-if="scope.row.status=='1'">禁用</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="createTime"
-                        align='center'
-                        label="创建时间"
-                        min-width="180">
-                        </el-table-column>
-                        <el-table-column
-                        label="操作"
-                        align='center'
-                        min-width="180"
-                        show-overflow-tooltip>
-                            <template slot-scope="scope">
-                                <el-button v-if="scope.row.status=='0'&&JurisdictionS.enabledUser" @click="userStatus(scope.row.id,scope.row.status)" type="danger" size='mini'>禁用</el-button>
-                                <el-button v-if="scope.row.status=='1'&&JurisdictionS.enabledUser" @click="userStatus(scope.row.id,scope.row.status)" type="primary" size='mini'>启用</el-button>
-                                <el-button v-if="JurisdictionS.resetPassword" @click="resetPasswords(scope.row.id)" type="primary" size='mini'>重置密码</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
+                    <div class="section_bottom_bottom">
+                        <div class="search" v-if="JurisdictionS.viewUser">
+                            <el-dropdown size="small" split-button @command="handleCommand">
+                                {{name}}
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item @click.native="name='用户名';types='1';">用户名</el-dropdown-item>
+                                    <el-dropdown-item @click.native="name='姓名';types='2';">姓名</el-dropdown-item>
+                                    <el-dropdown-item @click.native="name='电话';types='3';">电话</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                            <div>
+                                <template v-if="types=='1'">
+                                    <el-input v-model="username" size="small" placeholder="请输入用户名" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                                </template>
+                                <template v-if="types=='2'">
+                                    <el-input v-model="fullname" size="small" placeholder="请输入姓名" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                                </template>
+                                <template v-if="types=='3'">
+                                    <el-input v-model="mobile" size="small" placeholder="请输入电话" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                                </template>
+                            </div>
+                            <div>
+                                <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                            </div>
+                        </div>
+                        <div class="section_bottom_right">
+                            <el-button v-if="JurisdictionS.addUser" @click="adduser(0)" type="primary" plain icon='el-icon-plus' size='small'>添加用户</el-button>
+                            <el-button v-if="JurisdictionS.editUser" @click="adduser(1)" type="primary" plain icon="el-icon-edit" size='small'>编辑用户</el-button>
+                            <el-button v-if="JurisdictionS.delUser" @click="deleteuser" type="primary" plain icon='el-icon-delete' size='small'>删除用户</el-button>
+                        </div>
+                    </div>
+                    <div>
+                        <el-table
+                            :data="tableData"
+                            @row-click="clickRow" 
+                            ref="moviesTable"
+                            border
+                            size='small'
+                            tooltip-effect="dark"
+                            @selection-change="userSelectionChange"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            type="selection"
+                            align="center"
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="username"
+                            show-overflow-tooltip
+                            label="用户名"
+                            min-width="120">
+                            </el-table-column>
+                            <el-table-column
+                            prop="fullName"
+                            show-overflow-tooltip
+                            label="用户姓名"
+                            min-width="120">
+                            </el-table-column>
+                            <el-table-column
+                            prop="userType"
+                            show-overflow-tooltip
+                            label="用户类型"
+                            min-width="120">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.userType=='0'">普通用户</span>
+                                    <span v-if="scope.row.userType=='1'">管理员</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                            prop="mobile"
+                            show-overflow-tooltip
+                            label="电话"
+                            min-width="150">
+                            </el-table-column>
+                            <el-table-column
+                            show-overflow-tooltip
+                            label="所属机构"
+                            min-width="120">
+                                <template slot-scope="scope">
+                                    <span>{{scope.row.org.orgName}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                            show-overflow-tooltip
+                            label="状态"
+                            min-width="80">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.status=='0'" class="onLine">启用</span>
+                                    <span v-if="scope.row.status=='1'" class="Warning">禁用</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                            prop="createTime"
+                            show-overflow-tooltip
+                            label="创建时间"
+                            min-width="180">
+                            </el-table-column>
+                            <el-table-column
+                            label="操作"
+                            min-width="180">
+                                <template slot-scope="scope">
+                                    <el-button v-if="scope.row.status=='0'&&JurisdictionS.enabledUser" @click="userStatus(scope.row.id,scope.row.status)" type="danger" size='mini'>禁用</el-button>
+                                    <el-button v-if="scope.row.status=='1'&&JurisdictionS.enabledUser" @click="userStatus(scope.row.id,scope.row.status)" type="primary" size='mini'>启用</el-button>
+                                    <el-button v-if="JurisdictionS.resetPassword" @click="resetPasswords(scope.row.id)" type="primary" size='mini'>重置密码</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
                     <div class="block">
                         <el-pagination
                         background
@@ -132,7 +136,7 @@
         </div>
         <!-- 添加  修改  用户 -->
         <div class="modal fade" id="addedituser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:450px;">
+            <div class="modal-dialog" style="width:400px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -154,11 +158,11 @@
                         <div id="myTabContent" class="tab-content">
                             <div class="tab-pane fade in active" id="a">
                                 <div class="form-group" v-if="type=='0'">
-                                    <label for="username"><span class="Required">*</span>用户名:</label>
+                                    <label for="username"><span class="Required">*</span>用&ensp;户&ensp;名:</label>
                                     <input type="text" v-model="data.username" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="username" placeholder="请输入用户名">
                                 </div>
                                 <div class="form-group" v-if="type=='0'">
-                                    <label for="userPwd"><span class="Required">*</span>密码:</label>
+                                    <label for="userPwd"><span class="Required">*</span>密&emsp;&emsp;码:</label>
                                     <input type="password" v-model="data.userPwd" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="userPwd" placeholder="请输入密码">
                                 </div>
                                 <div class="form-group">
@@ -166,22 +170,22 @@
                                     <input type="text" v-model="data.fullName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户姓名">
                                 </div> 
                                 <div class="form-group">
-                                    <label for="mobile"><span class="Required">*</span>电话:</label>
+                                    <label for="mobile"><span class="Required">*</span>电&emsp;&emsp;话:</label>
                                     <input type="text" v-model="data.mobile" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="mobile" placeholder="请输入电话">
                                 </div> 
                                 <div class="form-group">
-                                    <label for="email">邮箱:</label>
+                                    <label for="email">邮&emsp;&emsp;箱:</label>
                                     <input type="email" v-model="data.email" class="form-control" id="email" placeholder="请输入邮箱">
                                 </div> 
                                 <div class="form-group">
-                                    <label for="phone">性别:</label>
-                                    <template>
+                                    <label for="phone">性&emsp;&emsp;别:</label>
+                                    <div>
                                         <el-radio v-model="data.sex" label="0">男</el-radio>
                                         <el-radio v-model="data.sex" label="1" style="margin-left:10px;">女</el-radio>
-                                    </template>
+                                    </div>
                                 </div> 
                                 <div class="form-group">
-                                    <label for="phone">状态:</label>
+                                    <label for="phone">状&emsp;&emsp;态:</label>
                                     <el-select v-model="value" size='small' style="width:196px;" placeholder="请选择">
                                         <el-option
                                         v-for="item in options"
@@ -193,19 +197,17 @@
                                 </div> 
                                 <div class="form-group">
                                     <label for="phone"><span class="Required">*</span>所属机构:</label>
-                                    <div class="block">
-                                        <el-cascader
-                                            :options="options1"
-                                            v-model="options1Value"
-                                            :props='optionspros'
-                                            size='small'
-                                            change-on-select
-                                            style='width:196px'>
-                                        </el-cascader>
-                                    </div>
+                                    <el-cascader
+                                        :options="options1"
+                                        v-model="options1Value"
+                                        :props='optionspros'
+                                        size='small'
+                                        change-on-select
+                                        style='width:196px'>
+                                    </el-cascader>
                                 </div> 
                                 <div class="form-group">
-                                    <label for="phone">头像:</label>
+                                    <label for="phone">头&emsp;&emsp;像:</label>
                                     <div class="user_img">
                                         <i @click="cancelImage()" class="iconfont icon-guanbi cancel_s"></i>
                                         <label for="img1">
@@ -241,33 +243,31 @@
                                         ref='multipleTable'
                                         @row-click="clickRow2" 
                                         border
-                                        stripe
                                         size='small'
                                         tooltip-effect="dark"
                                         @selection-change="userSelectionChange2"
                                         style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                                         <el-table-column
                                         type="selection"
-                                        align='center'
+                                        align="center"
                                         width="55">
                                         </el-table-column>
                                         <el-table-column
                                         prop="projectName"
-                                        align='center'
+                                        show-overflow-tooltip
                                         label="项目名称"
-                                        width="120">
+                                        min-width="80">
                                         </el-table-column>
                                         <el-table-column
                                         prop="principal"
-                                        align='center'
+                                        show-overflow-tooltip
                                         label="负责人"
-                                        width="80">
+                                        min-width="80">
                                         </el-table-column>
                                         <el-table-column
                                         label="区域"
-                                        width="152"
-                                        align='center'
-                                        show-overflow-tooltip>
+                                        show-overflow-tooltip
+                                        min-width="140">
                                             <template slot-scope="scope">
                                                 <span>{{scope.row.area.mergerName}}</span>
                                             </template>
@@ -444,6 +444,34 @@ export default {
                         }
                         that.tableData2 = arr
                         that.total2 = data.result.total
+                        setTimeout(function(){
+                            that.data.username = that.detailsData.baseInformation.username
+                            that.data.userPwd = that.detailsData.baseInformation.userPwd
+                            that.data.fullName = that.detailsData.baseInformation.fullName
+                            that.data.mobile = that.detailsData.baseInformation.mobile
+                            that.data.email = that.detailsData.baseInformation.email
+                            that.data.sex = String(that.detailsData.baseInformation.sex)
+                            that.value = String(that.detailsData.baseInformation.status)
+                            that.options1Value = that.detailsData.orgIds
+                            
+                            that.imageUrl1 = that.serverurl+that.detailsData.baseInformation.icon
+                            that.$refs.tree.setCheckedKeys(that.detailsData.operationIds);
+                            var arr = [];
+                            for(var i=0;i<that.detailsData.projects.length;i++){
+                                if(that.detailsData.projects[i].checked=='1'){
+                                    arr.push(that.detailsData.projects[i].project)
+                                }
+                            }
+                            setTimeout(function(){
+                                arr.forEach(arrs => {
+                                    that.$refs.multipleTable.toggleRowSelection(arrs);
+                                });
+                                that.site2 = arr
+                            },400)
+                            that.icon = that.detailsData.baseInformation.icon
+                            var file = document.getElementById('img1');
+                            file.value = '';
+                        },50)
                     }else{
                         that.errorCode(data)
                     }
@@ -554,34 +582,6 @@ export default {
                 this.mechanism()
                 this.details();
                 $('#addedituser').modal('show')
-                setTimeout(function(){
-                    that.data.username = that.detailsData.baseInformation.username
-                    that.data.userPwd = that.detailsData.baseInformation.userPwd
-                    that.data.fullName = that.detailsData.baseInformation.fullName
-                    that.data.mobile = that.detailsData.baseInformation.mobile
-                    that.data.email = that.detailsData.baseInformation.email
-                    that.data.sex = String(that.detailsData.baseInformation.sex)
-                    that.value = String(that.detailsData.baseInformation.status)
-                    that.options1Value = that.detailsData.orgIds
-                    
-                    that.imageUrl1 = that.serverurl+that.detailsData.baseInformation.icon
-                    that.$refs.tree.setCheckedKeys(that.detailsData.operationIds);
-                    var arr = [];
-                    for(var i=0;i<that.detailsData.projects.length;i++){
-                        if(that.detailsData.projects[i].checked=='1'){
-                            arr.push(that.detailsData.projects[i].project)
-                        }
-                    }
-                    setTimeout(function(){
-                        arr.forEach(arrs => {
-                            that.$refs.multipleTable.toggleRowSelection(arrs);
-                        });
-                        that.site2 = arr
-                    },400)
-                    that.icon = that.detailsData.baseInformation.icon
-                    var file = document.getElementById('img1');
-                    file.value = '';
-                },400)
             }
             /* 完成拖拽 */
             $('#addedituser').draggable({

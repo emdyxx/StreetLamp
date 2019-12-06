@@ -2,130 +2,136 @@
     <div class="section">
         <!-- 传感器部署 -->
         <div class="section_top">
-            <el-button v-if="JurisdictionS.addLoraSensor" @click="addloraSensor(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="JurisdictionS.editLoraSensor" @click="addloraSensor(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="JurisdictionS.delLoraSensor" @click="deletloraSensor" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <!-- <el-button v-if="setLoraSensorProject" @click="loraSensorBindProjects" type="primary" icon='el-icon-setting' size='small'>绑定项目</el-button> -->
-            <el-dropdown v-if="JurisdictionS.SetUp" size="small" split-button type="primary">
-                <i class="el-icon-setting el-icon--left"></i>设置
-                <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-if="JurisdictionS.setLoraSensorProject" @click.native="loraSensorBindProjects">绑定项目</el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>
-            <div class="search" v-if="JurisdictionS.viewLoraSensorDeploy">
-                <el-dropdown size="small" split-button @command="handleCommand">
-                    {{name}}
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="name='名称';type1='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='序列号';type1='2';">序列号</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='类型';type1='3';">类型</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <div>
-                    <template v-if="type1=='1'">
-                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="type1=='2'">
-                        <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="type1=='3'">
-                        <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
-                            <el-option
-                            v-for="item in options"
-                            :key="item.sensorsType"
-                            :label="item.text"
-                            :value="item.sensorsType">
-                            </el-option>
-                        </el-select>
-                    </template>
-                </div>
-                <div>
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div>
+            <p>位置: &nbsp;设备部署>Lora传感器管理</p>
         </div>
         <div class="section_bottom">
-            <el-table
-                :data="tableData"
-                @row-click="clickRow" 
-                ref="moviesTable"
-                border
-                stripe
-                size='small'
-                tooltip-effect="dark"
-                @selection-change="SelectionChange"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="nickName"
-                align='center'
-                label="名称"
-                :formatter="formatRole"
-                min-width="110">
-                </el-table-column>
-                <el-table-column
-                prop="serialNumber"
-                align='center'
-                :formatter="formatRole"
-                label="序列号"
-                min-width="110">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="状态"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.online=='0'">离线</span>
-                        <span v-if="scope.row.online=='1'">在线</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="sensorsTypeDesc"
-                align='center'
-                :formatter="formatRole"
-                label="类型"
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                prop="modelName"
-                align='center'
-                :formatter="formatRole"
-                label="型号"
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                prop="network"
-                align='center'
-                :formatter="formatRole"
-                label="入网方式"
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                prop="poleName"
-                align='center'
-                label="灯杆"
-                min-width="110"
-                :formatter="formatRole">
-                </el-table-column>
-                <el-table-column
-                prop="remark"
-                label="备注"
-                align='center'
-                :formatter="formatRole"
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                prop="createTime"
-                align='center'
-                label="创建时间"
-                :formatter="formatRole"
-                min-width="150">
-                </el-table-column>
-            </el-table>
+            <div class="section_bottom_bottom">
+                <div class="search" v-if="JurisdictionS.viewLoraSensorDeploy">
+                    <el-dropdown size="small" split-button @command="handleCommand">
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='名称';type1='1';">名称</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='序列号';type1='2';">序列号</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='类型';type1='3';">类型</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="type1=='1'">
+                            <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="type1=='2'">
+                            <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="type1=='3'">
+                            <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
+                                <el-option
+                                v-for="item in options"
+                                :key="item.sensorsType"
+                                :label="item.text"
+                                :value="item.sensorsType">
+                                </el-option>
+                            </el-select>
+                        </template>
+                    </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
+                </div>
+                <div class="section_bottom_right">
+                    <el-button v-if="JurisdictionS.addLoraSensor" @click="addloraSensor(0)" type="primary" icon='el-icon-plus' plain size='small'>添加</el-button>
+                    <el-button v-if="JurisdictionS.delLoraSensor" @click="deletloraSensor" type="primary" icon='el-icon-delete' plain size='small'>删除</el-button>
+                    <el-button v-if="JurisdictionS.setLoraSensorProject" @click="loraSensorBindProjects" type="primary" plain size='small'>绑定项目</el-button>
+                </div>
+            </div>
+            <div>
+                <el-table
+                    :data="tableData"
+                    @row-click="clickRow" 
+                    ref="moviesTable"
+                    border
+                    size='small'
+                    tooltip-effect="dark"
+                    @selection-change="SelectionChange"
+                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                    <el-table-column
+                    align="center"
+                    type="selection"
+                    width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="nickName"
+                    show-overflow-tooltip
+                    label="名称"
+                    :formatter="formatRole"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    prop="serialNumber"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    label="序列号"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    show-overflow-tooltip
+                    label="状态"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.online=='0'" class="offLine">离线</span>
+                            <span v-if="scope.row.online=='1'" class="onLine">在线</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="sensorsTypeDesc"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    label="类型"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="modelName"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    label="型号"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="network"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    label="入网方式"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="poleName"
+                    show-overflow-tooltip
+                    label="所属灯杆"
+                    min-width="110"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    prop="remark"
+                    label="备注"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="createTime"
+                    show-overflow-tooltip
+                    label="创建时间"
+                    :formatter="formatRole"
+                    min-width="150">
+                    </el-table-column>
+                    <el-table-column
+                    label="操作"
+                    min-width="120">
+                        <template slot-scope="scope">
+                            <el-button v-if="JurisdictionS.editLoraSensor" @click="addloraSensor(1,scope.row)" type="primary" size='mini'>编辑</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="block">
                 <el-pagination
                 background
@@ -141,7 +147,7 @@
         </div>
         <!-- 添加/编辑传感器模态框 -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:500px;">
+            <div class="modal-dialog" style="width:400px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -150,42 +156,23 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label><span class="Required">*</span>名称:</label>
+                            <label><span class="Required">*</span>名&emsp;&emsp;称:</label>
                             <input type="text" v-model="data.nickName" maxlength="40" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                         </div>
                         <div class="form-group">
-                            <label><span class="Required">*</span>序列号:</label>
+                            <label><span class="Required">*</span>序&ensp;列&ensp;号:</label>
                             <input type="text" v-model="data.serialNumber" :disabled='type=="1"' maxlength="16" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
                         </div>
-                        <div class="form-group">
-                            <label><span class="Required">*</span>型号:</label>
+                        <div class="form-group" v-if="type=='0'">
+                            <label><span class="Required">*</span>型&emsp;&emsp;号:</label>
                             <el-cascader
                                 :options="options"
                                 v-model="data.modelId"
                                 :props="props"
-                                :disabled='type=="1"'
                                 size='small'
-                                @change="modelChange"
                                 style="width:196px;">
                             </el-cascader>
                         </div>
-                        <template v-if="modalType=='5'">
-                            <div class="form-group">
-                                <label><span class="Required">*</span>告警类型:</label>
-                                <el-select v-model="value5" size="small" placeholder="请选择">
-                                    <el-option
-                                    v-for="item in options5"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                    </el-option>
-                                </el-select>
-                            </div>
-                            <div class="form-group">
-                                <label><span class="Required">*</span>告警距离:</label>
-                                <el-input-number v-model="alarmDistance" :min="0" :max="400" size="small" label="cm"></el-input-number>
-                            </div>
-                        </template>
                         <div class="form-group">
                             <label><span class="Required">*</span>入网方式:</label>
                             <el-select v-model="data.networkId" @change="networkIdChange" size='small' clearable style='width:196px;' placeholder="请选择">
@@ -229,22 +216,22 @@
                             </el-select>
                         </div>
                         <div class="form-group">
-                            <label>位置:</label>
+                            <label>位&emsp;&emsp;置:</label>
                             <input type="text" v-model="data.coord" :disabled='true' class="form-control" id="email" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="地图选点">
                             <i @click="mapClick" class="iconfont icon-baidumap mappoint"></i>
                         </div>
                         <div class="form-group">
-                            <label>备注:</label>
+                            <label>备&emsp;&emsp;注:</label>
                             <el-input
                                 type="textarea"
-                                :rows="2"
+                                :rows="1"
                                 placeholder="请输入备注"
                                 v-model="data.remark"
                                 style="width:196px;">
                             </el-input>
                         </div>
-                        <div v-if="JurisdictionS.loraSensorAssociatePole" class="form-group" style="margin-top:10px;">
-                            <el-button @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
+                        <div v-if="type=='0'" class="form-group" style="margin-top:10px;">
+                            <el-button @click="LampPole_data" v-if="JurisdictionS.loraSensorAssociatePole" type="primary" size='small'>关联灯杆</el-button>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -260,7 +247,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>请选择灯杆进行关联</h4>
+                        <h4 class="modal-title" id="myModalLabel">请选择灯杆进行关联</h4>
                     </div>
                     <div class="modal-body">
                         <el-table
@@ -268,24 +255,23 @@
                             @row-click="clickRow2" 
                             ref="multipleTable"
                             border
-                            stripe
                             size='small'
                             tooltip-effect="dark"
                             @selection-change="SelectionChange2"
                             style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                             <el-table-column
+                            align="center"
                             type="selection"
-                            align='center'
                             width="55">
                             </el-table-column>
                             <el-table-column
                             prop="nickName"
-                            align='center'
+                            show-overflow-tooltip
                             label="灯杆名称"
                             width="120">
                             </el-table-column>
                             <el-table-column
-                            align='center'
+                            show-overflow-tooltip
                             label="灯杆类型"
                             width="80">
                                 <template slot-scope="scope">
@@ -296,7 +282,7 @@
                             <el-table-column
                             prop="coord"
                             :formatter="formatRole"
-                            align='center'
+                            show-overflow-tooltip
                             label="位置"
                             width="150">
                             </el-table-column>
@@ -304,7 +290,7 @@
                             prop="remark"
                             :formatter="formatRole"
                             label="备注"
-                            align='center'
+                            show-overflow-tooltip
                             width="162">
                             </el-table-column>
                         </el-table>
@@ -339,9 +325,9 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <span style="line-height:35px;">项目:</span>
-                            <el-select size='small' v-model="value4" style="margin-left:20px;" placeholder="请选择">
+                            <el-select size='small' v-model="value3" style="margin-left:20px;" placeholder="请选择">
                                 <el-option
-                                    v-for="item in options4"
+                                    v-for="item in options3"
                                     style="height:30px;"
                                     :key="item.id"
                                     :label="item.projectName"
@@ -406,9 +392,9 @@ export default {
                 children: 'children'
             },
             value:'',
-            modalType:'',
             //添加/编辑
             type:'0',
+            loraSite:[],
             options2:[],
             networkIdChangeData:{},
             networkType:'',
@@ -435,12 +421,8 @@ export default {
             pageIndex2:1,
             total2:10,
             //绑定项目
-            options4:[],
-            value4:'',
-            //告警类型
-            options5:[{label:'不告警',value:'0'},{label:'大于告警',value:'1'},{label:'小于告警',value:'2'}],
-            value5:'0',
-            alarmDistance:0,
+            options3:[],
+            value3:'',
         }
     },
     mounted(){
@@ -502,7 +484,7 @@ export default {
             this.data.coord = this.referencePosition
         },
         //添加,编辑 按钮
-        addloraSensor(val){
+        addloraSensor(val,row){
             if(val=='0'){
                 this.type = '0';
                 this.serviceProfile();
@@ -521,41 +503,31 @@ export default {
                 this.networkType = ''
                 this.data.coord = ''
                 this.referencePosition = ''
-                this.value5 = '0'
-                this.alarmDistance = 0
                 this.site2 = []
                 $('#myModal').modal('show')
             }
             if(val=='1'){
-                if(this.site.length==0||this.site.length>=2){
-                    this.$message({
-                        message: '请选择单个传感器进行编辑!',
-                        type: 'error'
-                    });
-                    return
-                }
                 this.type = '1';
                 this.serviceProfile();
-                this.network();
-                this.data.nickName = this.site[0].nickName
-                this.data.serialNumber = this.site[0].serialNumber
-                this.site[0].modelIds[0] = String(this.site[0].modelIds[0])
-                this.data.modelId = this.site[0].modelIds
-                if(this.site[0].modelIds[0]=='5'){
-                    this.modalType = '5'
-                    this.value5 = String(this.site[0].alarmCondition)
-                    this.alarmDistance = this.site[0].alarmDistance
-                }
-                this.data.serviceProfileId = this.site[0].serviceProfileId
-                this.data.networkId = this.site[0].networkId
-                this.data.devAddr = this.site[0].devAddr
-                this.data.nwksKey = this.site[0].nwksKey
-                this.data.appsKey = this.site[0].appsKey
-                this.data.applicationKey = this.site[0].applicationKey
-                this.data.location = this.site[0].location
-                this.data.remark = this.site[0].remark
-                this.data.coord = this.site[0].coord
-                this.referencePosition = this.site[0].coord
+                this.network(row.networkId);
+                this.loraSite = row
+                setTimeout(() => {
+                    this.data.nickName = row.nickName
+                    this.data.serialNumber = row.serialNumber
+                    this.data.modelId = []
+                    this.data.modelId[0] = String(row.sensorsType)
+                    this.data.modelId[1] = Number(row.modelId)
+                    this.data.serviceProfileId = row.serviceProfileId
+                    this.data.networkId = row.networkId
+                    this.data.devAddr = row.devAddr
+                    this.data.nwksKey = row.nwksKey
+                    this.data.appsKey = row.appsKey
+                    this.data.applicationKey = row.applicationKey
+                    this.data.location = row.location
+                    this.data.remark = row.remark
+                    this.data.coord = row.coord
+                    this.referencePosition = row.coord
+                }, 40);
                 $('#myModal').modal('show')
             }
         },
@@ -589,8 +561,19 @@ export default {
             }
             var data= {}
             var type = ''
-            if(that.type=='0'){type='post';}
-            if(that.type=='1'){type='put';data.id=that.site[0].id}
+            if(that.type=='0'){
+                type='post';
+                if(that.site2.length==0){
+                    data.poleId='0'
+                }else{
+                    data.poleId = that.site2[0].id
+                }
+            }
+            if(that.type=='1'){
+                type='put';
+                data.id=that.loraSite.id
+                data.poleId=that.loraSite.poleId
+            }
             data.nickName = that.data.nickName
             data.serialNumber = that.data.serialNumber
             data.modelId = that.data.modelId[1]
@@ -604,19 +587,7 @@ export default {
             data.remark = that.data.remark
             data.projectId = sessionStorage.projectId
             data.coord = that.data.coord
-            if(that.modalType=='5'){
-                data.alarmCondition = that.value5
-                data.alarmDistance = that.alarmDistance
-            }
-            if(that.site2.length==0){
-                if(that.type=='0'){
-                    data.poleId='0'
-                }else{
-                    data.poleId=that.site[0].poleId
-                }
-            }else{
-                data.poleId = that.site2[0].id
-            }
+            
             $.ajax({
                 type:type,
                 async:true,
@@ -758,6 +729,7 @@ export default {
                 });
                 return;
             }
+            that.value3 = Number(sessionStorage.projectId)
             $('#sensorBindProjectModal').modal('show')
             this.project()
         },
@@ -773,8 +745,7 @@ export default {
                 data:{},
                 success:function(data){
                     if(data.errorCode=='0'){
-                        that.options4 = data.result.projects
-                        that.value4 = ''
+                        that.options3 = data.result.projects
                     }else{
                         that.errorCode(data)
                     }
@@ -796,7 +767,7 @@ export default {
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify({
                     loraSensors:arr,
-                    projectId:that.value4
+                    projectId:that.value3
                 }),
                 success:function(data){
                     if(data.errorCode=='0'){
@@ -811,10 +782,6 @@ export default {
                     }
                 },
             })
-        },
-        //型号change
-        modelChange(val){
-            this.modalType = val[0]
         },
         //请求服务配置方式
         serviceProfile(){
@@ -835,7 +802,7 @@ export default {
             })
         },
         //请求入网方式
-        network(){
+        network(networkId){
             var that = this;
             $.ajax({
                 type:'get',
@@ -850,14 +817,14 @@ export default {
                             if(that.type=='1'){
                                 var length=''
                                 for(var i = 0;i<that.options2.length;i++){
-                                    if(that.site[0].networkId!=that.options2[i].id){
+                                    if(networkId!=that.options2[i].id){
                                         length++
                                     }
                                 }
                                 if(length==that.options2.length){
                                     that.data.networkId = ''
                                 }else{
-                                    that.networkIdChange(that.site[0].networkId)
+                                    that.networkIdChange(networkId)
                                 }
                             }
                         },50)

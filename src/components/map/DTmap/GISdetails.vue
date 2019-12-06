@@ -129,7 +129,7 @@
                             <p></p>
                         </div>
                     </div>
-                    <div class="section_bottom_right" style="border-top:1px solid #192d5d;border-left:1px solid #192d5d;">
+                    <div class="section_bottom_rights" style="border-top:1px solid #192d5d;border-left:1px solid #192d5d;">
                         <p>
                             <img src="../../../assets/img/humidity.png" alt="">
                             温度 湿度 气压
@@ -153,8 +153,8 @@
             </div>
             <!-- 广告屏 -->
             <div class="Screen" v-if="screenType">
-                <p class="title">
-                    名称:{{screenVoList[0].nickName}}
+                <div class="title">
+                    <p style="display:inline-block;margin:0;">名称:{{screenVoList[0].nickName}}</p>
                     <span v-if="Sdata.online3=='1'">
                         <img src="../../../assets/img/online.png" alt="">
                         在线
@@ -163,7 +163,7 @@
                         <img src="../../../assets/img/offline.png" alt="">
                         离线
                     </span>
-                </p>
+                </div>
                 <div class="Screen_bottom">
                     <template v-if="Sdata.mediaType=='0'">
                         <img :src=serverurl+Sdata.mediaUrl alt="" style="width:100%;height:100%;">
@@ -916,12 +916,12 @@ export default {
 <style scoped> 
 .GISdetails{width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;min-height: 800px;overflow: auto;background: linear-gradient(to right, #02021b,#215de1,#02021b);}
 .map_right{position: absolute;right: 20px;top: 15px;height: 45px;width: 45px;background: white;border-radius: 50%;line-height: 45px;text-align: center;box-shadow: 1px 2px 1px rgba(0,0,0,.15);z-index: 99;}
-.backtrack{font-size: 34px;cursor: pointer;padding-top: 5px;}
+.backtrack{font-size: 34px;cursor: pointer;padding-top: 5px;color: #b2b2b2;padding: 5px 0 0 5px;}
 .mapDetails{position: relative;display: flex;width: 500px;justify-content: center;margin-left: 70px;}
 .mapDetails div{color: white;}
-.title{margin: 0;padding: 10px 0 10px 15px;font-size: 20px;position: relative;}
+.title{margin: 0;padding: 10px 0 10px 15px;font-size: 16px;position: relative;}
 .title>span{position: absolute;right: 20px;}
-.LampPost{position: absolute;top:0;margin-left: -540px;width: 550px;box-shadow: 0 0 3px white;background: rgba(0,0,0,0.3);}
+.LampPost{position: absolute;top:0;left: -565px;width: 550px;box-shadow: 0 0 3px white;background: rgba(0,0,0,0.3);}
 .LampPost>div{width: 100%;}
 .LampPost_center{position:relative;padding:20px 30px 10px 30px;text-align: center;border-top: 1px solid #1a2c59;border-bottom: 1px solid #1a2c59;}
 .LampPost_center>span{display: inline-block;width: 35px;height: 20px;margin-right: 5px;position: relative;}
@@ -938,7 +938,7 @@ export default {
 
 .sections{width: 500px;height: 360px !important;margin: 0 30px 20px 15px;display: flex;flex-wrap: wrap;}
 .sections>div{display: inline-block;width: 50%;}
-.section_top_left>p,.section_top_right>p,.section_bottom_left>p,.section_bottom_right>p{margin: 0;padding: 5px 0px;text-align: center;font-size: 16px;color: #666d7a}
+.section_top_left>p,.section_top_right>p,.section_bottom_left>p,.section_bottom_rights>p{margin: 0;padding: 5px 0px;text-align: center;font-size: 16px;color: #666d7a}
 .section_top_left>div{margin-top:20px;text-align: center;}
 .section_top_left>div>p{margin-bottom:20px;text-align: center;font-size: 16px;}
 .section_top_left>div>p>span:nth-of-type(2){display:inline-block;width:70px;height:30px;line-height:30px;font-weight:600;border-radius:5px;color: #010000;font-size: 19px;background:#72d671;}

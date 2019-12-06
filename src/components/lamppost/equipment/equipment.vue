@@ -83,14 +83,8 @@ export default {
                     "solinSceneryControllerManage" : {
                         "icon" : 'solinSceneryControllerDeploy',
                     },
-                    "solinLoraRainfall" : {
-                        "icon" : 'solinLoraRainfall',
-                    },
-                    "solinLoraFireHydrant" : {
-                        "icon" : 'solinLoraFireHydrant',
-                    },
-                    "solinLoraFireExtinguisher" : {
-                        "icon" : 'solinLoraFireExtinguisher',
+                    "solinRadarManage":{
+                        "icon" : 'solinRadar',
                     }
                 },
                 "plugins" : ['types'],
@@ -183,7 +177,7 @@ export default {
                                     if(sessionStorage.menuId3=='53'){
                                         that.$router.push({'path':'solinEnvManage'})
                                     }
-                                    if(sessionStorage.menuId3=='64'||sessionStorage.menuId3=='65'||sessionStorage.menuId3=='66'||sessionStorage.menuId3=='67'||sessionStorage.menuId3=='68'||sessionStorage.menuId3=='69'||sessionStorage.menuId3=='70'||sessionStorage.menuId3=='117'||sessionStorage.menuId3=='135'||sessionStorage.menuId3=='136'||sessionStorage.menuId3=='137'){
+                                    if(sessionStorage.menuId3=='64'||sessionStorage.menuId3=='65'||sessionStorage.menuId3=='66'||sessionStorage.menuId3=='67'||sessionStorage.menuId3=='68'||sessionStorage.menuId3=='69'||sessionStorage.menuId3=='70'||sessionStorage.menuId3=='117'){
                                         that.$router.push({'path':'solinLoraSensorsManage'})
                                     }
                                     if(sessionStorage.menuId3=='55'){
@@ -197,6 +191,9 @@ export default {
                                     }
                                     if(sessionStorage.menuId3=='119'){
                                         that.$router.push({'path':'solinSceneryControllerManage'})
+                                    }
+                                    if(sessionStorage.menuId3=='139'){
+                                        that.$router.push({'path':'solinRadarManage'})
                                     }
                                 }else{
                                     that.errorCode(data)
@@ -220,7 +217,7 @@ export default {
                     if(data.node.id=='53'){
                         that.$router.push({'path':'solinEnvManage'})
                     }
-                    if(data.node.id=='64'||data.node.id=='65'||data.node.id=='66'||data.node.id=='67'||data.node.id=='68'||data.node.id=='69'||data.node.id=='70'||data.node.id=='117'||data.node.id=='135'||data.node.id=='136'||data.node.id=='137'){
+                    if(data.node.id=='64'||data.node.id=='65'||data.node.id=='66'||data.node.id=='67'||data.node.id=='68'||data.node.id=='69'||data.node.id=='70'||data.node.id=='117'){
                         that.$router.push({'path':'loading'})
                         setTimeout(function(){
                             that.$router.push({'path':'solinLoraSensorsManage'})
@@ -237,6 +234,9 @@ export default {
                     }
                     if(data.node.id=='119'){
                         that.$router.push({'path':'solinSceneryControllerManage'})
+                    }
+                    if(data.node.id=='139'){
+                        that.$router.push({'path':'solinRadarManage'})
                     }
                 }
             });

@@ -1,24 +1,24 @@
-
 /* 所有菜单头部(header)css*/
 .OverallSituation{width: 100%;height: 100%;}
-.header{width:100%;height: 60px;background: #212e4e;display: flex;align-items: center;}
-.header>i{font-size: 32px;color: white;cursor: pointer;position: absolute;left: 20px;top:8px;}
-.header>i:hover{color: aquamarine;}
-.header-left{height: 100%;display: inline-block;margin-left: 70px;color: white;font-size: 24px;line-height: 50px;}
-.header-left>i{color: white;font-size: 26px;line-height: 62px;}
+.header{width:100%;height: 70px;background: #4382e6;display: flex;align-items: center;}
+.backtrack{color:white;display: flex;align-items: center;padding: 0 0 0 30px;cursor: pointer;}
+.backtrack>i{font-size: 30px;}
+.backtrack>span{font-size: 14px;padding-left: 5px;padding-top:3px;}
+
+.header-left{height: 100%;margin-left: 50px;padding-top: 21px;}
 .header-center{height: 100%;margin-left: 25px;display: flex;justify-content: center;align-items: center;}
-.header-center>div{color: white;font-size: 16px;width: 110px;height: 30px;text-align: center;line-height: 30px;border-radius: 8px;cursor: pointer;}
-/* .header-center>div:hover{background: #66b1ff;} */
-.header-center-color{background:white;color: #212e4e !important;}
+.header-center>div{color: white;font-size: 14px;width: 110px;height: 100%;text-align: center;cursor: pointer;}
+.header-center p{height: 25px;line-height: 25px;margin: 13px 0 2px 0 !important;font-size: 30px;}
+.header-center-color{background:#2b6cd1;}
 .header-right{position: absolute;right: 30px;height: 60px;;display: flex;align-items:center;}
 .header-right>i{color: white;font-size: 34px;cursor: pointer;}
 .header-right>i:hover{color: aquamarine;}
-.footer{width: 100%;position: absolute;top: 60px;bottom: 0;}
+.footer{width: 100%;position: absolute;top: 70px;bottom: 0;}
 
 /* 左右布局通用css */
-.CommonStyle{width: 100%;height: 100%;padding: 5px;}
-.CommonStyle_left{width: 200px;height: 100%;border: 1px solid #E4E4F1;overflow: auto;}
-.CommonStyle_right{position: absolute;left: 210px;right: 5px;top:5px;bottom:5px;}
+.CommonStyle{width: 100%;height: 100%;}
+.CommonStyle_left{width: 220px;height: 100%;border-right: 6px solid #eaeef2;overflow: auto;}
+.CommonStyle_right{position: absolute;left: 220px;right: 0;top:0;bottom:0;}
 
 /* 系统管理上传图片模块通用css */
 .user_img{text-align: center;position: relative;height: 100px !important;}
@@ -32,19 +32,25 @@
 /* 所有页面主体上层按钮,检索条件以及数据层css */
 .section{width: 100%;height: 100%;}
 .section>div{position: absolute;width: 100%;}
-.section_top{height: 46px;display: flex;border: 1px solid #E4E4F1;border-bottom: none !important;}
-.section_top>button,.section_top>div{height:33px;margin:6px 0 0 10px;}
-.section_bottom{top: 46px;bottom: 0;padding: 5px;overflow: auto;border: 1px solid #E4E4F1;}
+.section_top{height: 52px;display: flex;border-bottom: 1px solid #eaeef2;justify-content: center;align-items: center;}
+.section_top>p{position: absolute;left: 30px;line-height: 52px;color: #676767;font-size: 15px;}
+.section_top>div{border: 1px solid #4382e6;height: 34px;text-align: center;box-sizing: border-box;display: flex;}
+.section_top>div>span{display: inline-block;width: 102px;height: 100%;line-height: 34px;cursor: pointer;color: #333;}
+.section_bottom{top: 52px;bottom: 0;overflow: auto;}
+.section_bottom_bottom{display: flex;margin-top: 20px;height: 34px;}
+.section_bottom>div:nth-of-type(2){padding: 10px 30px 0 30px;}
+.section_bottom_right{position: absolute;right: 30px;}
 
 /* 弹框内部输入框,必填项,table分页居中 通用css */
 .Required{color: red;font-size: 17px;}
-.block{text-align: center;}
-.form-group{display:flex;justify-content: center;}
-.form-group>label{width: 90px;line-height: 32px;text-align: right;}
-.form-group>input,.form-group>div{width: 196px;height: 32px;}
-.form-group>button{margin-top: 15px;}
-.search{display: flex;align-items: center;margin-left: 50px !important;}
-.search>div,.search_Log>div{margin-left: 5px;}
+.block{text-align: right;margin-top: 10px;margin-right: 30px;}
+.form-group{display:flex;justify-content: center;margin-bottom: 5px;position: relative;}
+.form-group>label{width: 90px;line-height: 32px;text-align: right;margin-right: 10px;}
+.form-group>input,.form-group>div{width: 196px;height: 32px;line-height: 32px;}
+/* .form-group>button{margin-top: 15px;} */
+.search{display: flex;align-items: center;padding-left: 30px !important;}
+.search>div{margin-right: 10px;}
+.search_Log>div{margin-left: 5px;}
 .search>input,.search_Log>input,.search_Log>div{width: 146px;}
 /* 日志页面检索css */
 .search_Log{display: flex;align-items: center;margin-left: 15px !important;}
@@ -52,13 +58,46 @@
 /* 所有地图选点样式 */
 .map_Z{margin: 0;padding: 0;position: relative;}
 .map_Z>div:nth-of-type(1){width: 100%;height: 30px;line-height: 30px;}
-.map_Z>div:nth-of-type(2){width: 100%;position: absolute;top: 30px;bottom: 30px;}
-.map_Z>div:nth-of-type(3){width: 100%;height: 30px;line-height: 30px;position: absolute;bottom: 1px;text-align: center;}
-.mappoint{font-size: 24px;position: absolute;right: 110px;cursor: pointer;}
+.map_Z>div:nth-of-type(2){width: 100%;position: absolute;top: 55px;bottom: 45px;right: 0;}
+.map_Z>div:nth-of-type(3){width: 100%;height: 30px;line-height: 30px;position: absolute;bottom: 7px;text-align: center;}
+.mappoint{font-size: 20px;position: absolute;right: 44px;top:3px;cursor: pointer;}
 
 /* 地图样式 */
-.project_top_left{position: absolute;top: 0;left: 0;width: 100%;height: 48px;background: white;display: flex;align-items: center;z-index: 2;}
-.project_top_left>div{width: 300px;margin-left: 15px;}
+.project_top_left{position: absolute;top: 0;left: 0;width: 100%;height: 60px;background: white;display: flex;align-items: center;z-index: 2;border-bottom: 1px solid #dadada(196, 196, 196);}
+.project_top_left>div{width: 260px;margin-left: 15px;}
 .project_top_left>p{margin: 0;position: absolute;right: 20px;display: flex;align-items: center;}
 .project_top_left>p>span{padding: 0 5px 0 5px;}
 .project_top_left>p img{width: 40px;height: 40px;}
+
+/* 在线离线颜色 */
+.onLine{color: #13CEB6;}
+.offLine{color: #92A7BA;}
+.Warning{color: #FF6767;}
+.Unknown{color: #FD9A08;}
+.onLineStatus,.offLineStatus{color:white;display: inline-block;height: 25px;line-height: 25px;text-align: center;border-radius: 2px;padding: 0 10px;}
+.onLineStatus{background: #13CEB6;}
+.offLineStatus{background: #FF6767;}
+
+/* 覆盖element-Ui 默认样式 */
+.el-table th,.el-table td {padding: 0 !important;height: 40px;font-size: 14px;}
+.el-table thead{color: #333;}
+.el-dialog__title{font-size: 16px;}
+.el-table {color: #333 !important;}
+.has-gutter tr,.has-gutter th{background: #e8e8e8;}
+.el-button{line-height: 14px;}
+.el-table--border td{border-right: 1px solid #e8e8e8;}
+.el-table td{border-bottom: 1px solid #e8e8e8;}
+#borderRadiu40{border-radius:40px !important;}
+.el-button--mini{padding: 5px 15px;}
+
+
+/* 覆盖bootstrap基本样式 */
+.modal-header{padding: 7px 15px;background: #4382e6;color: white;}
+.close{color: white;opacity: .9;font-weight: 100;}
+.modal-footer{padding: 10px 15px;border-top: none;}
+h4{font-size: 16px;}
+.modal-content{box-shadow: none;border: none;}
+.modal-body{padding: 20px 15px 15px 15px;}
+#myTabContent{padding: 15px 0 0 0;}
+.modal{position: fixed !important;}
+.modal-dialog{top: 50px;}

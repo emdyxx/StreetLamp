@@ -1,8 +1,9 @@
 <template>
     <div class="mapHome">
         <div class="mapHome_left">
-            <div class="mapHome_left_top">
-                <img @click="returns" src="../../assets/img/return.png" alt="">
+            <div class="mapHome_left_top" @click="returns">
+                <i class="iconfont icon-fanhuishangyiji1"></i>
+                <span>返回</span>
             </div>
             <div class="mapHome_left_bottom">
                 <div v-for="item in menu" :id=item.id :key=item.id :class="item.id==type? 'background':''" @click="Jump(item)">
@@ -129,19 +130,19 @@ export default {
 </script>
 <style scoped>
 .mapHome{width: 100%;height: 100%;}
-.mapHome_left{width: 77px;height: 100%;background: #212e4e;}
-.mapHome_left_top{width: 100%;height: 48px;display: flex;justify-content: center;align-items: center;}
-.mapHome_left_top>img{cursor: pointer;width: 30px;}
-.mapHome_left_bottom{padding-top: 30px;}
+.mapHome_left{width: 90px;height: 100%;background: #4382e6;}
+.mapHome_left_top{color:white;display: flex;align-items: center;padding: 12px 0 0 10px;cursor: pointer;}
+.mapHome_left_top>i{font-size: 25px;}
+.mapHome_left_top>span{font-size: 14px;padding-left: 5px;padding-top:3px;}
+.mapHome_left_bottom{padding-top: 13px;}
 .mapHome_left_bottom>div{padding: 15px 10px 15px 10px;cursor: pointer;text-align: center;}
 .mapHome_left_bottom>div>img{transform: scale(0.8);}
 .mapHome_left_bottom>div>img:hover{transition: all .5s;transform: scale(0.9);}
-.mapHome_left_bottom>div>p{margin: 0;padding:5px 0 0 0;color: #b2bdca;}
-.background{background: #17213b;}
-.mapHome_right{position: absolute;top: 0;left:77px;right: 0;bottom:0;}
+.mapHome_left_bottom>div>p{margin: 0;padding:5px 0 0 0;color: #dce6ec;}
+.background{background: #2b6cd1;}
+.mapHome_right{position: absolute;top: 0;left:90px;right: 0;bottom:0;}
 </style>
 <style lang='less'>
-#borderRadiu40{border-radius:40px !important;}
 #Pattern{
     .el-radio-button__inner{
         width:136px !important;height: 60px;line-height: 35px;font-size: 18px;

@@ -1,8 +1,8 @@
 <template>
-    <!-- 灯杆日志 -->
+    <!-- 雷达日志 -->
     <div class="section">
         <div class="section_top">
-            <p>位置: &nbsp;设备日志>灯杆日志</p>
+            <p>位置: &nbsp;设备日志>雷达日志</p>
         </div>
         <div class="section_bottom">
             <div class="section_bottom_bottom">
@@ -10,20 +10,20 @@
                     <el-dropdown size="small" split-button @command="handleCommand">
                         {{name}}
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
-                            <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
-                            <el-dropdown-item @click.native="name='操作类别';type='3';">操作类别</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='名称';types='1';">名称</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='集中器序列号';types='2';">集中器序列号</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='操作类别';types='3';">操作类别</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                     <div>
-                        <template v-if="type=='1'">
-                            <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        <template v-if="types=='1'">
+                            <input type="text" v-model="nickName" class="form-control logManage_main_input" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                         </template>
-                        <template v-if="type=='2'">
-                            <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        <template v-if="types=='2'">
+                            <input type="text" v-model="concentratorSn" class="form-control logManage_main_input" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                         </template>
-                        <template v-if="type=='3'">
-                            <el-select v-model="value" clearable placeholder="请选择" size='small'>
+                        <template v-if="types=='3'">
+                            <el-select v-model="value" clearable size='small' placeholder="请选择">
                                 <el-option
                                 v-for="item in options"
                                 :key="item.value"
@@ -51,7 +51,7 @@
                     width="55">
                     </el-table-column>
                     <el-table-column
-                    prop="nickName"
+                    prop="createUser"
                     show-overflow-tooltip
                     label="操作用户"
                     min-width="100">
@@ -63,9 +63,15 @@
                     min-width="100">
                     </el-table-column>
                     <el-table-column
-                    prop="serialNumber"
+                    prop="concentratorSn"
                     show-overflow-tooltip
-                    label="序列号"
+                    label="集中器序列号"
+                    min-width="130">
+                    </el-table-column>
+                    <el-table-column
+                    prop="radarNumber"
+                    show-overflow-tooltip
+                    label="雷达485编号"
                     min-width="130">
                     </el-table-column>
                     <el-table-column
@@ -76,8 +82,8 @@
                             <span v-if="scope.row.operatType=='0'">添加</span>
                             <span v-if="scope.row.operatType=='1'">编辑</span>
                             <span v-if="scope.row.operatType=='2'">删除</span>
-                            <span v-if="scope.row.operatType=='3'">绑定项目</span>
-                            <span v-if="scope.row.operatType=='4'">设置位置</span>
+                            <span v-if="scope.row.operatType=='3'">绑定灯杆</span>
+                            <span v-if="scope.row.operatType=='4'">解绑灯杆</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -108,35 +114,21 @@
         </div>
     </div>
 </template>
+<style>
+
+</style>
 <script>
 export default {
-    name: 'lamppost',
+    name: 'solinRadarLog',
     data () {
         return {
             name:'名称',
-            type:'1',
+            types:'1',
             serverurl:localStorage.serverurl,
-            options:[
-                {
-                    value: '0',
-                    label: '添加'
-                },{
-                    value: '1',
-                    label: '编辑'
-                },{
-                    value: '2',
-                    label: '删除'
-                },{
-                    value: '3',
-                    label: '绑定项目'
-                },{
-                    value: '4',
-                    label: '设置位置'
-                },
-            ],
-            value:'',
             nickName:'',
-            serialNumber:'',
+            concentratorSn:'',
+            options:[{label:'添加',value:'0'},{label:'编辑',value:'1'},{label:'删除',value:'2'},{label:'绑定灯杆',value:'3'},{label:'解绑灯杆',value:'4'}],
+            value:'',
             tableData:[],
             pageIndex:1,
             pageSize:10,
@@ -149,11 +141,8 @@ export default {
     methods:{
         handleCommand(){
             this.nickName=''
-            this.serialNumber=''
-            this.value=''
-        },
-        search(){
-            this.ready()
+            this.concentratorSn = ''
+            this.value = ''
         },
         ready(){
             var that = this;
@@ -161,14 +150,14 @@ export default {
                 type:'get',
                 async:true,
                 dataType:'json',
-                url:that.serverurl+'/v1/solin/lighting/pole/log/operation',
+                url:that.serverurl+'/v1/solin/sensor/radar/log/operation',
                 contentType:'application/json;charset=UTF-8',
                 data:{
-                    nickName:that.nickName,
-                    serialNumber:that.serialNumber,
-                    operatType:that.value,
                     page:that.pageIndex,
                     size:that.pageSize,
+                    concentratorSn:that.concentratorSn,
+                    nickName:that.nickName,
+                    operatType:that.value,
                     projectIds:sessionStorage.projectId
                 },
                 success:function(data){
@@ -189,13 +178,12 @@ export default {
             this.pageSize = val;
             this.ready()
         },
+        search(){
+            this.ready()
+        },
     },
-    created() {
-        var that = this
+    created(){
         this.ready()
-    },
+    }
 }
 </script>
-<style scoped>
-
-</style>

@@ -2,86 +2,91 @@
     <!-- 巡检地点 -->
     <div class="section">
         <div class="section_top">
-            <el-button v-if="JurisdictionS.addPatrolSite" @click="addInspectionSite(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="JurisdictionS.editPatrolSite" @click="addInspectionSite(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="JurisdictionS.delPatrolSite" @click="addInspectionSite(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search" v-if="JurisdictionS.viewPatrolSite">
-                <el-dropdown size="small" split-button @command="handleCommand">
-                    {{name}}
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="name='点名称';types='1';">点名称</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <div>
-                    <template v-if="types=='1'">
-                        <el-input v-model="siteName" size="small" placeholder="请输入点名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                </div>
-                <div>
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div>
+            <p>位置: &nbsp;巡检管理>巡检地点</p>
         </div>
         <div class="section_bottom">
-            <el-table
-                :data="tableData"
-                @row-click="clickRow" 
-                ref="moviesTable"
-                border
-                stripe
-                size='small'
-                tooltip-effect="dark"
-                @selection-change="SelectionChange"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="siteNumber"
-                align='center'
-                label="点编号"
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                prop="siteName"
-                align='center'
-                label="点名称"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="点状态"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.siteStatus=='1'">正常</span>
-                        <span v-if="scope.row.siteStatus=='2'">异常</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="点类型"
-                min-width="150">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.siteType=='1'">固定时间检查点</span>
-                        <span v-if="scope.row.siteType=='2'">随机时间检查点</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="offsetDistance"
-                align='center'
-                label="有效巡检距离"
-                :formatter="formatRole"
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                prop="createTime"
-                align='center'
-                label="创建时间"
-                show-overflow-tooltip>
-                </el-table-column>
-            </el-table>
+            <div class="section_bottom_bottom">
+                <div class="search" v-if="JurisdictionS.viewPatrolSite">
+                    <el-dropdown size="small" split-button @command="handleCommand">
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='点名称';types='1';">点名称</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="types=='1'">
+                            <el-input v-model="siteName" size="small" placeholder="请输入点名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                    </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
+                </div>
+                <div class="section_bottom_right">
+                    <el-button v-if="JurisdictionS.addPatrolSite" @click="addInspectionSite(0)" type="primary" plain icon='el-icon-plus' size='small'>添加</el-button>
+                    <el-button v-if="JurisdictionS.editPatrolSite" @click="addInspectionSite(1)" type="primary" plain icon="el-icon-edit" size='small'>编辑</el-button>
+                    <el-button v-if="JurisdictionS.delPatrolSite" @click="addInspectionSite(2)" type="primary" plain icon='el-icon-delete' size='small'>删除</el-button>
+                </div>
+            </div>
+            <div>
+                <el-table
+                    :data="tableData"
+                    @row-click="clickRow" 
+                    ref="moviesTable"
+                    border
+                    size='small'
+                    tooltip-effect="dark"
+                    @selection-change="SelectionChange"
+                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                    <el-table-column
+                    align="center"
+                    type="selection"
+                    width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="siteNumber"
+                    show-overflow-tooltip
+                    label="点编号"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="siteName"
+                    show-overflow-tooltip
+                    label="点名称"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    show-overflow-tooltip
+                    label="点状态"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.siteStatus=='1'" class="onLine">正常</span>
+                            <span v-if="scope.row.siteStatus=='2'" class="Warning">异常</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    show-overflow-tooltip
+                    label="点类型"
+                    min-width="150">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.siteType=='1'">固定时间检查点</span>
+                            <span v-if="scope.row.siteType=='2'">随机时间检查点</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="offsetDistance"
+                    show-overflow-tooltip
+                    label="有效巡检距离"
+                    :formatter="formatRole"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="createTime"
+                    label="创建时间"
+                    show-overflow-tooltip>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="block">
                 <el-pagination
                 background
@@ -104,7 +109,7 @@
                         <h4 v-if="type=='0'" class="modal-title" id="myModalLabel">添加巡检点</h4>
                         <h4 v-if="type=='1'" class="modal-title" id="myModalLabel">编辑巡检点</h4>
                     </div>
-                    <div class="modal-body" style='min-height:200px;max-height:500px;overflow:auto;'>
+                    <div class="modal-body" style='min-height:200px;overflow:auto;'>
                         <ul id="myTab" class="nav nav-tabs">
                             <li class="active">
                                 <a href="#a" data-toggle="tab">基本信息</a>
@@ -116,22 +121,22 @@
                         <div id="myTabContent" class="tab-content">
                             <div class="tab-pane fade in active" id="a" style='margin-top:10px;'>
                                 <div class="form-group">
-                                    <label><span class="Required">*</span>点名称:</label>
+                                    <label><span class="Required">*</span>点&ensp;名&ensp;称:</label>
                                     <input v-model.lazy="data.siteName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入点名称">
                                 </div>
                                 <div class="form-group">
-                                    <label><span class="Required">*</span>点编号:</label>
+                                    <label><span class="Required">*</span>点&ensp;编&ensp;号:</label>
                                     <input v-model="data.siteNumber" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入点编号">
                                 </div>
                                 <div class="form-group">
-                                    <label for="phone">点状态:</label>
+                                    <label for="phone">点&ensp;状&ensp;态:</label>
                                     <el-radio-group v-model="data.siteStatus">
                                         <el-radio :label='1'>正常</el-radio>
                                         <el-radio :label="2">异常</el-radio>
                                     </el-radio-group>
                                 </div> 
                                 <div class="form-group">
-                                    <label for="phone">点类型:</label>
+                                    <label for="phone">点&ensp;类&ensp;型:</label>
                                     <el-radio-group v-model="data.siteType" style="margin-left:15px;">
                                         <el-radio :label="1">固定时间检查点</el-radio>
                                         <el-radio :label="2" style="margin-left:0;">随机时间检查点</el-radio>
@@ -151,7 +156,7 @@
                                 <div class="form-group">
                                     <label>参考位置:</label>
                                     <input v-model='data.referencePosition' type="text" class="form-control" placeholder="请输入参考位置">
-                                    <i @click="mapClick" class="iconfont icon-baidumap mappoint"></i>
+                                    <i @click="mapClick" class="iconfont icon-baidumap mappoint" style="right: 140px;"></i>
                                 </div>
                                 <div class="form-group">
                                     <label>最少拍照数量:</label>
@@ -163,20 +168,18 @@
                                 </div>
                                 <div class="form-group">
                                     <label>点图片:</label>
-                                    <div>
-                                        <el-upload
-                                            class="upload-demo"
-                                            ref="upload"
-                                            action=""
-                                            :on-change="handlePreview"
-                                            :on-remove="handleRemove"
-                                            :file-list="fileList"
-                                            :auto-upload="false"
-                                            list-type="picture">
-                                            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                                            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过1M</div>
-                                        </el-upload>
-                                    </div>
+                                    <el-upload
+                                        class="upload-demo"
+                                        ref="upload"
+                                        action=""
+                                        :on-change="handlePreview"
+                                        :on-remove="handleRemove"
+                                        :file-list="fileList"
+                                        :auto-upload="false"
+                                        list-type="picture">
+                                        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                                        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件</div>
+                                    </el-upload>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="b">
@@ -193,19 +196,18 @@
                                                 <el-table
                                                     :data="termData_left"
                                                     border
-                                                    stripe
                                                     size='small'
                                                     tooltip-effect="dark"
                                                     @selection-change="leftChange"
                                                     style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                                                     <el-table-column
+                                                    align="center"
                                                     type="selection"
-                                                    align='center'
                                                     width="55">
                                                     </el-table-column>
                                                     <el-table-column
                                                     prop="itemName"
-                                                    align='center'
+                                                    show-overflow-tooltip
                                                     label="巡检项名称"
                                                     min-width="80">
                                                     </el-table-column>
@@ -213,7 +215,6 @@
                                                     prop="categoryName"
                                                     label="归属分类"
                                                     min-width="80"
-                                                    align='center'
                                                     show-overflow-tooltip>
                                                     </el-table-column>
                                                 </el-table>
@@ -238,19 +239,18 @@
                                                 <el-table
                                                     :data="termData_right"
                                                     border
-                                                    stripe
                                                     size='small'
                                                     tooltip-effect="dark"
                                                     @selection-change="rightChange"
                                                     style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                                                     <el-table-column
+                                                    align="center"
                                                     type="selection"
-                                                    align='center'
                                                     width="55">
                                                     </el-table-column>
                                                     <el-table-column
                                                     prop="itemName"
-                                                    align='center'
+                                                    show-overflow-tooltip
                                                     label="巡检项名称"
                                                     min-width="80">
                                                     </el-table-column>
@@ -258,7 +258,6 @@
                                                     prop="categoryName"
                                                     label="归属分类"
                                                     min-width="80"
-                                                    align='center'
                                                     show-overflow-tooltip>
                                                     </el-table-column>
                                                 </el-table>

@@ -223,7 +223,7 @@ export default {
 .Mypreview{width: 100%;height: 100%;}
 .ElasticFrame{position: fixed;top: 0;right: 0;bottom: 0;left: 0;display: flex;justify-content: center;z-index: 2080;}
 .MyModal{
-    margin-top: 20vh;width: 200px;height: 360px;background: #000;box-shadow: 0 3px 9px rgba(0, 0, 0, .5);border-radius: 10px;
+    margin-top: 20vh;width: 240px;height: 480px;background: #000;box-shadow: -0.5px 2px 20px 5px #d9dbdd;border-radius: 10px;
     border: 8px solid;border-image:url("../../../assets/img/border.png") 9 repeat;box-sizing: content-box;position: relative;
 }
 .top_close{position: absolute;top: -15px;right: -15px;width: 22px;height: 22px;background: white;border-radius: 50%;text-align: center;line-height: 22px;font-size: 16px;color:#4dd3c5;cursor: pointer;}

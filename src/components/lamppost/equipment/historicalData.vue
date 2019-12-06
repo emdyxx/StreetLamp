@@ -1,7 +1,7 @@
 <template>
     <!-- 气象站历史数据 -->
     <div class="historicalData">
-        <el-button @click="backtrack" type="warning" size='small' icon="el-icon-arrow-left" style="position:absolute;top:5px;right:30px;z-index:9999;">返回</el-button>
+        <el-button @click="backtrack" type="primary" size='mini' plain icon="el-icon-arrow-left" style="position:absolute;top:5px;right:30px;z-index:9999;">返回</el-button>
         <el-tabs v-model="activeName" @tab-click="activeName_change" type="border-card" style="height:100%;">
             <el-tab-pane label="列表展示" name="0">
                 <div class="historicalData_top">
@@ -24,17 +24,16 @@
                     <el-table
                         :data="tableData"
                         border
-                        stripe
                         size='small'
                         tooltip-effect="dark"
                         style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                         <el-table-column
+                        align="center"
                         type="selection"
-                        align='center'
                         width="55">
                         </el-table-column>
                         <el-table-column
-                        align='center'
+                        show-overflow-tooltip
                         label="风向/风速"
                         min-width="90">
                             <template slot-scope="scope">
@@ -42,7 +41,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                        align='center'
+                        show-overflow-tooltip
                         label="温度/湿度"
                         min-width="80">
                             <template slot-scope="scope">
@@ -51,20 +50,20 @@
                         </el-table-column>
                         <el-table-column
                         prop="pressure"
-                        align='center'
+                        show-overflow-tooltip
                         label="气压"
                         min-width="80"
                         :formatter="formatRole">
                         </el-table-column>
                         <el-table-column
                         prop="noiseAverage"
-                        align='center'
+                        show-overflow-tooltip
                         label="噪声"
                         :formatter="formatRole"
                         min-width="80">
                         </el-table-column>
                         <el-table-column
-                        align='center'
+                        show-overflow-tooltip
                         label="PM2.5/PM10"
                         min-width="80">
                             <template slot-scope="scope">
@@ -74,7 +73,7 @@
                         <el-table-column
                         prop="createTime"
                         label="采集时间"
-                        align='center'
+                        show-overflow-tooltip
                         min-width="160"
                         :formatter="formatRole">
                         </el-table-column>

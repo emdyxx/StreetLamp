@@ -2,98 +2,106 @@
     <!-- 场景管理 -->
     <div class="section">
         <div class="section_top">
-            <el-button @click="sceneOperation(0)" type="primary" icon='el-icon-plus' size='small'>添加场景</el-button>
-            <el-button @click="sceneOperation(1)" type="primary" icon="el-icon-edit" size='small'>编辑场景</el-button>
-            <el-button @click="sceneOperation(2)" type="primary" icon='el-icon-delete' size='small'>删除场景</el-button>
-            <el-button @click="backtrack" type="success" plain icon='el-icon-arrow-left' size='small' style="position:absolute;right:10px;">返回</el-button>
-            <div class="search">
-                <el-dropdown size="small" split-button>
-                    {{name}}
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="name='场景名称';types='1';">场景名称</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <div>
-                    <template v-if="types=='1'">
-                        <el-input v-model="nickName" size="small" placeholder="请输入场景名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                </div>
-                <div>
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
+            <p>位置: &nbsp;设备操作>场景管理</p>
+            <div>
+                <span @click="backtrack" style="background:none;color:#333;">继电器操作</span>
+                <span style="background:#4382e6;color:white;">场景管理</span>
             </div>
         </div>
         <div class="section_bottom">
-            <el-table
-                :data="tableData"
-                @row-click="clickRow" 
-                ref="moviesTable"
-                border
-                stripe
-                size='small'
-                tooltip-effect="dark"
-                @selection-change="SelectionChange"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="nickName"
-                align='center'
-                label="场景名称"
-                :formatter="formatRole"
-                min-width="110">
-                </el-table-column>
-                <el-table-column
-                prop="concentratorSn"
-                align='center'
-                :formatter="formatRole"
-                label="集中器序列号"
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                prop="relayCount"
-                align='center'
-                :formatter="formatRole"
-                label="包含继电器数量"
-                min-width="110">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="下发状态"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.sendStatus=='0'">未下发</span>
-                        <span v-if="scope.row.sendStatus=='1'">已下发</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="createTime"
-                align='center'
-                :formatter="formatRole"
-                label="创建时间"
-                min-width="110">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="操作"
-                :formatter="formatRole"
-                min-width="170"
-                show-overflow-tooltip>
-                    <template slot-scope="scope">
-                        <el-button @click="details(scope.row.id)" type="primary" size='mini'>详情</el-button>
-                        <el-button @click="Lowerhair(scope.row.id)" type="primary" size='mini'>下发</el-button>
-                        <template v-if="scope.row.status=='0'">
-                            <el-button @click="status(scope.row.id,scope.row.status)" type="primary" size='mini'>启用</el-button>
+            <div class="section_bottom_bottom">
+                <div class="search">
+                    <el-dropdown size="small" split-button>
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='场景名称';types='1';">场景名称</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="types=='1'">
+                            <el-input v-model="nickName" size="small" placeholder="请输入场景名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
                         </template>
-                        <template v-if="scope.row.status=='1'">
-                            <el-button @click="status(scope.row.id,scope.row.status)" type="danger" size='mini'>禁用</el-button>
+                    </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
+                </div>
+                <div class="section_bottom_right">
+                    <el-button @click="sceneOperation(0)" type="primary" plain icon='el-icon-plus' size='small'>添加场景</el-button>
+                    <el-button @click="sceneOperation(1)" type="primary" plain icon="el-icon-edit" size='small'>编辑场景</el-button>
+                    <el-button @click="sceneOperation(2)" type="primary" plain icon='el-icon-delete' size='small'>删除场景</el-button>
+                </div>
+            </div>
+            <div>
+                <el-table
+                    :data="tableData"
+                    @row-click="clickRow" 
+                    ref="moviesTable"
+                    border
+                    size='small'
+                    tooltip-effect="dark"
+                    @selection-change="SelectionChange"
+                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                    <el-table-column
+                    align="center"
+                    type="selection"
+                    width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="nickName"
+                    show-overflow-tooltip
+                    label="场景名称"
+                    :formatter="formatRole"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    prop="concentratorSn"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    label="集中器序列号"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="relayCount"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    label="包含继电器数量"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    show-overflow-tooltip
+                    label="下发状态"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.sendStatus=='0'">未下发</span>
+                            <span v-if="scope.row.sendStatus=='1'">已下发</span>
                         </template>
-                    </template>
-                </el-table-column>
-            </el-table>
+                    </el-table-column>
+                    <el-table-column
+                    prop="createTime"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    label="创建时间"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    label="操作"
+                    :formatter="formatRole"
+                    min-width="170"
+                    show-overflow-tooltip>
+                        <template slot-scope="scope">
+                            <el-button @click="details(scope.row.id)" type="primary" size='mini'>详情</el-button>
+                            <el-button @click="Lowerhair(scope.row.id)" type="primary" size='mini'>下发</el-button>
+                            <template v-if="scope.row.status=='0'">
+                                <el-button @click="status(scope.row.id,scope.row.status)" type="primary" size='mini'>启用</el-button>
+                            </template>
+                            <template v-if="scope.row.status=='1'">
+                                <el-button @click="status(scope.row.id,scope.row.status)" type="danger" size='mini'>禁用</el-button>
+                            </template>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="block">
                 <el-pagination
                 background
@@ -138,12 +146,11 @@
                                 <el-table
                                     :data="tableData2"
                                     border
-                                    stripe
                                     size='small'
                                     tooltip-effect="dark"
                                     style="width: 100%;overflow:auto;height:auto;">
                                     <el-table-column
-                                    align='center'
+                                    show-overflow-tooltip
                                     label="继电器名称"
                                     min-width="80">
                                         <template slot-scope="scope">
@@ -151,7 +158,7 @@
                                         </template>
                                     </el-table-column>
                                     <el-table-column
-                                    align='center'
+                                    show-overflow-tooltip
                                     label="继电器地址"
                                     min-width="80">
                                         <template slot-scope="scope">
@@ -159,7 +166,7 @@
                                         </template>
                                     </el-table-column>
                                     <el-table-column
-                                    align='center'
+                                    show-overflow-tooltip
                                     label="继电器型号"
                                     min-width="80">
                                         <template slot-scope="scope">
@@ -168,7 +175,7 @@
                                     </el-table-column>
                                     <el-table-column
                                     prop="creatime"
-                                    align='center'
+                                    show-overflow-tooltip
                                     label="输入通道数量"
                                     min-width="80">
                                         <template slot-scope="scope">
@@ -177,7 +184,6 @@
                                     </el-table-column>
                                     <el-table-column
                                     prop="creatime"
-                                    align='center'
                                     label="输出通道数量"
                                     show-overflow-tooltip>
                                         <template slot-scope="scope">
@@ -196,12 +202,10 @@
                                 <el-table
                                     :data="tableData3"
                                     border
-                                    stripe
                                     size='small'
                                     tooltip-effect="dark"
                                     style="width: 100%;overflow:auto;height:auto;">
                                     <el-table-column
-                                    align='center'
                                     label="控制条件"
                                     min-width="190">
                                         <template slot-scope="scope">
@@ -215,7 +219,7 @@
                                         </template>
                                     </el-table-column>
                                     <el-table-column
-                                    align='center'
+                                    
                                     label="输出"
                                     min-width="110">
                                         <template slot-scope="scope">
@@ -224,7 +228,7 @@
                                         </template>
                                     </el-table-column>
                                     <el-table-column
-                                    align='center'
+                                    
                                     label="操作"
                                     show-overflow-tooltip>
                                         <template slot-scope="scope">
@@ -271,36 +275,34 @@
                     <el-table
                         :data="tableData4"
                         border
-                        stripe
                         size='small'
                         tooltip-effect="dark"
                         @selection-change="tableData4Change"
                         style="width: 100%;overflow:auto;height:auto;">
                         <el-table-column
+                        align="center"
                         type="selection"
-                        align='center'
                         width="55">
                         </el-table-column>
                         <el-table-column
                         prop="relayName"
-                        align='center'
+                        show-overflow-tooltip
                         label="继电器名称"
                         min-width="80">
                         </el-table-column>
                         <el-table-column
                         prop="nickName"
-                        align='center'
+                        show-overflow-tooltip
                         label="通道名称"
                         min-width="80">
                         </el-table-column>
                         <el-table-column
                         prop="channelNumber"
-                        align='center'
+                        show-overflow-tooltip
                         label="通道编号"
                         min-width="60">
                         </el-table-column>
                         <el-table-column
-                        align='center'
                         label="输入状态"
                         show-overflow-tooltip>
                             <template slot-scope="scope">
@@ -332,36 +334,34 @@
                     <el-table
                         :data="tableData5"
                         border
-                        stripe
                         size='small'
                         tooltip-effect="dark"
                         @selection-change="tableData5Change"
                         style="width: 100%;overflow:auto;height:auto;">
                         <el-table-column
+                        align="center"
                         type="selection"
-                        align='center'
                         width="55">
                         </el-table-column>
                         <el-table-column
                         prop="relayName"
-                        align='center'
+                        show-overflow-tooltip
                         label="继电器名称"
                         min-width="80">
                         </el-table-column>
                         <el-table-column
                         prop="nickName"
-                        align='center'
+                        show-overflow-tooltip
                         label="通道名称"
                         min-width="80">
                         </el-table-column>
                         <el-table-column
                         prop="channelNumber"
-                        align='center'
+                        show-overflow-tooltip
                         label="通道编号"
                         min-width="60">
                         </el-table-column>
                         <el-table-column
-                        align='center'
                         label="输出状态"
                         show-overflow-tooltip>
                             <template slot-scope="scope">
@@ -393,30 +393,28 @@
                     <el-table
                         :data="tableData6"
                         border
-                        stripe
                         size='small'
                         tooltip-effect="dark"
                         style="width: 100%;overflow:auto;height:auto;">
                         <el-table-column
                         prop="relayName"
-                        align='center'
+                        show-overflow-tooltip
                         label="继电器名称"
                         min-width="80">
                         </el-table-column>
                         <el-table-column
                         prop="nickName"
-                        align='center'
+                        show-overflow-tooltip
                         label="通道名称"
                         min-width="80">
                         </el-table-column>
                         <el-table-column
                         prop="channelNumber"
-                        align='center'
+                        show-overflow-tooltip
                         label="通道编号"
                         min-width="60">
                         </el-table-column>
                         <el-table-column
-                        align='center'
                         label="输出状态"
                         show-overflow-tooltip>
                             <template slot-scope="scope">
@@ -441,7 +439,6 @@
                     <el-table
                         :data="tableData3"
                         border
-                        stripe
                         size='small'
                         tooltip-effect="dark"
                         style="width: 100%">
@@ -455,21 +452,21 @@
                                     <el-table-column
                                     prop="relayName"
                                     label="继电器名称"
-                                    align='center'>
+                                    show-overflow-tooltip>
                                     </el-table-column>
                                     <el-table-column
                                     prop="nickName"
                                     label="通道名称"
-                                    align='center'>
+                                    show-overflow-tooltip>
                                     </el-table-column>
                                     <el-table-column
                                     prop="channelNumber"
                                     label="通道编号"
-                                    align='center'>
+                                    show-overflow-tooltip>
                                     </el-table-column>
                                     <el-table-column
                                     label="输出状态"
-                                    align='center'>
+                                    show-overflow-tooltip>
                                         <template slot-scope="scope">
                                             <span v-if="scope.row.outputState=='1'">开启</span>
                                             <span v-if="scope.row.outputState=='2'">关闭</span>
@@ -479,7 +476,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                        align='center'
+                        show-overflow-tooltip
                         label="控制类型">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.controlType=='1'">时间控制</span>
@@ -488,7 +485,7 @@
                         </el-table-column>
                         <el-table-column
                         prop="nickName"
-                        align='center'
+                        show-overflow-tooltip
                         label="控制详情">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.controlType=='1'">{{scope.row.controlTime}}</span>

@@ -31,22 +31,22 @@
                     <div>
                         <img src="../../../assets/img/fault.png" alt="">
                         <span>故障</span>
-                        <span style="color:#fe3819;font-size: 22px;"><i>{{statisticalData.alarmCount}}</i></span>
+                        <span style="color:#fe3819;font-size: 14px;"><i>{{statisticalData.alarmCount}}</i></span>
                     </div>
                     <div>
                         <img src="../../../assets/img/Unknown.png" alt="">
                         <span>未知</span>
-                        <span style="color:#fe9b08;font-size: 22px;"><i>{{statisticalData.otherCount}}</i></span>
+                        <span style="color:#fe9b08;font-size: 14px;"><i>{{statisticalData.otherCount}}</i></span>
                     </div>
                     <div>
                         <img src="../../../assets/img/online.png" alt="">
                         <span>在线</span>
-                        <span style="color:#00e6ac;font-size: 22px;"><i>{{statisticalData.onlineCount}}</i></span>
+                        <span style="color:#00e6ac;font-size: 14px;"><i>{{statisticalData.onlineCount}}</i></span>
                     </div>
                     <div>
                         <img src="../../../assets/img/offline.png" alt="">
                         <span>离线</span>
-                        <span style="color:#90a9bb;font-size: 22px;"><i>{{statisticalData.offlineCount}}</i></span>
+                        <span style="color:#90a9bb;font-size: 14px;"><i>{{statisticalData.offlineCount}}</i></span>
                     </div>
                 </div>
             </div>
@@ -249,7 +249,8 @@ export default {
                     {
                         name:'类型',
                         type:'pie',
-                        radius: ['80%', '95%'],
+                        radius: ['70%', '85%'],
+                        hoverOffset:3,
                         avoidLabelOverlap: false,
                         label: {
                             normal: {
@@ -257,12 +258,12 @@ export default {
                                 position: 'center',
                                 formatter:function (argument) {
                                     var html;
-                                    html=num+'\r\n\r\n总数';
+                                    html=num;
                                     return html;
                                 },
                                 textStyle:{
-                                    fontSize: 18,
-                                    color:'#000001'
+                                    fontSize: 24,
+                                    color:'#333333'
                                 }
                             },
                         },
@@ -367,10 +368,10 @@ export default {
                             }
                             map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
                             //添加灯杆坐标
-                            var online = new BMap.Icon(that.imgserverurl+"image/img/LED02.png", new BMap.Size(45,45));
-                            var offline = new BMap.Icon(that.imgserverurl+"image/img/LED03.png", new BMap.Size(45,45));
-                            var Unknown = new BMap.Icon(that.imgserverurl+"image/img/LED04.png", new BMap.Size(45,45));
-                            var abnormal = new BMap.Icon(that.imgserverurl+"image/img/LED01.gif", new BMap.Size(210,210));
+                            var online = new BMap.Icon(that.imgserverurl+"image/img/LED02.png", new BMap.Size(45,60));
+                            var offline = new BMap.Icon(that.imgserverurl+"image/img/LED03.png", new BMap.Size(45,60));
+                            var Unknown = new BMap.Icon(that.imgserverurl+"image/img/LED04.png", new BMap.Size(45,60));
+                            var abnormal = new BMap.Icon(that.imgserverurl+"image/img/LED01.gif", new BMap.Size(45,60));
                             var markers = []
                             for(var i=0;i<data.result.list.length;i++){
                                 if(data.result.list[i].coord==''||data.result.list[i].coord==undefined||data.result.list[i].coord==null){
@@ -460,7 +461,7 @@ export default {
     created(){
         //设置img的路径
         var url = localStorage.serverurl.split('/')
-        this.imgserverurl = url[0]+'//'+url[2]+'/solin-platform/'
+        this.imgserverurl = url[0]+'//'+url[2]+'/solin/'
         this.project()
     },
     beforeDestroy(){
@@ -472,14 +473,15 @@ export default {
 <style scoped>
 hr{margin: 0;}
 .SingleLamp{width: 100%;height: 100%;position: relative;}
-.statistical{width: 350px;height: 190px;border-radius: 10px;box-shadow: 3px 3px 5px #999;position: absolute;top: 75px;left: 10px;padding: 0 15px 0 15px;z-index: 2;background: white;}
+.statistical{width: 350px;height: 190px;border-radius: 10px;box-shadow: -0.5px 2px 10px 1px #d9dbdd;position: absolute;top: 75px;left: 10px;padding: 0 15px 0 15px;z-index: 2;background: white;}
 .statistical_top{height: 40px;display: flex;align-items: center;font-size: 15px;color: #333333;}
 .statistical_top>img{padding-right: 15px;width: 40px;}
 .statistical_equipment{width: 100%;padding: 5px 20px;display: flex;}
 .statistical_equipment_left{width:170px;height:115px;margin-top: 10px;}
 .statistical_equipment_right{height: 100%;}
-.statistical_equipment_right>div{padding-top: 2px;padding-left: 15px;}
+.statistical_equipment_right>div{padding-top: 10px;padding-left: 15px;}
 .statistical_equipment_right>div>span:nth-of-type(1){font-size: 14px;}
+.statistical_equipment_right img{width: 15px;}
 /* .weather{position: absolute;top:35px;right:35px;width: 355px;height: 193px;border-radius: 27px;box-shadow: 2px 2px 8px 1px #303e60;color: white;z-index: 2;}
 #weather1{background: url('../../../assets/img/tq3.png') 100% 100%;}
 #weather2{background: url('../../../assets/img/tq4.png') 100% 100%;}

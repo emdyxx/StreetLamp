@@ -7,82 +7,87 @@
         <div class="CommonStyle_right">
             <div class="section">
                 <div class="section_top">
-                    <el-button v-if="JurisdictionS.addOrg" @click="addorganization(0)" type="primary" icon='el-icon-plus' size='small'>添加机构</el-button>
-                    <el-button v-if="JurisdictionS.editOrg" @click="addorganization(1)" type="primary" icon="el-icon-edit" size='small'>编辑机构</el-button>
-                    <el-button v-if="JurisdictionS.delOrg" @click="deleteorganization" type="primary" icon='el-icon-delete' size='small'>删除机构</el-button>
-                    <div class="search" v-if="JurisdictionS.viewOrg">
-                        <el-dropdown size="small" split-button @command="handleCommand">
-                            {{name}}
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item @click.native="name='机构名称';types='1';">机构名称</el-dropdown-item>
-                                <el-dropdown-item @click.native="name='负责人';types='2';">负责人</el-dropdown-item>
-                                <el-dropdown-item @click.native="name='电话';types='3';">电话</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                        <div>
-                            <template v-if="types=='1'">
-                                <el-input v-model="orgName" size="small" placeholder="请输入机构名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                            </template>
-                            <template v-if="types=='2'">
-                                <el-input v-model="principal" size="small" placeholder="请输入负责人" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                            </template>
-                            <template v-if="types=='3'">
-                                <el-input v-model="mobile" size="small" placeholder="请输入电话" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                            </template>
-                        </div>
-                        <div>
-                            <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                        </div>
-                    </div>
+                    <p>位置: &nbsp;系统管理>机构操作</p>
                 </div>
                 <div class="section_bottom">
-                    <el-table
-                        :data="tableData"
-                        @row-click="clickRow" 
-                        ref="moviesTable"
-                        border
-                        stripe
-                        size='small'
-                        tooltip-effect="dark"
-                        @selection-change="userSelectionChange"
-                        style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                        <el-table-column
-                        type="selection"
-                        align='center'
-                        width="55">
-                        </el-table-column>
-                        <el-table-column
-                        prop="orgName"
-                        align='center'
-                        label="机构名称"
-                        min-width="160">
-                        </el-table-column>
-                        <el-table-column
-                        prop="parentName"
-                        align='center'
-                        label="所属机构"
-                        min-width="120">
-                        </el-table-column>
-                        <el-table-column
-                        prop="principal"
-                        align='center'
-                        label="负责人"
-                        min-width="120">
-                        </el-table-column>
-                        <el-table-column
-                        prop="mobile"
-                        align='center'
-                        label="电话"
-                        min-width="130">
-                        </el-table-column>
-                        <el-table-column
-                        prop="createTime"
-                        label="创建时间"
-                        align='center'
-                        min-width="160"
-                        show-overflow-tooltip>
-                        </el-table-column>
-                    </el-table>
+                    <div class="section_bottom_bottom">
+                        <div class="search" v-if="JurisdictionS.viewOrg">
+                            <el-dropdown size="small" split-button @command="handleCommand">
+                                {{name}}
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item @click.native="name='机构名称';types='1';">机构名称</el-dropdown-item>
+                                    <el-dropdown-item @click.native="name='负责人';types='2';">负责人</el-dropdown-item>
+                                    <el-dropdown-item @click.native="name='电话';types='3';">电话</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                            <div>
+                                <template v-if="types=='1'">
+                                    <el-input v-model="orgName" size="small" placeholder="请输入机构名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                                </template>
+                                <template v-if="types=='2'">
+                                    <el-input v-model="principal" size="small" placeholder="请输入负责人" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                                </template>
+                                <template v-if="types=='3'">
+                                    <el-input v-model="mobile" size="small" placeholder="请输入电话" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                                </template>
+                            </div>
+                            <div>
+                                <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                            </div>
+                        </div>
+                        <div class="section_bottom_right">
+                            <el-button v-if="JurisdictionS.addOrg" @click="addorganization(0)" type="primary" icon='el-icon-plus' plain size='small'>添加机构</el-button>
+                            <el-button v-if="JurisdictionS.editOrg" @click="addorganization(1)" type="primary" icon="el-icon-edit" plain size='small'>编辑机构</el-button>
+                            <el-button v-if="JurisdictionS.delOrg" @click="deleteorganization" type="primary" icon='el-icon-delete' plain size='small'>删除机构</el-button>
+                        </div>
+                    </div>
+                    <div>
+                        <el-table
+                            :data="tableData"
+                            @row-click="clickRow" 
+                            ref="moviesTable"
+                            border
+                            size='small'
+                            tooltip-effect="dark"
+                            @selection-change="userSelectionChange"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            align="center"
+                            type="selection"
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="orgName"
+                            show-overflow-tooltip
+                            label="机构名称"
+                            min-width="160">
+                            </el-table-column>
+                            <el-table-column
+                            prop="parentName"
+                            show-overflow-tooltip
+                            label="所属机构"
+                            min-width="120">
+                            </el-table-column>
+                            <el-table-column
+                            prop="principal"
+                            show-overflow-tooltip
+                            label="负责人"
+                            min-width="120">
+                            </el-table-column>
+                            <el-table-column
+                            prop="mobile"
+                            show-overflow-tooltip
+                            label="电话"
+                            min-width="130">
+                            </el-table-column>
+                            <el-table-column
+                            prop="createTime"
+                            label="创建时间"
+                            min-width="160"
+                            show-overflow-tooltip>
+                            </el-table-column>
+                        </el-table>
+                    </div>
                     <div class="block">
                         <el-pagination
                         background
@@ -126,29 +131,27 @@
                                     <input type="text" v-model="data.orgName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入机构名称">
                                 </div> 
                                 <div class="form-group">
-                                    <label for="password"><span class="Required">*</span>负责人:</label>
+                                    <label for="password"><span class="Required">*</span>负&ensp;责&ensp;人:</label>
                                     <input type="text" v-model="data.principal" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入负责人">
                                 </div> 
                                 <div class="form-group">
-                                    <label for="password2"><span class="Required">*</span>电话:</label>
+                                    <label for="password2"><span class="Required">*</span>电&emsp;&emsp;话:</label>
                                     <input type="text" v-model="data.orgMobile" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
                                 </div> 
                                 <div class="form-group">
-                                    <label for="name2">邮箱:</label>
+                                    <label for="name2">邮&emsp;&emsp;箱:</label>
                                     <input type="email" v-model="data.email" class="form-control" placeholder="请输入邮箱">
                                 </div> 
                                 <div class="form-group" v-if="type=='0'">
                                     <label for="phone">所属机构:</label>
-                                    <div class="block">
-                                        <el-cascader
-                                            :options="options"
-                                            v-model="data.optionsValue"
-                                            :props='optionspros'
-                                            size='small'
-                                            change-on-select
-                                            style='width:196px'>
-                                        </el-cascader>
-                                    </div>
+                                    <el-cascader
+                                        :options="options"
+                                        v-model="data.optionsValue"
+                                        :props='optionspros'
+                                        size='small'
+                                        change-on-select
+                                        style='width:196px'>
+                                    </el-cascader>
                                 </div> 
                                 <div class="form-group">
                                     <label>背景图片:</label>
@@ -161,40 +164,40 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="form-group"  v-if="type=='1'" style="justify-content: center;margin-left:-50px;">
+                                <div class="form-group"  v-if="type=='1'" style="justify-content: center;">
                                     <el-button @click="Appoint" size='small' type="primary">指定机构管理员</el-button>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="b">
                                 <div class="form-group" v-if="type=='0'">
-                                    <label for="name"><span class="Required">*</span>用户名:</label>
+                                    <label for="name"><span class="Required">*</span>用&ensp;户&ensp;名:</label>
                                     <input type="text" v-model="data.userName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
                                 </div> 
                                 <div class="form-group" v-if="type=='0'">
-                                    <label for="username"><span class="Required">*</span>密码:</label>
+                                    <label for="username"><span class="Required">*</span>密&emsp;&emsp;码:</label>
                                     <input type="password" v-model="data.userPwd" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入密码">
                                 </div> 
                                 <div class="form-group">
-                                    <label for="password"><span class="Required">*</span>姓名:</label>
+                                    <label for="password"><span class="Required">*</span>姓&emsp;&emsp;名:</label>
                                     <input type="text" v-model="data.fullName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入姓名">
                                 </div> 
                                 <div class="form-group">
-                                    <label for="password2"><span class="Required">*</span>电话:</label>
+                                    <label for="password2"><span class="Required">*</span>电&emsp;&emsp;话:</label>
                                     <input type="text" v-model="data.userMobile" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入电话">
                                 </div> 
                                 <div class="form-group">
-                                    <label for="name2">邮箱:</label>
+                                    <label for="name2">邮&emsp;&emsp;箱:</label>
                                     <input type="email" v-model="data.userEmail" class="form-control" placeholder="请输入邮箱">
                                 </div> 
                                 <div class="form-group">
-                                    <label for="phone">性别:</label>
-                                    <template>
+                                    <label for="phone">性&emsp;&emsp;别:</label>
+                                    <div>
                                         <el-radio v-model="data.sex" label="0">男</el-radio>
                                         <el-radio v-model="data.sex" label="1">女</el-radio>
-                                    </template>
+                                    </div>
                                 </div> 
                                 <div class="form-group">
-                                    <label>头像:</label>
+                                    <label>头&emsp;&emsp;像:</label>
                                     <div class="user_img">
                                         <i @click="cancelImage(2)" class="iconfont icon-guanbi cancel_s"></i>
                                         <label for="img2">
@@ -244,32 +247,31 @@
                         <el-table
                             :data="tableData2"
                             border
-                            stripe
                             size='small'
                             tooltip-effect="dark"
                             @selection-change="AppointModalChange"
                             style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                             <el-table-column
                             type="selection"
-                            align='center'
+                            align="center"
                             width="55">
                             </el-table-column>
                             <el-table-column
                             prop="fullName"
-                            align='center'
+                            show-overflow-tooltip
                             label="姓名"
                             width="120">
                             </el-table-column>
                             <el-table-column
                             prop="mobile"
-                            align='center'
+                            show-overflow-tooltip
                             label="电话"
                             width="130">
                             </el-table-column>
                             <el-table-column
                             prop="email"
                             label="邮箱"
-                            align='center'
+                            show-overflow-tooltip
                             width='162'>
                             </el-table-column>
                         </el-table>

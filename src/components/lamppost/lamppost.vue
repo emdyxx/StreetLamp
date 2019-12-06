@@ -1,12 +1,14 @@
 <template>
   <div class="OverallSituation">
       <header class="header">
-        <i @click="backtrack" class="iconfont icon-fanhui2"></i>
-        <div class="header-left">
-            <i class="iconfont icon-hengpai"></i>
-            设备管理
+        <div class="backtrack" @click="backtrack">
+            <i class="iconfont icon-fanhuishangyiji1"></i>
+            <span>返回</span>
         </div>
-        <el-select size='small' v-model="value2" @change='projectChange' style="margin-left:55px;" placeholder="请选择">
+        <div class="header-left">
+            <img src="../../assets/header-img.png" alt="">
+        </div>
+        <el-select size='small' id="borderRadiu40" v-model="value2" @change='projectChange' style="margin-left:55px;width:225px;" placeholder="请选择">
           <el-option
             v-for="item in options2"
             style="height:30px;"
@@ -18,13 +20,22 @@
         <div class="header-center">
           <template v-for="item in menu">
             <template v-if="item.code=='solinDeviceDeploy'">
-              <div @click="headercolor(2,item.id)" :class="headercolorType=='2'?'header-center-color':''">{{item.menuName}}</div>
+                <div @click="headercolor(2,item.id)" :class="headercolorType=='2'?'header-center-color':''" :key="item.id">
+                    <p class="iconfont icon-yunbushu" style="font-size:32px;padding-top:1px;"></p>
+                    {{item.menuName}}
+                </div>
             </template>
             <template v-if="item.code=='solinDeviceControl'">
-              <div @click="headercolor(3,item.id)" :class="headercolorType=='3'?'header-center-color':''">{{item.menuName}}</div>
+                <div @click="headercolor(3,item.id)" :class="headercolorType=='3'?'header-center-color':''" :key="item.id">
+                    <p class="iconfont icon-mofagongjubao-ss"></p>
+                    {{item.menuName}}
+                </div>
             </template>
             <template v-if="item.code=='solinDeviceLog'">
-              <div @click="headercolor(4,item.id)" :class="headercolorType=='4'?'header-center-color':''">{{item.menuName}}</div>
+                <div @click="headercolor(4,item.id)" :class="headercolorType=='4'?'header-center-color':''" :key="item.id">
+                    <p class="iconfont icon-shebeirizhi"></p>
+                    {{item.menuName}}
+                </div>
             </template>
           </template>
         </div>
@@ -175,6 +186,12 @@ export default {
             }
             if(sessionStorage.menuId3=='119'){
                 that.$router.push({'path':'solinSceneryControllerManage'})
+            }
+            if(sessionStorage.menuId3=='138'){
+                that.$router.push({'path':'/solinRadarDeploy'})
+            }
+            if(sessionStorage.menuId3=='139'){
+                that.$router.push({'path':'/solinRadarManage'})
             }
         },200)
     },

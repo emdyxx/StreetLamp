@@ -219,6 +219,9 @@ export default {
                                     if(sessionStorage.menuId3=='123'){
                                         that.$router.push({'path':'/solinSceneryControllerLog'})
                                     }
+                                    if(sessionStorage.menuId3=='140'){
+                                        that.$router.push({'path':'/solinRadarLog'})
+                                    }
                                 }else{
                                     that.errorCode(data)
                                 }
@@ -302,6 +305,9 @@ export default {
                     }
                     if(data.node.id=='123'){
                         that.$router.push({'path':'/solinSceneryControllerLog'})
+                    }
+                    if(data.node.id=='140'){
+                        that.$router.push({'path':'/solinRadarLog'})
                     }
                 }
             });

@@ -2,130 +2,156 @@
     <div class="section">
         <!-- 灯具 -->
         <div class="section_top">
-            <el-button v-if="JurisdictionS.addLamp" @click="addchargingpile(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="JurisdictionS.editLamp" @click="addchargingpile(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="JurisdictionS.delLamp" @click="deletechargingpile" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <el-dropdown v-if="JurisdictionS.SetUp" size="small" split-button type="primary">
-                <i class="el-icon-setting el-icon--left"></i>设置
-                <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-if="JurisdictionS.setLampProject" @click.native="lampBindProjects">绑定项目</el-dropdown-item>
-                    <!-- <el-dropdown-item @click.native="Powerfailuretime">断电时间</el-dropdown-item> -->
-                </el-dropdown-menu>
-            </el-dropdown>
-            <div class="search" v-if="JurisdictionS.viewLampDeploy">
-                <el-dropdown size="small" split-button @command="handleCommand">
-                    {{name}}
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='状态';type='3';">状态</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <div>
-                    <template v-if="type=='1'">
-                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="type=='2'">
-                        <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="type=='3'">
-                        <el-select v-model="online" size='small' style="width:194px;" clearable placeholder="请选择">
-                            <el-option
-                            v-for="item in options0"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </template>
-                </div>
-                <div>
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div>
+            <p>位置: &nbsp;设备部署>灯具管理</p>
         </div>
         <div class="section_bottom">
-            <el-table
-                :data="tableData"
-                @row-click="clickRow" 
-                ref="moviesTable"
-                border
-                stripe
-                size='small'
-                slot="empty"
-                tooltip-effect="dark"
-                @selection-change="SelectionChange"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="nickName"
-                align='center'
-                label="名称"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="serialNumber"
-                align='center'
-                label="序列号"
-                :formatter="formatRole"
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="状态"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.online=='0'">离线</span>
-                        <span v-if="scope.row.online=='1'">在线</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="modelName"
-                align='center'
-                label="型号"
-                :formatter="formatRole"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
-                prop="lampNumber"
-                align='center'
-                label="灯具编号"
-                :formatter="formatRole"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="poleName"
-                align='center'
-                label="灯杆"
-                :formatter="formatRole"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="concentratorName"
-                align='center'
-                label="集中器"
-                :formatter="formatRole"
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                prop="remark"
-                label="备注"
-                :formatter="formatRole"
-                align='center'
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                prop="createTime"
-                align='center'
-                label="创建时间"
-                :formatter="formatRole"
-                min-width="150">
-                </el-table-column>
-            </el-table>
+            <div class="section_bottom_bottom">
+                <div class="search" v-if="JurisdictionS.viewLampDeploy">
+                    <el-dropdown size="small" split-button @command="handleCommand">
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='状态';type='3';">状态</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='组网方式';type='4';">组网方式</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="type=='1'">
+                            <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="type=='2'">
+                            <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="type=='3'">
+                            <el-select v-model="online" size='small' style="width:194px;" clearable placeholder="请选择">
+                                <el-option
+                                v-for="item in options0"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </template>
+                        <template v-if="type=='4'">
+                            <el-select v-model="value3" size='small' style="width:194px;" clearable placeholder="请选择">
+                                <el-option
+                                v-for="item in options3"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </template>
+                    </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
+                </div>
+                <div class="section_bottom_right">
+                    <el-button v-if="JurisdictionS.addLamp" @click="addchargingpile(0)" type="primary" plain icon='el-icon-plus' size='small'>添加</el-button>
+                    <el-button v-if="JurisdictionS.delLamp" @click="deletechargingpile" type="primary" plain icon='el-icon-delete' size='small'>删除</el-button>
+                    <el-button  v-if="JurisdictionS.setLampProject" @click="lampBindProjects" type="primary" plain size='small'>绑定项目</el-button>
+                </div>
+            </div>
+            <div>
+                <el-table
+                    :data="tableData"
+                    @row-click="clickRow" 
+                    ref="moviesTable"
+                    border
+                    size='small'
+                    slot="empty"
+                    tooltip-effect="dark"
+                    @selection-change="SelectionChange"
+                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                    <el-table-column
+                    align="center"
+                    type="selection"
+                    width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="nickName"
+                    show-overflow-tooltip
+                    label="名称"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="serialNumber"
+                    show-overflow-tooltip
+                    label="序列号"
+                    :formatter="formatRole"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    show-overflow-tooltip
+                    label="在线状态"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.online=='0'" class="offLine">离线</span>
+                            <span v-if="scope.row.online=='1'" class="onLine">在线</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="modelName"
+                    show-overflow-tooltip
+                    label="型号"
+                    :formatter="formatRole"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    show-overflow-tooltip
+                    label="组网方式"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.modelType=='1'" class="onLineStatus">ZigBee</span>
+                            <span v-if="scope.row.modelType=='2'" class="offLineStatus">NB-IoT</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="lampNumber"
+                    show-overflow-tooltip
+                    label="灯具编号"
+                    :formatter="formatRole"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="poleName"
+                    show-overflow-tooltip
+                    label="所属灯杆"
+                    :formatter="formatRole"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="concentratorName"
+                    show-overflow-tooltip
+                    label="集中器"
+                    :formatter="formatRole"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="remark"
+                    label="备注"
+                    :formatter="formatRole"
+                    show-overflow-tooltip
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="createTime"
+                    show-overflow-tooltip
+                    label="创建时间"
+                    :formatter="formatRole"
+                    min-width="150">
+                    </el-table-column>
+                    <el-table-column
+                    label="操作"
+                    min-width="120">
+                        <template slot-scope="scope">
+                            <el-button v-if="JurisdictionS.editLamp" @click="addchargingpile(1,scope.row)" type="primary" size='mini'>编辑</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="block">
                 <el-pagination
                 background
@@ -141,7 +167,7 @@
         </div>
         <!-- 添加编辑模态框 -->
         <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:500px;">
+            <div class="modal-dialog" style="width:400px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -150,15 +176,15 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label><span class="Required">*</span>名称:</label>
+                            <label><span class="Required">*</span>名&emsp;&emsp;称:</label>
                             <input type="text" v-model="data.nickName" class="form-control" id="nickName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>序列号:</label>
+                            <label><span class="Required">*</span>序&ensp;列&ensp;号:</label>
                             <input type="text" v-model="data.serialNumber" class="form-control" maxlength="16" id="serialNumber" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号">
                         </div>
                         <div class="form-group">
-                            <label><span class="Required">*</span>型号:</label>
+                            <label><span class="Required">*</span>型&emsp;&emsp;号:</label>
                             <el-select v-model="data.modelId" @change="modelChange" size='small' style='width:195px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options"
@@ -173,7 +199,7 @@
                             <input type="text" v-model="data.lampNumber" class="form-control" id="lampNumber" placeholder="请输入灯具编号(自定义)">
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required" v-if="modelType=='1'">*</span>集中器:</label>
+                            <label><span class="Required" v-if="modelType=='1'">*</span>集&ensp;中&ensp;器:</label>
                             <el-select v-model="data.concentratorSn" :disabled="modelType=='2'" clearable size='small' style='width:195px;' placeholder="请选择">
                                 <el-option
                                     v-for="item in myModaltableData"
@@ -186,21 +212,21 @@
                             </el-select>
                         </div>
                         <div class="form-group">
-                            <label>位置:</label>
+                            <label>位&emsp;&emsp;置:</label>
                             <input type="text" v-model="data.coord" :disabled='true' class="form-control" id="email" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="地图选点">
                             <i @click="mapClick" class="iconfont icon-baidumap mappoint"></i>
                         </div>
                         <div class="form-group">
-                            <label>备注:</label>
+                            <label>备&emsp;&emsp;注:</label>
                             <el-input
                                 type="textarea"
                                 style="width:195px"
-                                :rows="2"
+                                :rows="1"
                                 placeholder="请输入内容"
                                 v-model="data.remark">
                             </el-input>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" v-if="addType=='0'">
                             <el-button v-if="JurisdictionS.lampAssociatePole" @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
                         </div> 
                     </div>
@@ -225,24 +251,23 @@
                             @row-click="clickRow2" 
                             ref="multipleTables"
                             border
-                            stripe
                             size='small'
                             tooltip-effect="dark"
                             @selection-change="SelectionChange2"
                             style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                             <el-table-column
+                            align="center"
                             type="selection"
-                            align='center'
                             width="55">
                             </el-table-column>
                             <el-table-column
                             prop="nickName"
-                            align='center'
+                            show-overflow-tooltip
                             label="灯杆名称"
                             width="120">
                             </el-table-column>
                             <el-table-column
-                            align='center'
+                            show-overflow-tooltip
                             label="灯杆类型"
                             width="80">
                                 <template slot-scope="scope">
@@ -252,7 +277,7 @@
                             </el-table-column>
                             <el-table-column
                             prop="coord"
-                            align='center'
+                            show-overflow-tooltip
                             :formatter="formatRole"
                             label="位置"
                             width="150">
@@ -261,7 +286,7 @@
                             prop="remark"
                             label="备注"
                             :formatter="formatRole"
-                            align='center'
+                            show-overflow-tooltip
                             width="162">
                             </el-table-column>
                         </el-table>
@@ -348,32 +373,31 @@
                             :data="PowerfailuretimeData1"
                             ref="multipleTable"
                             border
-                            stripe
                             size='small'
                             tooltip-effect="dark"
                             @selection-change="PowerfailuretimeChange1"
                             style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                             <el-table-column
+                            align="center"
                             type="selection"
-                            align='center'
                             width="55">
                             </el-table-column>
                             <el-table-column
                             prop="nickName"
-                            align='center'
+                            show-overflow-tooltip
                             label="灯具名称"
                             width="150">
                             </el-table-column>
                             <el-table-column
                             prop="location"
-                            align='center'
+                            show-overflow-tooltip
                             label="位置"
                             width="180">
                             </el-table-column>
                             <el-table-column
                             prop="remark"
                             label="备注"
-                            align='center'
+                            show-overflow-tooltip
                             width="182">
                             </el-table-column>
                         </el-table>
@@ -406,32 +430,31 @@
                             :data="PowerfailuretimeData2"
                             ref="multipleTable"
                             border
-                            stripe
                             size='small'
                             tooltip-effect="dark"
                             @selection-change="PowerfailuretimeChange2"
                             style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                             <el-table-column
+                            align="center"
                             type="selection"
-                            align='center'
                             width="55">
                             </el-table-column>
                             <el-table-column
                             prop="nickName"
-                            align='center'
+                            show-overflow-tooltip
                             label="灯具名称"
                             width="150">
                             </el-table-column>
                             <el-table-column
                             prop="location"
-                            align='center'
+                            show-overflow-tooltip
                             label="位置"
                             width="180">
                             </el-table-column>
                             <el-table-column
                             prop="remark"
                             label="备注"
-                            align='center'
+                            show-overflow-tooltip
                             width="182">
                             </el-table-column>
                         </el-table>
@@ -493,6 +516,7 @@ export default {
             options5:[],
             value5:'',
             addType:'0', //判断是添加还是编辑的参数
+            lampSite:'',
             tableData:[],
             site:[],
             pageSize:10,
@@ -503,14 +527,17 @@ export default {
             online:'',
             options0:[
                 {
-                    value: 0,
-                    label: '离线'
-                    }, {
-                    value: 1,
-                    label: '在线'
+                value: 1,
+                label: '在线'
+                },
+                {
+                value: 0,
+                label: '离线'
                 }
             ],
             options:[],
+            options3:[{value: '1',label: 'ZigBee'},{value: '2',label: 'NB-IoT'}],
+            value3:'',
             data:{
                 serialNumber:'',
                 concentratorSn:'',
@@ -551,6 +578,7 @@ export default {
             this.nickName=''
             this.serialNumber=''
             this.online=''
+            this.value3 = ''
         },
         formatRole:function(val, column, cellValue, index){
             if(cellValue == null||cellValue == undefined||cellValue == ''){
@@ -894,7 +922,7 @@ export default {
             this.site = val
         },
         //获取型号列表
-        ModelData(){
+        ModelData(modelId){
             var that = this;
             $.ajax({
                 type:'get',
@@ -910,7 +938,7 @@ export default {
                             that.data.modelId = data.result.mapList[0].id
                         }
                         if(that.addType=='1'){
-                            that.data.modelId = that.site[0].modelId
+                            that.data.modelId = modelId
                         }
                         that.modelChange()
                     }else{
@@ -930,7 +958,7 @@ export default {
             this.concentrator()
         },
         //点击添加或者编辑按钮
-        addchargingpile(val){
+        addchargingpile(val,row){
             if(sessionStorage.projectId=='0'){
                 this.$message({
                     message: '此操作请选择具体项目!',
@@ -958,24 +986,18 @@ export default {
                 this.site2 = []
             }
             if(val=='1'){
-                if(this.site.length==0||this.site.length>=2){
-                   this.$message({
-                        message: '请选择单个灯具进行编辑!',
-                        type: 'error'
-                    });
-                    return; 
-                }
                 this.addType = val
-                this.ModelData()
+                this.ModelData(row.modelId)
+                this.lampSite = row
                 $('#addModal').modal('show')
                 $('#lampNumber').attr('disabled','disabled')
-                that.data.serialNumber = that.site[0].serialNumber
-                that.data.concentratorSn = that.site[0].concentratorSn
-                that.data.nickName = that.site[0].nickName
-                that.data.lampNumber = that.site[0].lampNumber
-                that.data.remark = that.site[0].remark
-                that.data.coord = that.site[0].coord
-                that.referencePosition = that.site[0].coord
+                that.data.serialNumber = row.serialNumber
+                that.data.concentratorSn = row.concentratorSn
+                that.data.nickName = row.nickName
+                that.data.lampNumber = row.lampNumber
+                that.data.remark = row.remark
+                that.data.coord = row.coord
+                that.referencePosition = row.coord
             }
         },
         //点击关联灯杆
@@ -1077,22 +1099,18 @@ export default {
                 url='/v1/solin/lighting/lamp'
                 type = 'post'
                 datas.projectId=sessionStorage.projectId
+                if(this.site2.length==0){
+                    datas.poleId='0'
+                }else{
+                    datas.poleId = that.site2[0].id
+                }
             }
             if(this.addType=='1'){
                 url='/v1/solin/lighting/lamp';
-                datas.id=this.site[0].id
+                datas.id = that.lampSite.id
+                datas.poleId = that.lampSite.poleId
                 type = 'put'
             }
-            if(this.site2.length==''){
-                if(this.addType=='0'){
-                    datas.poleId='0'
-                }else{
-                    datas.poleId=that.site[0].poleId
-                }
-            }else{
-                datas.poleId = this.site2[0].id
-            }
-            if(this.addType=='1'){datas.id=that.site[0].id}
             datas.coord = that.data.coord
             $.ajax({
                 type:type,
@@ -1170,6 +1188,7 @@ export default {
                 });
                 return;
             }
+            that.value5 = Number(sessionStorage.projectId)
             $('#lampBindProjectModal').modal('show')
             this.project()
         },
@@ -1217,7 +1236,6 @@ export default {
                 success:function(data){
                     if(data.errorCode=='0'){
                         that.options5 = data.result.projects
-                        that.value5 = ''
                     }else{
                         that.errorCode(data)
                     }
@@ -1234,7 +1252,8 @@ export default {
                 serialNumber:that.serialNumber,
                 poleId:'',
                 projectIds:sessionStorage.projectId,
-                online:that.online
+                online:that.online,
+                modelType:that.value3
             }
             $.ajax({
                 type:'get',

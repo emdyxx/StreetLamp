@@ -2,88 +2,93 @@
     <!-- 用户设置 -->
     <div class="section">
         <div class="section_top">
-            <el-button @click="operationUserSettings(0)" v-if="JurisdictionS.addPatrolInspector" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button @click="operationUserSettings(1)" v-if="JurisdictionS.editPatrolInspector" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button @click="operationUserSettings(2)" v-if="JurisdictionS.delPatrolInspector" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search" v-if="JurisdictionS.viewPatrolInspector">
-                <el-dropdown size="small" split-button @command="handleCommand">
-                    {{name}}
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="name='姓名';types='1';">姓名</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='编号';types='2';">编号</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='手机号';types='3';">手机号</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <div>
-                    <template v-if="types=='1'">
-                        <el-input v-model="inspectorName" size="small" placeholder="请输入姓名" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="types=='2'">
-                        <el-input v-model="inspectorNumber" size="small" placeholder="请输入编号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="types=='3'">
-                        <el-input v-model="mobile" size="small" placeholder="请输入手机号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                </div>
-                <div>
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div>
+            <p>位置: &nbsp;巡检管理>用户设置</p>
         </div>
         <div class="section_bottom">
-            <el-table
-                :data="tableData"
-                @row-click="clickRow" 
-                ref="moviesTable"
-                border
-                stripe
-                size='small'
-                tooltip-effect="dark"
-                @selection-change="SelectionChange"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="inspectorName"
-                align='center'
-                label="姓名"
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                prop="sex"
-                align='center'
-                label="性别"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.sex=='0'">男</span>
-                        <span v-if="scope.row.sex=='1'">女</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="inspectorNumber"
-                align='center'
-                label="编号"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="mobile"
-                align='center'
-                label="手机号码"
-                :formatter="formatRole"
-                min-width="150">
-                </el-table-column>
-                <el-table-column
-                prop="createTime"
-                label="创建时间"
-                :formatter="formatRole"
-                align='center'
-                min-width="180"
-                show-overflow-tooltip>
-                </el-table-column>
-            </el-table>
+            <div class="section_bottom_bottom">
+                <div class="search" v-if="JurisdictionS.viewPatrolInspector">
+                    <el-dropdown size="small" split-button @command="handleCommand">
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='姓名';types='1';">姓名</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='编号';types='2';">编号</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='手机号';types='3';">手机号</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="types=='1'">
+                            <el-input v-model="inspectorName" size="small" placeholder="请输入姓名" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="types=='2'">
+                            <el-input v-model="inspectorNumber" size="small" placeholder="请输入编号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="types=='3'">
+                            <el-input v-model="mobile" size="small" placeholder="请输入手机号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                    </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
+                </div>
+                <div class="section_bottom_right">
+                    <el-button @click="operationUserSettings(0)" v-if="JurisdictionS.addPatrolInspector" type="primary" plain icon='el-icon-plus' size='small'>添加</el-button>
+                    <el-button @click="operationUserSettings(1)" v-if="JurisdictionS.editPatrolInspector" type="primary" plain icon="el-icon-edit" size='small'>编辑</el-button>
+                    <el-button @click="operationUserSettings(2)" v-if="JurisdictionS.delPatrolInspector" type="primary" plain icon='el-icon-delete' size='small'>删除</el-button>
+                </div>
+            </div>
+            <div>
+                <el-table
+                    :data="tableData"
+                    @row-click="clickRow" 
+                    ref="moviesTable"
+                    border
+                    size='small'
+                    tooltip-effect="dark"
+                    @selection-change="SelectionChange"
+                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                    <el-table-column
+                    align="center"
+                    type="selection"
+                    width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="inspectorName"
+                    show-overflow-tooltip
+                    label="姓名"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="sex"
+                    show-overflow-tooltip
+                    label="性别"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.sex=='0'">男</span>
+                            <span v-if="scope.row.sex=='1'">女</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="inspectorNumber"
+                    show-overflow-tooltip
+                    label="编号"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="mobile"
+                    show-overflow-tooltip
+                    label="手机号码"
+                    :formatter="formatRole"
+                    min-width="150">
+                    </el-table-column>
+                    <el-table-column
+                    prop="createTime"
+                    label="创建时间"
+                    :formatter="formatRole"
+                    min-width="180"
+                    show-overflow-tooltip>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="block">
                 <el-pagination
                 background
@@ -112,7 +117,7 @@
                             <input v-model="data.mobile" type="text" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入手机号码">
                         </div>
                         <div class="form-group" style='position:relative;'>
-                            <label><span class="Required">*</span>密码:</label>
+                            <label><span class="Required">*</span>密&emsp;&emsp;码:</label>
                             <input v-model="data.loginPwd" type="password" class="form-control password" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入密码">
                             <el-button @click="Password" type="warning" size="small" icon="el-icon-edit" circle style="position:absolute;right:20px;top:0;margin-top:0;"></el-button>
                         </div>
@@ -129,14 +134,14 @@
                             <input v-model="data.inspectorNumber" type="text" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入巡检员编号">
                         </div>
                         <div class="form-group">
-                            <label>性别:</label>
+                            <label>性&emsp;&emsp;别:</label>
                             <el-radio-group v-model="data.sex">
                                 <el-radio :label="0">男</el-radio>
                                 <el-radio :label="1">女</el-radio>
                             </el-radio-group>
                         </div>
                         <div class="form-group">
-                            <label>类别:</label>
+                            <label>类&emsp;&emsp;别:</label>
                             <el-radio-group v-model="data.inspectorType" style="margin-left:5px;">
                                 <el-radio :label="1">普通巡检员</el-radio>
                                 <el-radio :label="2" style="margin-left:0;">管理员</el-radio>

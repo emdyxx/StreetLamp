@@ -9,38 +9,39 @@ export default {
 	name: 'App',
 	created(){
 		// localStorage.serverurl = 'http://192.168.70.17:8071/SD-IOT-API'
-		localStorage.serverurl = 'http://192.168.10.9:8071/SD-IOT-API'
+		// localStorage.serverurl = 'http://192.168.10.9:8071/SD-IOT-API'
 		// localStorage.serverurl = 'http://192.168.70.10:8071/SD-IOT-API'
 		// localStorage.serverurl = 'http://192.168.10.95:8071/SD-IOT-API'
+		// localStorage.serverurl = 'http://192.168.70.19:8071/SD-IOT-API'
 
-		// $.ajax({
-		// 	type:'post',
-		// 	async:true,
-		// 	xhrFields:{withCredentials:true},
-		// 	url:'json/url.json',
-		// 	dataType:'json',
-		// 	success:function(data){
-		// 		if(data.url==''||data.url==undefined||data.url==null){
-		// 			var url = window.location.href
-		// 			url = url.split('/')
-		// 			localStorage.serverurl = url[0]+'//'+url[2]+'/SD-IOT-API';
-		// 			localStorage.serverurl2 = url[0]+'//'+url[2]+'/solin-platform'
-		// 		}else{
-		// 			localStorage.serverurl = data.url;
-		// 		}  
-		// 	}
-		// })
+		$.ajax({
+			type:'get',
+			async:true,
+			xhrFields:{withCredentials:true},
+			url:'json/url.json', 
+			dataType:'json',
+			success:function(data){
+				if(data.url==''||data.url==undefined||data.url==null){
+					var url = window.location.href
+					url = url.split('/')
+					localStorage.serverurl = url[0]+'//'+url[2]+'/SD-IOT-API';
+					localStorage.serverurl2 = url[0]+'//'+url[2]+'/solin'
+				}else{
+					localStorage.serverurl = data.url;
+				}  
+			}
+		})
 
-		// $.ajax({
-		// 	type:'post',
-		// 	async:true,
-		// 	xhrFields:{withCredentials:true},
-		// 	url:'json/versionNumber.json',
-		// 	dataType:'json',
-		// 	success:function(data){
-		// 		localStorage.versionNumber = data.versionNumber;
-		// 	}
-		// })
+		$.ajax({
+			type:'get',
+			async:true,
+			xhrFields:{withCredentials:true},
+			url:'json/versionNumber.json',
+			dataType:'json',
+			success:function(data){
+				localStorage.versionNumber = data.versionNumber;
+			}
+		})
   },
 }
 </script>
@@ -49,7 +50,7 @@ export default {
 #app {
   width:100%;
   height:100%;
-  font-family: "PingFang SC","Helvetica Neue",Helvetica,"Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  font-family: "Microsoft YaHei","微软雅黑","PingFang SC","Helvetica Neue",Helvetica,"Hiragino Sans GB",Arial,sans-serif;
   /* -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; */
   color: #2c3e50;

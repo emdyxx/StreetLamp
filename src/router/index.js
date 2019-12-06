@@ -31,6 +31,8 @@ import solinRelayDeploy from '@/components/lamppost/deploy/solinRelayDeploy'
 import solinCameraDeploy from '@/components/lamppost/deploy/solinCameraDeploy'
 import solinIlluminance from '@/components/lamppost/deploy/solinIlluminance'
 import solinSceneryControllerDeploy from '@/components/lamppost/deploy/solinSceneryControllerDeploy'
+import solinRadarDeploy from '@/components/lamppost/deploy/solinRadarDeploy'
+
 
 import solinScreenManage from '@/components/lamppost/equipment/solinScreenManage'
 import solinEnvManage from '@/components/lamppost/equipment/solinEnvManage'
@@ -43,6 +45,8 @@ import solinCameraManage from '@/components/lamppost/equipment/solinCameraManage
 import solinIlluminanceManage from '@/components/lamppost/equipment/solinIlluminanceManage'
 import solinSceneryControllerManage from '@/components/lamppost/equipment/solinSceneryControllerManage'
 import SceneryHistory from '@/components/lamppost/equipment/SceneryHistory'
+import solinRadarManage from '@/components/lamppost/equipment/solinRadarManage'
+
 
 import DeviceLog from '@/components/lamppost/DeviceLog/DeviceLog' //设备日志
 import solinPoleLog from '@/components/lamppost/DeviceLog/solinPoleLog' //灯杆日志
@@ -56,6 +60,8 @@ import solinConcentratorLog from '@/components/lamppost/DeviceLog/solinConcentra
 import solinCameraLog from '@/components/lamppost/DeviceLog/solinCameraLog' //摄像头日志
 import solinIlluminanceLog from '@/components/lamppost/DeviceLog/solinIlluminanceLog' //光照度日志
 import solinSceneryControllerLog from '@/components/lamppost/DeviceLog/solinSceneryControllerLog' //光照度日志
+import solinRadarLog from '@/components/lamppost/DeviceLog/solinRadarLog' //光照度日志
+
 
 import mapHomg from '@/components/map/mapHomg' //地图主页
 import GIS from '@/components/map/DTmap/GIS' //地图主页
@@ -97,8 +103,8 @@ var error = {}
 $.ajax({
 	type: 'get',
 	async: false,
-	url: '../static/error.json',
-	// url:'../solin-platform/static/error.json',
+	// url: '../static/error.json',
+	url:'../solin/static/error.json',
 	dataType: "text",
 	success: function (data) {
 		error = eval('(' + data + ')');
@@ -107,8 +113,8 @@ $.ajax({
 Vue.prototype.errorCode = function (data) {
 	if (data.errorCode == '11009') {
 		localStorage.messageNumber = Number(localStorage.messageNumber) + 1
-		console.log(localStorage.messageNumber)
 		if (localStorage.messageNumber > 1) {
+			this.$router.push({ 'path': '/' })
 			return
 		} else {
 			this.$message({
@@ -136,6 +142,7 @@ Vue.prototype.errorCode = function (data) {
 Vue.prototype.Verification = function (val, type) {
 
 }
+
 export default new Router({
 	routes: [
 		{
@@ -238,6 +245,11 @@ export default new Router({
 							name: 'SceneryHistory',
 							component: SceneryHistory,
 						},
+						{
+							path: '/solinRadarManage',
+							name: 'solinRadarManage',
+							component: solinRadarManage,
+						},
 					]
 				},
 				{
@@ -294,6 +306,11 @@ export default new Router({
 							path: '/solinSceneryControllerDeploy',
 							name: 'solinSceneryControllerDeploy',
 							component: solinSceneryControllerDeploy,
+						},
+						{
+							path: '/solinRadarDeploy',
+							name: 'solinRadarDeploy',
+							component: solinRadarDeploy,
 						},
 					]
 				},
@@ -356,6 +373,11 @@ export default new Router({
 							path: '/solinSceneryControllerLog',
 							name: 'solinSceneryControllerLog',
 							component: solinSceneryControllerLog,
+						},
+						{
+							path: '/solinRadarLog',
+							name: 'solinRadarLog',
+							component: solinRadarLog,
 						},
 					]
 				},

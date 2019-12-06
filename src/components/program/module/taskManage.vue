@@ -1,63 +1,69 @@
 <template>
-    <div class="taskManage">
-        <div class="taskManage_top">
-            <span>任务管理</span>
-            <div class="operation">
-                <el-button v-if='addTask' @click="addTasks(0)" size="small" icon='el-icon-plus'>创建任务</el-button>
+    <div class="section">
+        <div class="section_top">
+            <p style="left:20px;">位置: &nbsp;设备操作>LED屏幕>节目制作>任务管理</p>
+            <div>
+                <span @click="ScreenManage">屏幕操作</span>
+                <span style="background: #4382e6;color:white;">节目制作</span>
             </div>
         </div>
-        <div class="taskManage_bottom">
-            <el-table
-                :data="tableData" 
-                border
-                stripe
-                size='small'
-                tooltip-effect="dark"
-                style="width: 100%;overflow:auto;max-height:90%;">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="nickName"
-                align='center'
-                label="名称"
-                min-width="150">
-                </el-table-column>
-                <el-table-column
-                prop="publish"
-                align='center'
-                label="状态"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.publish==0">未发布</span>
-                        <span v-if="scope.row.publish==1">已发布</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="createTime"
-                label="创建时间"
-                align='center'
-                :formatter="formatRole"
-                min-width="180">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="操作"
-                min-width="180">
-                    <template slot-scope="scope">
-                        <el-button v-if='editTask' size="small" @click="editTasks(scope.row)">编辑任务</el-button>
-                        <el-dropdown size="small" trigger="click" split-button>
-                            更多
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item v-if='delTask' @click.native="handleCommand(1,scope.row.id)">删除任务</el-dropdown-item>
-                                <el-dropdown-item @click.native="handleCommand(2,scope.row.id)">发布任务</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                    </template>
-                </el-table-column>
-            </el-table>
+        <div class="section_bottom">
+            <div class="section_bottom_bottom">
+                <div class="section_bottom_right" v-if="addTask">
+                    <el-button @click="addTasks(0)" size="small" icon='el-icon-plus' type="primary" plain>创建任务</el-button>
+                </div>
+            </div>
+            <div>
+                <el-table
+                    :data="tableData" 
+                    border
+                    size='small'
+                    tooltip-effect="dark"
+                    style="width: 100%;overflow:auto;max-height:90%;">
+                    <el-table-column
+                    type="selection"
+                    align="center"
+                    width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="nickName"
+                    show-overflow-tooltip
+                    label="名称"
+                    min-width="170">
+                    </el-table-column>
+                    <el-table-column
+                    prop="publish"
+                    show-overflow-tooltip
+                    label="状态"
+                    min-width="140">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.publish==0" class="offLine">未发布</span>
+                            <span v-if="scope.row.publish==1" class="onLine">已发布</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="createTime"
+                    label="创建时间"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    min-width="190">
+                    </el-table-column>
+                    <el-table-column
+                    label="操作"
+                    min-width="180">
+                        <template slot-scope="scope">
+                            <el-button v-if='editTask' size="mini" @click="editTasks(scope.row)" type="primary">编辑任务</el-button>
+                            <el-dropdown size="mini" trigger="click" split-button type="primary">
+                                更多
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item v-if='delTask' @click.native="handleCommand(1,scope.row.id)">删除任务</el-dropdown-item>
+                                    <el-dropdown-item @click.native="handleCommand(2,scope.row.id)">发布任务</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="block">
                 <el-pagination
                 @size-change="sizechange"
@@ -91,20 +97,23 @@
                                 :data="ProgramTable" 
                                 ref="ProgramTable"
                                 border
-                                stripe
                                 size='small'
                                 tooltip-effect="dark"
                                 style="width: 100%;height:100%;overflow:auto;"
                                 @selection-change="programTableChange">
-                                <el-table-column type="selection" align='center' width="55"></el-table-column>
+                                <el-table-column 
+                                type="selection"  
+                                width="55"
+                                align="center">
+                                </el-table-column>
                                 <el-table-column
                                 prop="nickName"
-                                align='center'
+                                
                                 label="节目名称"
                                 min-width="100">
                                 </el-table-column>
                                 <el-table-column
-                                align='center'
+                                
                                 label="宽:高"
                                 min-width="60">
                                     <template slot-scope="scope">
@@ -113,13 +122,13 @@
                                 </el-table-column>
                                 <el-table-column
                                 prop="createTime"
-                                align='center'
+                                
                                 label="创建时间"
                                 min-width="100">
                                 </el-table-column>
                                 <el-table-column
                                 label="节目管理"
-                                align='center'
+                                
                                 v-if="type=='0'"
                                 show-overflow-tooltip>
                                     <template slot-scope="scope">
@@ -255,28 +264,31 @@
                         :data="ScreenTable" 
                         ref="ProgramTable"
                         border
-                        stripe
                         size='small'
                         tooltip-effect="dark"
                         style="width: 100%;height:100%;overflow:auto;"
                         @selection-change="ScreenTableChange">
-                        <el-table-column type="selection" align='center' width="55"></el-table-column>
+                        <el-table-column 
+                        type="selection" 
+                        align="center" 
+                        width="55">
+                        </el-table-column>
                         <el-table-column
                         prop="nickName"
-                        align='center'
+                        show-overflow-tooltip
                         label="名称"
                         :formatter="formatRole"
                         min-width="80">
                         </el-table-column>
                         <el-table-column
                         prop="serialNumber"
-                        align='center'
+                        show-overflow-tooltip
                         label="序列号"
                         :formatter="formatRole"
                         min-width="125">
                         </el-table-column>
                         <el-table-column
-                        align='center'
+                        show-overflow-tooltip
                         label="在线状态"
                         min-width="80">
                             <template slot-scope="scope">
@@ -285,7 +297,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                        align='center'
+                        show-overflow-tooltip
                         label="屏幕状态"
                         min-width="80">
                             <template slot-scope="scope">
@@ -295,7 +307,6 @@
                         </el-table-column>
                         <el-table-column
                         prop="taskName"
-                        align='center'
                         label="当前任务"
                         :formatter="formatRole"
                         show-overflow-tooltip>
@@ -359,25 +370,24 @@
                                 :data="editTaskData" 
                                 ref="ProgramTable"
                                 border
-                                stripe
                                 size='small'
                                 tooltip-effect="dark"
                                 style="width: 100%;height:100%;margin-top:15px;overflow:auto;">
                                 <el-table-column
                                 prop="programName"
-                                align='center'
+                                
                                 label="节目名称"
                                 min-width="80">
                                 </el-table-column>
                                 <el-table-column
                                 prop="programSize"
-                                align='center'
+                                
                                 label="节目大小"
                                 min-width="50">
                                 </el-table-column>
                                 <el-table-column
                                 label="顺序调整"
-                                align='center'
+                                
                                 min-width="50">
                                     <template slot-scope="scope">
                                         <i @click="move(0,scope.row)" class='el-icon-sort-up' style="font-size:25px;"></i>
@@ -386,7 +396,7 @@
                                 </el-table-column>
                                 <el-table-column
                                 label="节目管理"
-                                align='center'
+                                
                                 show-overflow-tooltip>
                                     <template slot-scope="scope">
                                         <el-button @click="SetUp(1,scope.row)" type="text" size="small">设置</el-button>
@@ -904,6 +914,7 @@ export default {
                         });
                         that.dialogVisible = false
                         that.dialogVisible2 = false;
+                        that.ready()
                     }else{
                         that.errorCode(data)
                     }
@@ -1005,6 +1016,10 @@ export default {
                     }
                 }
             })
+        },
+        //屏幕--节目管理按钮
+        ScreenManage(){
+            this.$router.push({path:'/solinScreenManage'})
         },
     },
     created(){

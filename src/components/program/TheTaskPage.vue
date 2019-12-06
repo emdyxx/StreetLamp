@@ -22,7 +22,7 @@
         <div class="TheTaskPage_right">
             <router-view></router-view>
         </div>
-        <div @click="Returns" class="Return iconfont icon-fanhuishangyiji"></div>
+        <!-- <div @click="Returns" class="Return iconfont icon-fanhuishangyiji"></div> -->
     </div>
 </template>
 
@@ -87,9 +87,9 @@ export default {
                 }
             })
         },
-        Returns(){
-            this.$router.push({path:'solinScreenManage'})
-        },
+        // Returns(){
+        //     this.$router.push({path:'solinScreenManage'})
+        // },
     },
     created(){
         if(sessionStorage.type=='2'){
@@ -102,8 +102,8 @@ export default {
 
 <style scoped>
 .TheTaskPage{width: 100%;height: 100%;}
-.TheTaskPage>div{box-shadow: -0.5px 1px 3px gray;}
-.TheTaskPage_left{position:absolute;top:10px;bottom:0;width:110px;}
+/* .TheTaskPage>div{box-shadow: -0.5px 1px 3px gray;} */
+.TheTaskPage_left{position:absolute;top:0;bottom:0;width:110px;}
 
 .TheTaskPage_left>ul>li{width: 110px;height: 110px;text-align: center;line-height: 30px;font-size: 16px;padding-top: 30px;}
 .TheTaskPage_left>ul>li:nth-of-type(1)>i{font-size: 22px;}
@@ -111,8 +111,8 @@ export default {
 .TheTaskPage_left>ul>li:nth-of-type(3)>i{font-size: 25px;}
 .TheTaskPage_left>ul>li:nth-of-type(4)>i{font-size: 28px;}
 
-.TheTaskPage_right{position: absolute;left: 125px;right: 10px;top:10px;bottom: 0;}
-.Return{position: absolute;right: 20px;top: -47px;width: 35px;height: 35px;line-height: 30px;border-radius: 50%;color: white;border: 2px solid white;cursor: pointer;text-align: center;font-size: 22px;}
+.TheTaskPage_right{position: absolute;left: 108px;right: 0;top:0;bottom: 0;border-left: 7px solid #eaeef2;}
+/* .Return{position: absolute;right: 20px;top: -53px;width: 35px;height: 35px;line-height: 30px;border-radius: 50%;color: white;border: 2px solid white;cursor: pointer;text-align: center;font-size: 22px;} */
 </style>
 <style lang='less'>
 .TheTaskPage_left{

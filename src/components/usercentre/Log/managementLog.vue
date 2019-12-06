@@ -29,46 +29,44 @@
                         @row-click="clickRow" 
                         ref="moviesTable"
                         border
-                        stripe
                         size='small'
                         tooltip-effect="dark"
                         style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                         <el-table-column
                         type="selection"
-                        align='center'
+                        align="center"
                         width="55">
                         </el-table-column>
                         <el-table-column
                         prop="username"
-                        align='center'
+                        show-overflow-tooltip
                         label="登录账号"
                         min-width="150">
                         </el-table-column>
                         <el-table-column
                         prop="ipAddress"
-                        align='center'
+                        show-overflow-tooltip
                         label="登录IP"
                         min-width="150">
                         </el-table-column>
                         <el-table-column
-                        align='center'
+                        show-overflow-tooltip
                         label="登录状态"
                         min-width="180">
                             <template slot-scope="scope">
-                                <span v-if="scope.row.status=='0'">成功</span>
-                                <span v-if="scope.row.status=='1'">失败</span>
+                                <span v-if="scope.row.status=='0'" class="onLine">成功</span>
+                                <span v-if="scope.row.status=='1'" class="Warning">失败</span>
                             </template>
                         </el-table-column>
                         <el-table-column
                         prop="createTime"
-                        align='center'
+                        show-overflow-tooltip
                         label="登录时间"
                         min-width="180">
                         </el-table-column>
                         <el-table-column
                         prop="content"
                         label="登录明细"
-                        align='center'
                         show-overflow-tooltip>
                         </el-table-column>
                     </el-table>
@@ -131,29 +129,28 @@
                         @row-click="clickRow2" 
                         ref="moviesTable2"
                         border
-                        stripe
                         size='small'
                         tooltip-effect="dark"
                         style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                         <el-table-column
                         type="selection"
-                        align='center'
+                        align="center"
                         width="55">
                         </el-table-column>
                         <el-table-column
                         prop="username"
-                        align='center'
+                        
                         label="用户名"
                         min-width="180">
                         </el-table-column>
                         <el-table-column
                         prop="orgName"
-                        align='center'
+                        
                         label="机构名称"
                         min-width="180">
                         </el-table-column>
                         <el-table-column
-                        align='center'
+                        
                         label="操作模块"
                         min-width="180">
                             <template slot-scope="scope">
@@ -163,7 +160,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                        align='center'
+                        
                         label="操作类别"
                         min-width="180">
                             <template slot-scope="scope">
@@ -175,14 +172,14 @@
                         </el-table-column>
                         <el-table-column
                         prop="createTime"
-                        align='center'
+                        
                         label="操作时间"
                         min-width="180">
                         </el-table-column>
                         <el-table-column
                         prop="content"
                         label="描述"
-                        align='center'
+                        
                         min-width="180"
                         show-overflow-tooltip>
                         </el-table-column>

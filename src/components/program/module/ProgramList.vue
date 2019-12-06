@@ -1,90 +1,97 @@
 <template>
     <!-- 节目管理 -->
-    <div class="ProgramList">
-        <div class="ProgramList_top">                       
-            <span>节目管理</span>
-            <div class="operation">
-                <el-button v-if="addProgram" @click="addPrograms" size="small" icon='el-icon-plus'>创建节目</el-button>
+    <div class="section">
+        <div class="section_top">                       
+            <p style="left:20px;">位置: &nbsp;设备操作>LED屏幕>节目制作>节目管理</p>
+            <div>
+                <span @click="ScreenManage">屏幕操作</span>
+                <span style="background: #4382e6;color:white;">节目制作</span>
             </div>
         </div>
-        <div class="ProgramList_bottom">
-            <el-table
-                :data="tableData"
-                size='small'
-                style="width: 100%;overflow:auto;max-height:90%;">
-                <el-table-column
-                prop="nickName"
-                align='center'
-                label="节目名称"
-                min-width="150">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="节目类型"
-                min-width="120">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.programType=='0'">简易节目</span>
-                        <span v-if="scope.row.programType=='1'">高级节目</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="programSizeM"
-                align='center'
-                label="大小"
-                min-width="60">
-                </el-table-column>
-                <el-table-column
-                prop="width"
-                align='center'
-                label="宽(像素)"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="height"
-                align='center'
-                label="高(像素)"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="audit"
-                align='center'
-                label="审核状态"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.audit=='0'">未审核</span>
-                        <span v-if="scope.row.audit=='1'">审核中</span>
-                        <span v-if="scope.row.audit=='2'" style="color:#4dd3c5">已通过</span>
-                        <el-tooltip class="item" effect="dark" :content=scope.row.auditContent placement="top">
-                            <span v-if="scope.row.audit=='3'" style="color:red;">未通过</span>
-                        </el-tooltip>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="createTime"
-                align='center'
-                label="创建时间"
-                min-width="180">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="操作"
-                min-width="180">
-                    <template slot-scope="scope">
-                        <el-button v-if="editProgram" @click="EditPargram(scope.row)" size="small">编辑节目</el-button>
-                        <el-dropdown size="small" trigger="click" split-button>
-                            更多
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item v-if="delProgram" @click.native="handleCommand(1,scope.row.id)">删除节目</el-dropdown-item>
-                                <!-- <el-dropdown-item v-if="editProgram" @click.native="handleCommand(2,scope.row.id)">重命名</el-dropdown-item> -->
-                                <el-dropdown-item v-if="shortcutTask" @click.native="handleCommand(3,scope.row.id)">生成任务</el-dropdown-item>
-                                <el-dropdown-item v-if="submitReview" @click.native="handleCommand(4,scope.row.id)">提交审核</el-dropdown-item>
-                                <el-dropdown-item v-if="review" @click.native="handleCommand(5,scope.row.id)">审核节目</el-dropdown-item>
-                                <el-dropdown-item @click.native="handleCommand(6,scope.row.id)">预览</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                    </template>
-                </el-table-column>
-            </el-table>
+        <div class="section_bottom">
+            <div class="section_bottom_bottom">
+                <div class="section_bottom_right" v-if="addProgram">
+                    <el-button @click="addPrograms" size="small" icon='el-icon-plus' type="primary" plain>创建节目</el-button>
+                </div>
+            </div>
+            <div>
+                <el-table
+                    :data="tableData"
+                    size='small'
+                    border
+                    style="width: 100%;overflow:auto;max-height:90%;">
+                    <el-table-column
+                    prop="nickName"
+                    show-overflow-tooltip
+                    label="节目名称"
+                    min-width="150">
+                    </el-table-column>
+                    <el-table-column
+                    show-overflow-tooltip
+                    label="节目类型"
+                    min-width="120">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.programType=='0'">简易节目</span>
+                            <span v-if="scope.row.programType=='1'">高级节目</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="programSizeM"
+                    show-overflow-tooltip
+                    label="大小"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="width"
+                    show-overflow-tooltip
+                    label="宽(像素)"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="height"
+                    show-overflow-tooltip
+                    label="高(像素)"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="audit"
+                    show-overflow-tooltip
+                    label="审核状态"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.audit=='0'">未审核</span>
+                            <span v-if="scope.row.audit=='1'">审核中</span>
+                            <span v-if="scope.row.audit=='2'" style="color:#4dd3c5">已通过</span>
+                            <el-tooltip class="item" effect="dark" :content=scope.row.auditContent placement="top">
+                                <span v-if="scope.row.audit=='3'" style="color:red;">未通过</span>
+                            </el-tooltip>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="createTime"
+                    show-overflow-tooltip
+                    label="创建时间"
+                    min-width="180">
+                    </el-table-column>
+                    <el-table-column
+                    label="操作"
+                    min-width="180">
+                        <template slot-scope="scope">
+                            <el-button v-if="editProgram" @click="EditPargram(scope.row)" type="primary" size="mini">编辑节目</el-button>
+                            <el-dropdown size="mini" trigger="click" split-button type="primary">
+                                更多
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item @click.native="handleCommand(6,scope.row.id)">预览</el-dropdown-item>
+                                    <el-dropdown-item v-if="delProgram" @click.native="handleCommand(1,scope.row.id)">删除节目</el-dropdown-item>
+                                    <el-dropdown-item v-if="submitReview" @click.native="handleCommand(4,scope.row.id)">提交审核</el-dropdown-item>
+                                    <el-dropdown-item v-if="review" @click.native="handleCommand(5,scope.row.id)">审核节目</el-dropdown-item>
+                                    <el-dropdown-item v-if="shortcutTask" @click.native="handleCommand(3,scope.row.id)">生成任务</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="block">
                 <el-pagination
                 @size-change="sizechange"
@@ -547,6 +554,10 @@ export default {
                 }
             })
         },
+        //屏幕--节目管理按钮
+        ScreenManage(){
+            this.$router.push({path:'/solinScreenManage'})
+        },
     },
     created(){
         this.Jurisdiction()
@@ -556,10 +567,10 @@ export default {
 </script>
 <style scoped>
 .ProgramList{width: 100%;height: 100%;}
-.ProgramList_top{height: 70px;border-bottom: 1px solid #efefef;padding-left: 20px;display: flex;align-items: center;position: relative;}
+.ProgramList_top{height: 50px;border-bottom: 1px solid #efefef;padding-left: 20px;display: flex;align-items: center;position: relative;}
 .ProgramList_top>span{font-size: 18px;line-height: 70px;}
 .operation{position: absolute;right: 15px;;height: 100%;line-height: 70px;}
-.ProgramList_bottom{position: absolute;top: 75px;bottom: 5px;left: 5px;right: 5px;}
+.ProgramList_bottom{position: absolute;top: 55px;bottom: 5px;left: 5px;right: 5px;}
 
 .ProgramSize{width: 100%;display: flex;}
 .ProgramSize>div{width: 167px;height: 238px;box-sizing: border-box;margin: 0 15px 0 15px;border: 1px solid #b0b0b0;text-align: center;font-size: 14px;line-height: 238px;cursor: default;}

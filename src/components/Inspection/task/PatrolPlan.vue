@@ -2,68 +2,73 @@
     <!-- 巡检计划 -->
     <div class="section">
         <div class="section_top">
-            <el-button v-if="JurisdictionS.addPatrolPlan" @click="PatrolPlan(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="JurisdictionS.editPatrolPlan" @click="PatrolPlan(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="JurisdictionS.delPatrolPlan" @click="PatrolPlan(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search" v-if="JurisdictionS.viewPatrolPlan">
-                <el-dropdown size="small" split-button @command="handleCommand">
-                    {{name}}
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="name='计划名称';types='1';">计划名称</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <div>
-                    <template v-if="types=='1'">
-                        <el-input v-model="planName" size="small" placeholder="请输入计划名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                </div>
-                <div>
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div>
+            <p>位置: &nbsp;巡检管理>巡检计划</p>
         </div>
         <div class="section_bottom">
-            <el-table
-                :data="tableData"
-                @row-click="clickRow" 
-                ref="moviesTable"
-                border
-                stripe
-                size='small'
-                tooltip-effect="dark"
-                @selection-change="SelectionChange"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="planName"
-                align='center'
-                label="计划名称"
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                prop="routeName"
-                align='center'
-                label="巡检路线"
-                min-width="150">
-                </el-table-column>
-                <el-table-column
-                prop="inspectorName"
-                align='center'
-                label="巡检员"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="createTime"
-                label="创建时间"
-                align='center'
-                min-width="180"
-                show-overflow-tooltip>
-                </el-table-column>
-            </el-table>
+            <div class="section_bottom_bottom">
+                <div class="search" v-if="JurisdictionS.viewPatrolPlan">
+                    <el-dropdown size="small" split-button @command="handleCommand">
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='计划名称';types='1';">计划名称</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="types=='1'">
+                            <el-input v-model="planName" size="small" placeholder="请输入计划名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                    </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
+                </div>
+                <div class="section_bottom_right">
+                    <el-button v-if="JurisdictionS.addPatrolPlan" @click="PatrolPlan(0)" plain type="primary" icon='el-icon-plus' size='small'>添加</el-button>
+                    <el-button v-if="JurisdictionS.editPatrolPlan" @click="PatrolPlan(1)" plain type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
+                    <el-button v-if="JurisdictionS.delPatrolPlan" @click="PatrolPlan(2)" plain type="primary" icon='el-icon-delete' size='small'>删除</el-button>
+                </div>
+            </div>
+            <div>
+                <el-table
+                    :data="tableData"
+                    @row-click="clickRow" 
+                    ref="moviesTable"
+                    border
+                    size='small'
+                    tooltip-effect="dark"
+                    @selection-change="SelectionChange"
+                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                    <el-table-column
+                    align="center"
+                    type="selection"
+                    width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="planName"
+                    show-overflow-tooltip
+                    label="计划名称"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="routeName"
+                    show-overflow-tooltip
+                    label="巡检路线"
+                    min-width="150">
+                    </el-table-column>
+                    <el-table-column
+                    prop="inspectorName"
+                    show-overflow-tooltip
+                    label="巡检员"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="createTime"
+                    label="创建时间"
+                    min-width="180"
+                    show-overflow-tooltip>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="block">
                 <el-pagination
                 background
@@ -229,26 +234,24 @@
                             <el-table
                                 :data="tableData2"
                                 border
-                                stripe
                                 size='small'
                                 tooltip-effect="dark"
                                 @selection-change="customChange"
                                 style="width: 100%;margin-top:5px;">
                                 <el-table-column
+                                align="center"
                                 type="selection"
-                                align='center'
                                 width="55">
                                 </el-table-column>
                                 <el-table-column
                                 prop="beginTime"
-                                align='center'
+                                show-overflow-tooltip
                                 label="开始时间"
                                 min-width="100">
                                 </el-table-column>
                                 <el-table-column
                                 prop="finishTime"
                                 label="结束时间"
-                                align='center'
                                 min-width="100"
                                 show-overflow-tooltip>
                                 </el-table-column>
@@ -300,32 +303,30 @@
                     <el-table
                         :data="tableData3"
                         border
-                        stripe
                         size='small'
                         tooltip-effect="dark"
                         @selection-change="SelectionChange3"
                         style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                         <el-table-column
+                        align="center"
                         type="selection"
-                        align='center'
                         width="55">
                         </el-table-column>
                         <el-table-column
                         prop="routeName"
-                        align='center'
+                        show-overflow-tooltip
                         label="路线名称"
                         min-width="80">
                         </el-table-column>
                         <el-table-column
                         prop="createTime"
-                        align='center'
+                        show-overflow-tooltip
                         label="创建时间"
                         min-width="80">
                         </el-table-column>
                         <el-table-column
                         prop="remark"
                         label="备注说明"
-                        align='center'
                         show-overflow-tooltip>
                         </el-table-column>
                     </el-table>
@@ -334,38 +335,36 @@
                     <el-table
                         :data="tableData3"
                         border
-                        stripe
                         size='small'
                         tooltip-effect="dark"
                         @selection-change="SelectionChange3"
                         style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                         <el-table-column
+                        align="center"
                         type="selection"
-                        align='center'
                         width="55">
                         </el-table-column>
                         <el-table-column
                         prop="inspectorName"
-                        align='center'
+                        show-overflow-tooltip
                         label="姓名"
                         min-width="120">
                         </el-table-column>
                         <el-table-column
                         prop="inspectorNumber"
-                        align='center'
+                        show-overflow-tooltip
                         label="编号"
                         min-width="80">
                         </el-table-column>
                         <el-table-column
                         prop="mobile"
-                        align='center'
+                        show-overflow-tooltip
                         label="手机号码"
                         min-width="100">
                         </el-table-column>
                         <el-table-column
                         prop="createTime"
                         label="创建时间"
-                        align='center'
                         show-overflow-tooltip>
                         </el-table-column>
                     </el-table>

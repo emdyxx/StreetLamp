@@ -9,26 +9,25 @@
                 :value="item.value">
                 </el-option>
             </el-select>
-            <el-button @click="backtrack" type="warning" size='small' icon="el-icon-arrow-left" style="position:absolute;top:5px;right:30px;z-index:9999;">返回</el-button>
+            <el-button @click="backtrack" type="primary" plain size='small' icon="el-icon-arrow-left" style="position:absolute;top:5px;right:30px;z-index:9999;">返回</el-button>
         </div>
         <div class="SceneryHistory_bottom">
             <el-table
                 :data="tableData"
                 ref="moviesTable"
                 border
-                stripe
                 size='small'
                 tooltip-effect="dark"
                 style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                 <el-table-column
                 prop="electricPower"
-                align='center'
+                show-overflow-tooltip
                 label="电量"
                 :formatter="formatRole"
                 min-width="80">
                 </el-table-column>
                 <el-table-column
-                align='center'
+                show-overflow-tooltip
                 label="太阳能电流/电压/功率"
                 min-width="120">
                     <template slot-scope="scope">
@@ -36,7 +35,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                align='center'
+                show-overflow-tooltip
                 label="风机电流/电压/功率"
                 min-width="120">
                     <template slot-scope="scope">
@@ -45,21 +44,20 @@
                 </el-table-column>
                 <el-table-column
                 prop="batteryVoltage"
-                align='center'
+                show-overflow-tooltip
                 label="电池电压"
                 :formatter="formatRole"
                 min-width="80">
                 </el-table-column>
                 <el-table-column
                 prop="batteryStatus"
-                align='center'
+                show-overflow-tooltip
                 label="电池状态"
                 :formatter="formatRole"
                 min-width="80">
                 </el-table-column>
                 <el-table-column
                 prop="createTime"
-                align='center'
                 label="创建时间"
                 show-overflow-tooltip>
                 </el-table-column>

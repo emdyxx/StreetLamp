@@ -7,110 +7,115 @@
         <div class="CommonStyle_right">
             <div class="section">
                 <div class="section_top">
-                    <el-button v-if="JurisdictionS.addProject" @click="addarticle(0)" type="primary" icon='el-icon-plus' size='small'>添加项目</el-button>
-                    <el-button v-if="JurisdictionS.editProject" @click="addarticle(1)" type="primary" icon="el-icon-edit" size='small'>编辑项目</el-button>
-                    <el-button v-if="JurisdictionS.delProject" @click="deletearticle" type="primary" icon='el-icon-delete' size='small'>删除项目</el-button>
-                    <div class="search" v-if="JurisdictionS.viewProject">
-                        <el-dropdown size="small" split-button @command="handleCommand">
-                            {{name}}
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item @click.native="name='项目名称';types='1';">项目名称</el-dropdown-item>
-                                <el-dropdown-item @click.native="name='负责人';types='2';">负责人</el-dropdown-item>
-                                <el-dropdown-item @click.native="name='归属机构';types='3';">归属机构</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                        <div>
-                            <template v-if="types=='1'">
-                                <el-input v-model="projectName2" size="small" placeholder="请输入项目名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                            </template>
-                            <template v-if="types=='2'">
-                                <el-input v-model="principal2" size="small" placeholder="请输入负责人" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                            </template>
-                            <template v-if="types=='3'">
-                                <el-cascader
-                                size='small'
-                                style="margin-top:6px;width:126px"
-                                :props='optionspros'
-                                :options="options"
-                                clearable
-                                :show-all-levels="false"
-                                change-on-select
-                                v-model="orgId2">
-                            </el-cascader>
-                            </template>
-                        </div>
-                        <div>
-                            <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                        </div>
-                    </div>
+                    <p>位置: &nbsp;系统管理>项目操作</p>
                 </div>
                 <div class="section_bottom">
-                    <el-table
-                        :data="tableData"
-                        @row-click="clickRow" 
-                        ref="moviesTable"
-                        border
-                        stripe
-                        size='small'
-                        tooltip-effect="dark"
-                        @selection-change="userSelectionChange"
-                        style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                        <el-table-column
-                        type="selection"
-                        align='center'
-                        width="55">
-                        </el-table-column>
-                        <el-table-column
-                        prop="projectName"
-                        align='center'
-                        label="项目名称"
-                        min-width="150">
-                        </el-table-column>
-                        <el-table-column
-                        prop="principal"
-                        align='center'
-                        label="负责人"
-                        min-width="120">
-                        </el-table-column>
-                        <el-table-column
-                        prop="username"
-                        align='center'
-                        label="所属机构"
-                        min-width="120">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.org.orgName}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="name"
-                        align='center'
-                        label="区域"
-                        min-width="250">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.area.mergerName}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="sceneName"
-                        align='center'
-                        label="场景"
-                        min-width="80">
-                        </el-table-column>
-                        <el-table-column
-                        prop="remark"
-                        align='center'
-                        label="备注"
-                        :formatter="formatRole"
-                        min-width="120">
-                        </el-table-column>
-                        <el-table-column
-                        prop="createTime"
-                        label="创建时间"
-                        align='center'
-                        min-width="160"
-                        show-overflow-tooltip>
-                        </el-table-column>
-                    </el-table>
+                    <div class="section_bottom_bottom">
+                        <div class="search" v-if="JurisdictionS.viewProject">
+                            <el-dropdown size="small" split-button @command="handleCommand">
+                                {{name}}
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item @click.native="name='项目名称';types='1';">项目名称</el-dropdown-item>
+                                    <el-dropdown-item @click.native="name='负责人';types='2';">负责人</el-dropdown-item>
+                                    <el-dropdown-item @click.native="name='归属机构';types='3';">归属机构</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                            <div>
+                                <template v-if="types=='1'">
+                                    <el-input v-model="projectName2" size="small" placeholder="请输入项目名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                                </template>
+                                <template v-if="types=='2'">
+                                    <el-input v-model="principal2" size="small" placeholder="请输入负责人" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                                </template>
+                                <template v-if="types=='3'">
+                                    <el-cascader
+                                    size='small'
+                                    style="margin-top:6px;width:126px"
+                                    :props='optionspros'
+                                    :options="options"
+                                    clearable
+                                    :show-all-levels="false"
+                                    change-on-select
+                                    v-model="orgId2">
+                                </el-cascader>
+                                </template>
+                            </div>
+                            <div>
+                                <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                            </div>
+                        </div>
+                        <div class="section_bottom_right">
+                            <el-button v-if="JurisdictionS.addProject" @click="addarticle(0)" plain type="primary" icon='el-icon-plus' size='small'>添加项目</el-button>
+                            <el-button v-if="JurisdictionS.editProject" @click="addarticle(1)" plain type="primary" icon="el-icon-edit" size='small'>编辑项目</el-button>
+                            <el-button v-if="JurisdictionS.delProject" @click="deletearticle" plain type="primary" icon='el-icon-delete' size='small'>删除项目</el-button>
+                        </div>
+                    </div>
+                    <div>
+                        <el-table
+                            :data="tableData"
+                            @row-click="clickRow" 
+                            ref="moviesTable"
+                            border
+                            size='small'
+                            tooltip-effect="dark"
+                            @selection-change="userSelectionChange"
+                            style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                            <el-table-column
+                            type="selection"
+                            align="center"
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="projectName"
+                            show-overflow-tooltip
+                            label="项目名称"
+                            min-width="150">
+                            </el-table-column>
+                            <el-table-column
+                            prop="principal"
+                            show-overflow-tooltip
+                            label="负责人"
+                            min-width="120">
+                            </el-table-column>
+                            <el-table-column
+                            prop="username"
+                            show-overflow-tooltip
+                            label="所属机构"
+                            min-width="120">
+                                <template slot-scope="scope">
+                                    <span>{{scope.row.org.orgName}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            show-overflow-tooltip
+                            label="区域"
+                            min-width="250">
+                                <template slot-scope="scope">
+                                    <span>{{scope.row.area.mergerName}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                            prop="sceneName"
+                            show-overflow-tooltip
+                            label="场景"
+                            min-width="80">
+                            </el-table-column>
+                            <el-table-column
+                            prop="remark"
+                            show-overflow-tooltip
+                            label="备注"
+                            :formatter="formatRole"
+                            min-width="120">
+                            </el-table-column>
+                            <el-table-column
+                            prop="createTime"
+                            label="创建时间"
+                            show-overflow-tooltip
+                            min-width="160">
+                            </el-table-column>
+                        </el-table>
+                    </div>
                     <div class="block">
                         <el-pagination
                         background
@@ -128,7 +133,7 @@
         </div>
         <!-- 添加修改模态框 -->
         <div class="modal fade" id="addarticles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:450px;">
+            <div class="modal-dialog" style="width:400px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -141,7 +146,7 @@
                             <input type="text" v-model="projectName" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="name" placeholder="请输入项目名称">
                         </div> 
                         <div class="form-group">
-                            <label for="name2"><span class="Required">*</span>负责人:</label>
+                            <label for="name2"><span class="Required">*</span>负&ensp;责&ensp;人:</label>
                             <input type="text" v-model="principal" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" id="name2" placeholder="请输入负责人">
                         </div> 
                         <div class="form-group">
@@ -189,7 +194,7 @@
                             </el-select>
                         </div> 
                         <div class="form-group">
-                            <label>场景:</label>
+                            <label>场&emsp;&emsp;景:</label>
                             <el-select v-model="value4" size='small' clearable style="width: 196px;" placeholder="请选择">
                                 <el-option
                                 v-for="item in options4"
@@ -211,7 +216,7 @@
                             </el-select>
                         </div>
                         <div class="form-group" v-if="mapType">
-                            <label><span class="Required">*</span>平面图:</label>
+                            <label><span class="Required">*</span>平&ensp;面&ensp;图:</label>
                             <div class="user_img">
                                 <label for="img1">
                                     <img :src=imageUrl1>
@@ -221,11 +226,11 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="name2">备注:</label>
+                            <label for="name2">备&emsp;&emsp;注:</label>
                             <el-input
                                 type="textarea"
                                 style="width:196px"
-                                :rows="2"
+                                :rows="1"
                                 placeholder="请输入内容"
                                 v-model="mark">
                             </el-input>

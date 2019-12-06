@@ -1,16 +1,23 @@
 <template>
     <!-- 媒体库 -->
     <div class="mediaLibrary">
-        <div class="mediaLibrary_top">
-            <span>媒体库</span>
-            <p @click="mediaType(0)" :class="active=='0' ? 'mediaStyle' : ''">图片</p>
-            <p @click="mediaType(1)" :class="active=='1' ? 'mediaStyle' : ''">视频</p>
-            <div class="operation">
-                <el-button v-if="addMedia" @click="ADDdialogVisible" size="small" icon="el-icon-upload2">上传</el-button>
-                <el-button v-if="addMedia" @click="addFolder" size="small">新建文件夹</el-button>
+        <div class="section_top">
+            <p style="left:20px;">位置: &nbsp;设备操作>LED屏幕>节目制作>媒体库</p>
+            <div>
+                <span @click="ScreenManage">屏幕操作</span>
+                <span style="background: #4382e6;color:white;">节目制作</span>
             </div>
         </div>
         <div class="mediaLibrary_bottom">
+            <div class="mediaLibrary_Navigation">
+                <span>媒体库</span>
+                <p @click="mediaType(0)" :class="active=='0' ? 'mediaStyle' : ''">图片</p>
+                <p @click="mediaType(1)" :class="active=='1' ? 'mediaStyle' : ''">视频</p>
+                <div class="operation">
+                    <el-button v-if="addMedia" @click="ADDdialogVisible" size="small" type="primary" plain icon="el-icon-upload2">上传</el-button>
+                    <el-button v-if="addMedia" @click="addFolder" size="small" type="primary" plain>新建文件夹</el-button>
+                </div>
+            </div>
             <div class="main_top">
                 <div class="main_top_top">
                     <span v-if="active=='0'">全部图片</span>
@@ -600,6 +607,10 @@ export default {
                 }
             })
         },
+        //屏幕--节目管理按钮
+        ScreenManage(){
+            this.$router.push({path:'/solinScreenManage'})
+        },
     },  
     created(){
         this.Jurisdiction()
@@ -609,22 +620,23 @@ export default {
 </script>
 <style scoped> 
 .mediaLibrary{width: 100%;height: 100%;}
-.mediaLibrary_top{height: 70px;border-bottom: 1px solid #efefef;padding-left: 20px;display: flex;align-items: center;position: relative;}
-.mediaLibrary_top>span{font-size: 18px;line-height: 70px;}
-.mediaLibrary_top>p:nth-of-type(1){margin-left: 20px;}
-.mediaLibrary_top>p{display: inline-block;margin: 0;font-size: 17px;width: 60px;height: 35px;line-height: 35px;text-align: center;border-radius: 3px;color: #2c3e50;cursor: pointer;}
+.mediaLibrary_top{border-bottom: 1px solid #efefef;width: 100%;height: 50px;display: flex;align-items: center;}
+.mediaLibrary_Navigation{height: 50px;padding-left: 20px;display: flex;align-items: center;position: relative;}
+.mediaLibrary_Navigation>span{font-size: 16px;line-height: 50px;}
+.mediaLibrary_Navigation>p:nth-of-type(1){margin-left: 20px;}
+.mediaLibrary_Navigation>p{display: inline-block;margin: 0;font-size: 14px;width: 60px;height: 30px;line-height: 30px;text-align: center;border-radius: 3px;color: #2c3e50;cursor: pointer;}
 .mediaStyle{background: #4dd3c5;color: white !important;}
 .operation{position: absolute;right: 15px;;height: 100%;line-height: 70px;}
-.mediaLibrary_bottom{position: absolute;top: 70px;bottom: 0;left: 0;right: 0;}
+.mediaLibrary_bottom{position: absolute;top: 50px;bottom: 0;left: 0;right: 0;}
 
-.main_top_top{font-size: 16px;padding:15px 0 10px 20px;}
+.main_top_top{font-size: 16px;padding:10px 0 10px 20px;}
 .main_top_top>button{position: absolute;right: 20px;top: 12px;}
-.main_top_bottom{padding: 0 0 5px 25px;}
-.main_top_bottom>div{display: inline-block;padding: 2px 4px 2px 4px;border: 1px solid #606266;}
-.main_top_bottom button{color:#606266;padding:0;}
+.main_top_bottom{padding: 0 0 5px 20px;}
+.main_top_bottom>div{display: inline-block;padding: 2px 4px 2px 4px;border: 1px solid #606266;    margin-left: 10px;}
+.main_top_bottom button{color:#606266;padding:2px 6px;}
 .main_top_bottom button:active{color: #4dd3c5;}
 
-.main_bottom{position: absolute;top: 80px;bottom: 0;left: 0;right: 0;padding: 0 15px 0 15px;display: flex;flex-wrap: wrap;overflow: auto;}
+.main_bottom{position: absolute;top: 130px;bottom: 0;left: 0;right: 0;padding: 0 15px 0 15px;display: flex;flex-wrap: wrap;overflow: auto;}
 .section{width: 150px;height: 178px;margin: 5px 20px 5px 20px;position: relative; }
 .section_img{height: 130px;overflow: hidden;display: flex;justify-content: center;}
 .section_img>img{position: absolute;bottom: 0;max-width: 100%;max-height: 130px;padding:5px;}

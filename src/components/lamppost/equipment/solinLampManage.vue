@@ -1,170 +1,185 @@
 <template>
     <!-- 灯具 -->
     <div class="section">
-        <div class="section_top">
-            <el-dropdown v-if="JurisdictionS.lampControl" style="margin-left:10px;" @command='operation'>
-                <el-button type="primary" size='small' style="width:85px;">
-                    操作<i class="el-icon-arrow-down el-icon--right"></i>
-                </el-button>
-                <el-dropdown-menu slot="dropdown"> 
-                    <el-dropdown-item v-if="JurisdictionS.lampControl" command='1'>开灯</el-dropdown-item>
-                    <el-dropdown-item v-if="JurisdictionS.lampControl" command='2'>关灯</el-dropdown-item>
-                    <el-dropdown-item v-if="JurisdictionS.lampControl" command='3'>调光</el-dropdown-item>
-                    <el-dropdown-item v-if="JurisdictionS.lampControl" command='4'>刷新状态</el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>    
-            <el-dropdown v-if="JurisdictionS.viewLampStrategy" style="margin-left:10px;" @command='switchOff'>
-                <el-button type="primary" size='small' style="width:85px;">
-                    策略<i class="el-icon-arrow-down el-icon--right"></i>
-                </el-button>
-                <el-dropdown-menu slot="dropdown"> 
-                    <el-dropdown-item v-if="JurisdictionS.viewLampStrategy" command='5'>策略管理</el-dropdown-item>
-                    <el-dropdown-item v-if="JurisdictionS.viewLampStrategy" command='6'>单灯策略</el-dropdown-item>
-                    <el-dropdown-item v-if="JurisdictionS.viewLampStrategy" command='7'>群组策略</el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>
-            <div class="search" v-if="JurisdictionS.viewLampManage">
-                <el-dropdown size="small" split-button @command="handleCommand">
-                    {{name}}
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='类型';type='3';">状态</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <div>
-                    <template v-if="type=='1'">
-                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="type=='2'">
-                        <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="type=='3'">
-                        <el-select v-model="value" clearable placeholder="请选择" size='small'>
-                            <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </template>
-                </div>
-                <div>
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div>
+        <div class="section_top">  
+            <p>位置: &nbsp;设备操作>灯具操作</p>
         </div>
         <div class="section_bottom">
-            <el-table
-                :data="tableData"
-                @row-click="clickRow" 
-                ref="moviesTable"
-                border
-                stripe
-                size='small'
-                tooltip-effect="dark"
-                @selection-change="SelectionChange"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="nickName"
-                align='center'
-                label="名称"
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                prop="serialNumber"
-                align='center'
-                label="序列号"
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="在线状态"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.online=='0'">离线</span>
-                        <span v-if="scope.row.online=='1'">在线</span>
-                    </template>
-                </el-table-column>
-                <!-- <el-table-column
-                align='center'
-                label="灯状态"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.lampStatus=='0'">关闭</span>
-                        <span v-if="scope.row.lampStatus=='1'">开启</span>
-                        <span v-if="scope.row.lampStatus=='2'">告警</span>
-                    </template>
-                </el-table-column> -->
-                <!-- <el-table-column
-                prop="lampNumber"
-                align='center'
-                label="灯具编号"
-                :formatter="formatRole"
-                min-width="80">
-                </el-table-column> -->
-                <el-table-column
-                prop="strategyName"
-                align='center'
-                label="当前策略"
-                :formatter="formatRole"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="envBrightness"
-                align='center'
-                :formatter="formatRole"
-                label="环境亮度"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="brightness"
-                align='center'
-                :formatter="formatRole"
-                label="灯亮度"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="voltage"
-                align='center'
-                :formatter="formatRole"
-                label="电压(V)"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="electricity"
-                align='center'
-                :formatter="formatRole"
-                label="电流(A)"
-                min-width="80">
-                </el-table-column>
-                <el-table-column
-                prop="power"
-                align='center'
-                :formatter="formatRole"
-                label="功率(W)"
-                min-width="80">
-                </el-table-column>
-                <!-- <el-table-column
-                prop="location"
-                align='center'
-                label="区域"
-                min-width="120">
-                </el-table-column> -->
-                <el-table-column
-                prop="timestamp"
-                :formatter="formatRole"
-                label="采集时间"
-                align='center'
-                min-width="160">
-                </el-table-column>
-            </el-table>
+            <div class="section_bottom_bottom">
+                <div class="search" v-if="JurisdictionS.viewLampManage">
+                    <el-dropdown size="small" split-button @command="handleCommand">
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='序列号';type='2';">序列号</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='状态';type='3';">状态</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='组网方式';type='4';">组网方式</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="type=='1'">
+                            <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="type=='2'">
+                            <el-input v-model="serialNumber" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="type=='3'">
+                            <el-select v-model="value" clearable placeholder="请选择" size='small'>
+                                <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </template>
+                        <template v-if="type=='4'">
+                            <el-select v-model="value3" clearable placeholder="请选择" size='small'>
+                                <el-option
+                                v-for="item in options3"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </template>
+                    </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
+                </div>
+                <div class="section_bottom_right">
+                    <el-button v-if="JurisdictionS.lampControl" @click="operation(1)" type="primary" plain size='small'>开灯</el-button>
+                    <el-button v-if="JurisdictionS.lampControl" @click="operation(2)" type="primary" plain size='small'>关灯</el-button>
+                    <el-button v-if="JurisdictionS.lampControl" @click="operation(3)" type="primary" plain size='small'>调光</el-button>
+                    <el-button v-if="JurisdictionS.lampControl" @click="operation(4)" type="primary" plain size='small'>状态查询</el-button>
+                    <el-dropdown v-if="JurisdictionS.viewLampStrategy" plain style="margin-left:10px;" @command='switchOff'>
+                        <el-button type="primary" size='small' style="width:85px;">
+                            策略<i class="el-icon-arrow-down el-icon--right"></i>
+                        </el-button>
+                        <el-dropdown-menu slot="dropdown"> 
+                            <el-dropdown-item v-if="JurisdictionS.viewLampStrategy" command='5'>策略管理</el-dropdown-item>
+                            <el-dropdown-item v-if="JurisdictionS.viewLampStrategy" command='6'>单灯策略</el-dropdown-item>
+                            <el-dropdown-item v-if="JurisdictionS.viewLampStrategy" command='7'>群组策略</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
+            </div>
+            <div>
+                <el-table
+                    :data="tableData"
+                    @row-click="clickRow" 
+                    ref="moviesTable"
+                    border
+                    size='small'
+                    tooltip-effect="dark"
+                    @selection-change="SelectionChange"
+                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                    <el-table-column
+                    align="center"
+                    type="selection"
+                    width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="nickName"
+                    show-overflow-tooltip
+                    label="名称"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="serialNumber"
+                    show-overflow-tooltip
+                    label="序列号"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    show-overflow-tooltip
+                    label="在线状态"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.online=='0'" class="offLine">离线</span>
+                            <span v-if="scope.row.online=='1'" class="onLine">在线</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    show-overflow-tooltip
+                    label="单灯状态"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.lampStatus=='0'">
+                                <img src="../../../assets/img/offline.png" alt="" style="width: 12px;margin-top:-2px;">
+                            关闭</span>
+                            <span v-if="scope.row.lampStatus=='1'">
+                                <img src="../../../assets/img/online.png" alt="" style="width: 12px;margin-top:-2px;">
+                            开启</span>
+                            <span v-if="scope.row.lampStatus=='2'">
+                                <img src="../../../assets/img/fault.png" alt="" style="width: 12px;margin-top:-2px;">
+                            告警</span>
+                            <span v-if="scope.row.lampStatus=='3'">
+                                <img src="../../../assets/img/Unknown.png" alt="" style="width: 12px;margin-top:-2px;">
+                            未知</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    show-overflow-tooltip
+                    label="组网方式"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.modelType=='1'" class="onLineStatus">ZigBee</span>
+                            <span v-if="scope.row.modelType=='2'" class="offLineStatus">NB-IoT</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="strategyName"
+                    show-overflow-tooltip
+                    label="当前策略"
+                    :formatter="formatRole"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="envBrightness"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    label="环境亮度"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="brightness"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    label="灯亮度"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="voltage"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    label="电压(V)"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="electricity"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    label="电流(A)"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="power"
+                    show-overflow-tooltip
+                    :formatter="formatRole"
+                    label="功率(W)"
+                    min-width="80">
+                    </el-table-column>
+                    <el-table-column
+                    prop="timestamp"
+                    :formatter="formatRole"
+                    label="采集时间"
+                    show-overflow-tooltip
+                    min-width="160">
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="block">
                 <el-pagination
                 background
@@ -201,30 +216,29 @@
                                     @row-click="clickRow2" 
                                     ref="moviesTable2"
                                     border
-                                    stripe
                                     size='small'
                                     tooltip-effect="dark"
                                     @selection-change="SelectionChange2"
                                     style="height:auto;max-height:90%;margin-bottom:10px;">
                                     <el-table-column
+                                    align="center"
                                     type="selection"
-                                    align='center'
                                     width="55">
                                     </el-table-column>
                                     <el-table-column
                                     prop="strategyName"
-                                    align='center'
+                                    show-overflow-tooltip
                                     label="策略名称"
                                     width="152">
                                     </el-table-column>
                                     <el-table-column
                                     prop="expire"
-                                    align='center'
+                                    show-overflow-tooltip
                                     label="策略时效"
                                     width="190">
                                     </el-table-column>
                                     <el-table-column
-                                    align='center'
+                                    show-overflow-tooltip
                                     label="操作"
                                     width="120">
                                         <template slot-scope="scope">
@@ -303,20 +317,19 @@
                             <el-table
                                 :data="tableData3"
                                 border
-                                stripe
                                 size='mini'
                                 tooltip-effect="dark"
                                 @selection-change="SelectionChange3"
                                 style="width: 100%;overflow:auto;height:auto;max-height:90%;">
                                 <el-table-column
                                 prop="timer"
-                                align='center'
+                                show-overflow-tooltip
                                 label="时间节点"
                                 width="170">
                                 </el-table-column>
                                 <el-table-column
                                 prop="brightness_type"
-                                align='center'
+                                show-overflow-tooltip
                                 label="操作"
                                 width="92">
                                     <template slot-scope="scope">
@@ -327,7 +340,6 @@
                                 <el-table-column
                                 prop="brightness"
                                 label="时间节点亮度"
-                                align='center'
                                 show-overflow-tooltip>
                                     <template slot-scope="scope">
                                         <span>{{scope.row.brightness}}%</span>
@@ -335,7 +347,7 @@
                                 </el-table-column>
                                 <el-table-column
                                 label="操作"
-                                align='center'
+                                show-overflow-tooltip
                                 width="130"
                                 v-if="type3!=5">
                                     <template slot-scope="scope">
@@ -360,9 +372,9 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="myModalLabel">群组策略</h4>
                     </div>
-                    <div class="modal-body" style="height: 600px;">
+                    <div class="modal-body" style="height: 620px;">
                         <el-tabs v-model="GroupStrategyType" type="card" @tab-click="GroupStrategyClick">
-                            <el-tab-pane label="集中器" name="0" style='padding:25px 10px 0 10px;'>
+                            <el-tab-pane label="集中器" name="0" style='padding:0 10px 0 10px;'>
                                 <p>请选中集中器:</p>
                                 <div style="width:100%;height:200px;">
                                     <el-table
@@ -370,32 +382,31 @@
                                         @row-click="clickRow3" 
                                         ref="myModalmoviesTable"
                                         border
-                                        stripe
                                         size='small'
                                         slot="empty"
                                         tooltip-effect="dark"
                                         @selection-change="myModalChange"
                                         style="width: 100%;overflow:auto;max-height:136px;margin-bottom:10px;margin-top:10px;">
                                         <el-table-column
+                                        align="center"
                                         type="selection"
-                                        align='center'
                                         width="55">
                                         </el-table-column>
                                         <el-table-column
                                         prop="concentratorName"
-                                        align='center'
+                                        show-overflow-tooltip
                                         label="集中器名字"
                                         min-width="100">
                                         </el-table-column>
                                         <el-table-column
                                         prop="concentratorSn"
-                                        align='center'
+                                        show-overflow-tooltip
                                         label="集中器序列号"
                                         min-width="100">
                                         </el-table-column>
                                         <el-table-column
                                         prop="strategyName"
-                                        align='center'
+                                        show-overflow-tooltip
                                         label="当前策略"
                                         :formatter="formatRole"
                                         xshow-overflow-tooltip>
@@ -421,25 +432,24 @@
                                         @row-click="clickRow4" 
                                         ref="moviesTable4"
                                         border
-                                        stripe
                                         size='small'
                                         tooltip-effect="dark"
                                         @selection-change="SelectionChange2"
                                         style="max-height:158px;overflow:auto;margin-bottom:10px;">
                                         <el-table-column
+                                        align="center"
                                         type="selection"
-                                        align='center'
                                         width="55">
                                         </el-table-column>
                                         <el-table-column
                                         prop="strategyName"
-                                        align='center'
+                                        show-overflow-tooltip
                                         label="策略名称"
                                         width="152">
                                         </el-table-column>
                                         <el-table-column
                                         prop="expire"
-                                        align='center'
+                                        show-overflow-tooltip
                                         label="策略时效"
                                         xshow-overflow-tooltip>
                                         </el-table-column>
@@ -462,7 +472,7 @@
                                     <el-button @click="GroupStrategySubmit(1)" type="primary" size="small">清空策略</el-button>
                                 </div>
                             </el-tab-pane>
-                            <el-tab-pane label="分组" name="1" style='padding:25px 10px 0 10px;'>配置管理</el-tab-pane>
+                            <el-tab-pane label="分组" name="1" style='padding:0 10px 0 10px;'>配置管理</el-tab-pane>
                         </el-tabs>
                     </div>
                 </div><!-- /.modal-content -->
@@ -540,6 +550,8 @@ export default {
             serialNumber:'',
             options:[{value: '1',label: '在线'},{value: '0',label: '离线'}],
             value:'',
+            options3:[{value: '1',label: 'ZigBee'},{value: '2',label: 'NB-IoT'}],
+            value3:'',
             tableData:[],
             site:[],
             pageSize:10,
@@ -600,6 +612,7 @@ export default {
             this.nickName=''
             this.serialNumber=''
             this.value=''
+            this.value3 = ''
         },
         formatRole:function(val, column, cellValue, index){
             if(cellValue == null||cellValue == undefined||cellValue == ''){
@@ -709,7 +722,7 @@ export default {
                             that.dialogVisible0 = false
                             setTimeout(function(){
                                 that.ready()
-                            },5000)
+                            },3000)
                         }else{
                             that.errorCode(data)
                         }
@@ -777,7 +790,7 @@ export default {
                                 }
                                 setTimeout(function(){
                                     that.ready()
-                                },5000)
+                                },3000)
                             }else{
                                 that.errorCode(data)
                             }
@@ -808,9 +821,9 @@ export default {
                 this.dialogVisible0 = true;
             }
             if(val=='4'){
-                if(that.site.length==0||that.site.length>=2){
+                if(that.site.length==0){
                     that.$message({
-                        message: '请选择单个灯具进行状态刷新!',
+                        message: '请选择灯具进行状态刷新!',
                         type: 'error'
                     });
                     return;
@@ -835,7 +848,7 @@ export default {
                             });
                             setTimeout(function(){
                                 that.ready()
-                            },5000)
+                            },3000)
                         }else{
                             that.errorCode(data)
                         }
@@ -1330,6 +1343,7 @@ export default {
                 poleId:'',
                 projectIds:sessionStorage.projectId,
                 online:that.value,
+                modelType:that.value3,
                 dataType:'1'
             }
             $.ajax({

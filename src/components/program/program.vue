@@ -12,24 +12,23 @@
                 @row-click="clickRow" 
                 ref="moviesTable" 
                 border
-                stripe
                 size='small'
                 tooltip-effect="dark"
                 style="width: 100%;overflow:auto;max-height:80%;margin-bottom:10px;"
                 @selection-change='TableChange'>
                 <el-table-column
                 type="selection"
-                align='center'
+                align="center"
                 width="55">
                 </el-table-column>
                 <el-table-column
                 prop="nickName"
-                align='center'
+                show-overflow-tooltip
                 label="节目名称"
                 min-width="150">
                 </el-table-column>
                 <el-table-column
-                align='center'
+                show-overflow-tooltip
                 label="节目类型"
                 min-width="120">
                     <template slot-scope="scope">
@@ -39,30 +38,30 @@
                 </el-table-column>
                 <el-table-column
                 prop="programSizeM"
-                align='center'
+                show-overflow-tooltip
                 label="大小"
                 min-width="60">
                 </el-table-column>
                 <el-table-column
                 prop="width"
-                align='center'
+                show-overflow-tooltip
                 label="宽(像素)"
                 min-width="80">
                 </el-table-column>
                 <el-table-column
                 prop="height"
-                align='center'
+                show-overflow-tooltip
                 label="高(像素)"
                 min-width="80">
                 </el-table-column>
                 <el-table-column
                 prop="createTime"
-                align='center'
+                show-overflow-tooltip
                 label="创建时间"
                 min-width="180">
                 </el-table-column>
                 <el-table-column
-                align='center'
+                show-overflow-tooltip
                 label="操作"
                 min-width="180">
                     <template slot-scope="scope">

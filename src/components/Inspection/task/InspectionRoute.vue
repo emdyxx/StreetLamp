@@ -2,68 +2,62 @@
     <!-- 巡检路线 -->
     <div class="section">
         <div class="section_top">
-            <el-button v-if="JurisdictionS.addPatrolRoute" @click="InspectionRoute(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="JurisdictionS.editPatrolRoute" @click="InspectionRoute(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="JurisdictionS.delPatrolRoute" @click="InspectionRoute(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search" v-if="JurisdictionS.viewPatrolRoute">
-                <el-dropdown size="small" split-button @command="handleCommand">
-                    {{name}}
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="name='路线名称';types='1';">路线名称</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <div>
-                    <template v-if="types=='1'">
-                        <el-input v-model="routeName" size="small" placeholder="请输入路线名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                </div>
-                <div>
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div>
+            <p>位置: &nbsp;巡检管理>巡检路线</p>
         </div>
         <div class="section_bottom">
-            <!-- <div class="UserSettings_bottom_top">
-                <div class="search">
-                    <label>路线名称:</label>
-                    <input v-model="routeName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入路线名称">
+            <div class="section_bottom_bottom">
+                <div class="search" v-if="JurisdictionS.viewPatrolRoute">
+                    <el-dropdown size="small" split-button @command="handleCommand">
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='路线名称';types='1';">路线名称</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="types=='1'">
+                            <el-input v-model="routeName" size="small" placeholder="请输入路线名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                    </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
                 </div>
-                <div style="margin-left:15px;">
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                <div class="section_bottom_right">
+                    <el-button v-if="JurisdictionS.addPatrolRoute" @click="InspectionRoute(0)" type="primary" plain icon='el-icon-plus' size='small'>添加</el-button>
+                    <el-button v-if="JurisdictionS.editPatrolRoute" @click="InspectionRoute(1)" type="primary" plain icon="el-icon-edit" size='small'>编辑</el-button>
+                    <el-button v-if="JurisdictionS.delPatrolRoute" @click="InspectionRoute(2)" type="primary" plain icon='el-icon-delete' size='small'>删除</el-button>
                 </div>
-            </div> -->
+            </div>
             <div class="UserSettings_bottom_bottom">
                 <el-table
                     :data="tableData"
                     @row-click="clickRow" 
                     ref="moviesTable"
                     border
-                    stripe
                     size='small'
                     tooltip-effect="dark"
                     @selection-change="SelectionChange"
                     style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                     <el-table-column
+                    align="center"
                     type="selection"
-                    align='center'
                     width="55">
                     </el-table-column>
                     <el-table-column
                     prop="routeName"
-                    align='center'
+                    show-overflow-tooltip
                     label="路线名称"
                     min-width="120">
                     </el-table-column>
                     <el-table-column
                     prop="createTime"
-                    align='center'
+                    show-overflow-tooltip
                     label="创建时间"
                     min-width="80">
                     </el-table-column>
                     <el-table-column
                     prop="remark"
                     label="备注说明"
-                    align='center'
                     min-width="180"
                     show-overflow-tooltip>
                     </el-table-column>
@@ -110,27 +104,25 @@
                                     <el-table
                                         :data="tableData3"
                                         border
-                                        stripe
                                         size='small'
                                         tooltip-effect="dark"
                                         @selection-change="SelectionChange3"
                                         style="width: 100%;max-height:250px;;overflow:auto;">
                                         <el-table-column
+                                        align="center"
                                         type="selection"
-                                        align='center'
                                         width="55">
                                         </el-table-column>
                                         <el-table-column
                                         prop="siteName"
-                                        align='center'
+                                        show-overflow-tooltip
                                         label="点名称"
                                         min-width="50">
                                         </el-table-column>
                                         <el-table-column
                                         prop="siteNumber"
-                                        align='center'
-                                        label="点编号"
-                                        show-overflow-tooltip>
+                                        show-overflow-tooltip
+                                        label="点编号">
                                         </el-table-column>
                                     </el-table>
                                 </div>
@@ -144,27 +136,25 @@
                                     <el-table
                                         :data="tableData2"
                                         border
-                                        stripe
                                         size='small'
                                         tooltip-effect="dark"
                                         @selection-change="SelectionChange2"
                                         style="width: 100%;max-height:250px;;overflow:auto;">
                                         <el-table-column
+                                        align="center"
                                         type="selection"
-                                        align='center'
                                         width="55">
                                         </el-table-column>
                                         <el-table-column
                                         prop="siteName"
-                                        align='center'
+                                        show-overflow-tooltip
                                         label="点名称"
                                         min-width="50">
                                         </el-table-column>
                                         <el-table-column
                                         prop="siteNumber"
-                                        align='center'
-                                        label="点编号"
-                                        show-overflow-tooltip>
+                                        show-overflow-tooltip
+                                        label="点编号">
                                         </el-table-column>
                                     </el-table>
                                 </div>

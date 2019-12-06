@@ -45,15 +45,15 @@
                         <img src="../../../assets/img/fault.png" alt="">
                         <span>故障</span>
                         <span style="color:#fe3819;font-size: 14px;"><i>{{statisticalData.alarmCount}}</i></span>
-                        <img src="../../../assets/img/Unknown.png" alt="" style="padding-left:30px;">
+                        <img src="../../../assets/img/Unknown.png" alt="" style="margin-left:30px;">
                         <span>未知</span>
                         <span style="color:#fe9b08;font-size: 14px;"><i>{{statisticalData.otherCount}}</i></span>
                     </div>
-                    <div style="padding-top: 15px;">
+                    <div style="padding-top: 10px;">
                         <img src="../../../assets/img/online.png" alt="">
                         <span>在线</span>
                         <span style="color:#00e6ac;font-size: 14px;"><i>{{statisticalData.onlineCount}}</i></span>
-                        <img src="../../../assets/img/offline.png" alt="" style="padding-left:30px;">
+                        <img src="../../../assets/img/offline.png" alt="" style="margin-left:30px;">
                         <span>离线</span>
                         <span style="color:#90a9bb;font-size: 14px;"><i>{{statisticalData.offlineCount}}</i></span>
                     </div>
@@ -138,22 +138,23 @@
                     @selection-change="radioChange">
                     <el-table-column
                     type="selection"
+                    align="center"
                     width="55">
                     </el-table-column>
                     <el-table-column
                     prop="nickName"
-                    label="名称"
-                    align="center">
+                    show-overflow-tooltip
+                    label="名称">
                     </el-table-column>
                     <el-table-column
                     prop="serialNumber"
                     label="序列号"
-                    align="center">
+                    show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
                     prop="name"
                     label="类型"
-                    align="center">
+                    show-overflow-tooltip>
                         <template slot-scope="scope">
                             <span v-if="scope.row.poleType=='1'">智慧灯杆</span>
                             <span v-else>普通灯杆</span>
@@ -330,7 +331,8 @@ export default {
                     {
                         name:'类型',
                         type:'pie',
-                        radius: ['75%', '90%'],
+                        radius: ['70%', '85%'],
+                        hoverOffset:3,
                         avoidLabelOverlap: false,
                         label: {
                             normal: {
@@ -338,12 +340,12 @@ export default {
                                 position: 'center',
                                 formatter:function (argument) {
                                     var html;
-                                    html=num+'\r\n\r\n总数';
+                                    html= num;
                                     return html;
                                 },
                                 textStyle:{
-                                    fontSize: 14,
-                                    color:'#333333'
+                                    fontSize: 24,
+                                    color:'#333333',
                                 }
                             },
                         },
@@ -523,23 +525,23 @@ export default {
                             coord = coord.split(',')
                             map.centerAndZoom(new BMap.Point(coord[0],coord[1]), 16);  // 初始化地图,设置中心点坐标和地图级别
                             map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
-                            // //添加灯杆坐标
-                            var online = new BMap.Icon(that.imgserverurl+"image/img/online.png", new BMap.Size(45,45));
-                            var offline = new BMap.Icon(that.imgserverurl+"image/img/offline.png", new BMap.Size(45,45));
-                            var Unknown = new BMap.Icon(that.imgserverurl+"image/img/Unknown.png", new BMap.Size(45,45));
-                            var abnormal = new BMap.Icon(that.imgserverurl+"image/img/abnormal.png", new BMap.Size(45,45));
+                            // //添加灯杆坐标 
+                            var online = new BMap.Icon(that.imgserverurl+"image/img/online.png", new BMap.Size(45,60));
+                            var offline = new BMap.Icon(that.imgserverurl+"image/img/offline.png", new BMap.Size(45,60));
+                            var Unknown = new BMap.Icon(that.imgserverurl+"image/img/Unknown.png", new BMap.Size(45,60));
+                            var abnormal = new BMap.Icon(that.imgserverurl+"image/img/abnormal.png", new BMap.Size(45,60));
                             var markers = []
                             for(var i=0;i<data.result.list.length;i++){
                                 var coord = data.result.list[i].coord
                                 var point = new BMap.Point(coord.split(",")[0],coord.split(",")[1]);
                                 if(data.result.list[i].poleStatus=='3'){
-                                    var marker = new BMap.Marker(point,{icon:abnormal});
-                                }else if(data.result.list[i].poleStatus=='0'){
                                     var marker = new BMap.Marker(point,{icon:Unknown});
-                                }else if(data.result.list[i].poleStatus=='2'){
-                                    var marker = new BMap.Marker(point,{icon:online});
-                                }else{
+                                }else if(data.result.list[i].poleStatus=='0'){
                                     var marker = new BMap.Marker(point,{icon:offline});
+                                }else if(data.result.list[i].poleStatus=='2'){
+                                    var marker = new BMap.Marker(point,{icon:abnormal});
+                                }else{
+                                    var marker = new BMap.Marker(point,{icon:online});
                                 }
                                 marker.id=data.result.list[i].id
                                 marker.type=that.value1
@@ -672,7 +674,7 @@ export default {
     created(){
         //设置img的路径
         var url = localStorage.serverurl.split('/')
-        this.imgserverurl = url[0]+'//'+url[2]+'/solin-platform/'
+        this.imgserverurl = url[0]+'//'+url[2]+'/solin/'
         this.project()
     },
     beforeDestroy(){
@@ -684,17 +686,18 @@ export default {
 <style scoped>
 hr{margin: 0;}
 .GIS{width: 100%;height: 100%;position: relative;}
-.statistical{width: 350px;height: 190px;border-radius: 10px;box-shadow: 3px 3px 5px #999;position: absolute;top: 75px;left: 10px;padding: 0 15px 0 15px;z-index: 2;background: white;}
+.statistical{width: 350px;height: 190px;border-radius: 10px;box-shadow: -0.5px 2px 10px 1px #d9dbdd;position: absolute;top: 75px;left: 10px;padding: 0 15px 0 15px;z-index: 2;background: white;}
 .statistical_top{height: 40px;display: flex;align-items: center;font-size: 15px;color: #333333;}
 .statistical_top>img{padding-right: 15px;width: 40px;}
 .statistical_equipment{width: 100%;padding: 15px 0;}
 .statistical_equipment>span{font-size:12px;background: #d6dae0;padding: 5px 10px;border-radius: 3px;margin-left: 10px;cursor: pointer;color: #333333;}
 .statistical_equipment_background{background: #0097ff !important;color: white !important;}
 .statistical_bottom{width: 100%;display: flex;}
-.statistical_bottom>div:nth-of-type(1){padding-top: 15px;}
+.statistical_bottom>div:nth-of-type(1){padding-top: 15px;margin-left: 15px;}
 #Equipment_echarts{width: 120px;position: absolute;right: 5px;bottom: 15px;height: 100px;}
 .statistical_bottom>div>div{display: flex;align-items: center;}
-.statistical_bottom>div>div>span{padding-left: 15px;font-size: 14px;color: #333333;}
+.statistical_bottom>div>div>span{padding-left: 5px;font-size: 14px;color: #333333;}
+.statistical_bottom img{width: 12px;}
 .Pattern{position: absolute;top: 50px;right: 50px;z-index: 2;}
 /* .weather{position: absolute;top:135px;right:50px;width: 355px;height: 193px;border-radius: 27px;box-shadow: 2px 2px 8px 1px #303e60;color: white;z-index: 2;}
 #weather1{background: url('../../../assets/img/tq3.png') 100% 100%;}

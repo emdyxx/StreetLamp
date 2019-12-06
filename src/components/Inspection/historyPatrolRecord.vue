@@ -2,121 +2,125 @@
     <!-- 历史任务 -->
     <div class="section"> 
         <div class="section_top">
-            <div class="search">
-                <el-dropdown size="small" split-button @command="handleCommand">
-                    {{name}}
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="name='计划名称';types='1';">计划名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='巡检员';types='2';">巡检员</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <div>
-                    <template v-if="types=='1'">
-                        <el-input v-model="planName" size="small" placeholder="请输入计划名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="types=='2'">
-                        <el-input v-model="inspectorName" size="small" placeholder="请输入巡检员" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                </div>
-                <div>
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div>
+            <p>位置: &nbsp;巡检管理>历史任务</p>
         </div>
         <div class="section_bottom">
-            <el-table
-                :data="tableData"
-                row-key="id"
-                :expand-row-keys="expands"
-                border
-                stripe
-                size='small'
-                tooltip-effect="dark"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;"
-                @expand-change='clickTable'>
-                <el-table-column type="expand">
-                    <template slot-scope="props">
-                        <el-table
-                        :data='tableData2'
-                        border
-                        size='mini'
-                        style="width: 100%;">
-                            <el-table-column
-                            prop="siteName"
-                            align='center'
-                            label="点名称"
-                            min-width="50">
-                            </el-table-column>
-                            <el-table-column
-                            prop="siteNumber"
-                            label="点编号"
-                            align='center'>
-                            </el-table-column>
-                            <el-table-column
-                            align='center'
-                            label="点状态"
-                            min-width="50">
-                                <template slot-scope="scope">
-                                    <span v-if="scope.row.siteStatus=='1'" style="color:#67C23A;">正常</span>
-                                    <span v-if="scope.row.siteStatus=='2'" style="color:#F56C6C;">异常</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                            align='center'
-                            label="巡检状态"
-                            min-width="50">
-                                <template slot-scope="scope">
-                                    <span v-if="scope.row.siteExecuteStatus=='0'" style="color:#F56C6C;">未巡检</span>
-                                    <span v-if="scope.row.siteExecuteStatus=='1'" style="color:#67C23A;">已巡检</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                            prop="updateTime"
-                            label="上报时间"
-                            align='center'>
-                            </el-table-column>
-                            <el-table-column
-                            align='center'
-                            label="操作"
-                            min-width="50">
-                                <template slot-scope="scope">
-                                    <el-button @click="details(scope.row)" :disabled="scope.row.recordId=='0'" type="primary" size='mini'>详情</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <div class="block">
-                            <el-pagination
-                            background
-                            @size-change="sizechange2"
-                            @current-change="currentchange2"
-                            :current-page="pageIndex2"
-                            :page-sizes="[10, 20, 30, 50]"
-                            :page-size="pageSize2"
-                            layout="total, sizes, prev, pager, next, jumper"
-                            :total="total2">
-                            </el-pagination>
-                        </div>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="planName"
-                align='center'
-                label="计划名称"
-                min-width="180">
-                </el-table-column>
-                <el-table-column
-                prop="routeName"
-                align='center'
-                label="巡检路线"
-                min-width="180">
-                </el-table-column>
-                <el-table-column
-                prop="inspectorName"
-                align='center'
-                label="巡检员"
-                min-width="180">
-                </el-table-column>
-            </el-table>
+            <div class="section_bottom_bottom">
+                <div class="search">
+                    <el-dropdown size="small" split-button @command="handleCommand">
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='计划名称';types='1';">计划名称</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='巡检员';types='2';">巡检员</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="types=='1'">
+                            <el-input v-model="planName" size="small" placeholder="请输入计划名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="types=='2'">
+                            <el-input v-model="inspectorName" size="small" placeholder="请输入巡检员" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                    </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <el-table
+                    :data="tableData"
+                    row-key="id"
+                    :expand-row-keys="expands"
+                    border
+                    size='small'
+                    tooltip-effect="dark"
+                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;"
+                    @expand-change='clickTable'>
+                    <el-table-column type="expand">
+                        <template slot-scope="props">
+                            <el-table
+                            :data='tableData2'
+                            border
+                            size='mini'
+                            style="width: 100%;">
+                                <el-table-column
+                                prop="siteName"
+                                show-overflow-tooltip
+                                label="点名称"
+                                min-width="50">
+                                </el-table-column>
+                                <el-table-column
+                                prop="siteNumber"
+                                label="点编号"
+                                show-overflow-tooltip>
+                                </el-table-column>
+                                <el-table-column
+                                show-overflow-tooltip
+                                label="点状态"
+                                min-width="50">
+                                    <template slot-scope="scope">
+                                        <span v-if="scope.row.siteStatus=='1'" style="color:#67C23A;">正常</span>
+                                        <span v-if="scope.row.siteStatus=='2'" style="color:#F56C6C;">异常</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                show-overflow-tooltip
+                                label="巡检状态"
+                                min-width="50">
+                                    <template slot-scope="scope">
+                                        <span v-if="scope.row.siteExecuteStatus=='0'" style="color:#F56C6C;">未巡检</span>
+                                        <span v-if="scope.row.siteExecuteStatus=='1'" style="color:#67C23A;">已巡检</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                prop="updateTime"
+                                label="上报时间"
+                                show-overflow-tooltip>
+                                </el-table-column>
+                                <el-table-column
+                                show-overflow-tooltip
+                                label="操作"
+                                min-width="50">
+                                    <template slot-scope="scope">
+                                        <el-button @click="details(scope.row)" :disabled="scope.row.recordId=='0'" type="primary" size='mini'>详情</el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <div class="block">
+                                <el-pagination
+                                background
+                                @size-change="sizechange2"
+                                @current-change="currentchange2"
+                                :current-page="pageIndex2"
+                                :page-sizes="[10, 20, 30, 50]"
+                                :page-size="pageSize2"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="total2">
+                                </el-pagination>
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="planName"
+                    show-overflow-tooltip
+                    label="计划名称"
+                    min-width="180">
+                    </el-table-column>
+                    <el-table-column
+                    prop="routeName"
+                    show-overflow-tooltip
+                    label="巡检路线"
+                    min-width="180">
+                    </el-table-column>
+                    <el-table-column
+                    prop="inspectorName"
+                    show-overflow-tooltip
+                    label="巡检员"
+                    min-width="180">
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="block">
                 <el-pagination
                 background
@@ -146,17 +150,17 @@
                             style="width: 100%;">
                             <el-table-column
                             prop="itemName"
-                            align='center'
+                            show-overflow-tooltip
                             label="项名称"
                             min-width="120">
                             </el-table-column>
                             <el-table-column
                             prop="itemCategoryName"
                             label="项类别"
-                            align='center'>
+                            show-overflow-tooltip>
                             </el-table-column>
                             <el-table-column
-                            align='center'
+                            show-overflow-tooltip
                             label="状态"
                             min-width="50">
                                 <template slot-scope="scope">
@@ -167,7 +171,7 @@
                             <el-table-column
                             prop="itemCheckResults"
                             label="备注"
-                            align='center'>
+                            show-overflow-tooltip>
                             </el-table-column>
                         </el-table>
                         <div style="display:flex;flex-wrap: wrap;">

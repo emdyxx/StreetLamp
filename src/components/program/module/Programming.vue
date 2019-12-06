@@ -1,9 +1,9 @@
 <template>
     <div class="Programming">
-        <div class="preview box_shadow">
+        <div class="preview">
             <div class="preview_top">
                 节目预览
-                <el-button @click="preview" size="small">预览</el-button>
+                <el-button @click="preview" size="mini" type="primary" plain style="background:#4CD3C5;color:white;border:none;">预览</el-button>
             </div>
             <div class="preview_bottom">
                 <div class="MediaPreview">
@@ -22,10 +22,10 @@
                         {{textarea}}
                     </div>
                 </div>
-                <div class="MediaPreviewZoom">
-                    <el-button @click="Zoom(0)" title="放大" size="mini">放大</el-button>
-                    <el-button @click="Zoom(1)" title="缩小" size="mini">缩小</el-button>
-                </div>
+                <!-- <div class="MediaPreviewZoom">
+                    <el-button @click="Zoom(0)" title="放大" size="mini" type="primary" plain>放大</el-button>
+                    <el-button @click="Zoom(1)" title="缩小" size="mini" type="primary" plain>缩小</el-button>
+                </div> -->
             </div>
         </div>
         <div class="content">
@@ -37,8 +37,8 @@
                     oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"
                     v-model="ProgramName">
                 </el-input>
-                <el-button @click="backtrack" size="small" icon='el-icon-back'>退出</el-button>
-                <el-button @click="ProgramSubmit" size="small">保存</el-button>
+                <el-button @click="backtrack" size="small" icon='el-icon-back' type="primary" plain>退出</el-button>
+                <el-button @click="ProgramSubmit" size="small" type="primary" plain>保存</el-button>
             </div>
             <div class="content_bottom box_shadow">
                 <div class="content_bottom_01">
@@ -101,12 +101,12 @@
                 </div>
             </div>
         </div>
-        <div class="medias box_shadow">
+        <div class="medias">
             <div class="medias_left">
                 <div class="media_top">
                     <span v-if="mediaType=='0'">我的图片</span>
                     <span v-if="mediaType=='1'">我的视频</span>
-                    <el-button v-if="dirId!='0'" @click="ReturnDir" size="small">返回</el-button>
+                    <el-button v-if="dirId!='0'" @click="ReturnDir" size="mini" type="primary" plain style="background:#4CD3C5;color:white;border:none;">返回</el-button>
                 </div>
                 <div class="media_bottom">
                     <template v-for="item in tableData">
@@ -169,8 +169,8 @@
                     (秒)
                 </div>
                 <div>
-                    <el-button @click="mediamove(1)" round icon="el-icon-arrow-left" size="mini" style="margin-left:10px;"></el-button>
-                    <el-button @click="mediamove(2)" round icon="el-icon-arrow-right" size="mini"></el-button>
+                    <el-button @click="mediamove(1)" type="text" round icon="el-icon-arrow-left" size="mini" style="margin-left:10px;"></el-button>
+                    <el-button @click="mediamove(2)" type="text" round icon="el-icon-arrow-right" size="mini"></el-button>
                     <p>
                         <span style="color:#4fd2c3;">{{mediaIndex+1}}</span>/{{mediaTotal}}
                     </p>
@@ -404,7 +404,7 @@ export default {
                 playTime:'0',
                 rollDirection:'0',
                 sort:'',
-                speed:'0',
+                speed:'2',
                 textMsg:'',
                 timeSpan:this.mediaClickData.timeSpan,
                 top:'0',
@@ -675,7 +675,7 @@ export default {
                     playTime:'0',
                     rollDirection:'1',
                     sort:'1',
-                    speed:'5',
+                    speed:'2',
                     textMsg:that.textarea,
                     timeSpan:'5',
                     top:sessionStorage.height-20,
@@ -735,10 +735,10 @@ export default {
 </script>
 <style scoped>
 .Programming{width: 100%;height: 100%;position: relative;display: flex;justify-content: center;align-items: center;}
-.box_shadow{box-shadow: -0.5px 1px 5px gray;}
-.preview{position: absolute;top: 8px;bottom: 0;left: 5px;width: 250px;}
-.preview_top{height: 50px;line-height: 50px;padding-left: 20px;border-bottom: 1px solid #efefef;font-size: 16px;}
-.preview_top>button{position: absolute;right: 10px;top: 9px;}
+/* .box_shadow{box-shadow: -0.5px 1px 5px gray;} */
+.preview{position: absolute;top: 0;bottom: 0;left: 5px;width: 250px;}
+.preview_top{height: 50px;line-height: 50px;padding-left: 20px;border-bottom: 1px solid #efefef;font-size: 14px;}
+.preview_top>button{position: absolute;right: 10px;top: 13px;}
 .preview_bottom{position: absolute;top: 50px;bottom: 0;width: 100%;display: flex;justify-content: center;padding-top: 80px;overflow: hidden;}
 .MediaPreview{width: 200px;height: 360px;border: 8px solid;border-image:url("../../../assets/img/border.png") 9 repeat;box-sizing: content-box;overflow: hidden;position: relative;}
 .MediaPreview img{width: 100%;height: 100%;}
@@ -746,15 +746,15 @@ export default {
 .textarea{position: absolute;bottom: 0;width:100%;height: 20px;border-top:1px solid #4d4d4d;text-align: center;background: #000;color: white;}
 .MediaPreview_div{overflow: hidden;background: #000;}
 
-.content{position: absolute;top: 8px;bottom: 0;left: 265px;right: 370px;}
-.content_top{height: 50px;display: flex;align-items: center;padding-left: 15px;}
+.content{position: absolute;top: 0;bottom: 0;left: 265px;right: 370px;border-left:5px solid #efefef;border-right: 5px solid #efefef;}
+.content_top{height: 50px;display: flex;align-items: center;padding-left: 15px;border-bottom: 1px solid #efefef;}
 .content_top>div{width: 196px;}
 .content_top>button:nth-of-type(1){position: absolute;right: 15px;}
 .content_top>button:nth-of-type(2){position: absolute;right: 100px;}
 .content_bottom{position: absolute;top: 60px;bottom: 0;width: 100%;overflow: auto;}
 .content_bottom>div{width: 100%;height: 220px;padding: 10px;margin-top:15px;}
 .content_bottom>div>div{width: 100%;height: 100%;padding: 10px;position: relative;}
-.content_bottom>div p{font-size: 16px;}
+.content_bottom>div p{font-size: 14px;}
 .content_bottom>div>div>div{position: absolute;top: 32px;bottom: 0;left: 0;right: 0;}
 .content_bgcolor{background: #ecf6ff;}
 .setion_main{display: flex;overflow: auto;}
@@ -764,7 +764,7 @@ export default {
 .img__div>img{width: 100%;position: absolute;bottom: 0;}
 .img__div>div{position: absolute;width: 100%;height: 100%;background: #454545;color:white;opacity: .75;display: flex;justify-content: center;align-items: center;}
 .img__div>div>i{position: absolute;top: 5px;right: 5px;font-size: 25px;}
-.medias{position: absolute;top: 8px;bottom: 0;right: 0;width: 360px;}
+.medias{position: absolute;top: 0;bottom: 0;right: 0;width: 360px;}
 .medias_left{position: absolute;left: 0;right: 70px;height: 100%;}
 .media_top{width: 100%;height: 50px;line-height: 50px;padding-left: 15px;border-bottom: 1px solid #efefef;font-size: 16px;}
 .media_top>button{position: absolute;right: 10px;top: 9px;}
@@ -772,7 +772,7 @@ export default {
 .medias_right>div{padding: 10px 0 10px 0;cursor: pointer;}
 .medias_right>div>P{margin: 0;font-size: 16px;text-align: center;}
 .medias_right_style{color: #4dd3c5;background: #e7e7e7;}
-.media_bottom{position: absolute;top: 52px;bottom: 0;width: 100%;overflow: auto;display: flex;flex-wrap: wrap;}
+.media_bottom{position: absolute;top: 52px;bottom: 0;width: 100%;overflow: auto;display: flex;flex-wrap: wrap;align-content: flex-start;}
 .media_bottom>div{width: 42%;height: 178px;margin: 10px 10px 0 10px;position: relative;}
 .section_img{height: 130px;overflow: hidden;display: flex;justify-content: center;position: relative;}
 .section_img>img{position: absolute;bottom: 0;max-width: 100%;max-height: 130px;padding:5px;}
@@ -784,14 +784,16 @@ overflow: hidden;white-space : nowrap;text-overflow: ellipsis;}
 .FolderEvent{background: rgb(240, 240, 240);}
 
 /* 弹框 */
-.Programming_modal{width: 310px;height: 460px;box-shadow: -0.5px 1px 10px gray;z-index: 99;position: relative;background: white;display: none;}
+.Programming_modal{width: 240px;height: 480px;box-shadow: -0.5px 2px 20px 5px #d9dbdd;z-index: 99;position: relative;background: white;display: none;}
 .Programming_modal_top{width:100%;height:380px;border-bottom: 1px solid #efefef;overflow: hidden;display: flex;justify-content: center;align-items: center;}
 .Programming_modal_top>img,.Programming_modal_top>video{width: 310px;}
 .Programming_modal_bottom{position: absolute;top: 381px;bottom: 0;width: 100%;}
-.Programming_modal_bottom>div{width: 100%;height: 30px;display: flex;align-items: center;margin-top: 5px;}
-.Programming_modal_bottom>div:nth-of-type(1){justify-content: center;}
+.Programming_modal_bottom>div{width: 100%;height: 30px;display: flex;align-items: center;margin-top: 15px;}
+.Programming_modal_bottom>div:nth-of-type(1){justify-content: center;margin-top: 20px;}
 .Programming_modal_bottom div>p{margin:0;position: absolute;right: 10px;}
-.Programming_modal_close{position: absolute;right: -7px;top: -7px;width: 30px;height: 30px;border-radius: 50%;color:#4fd2c3;font-size: 24px;text-align:center;line-height:30px;box-shadow: -0.5px 1px 5px gray;background: white;}
+.Programming_modal_bottom>div>button{padding: 7px 2px;font-weight: 600;font-size: 14px;}
+.Programming_modal_bottom>div>button:hover{color: #4fd2c3;}
+.Programming_modal_close{position: absolute;right: -7px;top: -7px;width: 24px;height: 24px;border-radius: 50%;color:#4fd2c3;font-size: 18px;text-align:center;line-height:24px;background: white;}
 </style>
 <style lang='less'>
 .content_top{

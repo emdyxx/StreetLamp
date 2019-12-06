@@ -2,80 +2,52 @@
     <!-- 统计信息 -->
     <div class="section">
         <div class="section_top">
-            <el-select v-model="value" @change="Recordchange" size="small" placeholder="请选择">
-                <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-                </el-option>
-            </el-select>
-            <template v-if="value=='1'">
-                <div class="search_Log">
-                    <span>姓名:</span>
-                    <input v-model="inspectorName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入巡检员姓名">
-                </div>
-            </template>
-            <div class="search_Log">
-                <span>开始日期:</span>
-                <el-date-picker
-                    size="small"
-                    align="right"
-                    type="date"
-                    value-format='yyyy-MM-dd'
-                    v-model="startTime"
-                    placeholder="选择日期">
-                </el-date-picker>
-            </div>
-            <div class="search_Log">
-                <span>结束日期:</span>
-                <el-date-picker
-                    size="small"
-                    align="right"
-                    type="date"
-                    value-format='yyyy-MM-dd'
-                    v-model="endTime"
-                    placeholder="选择日期">
-                </el-date-picker>
-            </div>
-            <div style="margin-left:15px;">
-                <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-            </div>
+            <p>位置: &nbsp;巡检管理>统计信息</p>
         </div>
         <div class="section_bottom">
-            <!-- <div class="Record_bottom_top">
-                <template v-if="value=='1'">
-                    <div class="search">
-                        <label>巡检员姓名:</label>
-                        <input v-model="inspectorName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入巡检员姓名">
+            <div class='section_bottom_bottom'>
+                <div class="search">
+                    <el-select v-model="value" @change="Recordchange" size="small" placeholder="请选择">
+                        <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <template v-if="value=='1'">
+                        <div class="search_Log">
+                            <span>姓名:</span>
+                            <input v-model="inspectorName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入巡检员姓名">
+                        </div>
+                    </template>
+                    <div class="search_Log">
+                        <span>开始日期:</span>
+                        <el-date-picker
+                            size="small"
+                            align="right"
+                            type="date"
+                            value-format='yyyy-MM-dd'
+                            v-model="startTime"
+                            placeholder="选择日期">
+                        </el-date-picker>
                     </div>
-                </template>
-                <div class="search">
-                    <label>开始日期:</label>
-                    <el-date-picker
-                        size="small"
-                        align="right"
-                        type="date"
-                        value-format='yyyy-MM-dd'
-                        v-model="startTime"
-                        placeholder="选择日期">
-                    </el-date-picker>
+                    <div class="search_Log">
+                        <span>结束日期:</span>
+                        <el-date-picker
+                            size="small"
+                            align="right"
+                            type="date"
+                            value-format='yyyy-MM-dd'
+                            v-model="endTime"
+                            placeholder="选择日期">
+                        </el-date-picker>
+                    </div>
+                    <div style="margin-left:15px;">
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
                 </div>
-                <div class="search">
-                    <label>结束日期:</label>
-                    <el-date-picker
-                        size="small"
-                        align="right"
-                        type="date"
-                        value-format='yyyy-MM-dd'
-                        v-model="endTime"
-                        placeholder="选择日期">
-                    </el-date-picker>
-                </div>
-                <div style="margin-left:15px;">
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div> -->
+            </div>
             <div class="Record_bottom_bottom">
                 <template v-if="value=='0'">
                     <el-table
@@ -83,37 +55,35 @@
                         @row-click="clickRow" 
                         ref="moviesTable"
                         border
-                        stripe
                         size='small'
                         tooltip-effect="dark"
                         @selection-change="SelectionChange"
                         style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                         <el-table-column
+                        align="center"
                         type="selection"
-                        align='center'
                         width="55">
                         </el-table-column>
                         <el-table-column
                         prop="patrolPlanName"
-                        align='center'
+                        show-overflow-tooltip
                         label="计划名称"
                         min-width="80">
                         </el-table-column>
                         <el-table-column
                         prop="factSiteNum"
-                        align='center'
+                        show-overflow-tooltip
                         label="点实际巡检次数"
                         min-width="120">
                         </el-table-column>
                         <el-table-column
                         prop="omissionFactor"
-                        align='center'
+                        show-overflow-tooltip
                         label="漏检率"
                         min-width="150">
                         </el-table-column>
                         <el-table-column
                         prop="totalSiteNum"
-                        align='center'
                         label="点巡检总次数"
                         show-overflow-tooltip
                         min-width="120">
@@ -126,37 +96,35 @@
                         @row-click="clickRow" 
                         ref="moviesTable"
                         border
-                        stripe
                         size='small'
                         tooltip-effect="dark"
                         @selection-change="SelectionChange"
                         style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                         <el-table-column
+                        align="center"
                         type="selection"
-                        align='center'
                         width="55">
                         </el-table-column>
                         <el-table-column
                         prop="inspectorName"
-                        align='center'
+                        show-overflow-tooltip
                         label="巡检员姓名"
                         min-width="120">
                         </el-table-column>
                         <el-table-column
                         prop="factNum"
-                        align='center'
+                        show-overflow-tooltip
                         label="巡检员已巡检次数"
                         min-width="120">
                         </el-table-column>
                         <el-table-column
                         prop="totalNum"
-                        align='center'
+                        show-overflow-tooltip
                         label="巡检员需要巡检总次数"
                         min-width="150">
                         </el-table-column>
                         <el-table-column
                         prop="finishRate"
-                        align='center'
                         label="完成率"
                         show-overflow-tooltip
                         min-width="120">
@@ -169,38 +137,36 @@
                         @row-click="clickRow" 
                         ref="moviesTable"
                         border
-                        stripe
                         size='small'
                         tooltip-effect="dark"
                         @selection-change="SelectionChange"
                         style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                         <el-table-column
+                        align="center"
                         type="selection"
-                        align='center'
                         width="55">
                         </el-table-column>
                         <el-table-column
                         prop="patrolSiteName"
-                        align='center'
+                        show-overflow-tooltip
                         label="巡检点名称"
                         min-width="120">
                         </el-table-column>
                         <el-table-column
                         prop="factSiteNum"
-                        align='center'
+                        show-overflow-tooltip
                         label="巡检点实际巡检次数"
                         min-width="120">
                         </el-table-column>
                         <el-table-column
                         prop="totalSiteNum"
-                        align='center'
+                        show-overflow-tooltip
                         label="巡检点巡检总次数"
                         min-width="120">
                         </el-table-column>
                         <el-table-column
                         prop="lossRate"
                         label="漏检率"
-                        align='center'
                         min-width="120"
                         show-overflow-tooltip>
                         </el-table-column>

@@ -2,12 +2,14 @@
     <!-- 巡检主页 -->
     <div class="OverallSituation">
         <header class="header">
-            <i @click="backtrack" class="iconfont icon-fanhui2"></i>
-            <div class="header-left">
-                <i class="iconfont icon-hengpai"></i>
-                巡检管理
+            <div class="backtrack" @click="backtrack">
+                <i class="iconfont icon-fanhuishangyiji1"></i>
+                <span>返回</span>
             </div>
-            <el-select size='small' v-model="value" @change='projectChange' style="margin-left:20px;" placeholder="请选择">
+            <div class="header-left">
+                <img src="../../assets/header-img.png" alt="">
+            </div>
+            <el-select size='small' v-model="value" id="borderRadiu40" @change='projectChange' style="margin-left:20px;width:225px;" placeholder="请选择">
                 <el-option
                     v-for="item in options"
                     style="height:30px;"

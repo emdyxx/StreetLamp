@@ -2,101 +2,86 @@
     <!-- 巡检项 -->
     <div class="section">
         <div class="section_top">
-            <el-button v-if="JurisdictionS.addPatrolItem" @click="operationPatrolItem(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="JurisdictionS.editPatrolItem" @click="operationPatrolItem(1)" type="primary" icon='el-icon-edit' size='small'>编辑</el-button>
-            <el-button v-if="JurisdictionS.delPatrolItem" @click="operationPatrolItem(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <el-button v-if="JurisdictionS.patrolCategoryManagement" @click="operationPatrolItem(3)" type="primary" icon='el-icon-setting' size='small'>分类管理</el-button>
-            <div class="search" v-if="JurisdictionS.viewPatrolItem">
-                <el-dropdown size="small" split-button @command="handleCommand">
-                    {{name}}
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="name='名称';types='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='分类';types='2';">分类</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <div>
-                    <template v-if="types=='1'">
-                        <el-input v-model="itemName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="types=='2'">
-                        <el-select v-model='categoryId' clearable size='small' style="width:176px;" placeholder="请选择分类">
-                            <el-option
-                            v-for="item in options"
-                            :key="item.id"
-                            :label="item.categoryName"
-                            :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </template>
-                </div>
-                <div>
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div>
+            <p>位置: &nbsp;巡检管理>巡检项</p>
         </div>
         <div class="section_bottom">
-            <!-- <div class="patrolItem_bottom_top">
-                <div class="search">
-                    <label>检查项名称:</label>
-                    <input v-model="itemName" type="text" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" class="form-control" placeholder="请输入用户名">
+            <div class="section_bottom_bottom">
+                <div class="search" v-if="JurisdictionS.viewPatrolItem">
+                    <el-dropdown size="small" split-button @command="handleCommand">
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='名称';types='1';">名称</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='分类';types='2';">分类</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="types=='1'">
+                            <el-input v-model="itemName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="types=='2'">
+                            <el-select v-model='categoryId' clearable size='small' style="width:176px;" placeholder="请选择分类">
+                                <el-option
+                                v-for="item in options"
+                                :key="item.id"
+                                :label="item.categoryName"
+                                :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </template>
+                    </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
                 </div>
-                <div class="search">
-                    <label>检查项分类:</label>
-                    <el-select v-model='categoryId' clearable size='small' style="width:176px;" placeholder="请选择分类">
-                        <el-option
-                        v-for="item in options"
-                        :key="item.id"
-                        :label="item.categoryName"
-                        :value="item.id">
-                        </el-option>
-                    </el-select>
+                <div class="section_bottom_right">
+                    <el-button v-if="JurisdictionS.addPatrolItem" @click="operationPatrolItem(0)" type="primary" plain icon='el-icon-plus' size='small'>添加</el-button>
+                    <el-button v-if="JurisdictionS.editPatrolItem" @click="operationPatrolItem(1)" type="primary" plain icon='el-icon-edit' size='small'>编辑</el-button>
+                    <el-button v-if="JurisdictionS.delPatrolItem" @click="operationPatrolItem(2)" type="primary" plain icon='el-icon-delete' size='small'>删除</el-button>
+                    <el-button v-if="JurisdictionS.patrolCategoryManagement" @click="operationPatrolItem(3)" type="primary" plain icon='el-icon-setting' size='small'>分类管理</el-button>
                 </div>
-                <div style="margin-left:15px;">
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div> -->
+            </div>
             <div class="patrolItem_bottom_bottom">
-                <el-table
-                    :data="tableData"
-                    @row-click="clickRow" 
-                    ref="moviesTable"
-                    border
-                    stripe
-                    size='small'
-                    tooltip-effect="dark"
-                    @selection-change="SelectionChange"
-                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                    <el-table-column
-                    type="selection"
-                    align='center'
-                    width="55">
-                    </el-table-column>
-                    <el-table-column
-                    prop="itemName"
-                    align='center'
-                    label="检查项名称"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="createUser"
-                    align='center'
-                    label="创建人员"
-                    min-width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="categoryName"
-                    align='center'
-                    label="归属类别"
-                    min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="createTime"
-                    label="创建时间"
-                    align='center'
-                    min-width="180"
-                    show-overflow-tooltip>
-                    </el-table-column>
-                </el-table>
+                <div>
+                    <el-table
+                        :data="tableData"
+                        @row-click="clickRow" 
+                        ref="moviesTable"
+                        border
+                        size='small'
+                        tooltip-effect="dark"
+                        @selection-change="SelectionChange"
+                        style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                        <el-table-column
+                        align="center"
+                        type="selection"
+                        width="55">
+                        </el-table-column>
+                        <el-table-column
+                        prop="itemName"
+                        show-overflow-tooltip
+                        label="检查项名称"
+                        min-width="120">
+                        </el-table-column>
+                        <el-table-column
+                        prop="createUser"
+                        show-overflow-tooltip
+                        label="创建人员"
+                        min-width="80">
+                        </el-table-column>
+                        <el-table-column
+                        prop="categoryName"
+                        show-overflow-tooltip
+                        label="归属类别"
+                        min-width="120">
+                        </el-table-column>
+                        <el-table-column
+                        prop="createTime"
+                        label="创建时间"
+                        min-width="180"
+                        show-overflow-tooltip>
+                        </el-table-column>
+                    </el-table>
+                </div>
                 <div class="block">
                     <el-pagination
                     background
@@ -166,26 +151,24 @@
                             @row-click="clickRow2" 
                             ref="moviesTable2"
                             border
-                            stripe
                             size='small'
                             tooltip-effect="dark"
                             @selection-change="SelectionChange2"
                             style="width: 100%;margin-top:10px;">
                             <el-table-column
+                            align="center"
                             type="selection"
-                            align='center'
                             width="55">
                             </el-table-column>
                             <el-table-column
                             prop="categoryName"
-                            align='center'
+                            show-overflow-tooltip
                             label="分类名称"
                             min-width="120">
                             </el-table-column>
                             <el-table-column
                             prop="createTime"
                             label="创建时间"
-                            align='center'
                             min-width="180"
                             show-overflow-tooltip>
                             </el-table-column>

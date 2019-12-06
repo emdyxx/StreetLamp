@@ -2,80 +2,92 @@
     <div class="section">
         <!-- 集中器模式 -->
         <div class="section_top">
-            <el-button v-if="JurisdictionS.addConcentrator" @click="myModalOperation(0)" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button v-if="JurisdictionS.editConcentrator" @click="myModalOperation(1)" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button v-if="JurisdictionS.delConcentrator" @click="myModalOperation(2)" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search" v-if="JurisdictionS.viewConcentrator">
-                <el-dropdown size="small" split-button @command="handleCommand">
-                    {{name}}
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="name='名称';type1='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='序列号';type1='2';">序列号</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <div>
-                    <template v-if="type1=='1'">
-                        <el-input v-model="concentratorName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="type1=='2'">
-                        <el-input v-model="concentratorSn" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                </div>
-                <div>
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div>
+            <p>位置: &nbsp;设备部署>集中器管理</p>
         </div>
         <div class="section_bottom">
-            <el-table
-                :data="myModaltableData"
-                @row-click="clickRow3" 
-                ref="myModalmoviesTable"
-                border
-                stripe
-                size='small'
-                slot="empty"
-                tooltip-effect="dark"
-                @selection-change="myModalChange"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="concentratorName"
-                align='center'
-                label="名称"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
-                prop="concentratorSn"
-                align='center'
-                label="序列号"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
-                prop="deviceCount"
-                align='center'
-                label="关联设备数量"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
-                prop="remark"
-                align='center'
-                label="备注"
-                :formatter="formatRole"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
-                prop="createTime"
-                align='center'
-                label="创建时间"
-                :formatter="formatRole"
-                xshow-overflow-tooltip>
-                </el-table-column>
-            </el-table>
+            <div class="section_bottom_bottom">
+                <div class="search" v-if="JurisdictionS.viewConcentrator">
+                    <el-dropdown size="small" split-button @command="handleCommand">
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='名称';type1='1';">名称</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='序列号';type1='2';">序列号</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="type1=='1'">
+                            <el-input v-model="concentratorName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="type1=='2'">
+                            <el-input v-model="concentratorSn" size="small" placeholder="请输入序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                    </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
+                </div>
+                <div class="section_bottom_right">
+                    <el-button v-if="JurisdictionS.addConcentrator" @click="myModalOperation(0)" type="primary" plain icon='el-icon-plus' size='small'>添加</el-button>
+                    <el-button v-if="JurisdictionS.delConcentrator" @click="myModalOperation(2)" type="primary" plain icon='el-icon-delete' size='small'>删除</el-button>
+                </div>
+            </div>
+            <div>
+                <el-table
+                    :data="myModaltableData"
+                    @row-click="clickRow3" 
+                    ref="myModalmoviesTable"
+                    border
+                    size='small'
+                    slot="empty"
+                    tooltip-effect="dark"
+                    @selection-change="myModalChange"
+                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                    <el-table-column
+                    align="center"
+                    type="selection"
+                    width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="concentratorName"
+                    show-overflow-tooltip
+                    label="名称"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="concentratorSn"
+                    show-overflow-tooltip
+                    label="序列号"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="deviceCount"
+                    show-overflow-tooltip
+                    label="关联设备数量"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="remark"
+                    show-overflow-tooltip
+                    label="备注"
+                    :formatter="formatRole"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="createTime"
+                    show-overflow-tooltip
+                    label="创建时间"
+                    :formatter="formatRole"
+                    xshow-overflow-tooltip>
+                    </el-table-column>
+                    <el-table-column
+                    label="操作"
+                    min-width="120">
+                        <template slot-scope="scope">
+                            <el-button v-if="JurisdictionS.editConcentrator" @click="myModalOperation(1,scope.row)" type="primary" size='mini'>编辑</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="block">
                 <el-pagination
                 background
@@ -91,7 +103,7 @@
         </div>
         <!-- 集中器添加修改模态框 -->
         <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:350px;">
+            <div class="modal-dialog" style="width:400px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -100,18 +112,18 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label><span class="Required">*</span>名称:</label>
+                            <label><span class="Required">*</span>名&emsp;&emsp;称:</label>
                             <input type="text" v-model="myModaldata.concentratorName" class="form-control" id="serialNumber" placeholder="请输入集中器名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')">
                         </div>
                         <div class="form-group" v-if="myModal=='0'">
-                            <label><span class="Required">*</span>序列号:</label>
+                            <label><span class="Required">*</span>序&ensp;列&ensp;号:</label>
                             <input type="text" v-model="myModaldata.concentratorSn" maxlength="12" class="form-control" id="concentratorSN" placeholder="请输入集中器序列号" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')">
                         </div>
                         <div class="form-group">
-                            <label>备注:</label>
+                            <label>备&emsp;&emsp;注:</label>
                             <el-input
                                 type="textarea"
-                                :rows="2"
+                                :rows="1"
                                 placeholder="请输入备注"
                                 v-model="myModaldata.remark">
                             </el-input>
@@ -133,6 +145,7 @@ export default {
         return {
             name:'名称',
             type1:'1',
+            site:[],
             JurisdictionS:{
                 viewConcentrator:false,//查看集中器部署
                 addConcentrator:false,//添加集中器
@@ -174,7 +187,7 @@ export default {
             this.$refs.myModalmoviesTable.toggleRowSelection(row)
         },
         //集中器管理添加,修改,删除
-        myModalOperation(val){
+        myModalOperation(val,row){
             var that = this;
             if(val=='0'){
                 that.myModal = '0'
@@ -184,18 +197,12 @@ export default {
                 that.myModaldata.remark = ''
             }
             if(val=='1'){
-                if(that.myModalSite.length==0||that.myModalSite.length>1){
-                    that.$message({
-                        message: '请选择单条数据修改!',
-                        type: 'error'
-                    });
-                    return;
-                }
                 that.myModal = '1'
                 $('#myModal2').modal('show')
-                that.myModaldata.concentratorName = that.myModalSite[0].concentratorName
-                that.myModaldata.concentratorSn = that.myModalSite[0].concentratorSn
-                that.myModaldata.remark = that.myModalSite[0].remark
+                that.site = row
+                that.myModaldata.concentratorName = row.concentratorName
+                that.myModaldata.concentratorSn = row.concentratorSn
+                that.myModaldata.remark = row.remark
             }
             if(val=='2'){
                 if(that.myModalSite.length==0){
@@ -262,7 +269,7 @@ export default {
             }
             if(that.myModal == '1'){
                 type = 'put'
-                data.id = that.myModalSite[0].id
+                data.id = that.site.id
             }
             data.concentratorName = that.myModaldata.concentratorName
             data.concentratorSn = that.myModaldata.concentratorSn

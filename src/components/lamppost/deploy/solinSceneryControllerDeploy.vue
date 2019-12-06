@@ -2,113 +2,125 @@
     <!-- 风光传感器 -->
     <div class="section">
         <div class="section_top">
-            <el-button @click="operation(0)" v-if="JurisdictionS.addSceneryController" type="primary" icon='el-icon-plus' size='small'>添加</el-button>
-            <el-button @click="operation(1)" v-if="JurisdictionS.editSceneryController" type="primary" icon="el-icon-edit" size='small'>编辑</el-button>
-            <el-button @click="operation(2)" v-if="JurisdictionS.delSceneryController" type="primary" icon='el-icon-delete' size='small'>删除</el-button>
-            <div class="search" v-if="JurisdictionS.viewSceneryControllerDeploy">
-                <el-dropdown size="small" split-button @command="handleCommand">
-                    {{name}}
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='地址';type='2';">地址</el-dropdown-item>
-                        <el-dropdown-item @click.native="name='状态';type='3';">状态</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <div>
-                    <template v-if="type=='1'">
-                        <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
-                    </template>
-                    <template v-if="type=='2'">
-                        <el-input type="number" v-model="windSolarNumber" size="small" placeholder="请输入地址" style="width:200px;"></el-input>
-                        <!-- <el-input-number v-model="windSolarNumber" size="small" :precision="0" :min="1" :max="253" label="请输入地址" style="width:200px;"></el-input-number> -->
-                        <!-- <el-input v-model="windSolarNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input> -->
-                    </template>
-                    <template v-if="type=='3'">
-                        <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
-                            <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </template>
-                </div>
-                <div>
-                    <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
-                </div>
-            </div>
+            <p>位置: &nbsp;设备部署>风光传感器管理</p>
         </div>
         <div class="section_bottom">
-            <el-table
-                :data="tableData"
-                @row-click="clickRow" 
-                ref="moviesTable"
-                border
-                stripe
-                size='small'
-                tooltip-effect="dark"
-                @selection-change="SelectionChange"
-                style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
-                <el-table-column
-                type="selection"
-                align='center'
-                width="55">
-                </el-table-column>
-                <el-table-column
-                prop="nickName"
-                align='center'
-                label="名称"
-                min-width="110">
-                </el-table-column>
-                <el-table-column
-                prop="windSolarNumber"
-                align='center'
-                label="地址"
-                min-width="110">
-                </el-table-column>
-                <el-table-column
-                align='center'
-                label="状态"
-                min-width="80">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.online=='0'">离线</span>
-                        <span v-if="scope.row.online=='1'">在线</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="modelName"
-                align='center'
-                label="型号"
-                min-width="120">
-                </el-table-column>
-                <el-table-column
-                prop="poleName"
-                align='center'
-                label="灯杆"
-                min-width="110"
-                :formatter="formatRole">
-                </el-table-column>
-                <el-table-column
-                prop="concentratorName"
-                align='center'
-                label="集中器"
-                min-width="100">
-                </el-table-column>
-                <el-table-column
-                prop="remark"
-                align='center'
-                label="备注"
-                min-width="120"
-                :formatter="formatRole">
-                </el-table-column>
-                <el-table-column
-                prop="createTime"
-                align='center'
-                label="创建时间"
-                min-width="150">
-                </el-table-column>
-            </el-table>
+            <div class="section_bottom_bottom">
+                <div class="search" v-if="JurisdictionS.viewSceneryControllerDeploy">
+                    <el-dropdown size="small" split-button @command="handleCommand">
+                        {{name}}
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="name='名称';type='1';">名称</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='地址';type='2';">地址</el-dropdown-item>
+                            <el-dropdown-item @click.native="name='状态';type='3';">状态</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div>
+                        <template v-if="type=='1'">
+                            <el-input v-model="nickName" size="small" placeholder="请输入名称" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')"></el-input>
+                        </template>
+                        <template v-if="type=='2'">
+                            <el-input type="number" v-model="windSolarNumber" size="small" placeholder="请输入地址" style="width:200px;"></el-input>
+                            <!-- <el-input-number v-model="windSolarNumber" size="small" :precision="0" :min="1" :max="253" label="请输入地址" style="width:200px;"></el-input-number> -->
+                            <!-- <el-input v-model="windSolarNumber" size="small" placeholder="请输入地址" oninput="value=value.replace(/[^\d]/g,'')"></el-input> -->
+                        </template>
+                        <template v-if="type=='3'">
+                            <el-select v-model="value" size='small' style="width:194px;" clearable placeholder="请选择">
+                                <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </template>
+                    </div>
+                    <div>
+                        <el-button @click="search" type="primary" size='small' icon="el-icon-search">搜索</el-button>
+                    </div>
+                </div>
+                <div class="section_bottom_right">
+                    <el-button @click="operation(0)" v-if="JurisdictionS.addSceneryController" type="primary" plain icon='el-icon-plus' size='small'>添加</el-button>
+                    <el-button @click="operation(2)" v-if="JurisdictionS.delSceneryController" type="primary" plain icon='el-icon-delete' size='small'>删除</el-button>
+                </div>
+            </div>
+            <div>
+                <el-table
+                    :data="tableData"
+                    @row-click="clickRow" 
+                    ref="moviesTable"
+                    border
+                    size='small'
+                    tooltip-effect="dark"
+                    @selection-change="SelectionChange"
+                    style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
+                    <el-table-column
+                    align="center"
+                    type="selection"
+                    width="55">
+                    </el-table-column>
+                    <el-table-column
+                    prop="nickName"
+                    show-overflow-tooltip
+                    label="名称"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    prop="windSolarNumber"
+                    show-overflow-tooltip
+                    label="地址"
+                    min-width="110">
+                    </el-table-column>
+                    <el-table-column
+                    show-overflow-tooltip
+                    label="状态"
+                    min-width="80">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.online=='0'" class="offLine">离线</span>
+                            <span v-if="scope.row.online=='1'" class="onLine">在线</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="modelName"
+                    show-overflow-tooltip
+                    label="型号"
+                    min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                    prop="poleName"
+                    show-overflow-tooltip
+                    label="所属灯杆"
+                    min-width="110"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    prop="concentratorName"
+                    show-overflow-tooltip
+                    label="集中器"
+                    min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                    prop="remark"
+                    show-overflow-tooltip
+                    label="备注"
+                    min-width="120"
+                    :formatter="formatRole">
+                    </el-table-column>
+                    <el-table-column
+                    prop="createTime"
+                    show-overflow-tooltip
+                    label="创建时间"
+                    min-width="150">
+                    </el-table-column>
+                    <el-table-column
+                    label="操作"
+                    min-width="120">
+                        <template slot-scope="scope">
+                            <el-button @click="operation(1,scope.row)" v-if="JurisdictionS.editSceneryController" type="primary" size='mini'>编辑</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="block">
                 <el-pagination
                 background
@@ -124,7 +136,7 @@
         </div>
         <!-- 添加编辑气象站模态框 -->
         <div class="modal fade" id="addModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:500px;">
+            <div class="modal-dialog" style="width:400px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -133,16 +145,16 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label><span class="Required">*</span>名称:</label>
+                            <label><span class="Required">*</span>名&emsp;&emsp;称:</label>
                             <input type="text" v-model="data.nickName" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入名称">
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>地址:</label>
+                            <label><span class="Required">*</span>地&emsp;&emsp;址:</label>
                             <!-- <input type="text" v-model="data.serialNumber" id="serialNumber" class="form-control" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="请输入序列号"> -->
                             <el-input-number v-model.lazy="data.windSolarNumber" :precision="0" :min="1" :max="253" size="small" style="width:196px;" label="地址"></el-input-number>
                         </div>
                         <div class="form-group">
-                            <label><span class="Required">*</span>型号:</label>
+                            <label><span class="Required">*</span>型&emsp;&emsp;号:</label>
                             <el-select v-model="data.modelId" size='small' style='width:195px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options2"
@@ -153,7 +165,7 @@
                             </el-select>
                         </div> 
                         <div class="form-group">
-                            <label><span class="Required">*</span>集中器:</label>
+                            <label><span class="Required">*</span>集&ensp;中&ensp;器:</label>
                             <el-select v-model="data.concentratorSn" size='small' style='width:196px;' placeholder="请选择">
                                 <el-option
                                 v-for="item in options3"
@@ -166,21 +178,21 @@
                             </el-select>
                         </div> 
                         <div class="form-group">
-                            <label>位置:</label>
+                            <label>位&emsp;&emsp;置:</label>
                             <input type="text" v-model="data.coord" :disabled='true' class="form-control" id="email" oninput="this.value=this.value.replace(/\s+/g,'').replace(/[^\u4e00-\u9fa5\w\.\*\-]/g,'')" placeholder="地图选点">
                             <i @click="mapClick" class="iconfont icon-baidumap mappoint"></i>
                         </div>
                         <div class="form-group">
-                            <label>备注:</label>
+                            <label>备&emsp;&emsp;注:</label>
                             <el-input
                                 type="textarea"
-                                :rows="2"
+                                :rows="1"
                                 style="width:195px;"
                                 placeholder="请输入内容"
                                 v-model="data.remark">
                             </el-input>
                         </div> 
-                        <div class="form-group">
+                        <div class="form-group" v-if="addtype=='0'">
                             <el-button v-if="JurisdictionS.sceneryControllerAssociatePole" @click="LampPole_data" type="primary" size='small'>关联灯杆</el-button>
                         </div> 
                     </div>
@@ -197,7 +209,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>请选择灯杆进行关联</h4>
+                        <h4 class="modal-title" id="myModalLabel">请选择灯杆进行关联</h4>
                     </div>
                     <div class="modal-body">
                         <el-table
@@ -205,24 +217,23 @@
                             @row-click="clickRow2" 
                             ref="multipleTable"
                             border
-                            stripe
                             size='small'
                             tooltip-effect="dark"
                             @selection-change="SelectionChange2"
                             style="width: 100%;overflow:auto;height:auto;max-height:90%;margin-bottom:10px;">
                             <el-table-column
+                            align="center"
                             type="selection"
-                            align='center'
                             width="55">
                             </el-table-column>
                             <el-table-column
                             prop="nickName"
-                            align='center'
+                            show-overflow-tooltip
                             label="灯杆名称"
                             width="120">
                             </el-table-column>
                             <el-table-column
-                            align='center'
+                            show-overflow-tooltip
                             label="灯杆类型"
                             width="80">
                                 <template slot-scope="scope">
@@ -233,7 +244,7 @@
                             <el-table-column
                             prop="coord"
                             :formatter="formatRole"
-                            align='center'
+                            show-overflow-tooltip
                             label="位置"
                             width="150">
                             </el-table-column>
@@ -241,7 +252,7 @@
                             prop="remark"
                             :formatter="formatRole"
                             label="备注"
-                            align='center'
+                            show-overflow-tooltip
                             width="162">
                             </el-table-column>
                         </el-table>
@@ -306,8 +317,9 @@ export default {
             nickName:'',
             windSolarNumber:'',
             value:'',
-            options:[{label:'离线',value:'0'},{label:'在线',value:'1'}],
+            options:[{label:'在线',value:'1'},{label:'离线',value:'0'}],
             addtype:'0',
+            scenerySite:[],
             options2:[],
             options3:[],
             referencePosition:'',
@@ -349,7 +361,7 @@ export default {
             this.$refs.multipleTable.toggleRowSelection(row)
         },
         //点击添加,编辑,删除
-        operation(val){
+        operation(val,row){
             var that = this;
             if(val=='0'){
                 that.ModelData()
@@ -366,23 +378,17 @@ export default {
                 that.referencePosition = ''
             }
             if(val=='1'){
-                if(that.site.length==0||that.site.length>=2){
-                    that.$message({
-                        message: '请选择一个气象站进行编辑!',
-                        type: 'error'
-                    });
-                    return;
-                }
                 that.addtype = '1'
-                that.ModelData()
-                that.concentrator()
-                that.data.nickName = that.site[0].nickName
-                that.data.windSolarNumber = that.site[0].windSolarNumber
-                that.data.modelId = that.site[0].modelId
-                that.data.concentratorSn = that.site[0].concentratorSn
-                that.data.coord = that.site[0].coord
-                that.referencePosition = that.site[0].coord
-                that.data.remark = that.site[0].remark
+                that.ModelData(row.modelId)
+                that.concentrator(row.concentratorSn)
+                that.scenerySite = row
+                that.data.nickName = row.nickName
+                that.data.windSolarNumber = row.windSolarNumber
+                that.data.modelId = row.modelId
+                that.data.concentratorSn = row.concentratorSn
+                that.data.coord = row.coord
+                that.referencePosition = row.coord
+                that.data.remark = row.remark
                 $('#addModal').modal('show')
             }
             if(val=='2'){
@@ -450,18 +456,20 @@ export default {
                 return;
             }
             data = this.data
-            if(this.addtype=='0'){type='post'}
-            if(this.addtype=='1'){data.id=this.site[0].id;type='put'}
-            data.projectId = sessionStorage.projectId
-            if(this.site2.length==0){
-                if(this.addtype=='0'){
+            if(this.addtype=='0'){
+                type='post'
+                if(this.site2.length==0){
                     data.poleId='0'
                 }else{
-                    data.poleId=that.site[0].poleId
+                    data.poleId = this.site2[0].id
                 }
-            }else{
-                data.poleId = this.site2[0].id
             }
+            if(this.addtype=='1'){
+                data.id=that.scenerySite.id;
+                data.poleId=that.scenerySite.poleId
+                type='put'
+            }
+            data.projectId = sessionStorage.projectId
             $.ajax({
                 type:type,
                 async:true,
@@ -619,7 +627,7 @@ export default {
             $('#LampPole_data').modal('hide')
         },
         //获取型号列表
-        ModelData(){
+        ModelData(modelId){
             var that = this;
             $.ajax({
                 type:'get',
@@ -635,7 +643,7 @@ export default {
                             that.data.modelId = data.result.windSolarSensorsModelVOs[0].id
                         }
                         if(that.addType=='1'){
-                            that.data.modelId = that.site[0].modelId
+                            that.data.modelId = modelId
                         }
                     }else{
                         that.errorCode(data)
@@ -644,7 +652,7 @@ export default {
             })
         },
         //请求集中器
-        concentrator(){
+        concentrator(concentratorSn){
             var that = this;
             $.ajax({
                 type:'get',
@@ -661,7 +669,7 @@ export default {
                     if(data.errorCode=='0'){
                         that.options3 = data.result.list
                         if(that.addType=='1'){
-                            that.data.concentratorSn = that.site[0].concentratorSn
+                            that.data.concentratorSn = concentratorSn
                         }
                     }else{
                         that.errorCode(data)
